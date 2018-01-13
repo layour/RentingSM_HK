@@ -7,7 +7,7 @@
 	<title></title>
 	<link rel="stylesheet" href="../../css/iuapmobile.um.css">
 	<link rel="stylesheet" href="../../css/fonts/iconfont.css">
-	<link rel="stylesheet" href="index.css">
+	<link rel="stylesheet" href="personal.css">
 	<script src="../../js/summer.js"></script>
 	<script src="../../js/jquery.min.js"></script>
 	<script src="../../js/Frameworks/iuapmobile.frameworks.ui.js"></script>
@@ -25,19 +25,19 @@
 				</div>
 			</div>
 			<ul class="userList">
-				<li>
+				<li onclick = "lease()">
 					<span class="iconfont icon-version"></span>
 					<i>租赁物</i>
 					<div class="companyInfo">
-                        <b class="company">1</b>
+                        <b class="company"></b>
 						<span class="iconfont icon-enter"></span>
 					</div>
 				</li>
-				<li onclick="help()">
+				<li>
 					<span class="iconfont icon-honor2"></span>
 					<i>银行卡</i>
 					<div class="companyInfo">
-						<b class="company">1</b>
+						<b class="company"></b>
 						<span class="iconfont icon-enter"></span>
 					</div>
 				</li>
@@ -52,7 +52,7 @@
 					<span class="iconfont icon-call"></span>
 					<i>客服电话</i>
 					<div class="companyInfo">
-						<b class="company">400-1800-852</b>
+						<b class="company"><a href="tel:010-84705470">010-84705470</a></b>
 					</div>
 				</li>
 				<li>
@@ -68,7 +68,41 @@
 		</div>
 	</div>
 	<script type="text/javascript">
-
+        // 租赁物
+		function lease(){
+			summer.openWin({
+				id: 'stockPersonal',
+				url: 'html/stock/lease.html',
+				create: false,
+				type: 'actionBar',
+				actionBar: {
+					title: "租赁信息",
+					titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
+					backgroundColor: "#039be5",
+					leftItem: {
+						image: "img/back.png",
+						method: "", //返回按钮自定义事件
+						text: "返回",
+						textColor: "#ffffff" //返回文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
+					}
+				}
+			})
+		};
+        // 退出登陆
+		function logout() {
+			var os = $summer.os;
+			UM.confirm({
+				title: '确定要退出吗？',
+				btnText: ["取消", "确定"],
+				overlay: true,
+				ok: function() {
+					summer.setStorage("userinfo", {});
+					summer.closeToWin({
+						id: 'login'
+					});
+				}
+			});
+		};
 	</script>
 </body>
 

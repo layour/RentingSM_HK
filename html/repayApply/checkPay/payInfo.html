@@ -1,123 +1,227 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1">
-		<meta charset="UTF-8">
-		<title></title>
-		<link rel="stylesheet" href="../../../css/iuapmobile.um.css">
-		<link rel="stylesheet" href="../../../css/fonts/iconfont.css">
-		<link rel="stylesheet" href="index.css">
-		<script src="../../../js/summer.js" ></script>
-		<script src="../../../js/jquery.min.js" ></script>
-		<script src="../../../js/Frameworks/iuapmobile.frameworks.ui.js" ></script>
-		<script src="../../../js/font.js" ></script>
-		<script src="../../../js/vue.js" ></script>
-	</head>
-	<body>
-		<div class="um-frame" id="index">
-			<div class="um-content">
-				<ul class="infoList">
-				   <li class="first"><strong></strong><i>基本信息</i></li>
-				   <li>
-				      <span>客户信息</span>
-                  <span>{{msg}}</span>
-				   </li>
-				   <li>
-                  <span>合同号</span>
-                  <span>CNKYRZ000435201780</span>
-				   </li>
-				   <li>
-                  <span>支付表号</span>
-                  <span>CNKYRZ000435201780</span>
-				   </li>
-				   <li>
-                  <span>项目类型</span>
-                  <span>大客户业务</span>
-				   </li>
-				   <li>
-                  <span>所属机构</span>
-                  <span>汽车金融事业部</span>
-				   </li>
-				   <li>
-                  <span>首付款代收</span>
-                  <span>是</span>
-				   </li>
-				   <li>
-                  <span>首付款金额</span>
-                  <span>￥<b>8,100.00</b></span>
-				   </li>
-				   <li>
-                  <span>设备款</span>
-                  <span>￥<b>8,100.00</b></span>
-				   </li>
-				   <li>
-                  <span>上牌信息</span>
-                  <span>已上牌</span>
-				   </li>
-				</ul>
-            <ul class="infoList">
-				   <li class="first"><strong></strong><i>付款通知（收款方）</i></li>
-				   <li>
-                  <span>收款方类型</span>
-                  <span>供应商</span>
-				   </li>
-				   <li>
-                  <span>收款单位</span>
-                  <span>郭本福</span>
-				   </li>
-				   <li>
-                  <span>账户类型</span>
-                  <span>对私</span>
-				   </li>
-				   <li>
-                  <span>开户行</span>
-                  <span>农行</span>
-				   </li>
-				   <li>
-                  <span>开户行行号</span>
-                  <span>103475749114</span>
-				   </li>
-				   <li>
-                  <span>收款账号</span>
-                  <span>103475749114</span>
-				   </li>
-				   <li>
-                  <span>备注</span>
-                  <span>无</span>
-				   </li>
-				</ul>
-            <ul class="infoList">
-				   <li class="first"><strong></strong><i>付款通知（付款信息）</i></li>
-				   <li>
-                  <span>应付金额</span>
-                  <span>￥<b>8,100.00</b></span>
-				   </li>
-				   <li>
-                  <span>实付金额</span>
-                  <span>￥<b>8,100.00</b></span>
-				   </li>
-				   <li>
-                  <span>付款方式</span>
-                  <span>银行汇票</span>
-				   </li>
-				   <li>
-                  <span>实付时间</span>
-                  <span>2016-12-01</span>
-				   </li>
-				</ul>
-			</div>
+
+<head>
+	<meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1">
+	<meta charset="UTF-8">
+	<title></title>
+	<link rel="stylesheet" href="../../../css/iuapmobile.um.css">
+	<link rel="stylesheet" href="../../../css/fonts/iconfont.css">
+	<link rel="stylesheet" href="index.css">
+	<script src="../../../js/summer.js"></script>
+	<script src="../../../js/jquery.min.js"></script>
+	<script src="../../../js/Frameworks/iuapmobile.frameworks.ui.js"></script>
+	<script src="../../../js/font.js"></script>
+	<script src="../../../js/vue.js"></script>
+	<script src="../../../js/common.js"></script>
+</head>
+
+<body>
+	<div class="um-frame" id="index">
+		<div class="um-content" v-cloak>
+			<ul class="infoList">
+				<li class="first"><strong></strong><i>基本信息</i></li>
+				<li>
+					<span>客户信息</span>
+					<span>
+						<div>
+							{{datas ? datas.paymentMap.NAME : ""}}
+						</div>
+					</span>
+				</li>
+				<li>
+					<span>合同号</span>
+					<span>
+						<div>
+							{{datas ? datas.paymentMap.LEASE_CODE : ""}}
+						</div>
+					</span>
+				</li>
+				<li>
+					<span>支付表号</span>
+					<span>
+						<div>
+							{{datas ? datas.paymentMap.PAYLIST_CODE : ""}}
+						</div>
+					</span>
+				</li>
+				<!-- <li>
+					<span>项目类型</span>
+					<span></span>
+				</li> -->
+				<!-- <li>
+					<span>所属机构</span>
+					<span></span>
+				</li> -->
+				<li>
+					<span>首付款代收</span>
+					<span>
+						<div>
+							{{datas ? datas.paymentMap.ISDEKOU : ""}}
+						</div>
+					</span>
+				</li>
+				<li>
+					<span>首付款金额</span>
+					<span>
+						<div>
+							￥<b>{{datas ? datas.paymentMap.FIRSTPAYALL : ""}}</b>
+						</div>
+					</span>
+				</li>
+				<li>
+					<span>设备款</span>
+					<span>
+						<div>
+							￥<b>{{datas ? datas.paymentMap.LEASE_TOPRIC : ""}}</b>
+						</div>
+					</span>
+				</li>
+				<li>
+					<span>品牌</span>
+					<span>
+						<div>
+							{{datas ? datas.paymentMap.PRODUCT_NAME : ""}}
+						</div>
+					</span>
+				</li>
+			</ul>
+			<ul class="infoList">
+				<li class="first"><strong></strong><i>付款通知（收款方）</i></li>
+				<!-- <li>
+					<span>收款方类型</span>
+					<span></span>
+				</li> -->
+				<li>
+					<span>收款单位</span>
+					<span>
+						<div>
+							{{datas ? datas.paymentMap.PAYEE_NAME : ""}}
+						</div>
+					</span>
+				</li>
+				<!-- <li>
+					<span>账户类型</span>
+					<span></span>
+				</li> -->
+				<li>
+					<span>开户行</span>
+					<span>
+						<div>
+							{{datas ? datas.paymentMap.COBANK_NAME : ""}}
+						</div>
+					</span>
+				</li>
+				<li>
+					<span>开户行行号</span>
+					<span>
+						<div>
+							{{datas ? datas.paymentMap.COBANK_ACCOUNT : ""}}
+						</div>
+					</span>
+				</li>
+				<li>
+					<span>收款账号</span>
+					<span>
+						<div>
+							{{datas ? datas.paymentMap.PAY_BANK_ACCOUNT : ""}}
+						</div>
+					</span>
+				</li>
+				<!-- <li>
+					<span>备注</span>
+					<span>
+						<div></div>
+					</span>
+				</li> -->
+			</ul>
+			<ul class="infoList">
+				<li class="first"><strong></strong><i>付款通知（付款信息）</i></li>
+				<li>
+					<span>应付金额</span>
+					<span>
+						<div>
+							￥<b>{{datas ? datas.paymentMap.PAY_MONEY : ""}}</b>
+						</div>
+					</span>
+				</li>
+				<li>
+					<span>实付金额</span>
+					<span>
+						<div>
+							￥<b>{{datas ? datas.paymentMap.LAST_MONEY : ""}}</b>
+						</div>
+					</span>
+				</li>
+				<li>
+					<span>付款方式</span>
+					<span>
+						<div>
+							{{datas ? datas.paymentMap.PAYMONEY_TYPE : ""}}
+						</div>
+					</span>
+				</li>
+				<li>
+					<span>实付时间</span>
+					<span>
+						<div>
+							{{datas ? datas.paymentMap.REALITY_DATE : ""}}
+						</div>
+					</span>
+				</li>
+			</ul>
 		</div>
-		<script type="text/javascript">
-			summerready = function (){
-				user = summer.pageParam.user;
-				payInfo.msg = user;
-			};
-			var payInfo = new Vue({
-				el:'#index',
-				data:{
-					msg:''
+	</div>
+	<script type="text/javascript">
+		var payInfo = new Vue({
+			el: '#index',
+			data: {
+				datas: null
+			}
+		});
+		summerready = function() {
+			var info = summer.pageParam.info;
+			summer.showProgress();
+			ajaxRequest({
+				type: 'post',
+				url: 'appservice/payment/queryPaymentInfo',
+				param: {
+					PAYMENT_ID: info.PAYMENT_ID
 				}
+			}, function(res) {
+				summer.hideProgress();
+				var Data;
+				if (Object.prototype.toString.call(res.data) === '[object String]') {
+					Data = JSON.parse(res.data);
+				} else {
+					Data = res.data;
+				}
+				if (Data.flag == 1) {
+					if (Data.datas.paymentMap.PAYMONEY_TYPE == 0) {
+						Data.datas.paymentMap.PAYMONEY_TYPE = "现汇";
+					} else {
+						Data.datas.paymentMap.PAYMONEY_TYPE = "承兑";
+					}
+					if (Data.datas.paymentMap.ISDEKOU == 0) {
+						Data.datas.paymentMap.ISDEKOU = "差额";
+					} else {
+						Data.datas.paymentMap.ISDEKOU = "全额";
+					}
+					payInfo.datas = Data.datas;
+				} else {
+					summer.toast({
+						msg: "暂无数据"
+					});
+				}
+			}, function(err) {
+				summer.hideProgress();
+				summer.toast({
+					msg: "暂无数据"
+				});
+				console.log(err);
 			});
-		</script>
-	</body>
+		};
+	</script>
+</body>
+
 </html>

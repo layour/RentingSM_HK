@@ -11,25 +11,39 @@
     tr{
       border-bottom:1px solid @borderColor;
       td{
-        height:.88rem;
+        // height:.88rem;
         line-height:.88rem;
         padding-left:.56rem;
         color:@fontColor;
         font-size:14px;
+        &:first-child{
+          overflow:hidden;
+          white-space:nowrap;
+        }
         &:last-child{
           text-align:right;
-          padding-left: 0;
-          padding-right: .56rem;
-
+          padding:0 .88rem 0 0;
+          position:relative;
+          line-height: .4rem;
           span{
             padding-right: .1rem;
+            // line-height: .3rem;
+            padding:.2rem 0;
             &.grayColor{
               color:@grayColor;
             }
           }
           >i{
             vertical-align: middle;
+            position: absolute;
+            right: .56rem;
+            top:50%;
+            -webkit-transform:translate(0,-50%);
+            transform:translate(0,-50%);
           }
+        }
+        &.last{
+          padding-right: .56rem;
         }
         input{
           border:none;
@@ -66,6 +80,28 @@
   }
 
 }
+.alignCenter{
+
+    position:absolute;;
+    top:50%;
+    left:50%;
+    -ms-transform:translate(-50%,-50%);
+    -webkit-transform:translate(-50%,-50%);
+    -o-transform:translate(-50%,-50%);
+    -moz-transform:translate(-50%,-50%);
+    transform:translate(-50%,-50%);
+    text-align:center;
+
+}
+.alignCenter p{
+  // line-height: .8rem;
+  font-size: 14px;
+  color: #CBCBCB;
+  padding-top:20px;
+}
+.alignCenter img{
+  width: 3rem;
+}
 .pickerColor{
   // position:fixed;
   // left:0;
@@ -75,6 +111,14 @@
   background: @white;
   .picker-item{
     font-size: 14px;
+  }
+  .picker-slot{
+    font-size: 14px;
+    color:@grayColor;
+  }
+  .picker-item.picker-selected{
+    font-size: 22px;
+    color:@fontColor;
   }
   >p{
     line-height: .88rem;
@@ -87,32 +131,19 @@
     }
   }
 }
+.dealerList{
+  background: @white;
+  // padding:.22rem 0;
+  li{
+    height:.68rem;
+    line-height: .68rem;
+    padding:0 .56rem;
+    border-bottom:1px solid @borderColor;
+    font-size: 14px;
+    color:fontColor;
+  }
+}
 #pickerDealer{
-  .um-input-group.pr{
-    span{
-      width:35px;
-    	height:0.6rem;
-    	line-height:0.6rem;
-    	margin-left:10px;
-    	font-size:14px;
-      display: none;
-      &.active{
-        display: block;
-      }
-    }
-  }
-  .dealerList{
-    background: @white;
-    // padding:.22rem 0;
-    li{
-      height:.68rem;
-      line-height: .68rem;
-      padding:0 .56rem;
-      border-bottom:1px solid @borderColor;
-      font-size: 14px;
-      color:fontColor;
-    }
-  }
   .mint-popup{
     width:100%;
     >p{
@@ -179,6 +210,19 @@
   //   border-top-right-radius: .3rem;
   //   border-bottom-right-radius: .3rem;
   // }
+}
+.um-input-group.pr{
+  span{
+    width:35px;
+    height:0.6rem;
+    line-height:0.6rem;
+    margin-left:10px;
+    font-size:14px;
+    display: none;
+    &.active{
+      display: block;
+    }
+  }
 }
 .modelsList,.mint-indexlist{
   border-top:1px solid @borderColor;

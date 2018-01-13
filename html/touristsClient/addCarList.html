@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1">
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="../../css/iuapmobile.um.css">
+		<link rel="stylesheet" href="../../css/fonts/iconfont.css">
+		<link rel="stylesheet" href="../../css/mint.css">
+		<style>
+			.addCarList>ul li{
+				background:#fff;
+				margin-bottom: .2rem;
+				height: 2.4rem;
+				position: relative;
+			}
+			.price{
+				color: #333;
+				 font-size: 14px;
+				 line-height: .4rem;
+				 position: absolute;
+				 left:0;
+				 bottom: .3rem;
+			 }
+			.mint-cell-swipe{
+				height: 2.4rem;
+				padding-left: .54rem;
+				background: #fff;
+			}
+			.mint-cell-wrapper{
+				height: 2.4rem;
+				padding-left: 0;
+				background: none;
+			}
+			.mint-cell-right{
+				height: 2.4rem;
+				font-size: 14px;
+			}
+			.mint-cell-title{
+				margin-bottom: .6rem;
+			}
+			.mint-cell-title span{
+				display: block;
+				margin-bottom: .2rem;
+			}
+			.mint-cell-title span:first-child{
+				margin-bottom: .1rem;
+			}
+			.title,.mint-cell-text{
+				font-size: 16px;
+				color:#039BE5;
+			}
+			.normal,.mint-cell-label{
+				color:#333;
+				font-size: 14px;
+			}
+			.um-footer{
+				background: inherit;
+			}
+			.um-footer button{
+	      height: .9rem;
+	      border:none;
+	      outline: none;
+	      width:100%;
+	      line-height: .9rem;
+	      color:#fff;
+	      border-radius: 5px;
+	    }
+			.alignCenter{
+
+			    position:absolute;;
+			    top:50%;
+			    left:50%;
+			    -ms-transform:translate(-50%,-50%);
+			    -webkit-transform:translate(-50%,-50%);
+			    -o-transform:translate(-50%,-50%);
+			    -moz-transform:translate(-50%,-50%);
+			    transform:translate(-50%,-50%);
+			    text-align:center;
+
+			}
+			.alignCenter p{
+			  padding-top: 20px;
+				font-size:14px;
+				color: #CBCBCB;
+			}
+			.alignCenter img{
+			  width: 3rem;
+			}
+			.icon-enter{
+				color: #DBDBDB;
+				margin-top:.5rem;
+
+			}
+		</style>
+	</head>
+	<body>
+		<div class="um-win" id="addCarList" v-cloak>
+			<div class="um-content addCarList">
+				<ul>
+					<li v-for="(item,index) in addCarList" @click="gotoDetail(item)" :key='index'>
+						<!-- <template v-if="addCarList.length==1">
+							<div class="inDiv" style="padding:.4rem 1rem; .4rem 0;">
+								<p class="title">{{item.PRODUCT_NAME}}{{item.CATENA_NAME}}{{item.SPEC_NAME}}</p>
+								<p class="normal">{{item.COMPANY_NAME}}</p>
+								<p class="price">成交价：&yen;{{item.ACTUAL_PRICE}}</p>
+							</div>
+							<div  class="fr one inDiv">
+								<i class="icon iconfont icon-enter"></i>
+							</div>
+						</template> -->
+						<mt-cell-swipe :title="item.PRODUCT_NAME+' | '+item.CATENA_NAME+' | '+item.SPEC_NAME" :label="item.COMPANY_NAME"  :right="[{content: '&nbsp;&nbsp;&nbsp;&nbsp;删除&nbsp;&nbsp;&nbsp;',style: {lineHeight:'2.4rem', background: '#f44336', color: '#fff' },handler: () =>deleteItem(index,ID)}]">
+								 <div class="price">
+									<p>数量：{{item.AMOUNT}}台</p>
+								 	<p>单台成交价：&yen;{{item.ACTUAL_PRICE}}</p>
+								 </div>
+								<div class="fr">
+									<i class="icon iconfont icon-enter"></i>
+								</div>
+						</mt-cell-swipe>
+					</li>
+				</ul>
+				<div id="noData" class="alignCenter" v-if="addCarList.length==0">
+					<img src="../../img/empty.png" alt="">
+					<p>暂无数据</p>
+	      </div>
+      </div>
+
+			<div v-if="addCarList.length>0" class="um-footer" id="footer">
+				<div style="padding:0 .56rem;">
+					<button @click="save" style="height:.9rem;margin-bottom:.56rem;background:#039BE5;font-size:0.3rem;">保存</button>
+				</div>
+			</div>
+    </div>
+		<script src="../../js/summer.js" ></script>
+		<script src="../../js/jquery.min.js" ></script>
+		<script src="../../js/font.js" ></script>
+		<script src="../../js/vue.js" ></script>
+		<script src="../../js/mint.js" ></script>
+		<script src="../../js/common.js" ></script>
+		<script src="../../js/Frameworks/iuapmobile.frameworks.ui.js" ></script>
+    <script>
+        summerready=function(){
+					console.log(summer.pageParam);
+					vueTemplate.PROJECT_ID=summer.pageParam.id
+					vueTemplate.CLIENT_ID=summer.pageParam.CLIENT_ID
+					vueTemplate.getData()
+        }
+        var vueTemplate=new Vue({
+          el:'#addCarList',
+          data(){
+            return {
+							// addCarList:[{ACTUAL_PRICE:1},{ACTUAL_PRICE:1}],
+							addCarList:[],
+							PROJECT_ID:'',
+							CLIENT_ID:'',
+							dataLength:false,
+							swipeArr:[
+						    {
+						      content: '删除',
+						      style: { background: 'red', color: '#fff' },
+						      handler: () => this.$messagebox('delete')
+						    }
+						  ]
+            }
+          },
+					methods:{
+						gotoDetail(item){
+							console.log("传参",JSON.stringify(item));
+							summer.openWin({
+								id:'addCar',
+								url:'html/touristsClient/addCar.html',
+								create:false,
+								type:'actionBar',
+								pageParam:{
+									item:item
+								},
+								actionBar: {
+									title: '添加车辆',
+									titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
+									backgroundColor: "#039BE5",
+									leftItem:{
+											image: "img/back.png",
+											method:'',//返回按钮自定义事件
+											text:"返回",
+											textColor:"#ffffff"  //返回文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
+									},
+									rightItems: [{
+										type: "text",
+										text: "确定",
+										method:'goBack()',
+										textColor: "#ffffff"
+									}]
+								}
+							})
+						},
+						getData(id){
+							var _this=this;
+							console.log(_this.PROJECT_ID);
+							summer.showProgress();
+							ajaxRequest({
+								type:'POST',
+								url:'appservice/foundproject/loadProjectPage',
+								param:{
+									PROJECT_ID:_this.PROJECT_ID
+								}
+							},function(res){
+								console.log("res",JSON.stringify(res.data.datas.EquipObj));
+								summer.hideProgress()
+								var length=res.data.datas.EquipObj.length;
+								if(length>0){
+									_this.addCarList=res.data.datas.EquipObj
+								}
+							},function(err){
+								summer.hideProgress()
+								console.log("err",err);
+							})
+						},
+						deleteItem(i,id){
+							this.addCarList.splice(i,1)
+							summer.toast({msg:'删除成功'})
+						},
+						addItem(){
+							var _this=this
+							summer.openWin({
+								id:'addCar',
+								url:'html/touristsClient/addCar.html',
+								create:false,
+								type:'actionBar',
+								pageParam:{
+									id: _this.PROJECT_ID
+								},
+								actionBar: {
+									title: '添加车辆',
+									titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
+									backgroundColor: "#039BE5",
+									leftItem:{
+											image: "img/back.png",
+											method:'',//返回按钮自定义事件
+											text:"返回",
+											textColor:"#ffffff"  //返回文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
+									},
+									rightItems: [{
+										type: "text",
+										text: "确定",
+										method:'goBack()',
+										textColor: "#ffffff"
+									}]
+								}
+							})
+						},
+						toggleItem(itemData){
+							if(itemData.ROWNUM){
+								for(var i=0;i<this.addCarList.length;i++){
+									if(itemData.ROWNUM==this.addCarList[i].ROWNUM){
+										this.addCarList[i].SUPPLIERS_NAME=itemData.SUPPLIERS_NAME
+										this.addCarList[i].SUPPLIERS_ID=itemData.SUPPLIERS_ID
+										this.addCarList[i].COMPANY_NAME=itemData.COMPANY_NAME
+										this.addCarList[i].COMPANY_ID=itemData.COMPANY_ID
+										this.addCarList[i].CAR_TYPE=itemData.CAR_TYPE
+										this.addCarList[i].CAR_NAME=itemData.CAR_NAME
+										this.addCarList[i].PRODUCT_NAME=itemData.PRODUCT_NAME
+										this.addCarList[i].PRODUCT_ID=itemData.PRODUCT_ID
+										this.addCarList[i].CATENA_NAME=itemData.CATENA_NAME
+										this.addCarList[i].CATENA_ID=itemData.CATENA_ID
+										this.addCarList[i].SPEC_NAME=itemData.SPEC_NAME
+										this.addCarList[i].SPEC_ID=itemData.SPEC_ID
+										this.addCarList[i].ROWNUM=itemData.ROWNUM
+										this.addCarList[i].UNITTEST=itemData.UNITTEST
+										this.addCarList[i].UNIT=itemData.UNIT
+										this.addCarList[i].AMOUNT=itemData.AMOUNT
+										this.addCarList[i].UNIT_PRICE=itemData.UNIT_PRICE
+										this.addCarList[i].ACTUAL_PRICE=itemData.ACTUAL_PRICE
+										this.addCarList[i].CCS=itemData.CCS
+										this.addCarList[i].BX=itemData.BX
+										this.addCarList[i].STAYBUY_PRICE=itemData.STAYBUY_PRICE
+									}
+								}
+
+							}else{
+								itemData.ROWNUM=new Date().getTime()
+								this.addCarList.push(itemData)
+							}
+							if(this.addCarList.length>0){this.dataLength=true}
+							console.log("最终结果",JSON.stringify(this.addCarList));
+						},
+						save(){
+							//发请求
+							console.log(JSON.stringify(this.addCarList));
+							if(this.addCarList.length==0){
+								summer.toast({msg:'请先添加车辆'});
+								return
+							}
+							summer.showProgress();
+							var _this=this;
+							ajaxRequest({
+								type:'POST',
+								url:'appservice/foundproject/saveProject',
+								param:{
+									PROJECT_ID:_this.PROJECT_ID,
+									CLIENT_ID:_this.CLIENT_ID,
+									EquipObj:_this.addCarList
+								}
+							},function(res){
+								console.log("res",res);
+								summer.hideProgress();
+								summer.toast({msg:"保存成功"});
+								summer.execScript({
+								    winId: "setProject",
+								    script: "addRight('addCarList')"
+								});
+								summer.closeWin();
+							},function(err){
+								console.log("err",err);
+							})
+						}
+					}
+        });
+				function addCar(){
+					vueTemplate.addItem()
+				}
+				function itemTemplate(item){
+					vueTemplate.toggleItem(JSON.parse(item))
+				}
+    </script>
+  </body>
+</html>

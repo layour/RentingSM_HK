@@ -18,22 +18,35 @@
 	<div class="um-win" id="index">
 		<div class="um-content">
 			<div id="bot">
-				<span class = "taste">快速体验</span>
-				<span class = "shu">|</span>
-				<span class = "changeLog"></span>
+				<span class = "taste">销售登录</span>
+				<span class = "changeLog">客户登录</span>
 			</div>
 		</div>
 	</div>
 	<script type="text/javascript">
 		summerready = function() {
-			var bot = $('#bot').height();
+			// 判断是否加载引导页
+			var bool = summer.getStorage("welcome") ? summer.getStorage("welcome") : false;
+			if (!bool) {
+				summer.openWin({
+					"id" : 'guide',
+					"url" : 'html/guide/index.html',
+					"isKeep" : false
+				});
+				return;
+			}
+			// 关闭启动图
+			setTimeout(function() {
+                summer.hideLaunch();
+            }, 500);
+			var bot = $('#bot').height() + $('.um-header').height();
 			summer.openFrameGroup({
 				id: 'login',
 				background: '#ffffff',
 				scrollEnabled: false,
 				position: {
-					top: 0,
-					bottom: bot,
+					top: bot,
+					bottom: 0,
 					left: 0,
 					right: 0
 				},
@@ -47,7 +60,7 @@
 					id: 'customerLogin',
 					url: 'html/login/customerLogin.html',
 					bgColor: '#ffffff',
-					hidden: false
+					hidden: true
 				}],
 			}, function(ret, err) {
 				var index = ret.index;
@@ -55,27 +68,41 @@
 		}
 		$(function() {
 			$('body').height($('body')[0].clientHeight);
-			var onOff = true;
-			$('.changeLog').text('客户登陆');
-			$('.changeLog').on('click', function() {
-				if (onOff) {
-					onOff = false;
-					$('.changeLog').text('客户登陆');
-					summer.setFrameGroupAttr({
-						id: 'login',
-						index: 1
-					});
-				} else {
-					onOff = true;
-					$('.changeLog').text('销售登录');
-					summer.setFrameGroupAttr({
-						id: 'login',
-						index: 0
-					});
-				}
+			$('.taste').css({
+				'color':'#1287de',
+				'border-color':'#1287de'
 			});
-			$('.taste').on('click',function (){
-				//暂无
+			$('.changeLog').css({
+				'color':'#333',
+				'border-color':'#d4d4d4'
+			});
+			$('.taste').on('click', function() {
+				$(this).css({
+					'color':'#1287de',
+					'border-color':'#1287de'
+				});
+				$('.changeLog').css({
+					'color':'#333',
+					'border-color':'#d4d4d4'
+				});
+				summer.setFrameGroupAttr({
+					id: 'login',
+					index: 0
+				});
+			});
+			$('.changeLog').on('click', function() {
+				$(this).css({
+					'color':'#1287de',
+					'border-color':'#1287de'
+				});
+				$('.taste').css({
+					'color':'#333',
+					'border-color':'#d4d4d4'
+				});
+				summer.setFrameGroupAttr({
+					id: 'login',
+					index: 1
+				});
 			});
 		});
 	</script>

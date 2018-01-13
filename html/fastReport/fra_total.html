@@ -10,7 +10,6 @@
 	<script src="../../js/font.js"></script>
 	<link rel="stylesheet" href="css/fraCommon.css">
 </head>
-
 <body>
 	<div class="um-frame" id="fra_total" v-cloak>
 		<div class="um-header-light">
@@ -24,27 +23,28 @@
 			</div>
 		</div>
 		<div class="um-content">
+			<div  id="content"></div>
 			<div class="list customList um-bgc-white" v-for="(item,index) in dataList">
 				<p class="pl10 title pr10">
-					{{item.cstNm}}<span class="status fr">
-					<i class="iconfont icon-customer mr5"></i>{{item.cstMgrNm}}</span>
+					{{item.CR_BECR_NAME}}<span class="status fr">
+					<i class="iconfont icon-customer mr5"></i>{{item.CLERK_NAME}}</span>
 				</p>
-				<div class="center" @click="openDetail(item.id)">
+				<div class="center" @click="openDetail(item.ID,item.JBPM_ID)">
 					<p class="type pl10">
-						<span>{{item.cstId?item.cstId.cstTypCdNm:"  "}} </span> | <span>{{item.bizTypNm}}</span>
+						<span>{{item.CR_BECR_TYPE}} </span> | <span>{{item.PLATFORM}}</span>
 					</p>
-					<p class="type card pl10 status">
-						{{item.lsCntNo}} <span class="fr">{{item.prjStsCdNm}}</span>
+					<p class="type card pl10 status h20">
+						{{item.LEASE_CODE}} <span class="fr">{{item.STATUS}}</span>
 					</p>
 					<p class="time pl10 pr10">
-						<span>创建时间：<span>{{item.createDate}}</span></span>
+						<span>创建时间：<span>{{item.CREATE_TIME}}</span></span>
 					</p>
 				</div>
-				<p class=" select um-box" v-if="item.prjStsCdNm=='未评审'">
-					<span class="um-bf1   tc" @click="upload(item.id)"><i class="iconfont icon-Upload mr5"></i>上传资料</span>
-					<span class="um-bf1  tc" @click="submit(item.id)"><i class="iconfont icon-submit mr5"></i>提交</span>
-					<span class="um-bf1   tc" @click="edit(item.id)"><i class="iconfont icon-modify mr5"></i>修改</span>
-					<span class="um-bf1  tc" @click="openOpacity(item.id,item.LEASE_CODE)"><i class="iconfont icon-nav_delete mr5"></i>删除</span>
+				<p class=" select um-box" v-if="item.STATUS=='草稿'">
+					<!--<span class="um-bf1   tc" @click="upload(item.ID)"><i class="iconfont icon-Upload mr5"></i>上传资料</span>-->
+					<!--<span class="um-bf1  tc" @click="submit(item.ID)"><i class="iconfont icon-submit mr5"></i>提交</span>-->
+					<span class="um-bf1   tc" @click="edit(item.ID)"><i class="iconfont icon-modify mr5"></i>修改</span>
+					<span class="um-bf1  tc" @click="openOpacity(item.ID,item.LEASE_CODE)"><i class="iconfont icon-nav_delete mr5"></i>删除</span>
 				</p>
 				<p v-else></p>
 			</div>
@@ -57,17 +57,18 @@
 	<script src="../../js/Frameworks/iuapmobile.frameworks.ui.js"></script>
 	<script>
 		function opensearch() {
+			summer.setStorage("searchFromSource","program");
 			summer.openWin({
 				id: 'search',
 				url: 'html/fastReport/search.html',
-				pageParam: {
-					source: "program"
-				}
-
+			/*	pageParam: {
+					fromSurce: "program"
+				}*/
 			});
 		}
 		var _endNum = 1;
 		summerready = function() {
+			summer.showProgress();
 			getData(1, true)
 			summer.setRefreshHeaderInfo({
 				visible: true,
@@ -97,13 +98,12 @@
 					summer.toast({
 						msg: "没有更多了"
 					});
-					  summer.refreshFooterLoadDone(); //加载完成后调用方法恢复组件到默认状态
+					summer.refreshFooterLoadDone(); //加载完成后调用方法恢复组件到默认状态
 					return;
 				}
 				getData(_endNum, false);
 			});
 		}
-
 		function getData(end, flag) {
 			fra_total.getData(end, flag);
 		}
@@ -120,23 +120,34 @@
 				getData(pageNum, flag) {
 					let self = this;
 					ajaxRequest({
-						type: 'get',
-						url: 'honor/appservice/project/prjbscinfo/initList.do',
+						type: 'post',
+						url: 'appservice/promc/projectList',
 						param: {
 							"pageNo": pageNum,
 							"pageSize": 10,
-							"prjStsCd": ""
+							"STATUS": ""
 						}
 					}, function(res) {
 						//alert(res);
 						summer.hideProgress();
-						if (res.status == 200) {
-							self.totalPage = JSON.parse(res.data).datas.last;
+						var Data;
+						if (Object.prototype.toString.call(res.data) === '[object String]') {
+							Data = JSON.parse(res.data);
+						} else {
+							Data = res.data;
+						}
+						if (Data.flag == 1) {
+							self.totalPage = Data.datas.last;
 							if (flag) {
-								self.dataList = JSON.parse(res.data).datas.list;
+								if (Data.datas.list.length < 1) {
+									createNull("content", "../../img/empty.png");
+									$("#content").css('display', 'block');
+								} else {
+									$("#content").css('display', 'none');
+									self.dataList = Data.datas.list;
+								}
 							} else {
-								//var initArray=JSON.parse(JSON.stringify(self.dataList));
-								self.dataList = self.dataList.concat(JSON.parse(res.data).datas.list);
+								self.dataList = self.dataList.concat(Data.datas.list);
 							}
 
 							console.log(self.dataList);
@@ -170,28 +181,29 @@
 						}
 					})
 				},
-				openDetail(id) {
+				openDetail(id,JBPM_ID) {
 					console.log(id);
-					summer.openWin({
-						id: 'programDetail',
-						url: 'html/fastReport/programDetail.html',
-						create: false,
-						type: 'actionBar',
-						actionBar: {
-							title: "项目查看",
-							titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
-							backgroundColor: "#039be5",
-							leftItem: {
-								image: "img/back.png",
-								method: "", //返回按钮自定义事件
-								text: "返回",
-								textColor: "#ffffff" //返回文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
+						summer.openWin({
+							id: 'programDetail',
+							url: 'html/fastReport/programDetail.html',
+							create: false,
+							type: 'actionBar',
+							actionBar: {
+								title: "项目查看",
+								titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
+								backgroundColor: "#039be5",
+								leftItem: {
+									image: "img/back.png",
+									method: "", //返回按钮自定义事件
+									text: "返回",
+									textColor: "#ffffff" //返回文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
+								}
+							},
+							pageParam: {
+								id: id,
+								JBPM_ID:JBPM_ID
 							}
-						},
-						pageParam: {
-							id: id
-						}
-					});
+						});
 				},
 				upload(id) {
 					summer.openWin({
@@ -224,6 +236,27 @@
 				},
 				submit(id) {
 					summer.openWin({
+							id : "submitSure",
+							url : "html/fastReport/submitSure.html",
+							create : false,
+							type : 'actionBar',
+							actionBar : {
+								title : "提交确认",
+								titleColor : "#ffffff",
+								backgroundColor : "#039BE5",
+								leftItem : {
+									image : "img/back.png",
+									method : "",
+									text : "返回",
+									textColor : "#ffffff"
+								}
+							},
+							pageParam:{
+								project_Id:	id
+							}
+
+						})
+					/*summer.openWin({
 						id: 'submitSure',
 						url: 'html/fastReport/submitSure.html',
 						create: false,
@@ -243,7 +276,7 @@
 							id: id,
 							source: "programSelect"
 						}
-					});
+					});*/
 				},
 				edit(id) {
 					summer.openWin({
@@ -269,8 +302,9 @@
 							}]
 						},
 						pageParam: {
-							id: id,
-							source: "programSelect"
+							projectId: id,
+							source: "programSelect",
+							isEdit:true
 						}
 					});
 				}

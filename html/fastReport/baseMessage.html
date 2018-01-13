@@ -3,35 +3,56 @@
 	<head>
 		<meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1">
 		<meta charset="UTF-8">
-		<title>添加车辆</title>
+		<title>基本信息</title>
 		<link rel="stylesheet" href="../../css/iuapmobile.um.css">
 		<link rel="stylesheet" href="../../css/fonts/iconfont.css">
 		<link rel="stylesheet" href="../../css/mint.css">
 		<link rel="stylesheet" href="css/baseMessage.css">
-		<script src="../../js/summer.js" ></script>
-		<script src="../../js/jquery.min.js" ></script>
-		<script src="../../js/font.js" ></script>
-		<script src="../../js/vue.js" ></script>
-		<script src="../../js/mint.js" ></script>
-		<script src="../../js/Frameworks/iuapmobile.frameworks.ui.js" ></script>
 	</head>
 	<body>
-		<div class="um-win" id="baseMessage" v-cloak>
+		<div class="um-win" id="baseMessageElement" v-cloak>
 			<div class="um-content baseMessage">
 				<ul>
-					<li @click="surePickerProgram">
+					<li   v-if='hasProjectId'>
+						<p class="pl10 pr10 tr">
+							<span class="fl">项目类型</span>
+							 <span class="right"><span   class="first">{{programStyle}}</span> </span>
+						</p>
+					</li>
+					<li @click="surePickerProgram" v-else>
 						<p class="pl10 pr10 tr">
 							<span class="fl">项目类型</span>
 							 <span class="right"><span v-if='programStyle' class="first">{{programStyle}}</span><span v-else class="second">请选择</span> <i class="icon iconfont icon-enter"></i></span>
 						</p>
 					</li>
-					<li @click="surePickerTask">
-						<p class="pl10 pr10 tr ">
-							<span class="fl">业务类型</span>
-							<span class="right"><span v-if='taskStyle'  class="first">{{taskStyle}}</span><span v-else class="second">请选择</span> <i class="icon iconfont icon-enter"></i></span>
+
+					<li  v-if='hasProjectId'>
+						<p class="pl10 pr10 tr" >
+							<span class="fl">省市</span>
+							 <span class=""> <span  class="first">{{AREA_ID_NM}} {{CITY_ID_NM}}  </span> </span>
 						</p>
 					</li>
-					<li>
+					<li  v-else>
+						<p class="pl10 pr10 tr" @click="selectAddr">
+							<span class="fl">省市</span>
+							 <span class=""> <span  class="first">{{AREA_ID_NM}} {{CITY_ID_NM}}  </span> <i class="icon iconfont icon-enter"></i></span>
+						</p>
+					</li>
+					<li  v-if='hasProjectId'>
+						<p class="pl10 pr10 tr" >
+							<span class="fl">项目名称</span>
+							 <span class=""> <span  class="first">{{PROJECT_NAME}}   </span> </span>
+						</p>
+					</li>
+					<li v-else></li>
+					<li  v-if='hasProjectId'>
+						<p class="pl10 pr10 tr" >
+							<span class="fl">项目ID</span>
+							 <span class=""> <span  class="first">{{PROJECT_ID}}   </span> </span>
+						</p>
+					</li>
+					<li v-else></li>
+			<!--		<li>
 						<p class="pl10 pr10 tr" style="line-height:0.88rem;">
 							<span class="fl">合同签署方式</span>
 							<span class="isGroup">
@@ -55,12 +76,12 @@
 									</span>
 							</span>
 						</p>
-					</li>
+					</li>-->
 				</ul>
-				
-				
+
+
 			</div>
-			
+
 			<div class="um-footer">
 				<mt-popup v-model="pickerProgramStatus" position='bottom' class="pickerColor">
 						<mt-picker :slots="slots1" @change="onValuesChange1"></mt-picker>
@@ -68,51 +89,117 @@
 							<span class="fl" @click="surePickerProgram">取消</span><span class="fr" @click="surePickerProgram('confirm')">确定</span>
 						</p>
 				</mt-popup>
-				<mt-popup v-model="pickerTaskStatus" position='bottom' class="pickerColor">
-						<mt-picker :slots="slots2" @change="onValuesChange2"></mt-picker>
-						<p>
-							<span class="fl" @click="surePickerTask">取消</span><span class="fr" @click="surePickerTask('confirm')">确定</span>
-						</p>
-				</mt-popup>
 			</div>
 		</div>
+		<script src="../../js/summer.js" ></script>
+		<script src="../../js/jquery.min.js" ></script>
+		<script src="../../js/font.js" ></script>
+		<script src="../../js/vue.js" ></script>
+		<script src="../../js/mint.js" ></script>
+		<script src="../../js/Frameworks/iuapmobile.frameworks.ui.js" ></script>
+		<script src="../../js/common.js" ></script>
 		<script>
+		  summerready=function(){
+			  var baseData=summer.pageParam.baseData;
+			  var customId=summer.pageParam.customId;
+			  baseMessage.customId=customId;
+			  let _project_Id=summer.pageParam.project_Id;
+
+			  if(_project_Id){
+				  baseMessage.hasProjectId=true;
+					baseMessage.getData(_project_Id);
+			  }
+			  baseMessage.totalData=baseData;
+			  baseMessage.project_Id=_project_Id;
+			  baseData.business.map((e,i) =>{
+					baseMessage.slots1[0].values.push(e.FLAG);
+			  })
+		  }
+		  function getAddr(){
+			  baseMessage.AREA_ID=JSON.parse(summer.getStorage('selectProvince')).AREA_ID
+			  baseMessage.CITY_ID=JSON.parse(summer.getStorage('selectCity')).AREA_ID
+			  baseMessage.AREA_ID_NM=JSON.parse(summer.getStorage('selectProvince')).AREA_NAME
+			  baseMessage.CITY_ID_NM=JSON.parse(summer.getStorage('selectCity')).AREA_NAME
+		  }
 			function save(){
 				baseMessage.save();
 			}
 			var baseMessage=new Vue({
-			el:'#baseMessage',
+			el:'#baseMessageElement',
 			data() {
 				return {
 					contractStatus : 'electron',
 					GroupStatus : 'no',
 					programStyle : '',
-					taskStyle:'',
 					holdPrice : 100,
 					pickerProgramStatus:false,
-					pickerTaskStatus:false,
 					pickerProgram:'',
-					pickerTask:'',
 					slots1 : [{
 						flex : 1,
-						values : ['大客户业务', '个人业务', '对公业务'],
+						values : [],
 						defaultIndex :0,
 						className : 'slot1',
 						textAlign : 'center'
 					}],
-					slots2 : [{
-						flex : 1,
-						values : ['形式售后回租', '形式回租'],
-						defaultIndex : 0,
-						className : 'slot2',
-						textAlign : 'center'
-					}]
+					totalData:"",
+					project_Id:"",
+					AREA_ID:"",
+					CITY_ID:"",
+					AREA_ID_NM:"",
+					CITY_ID_NM:"",
+					customId:"",
+					hasProjectId:false,
+					PROJECT_NAME:'',
+					PROJECT_ID:''
 				}
 			},
 			created() {
 
 			},
 			 methods: {
+				 getData(id){
+					 let self=this;
+					 ajaxRequest({
+						 type: 'post',
+						 url: 'appservice/foundproject/loadProjectPage',
+						 param: {
+							  PROJECT_ID:id
+						 }
+					 }, function(res) {
+						 summer.hideProgress();
+						 if (res.data.flag == 1) {
+								self.programStyle =res.data.datas.ProjectObj.PLATFORM
+								self.AREA_ID_NM =res.data.datas.ProjectObj.AREA_NAME
+								self.CITY_ID_NM =res.data.datas.ProjectObj.CITY_NAME
+								self.PROJECT_NAME =res.data.datas.ProjectObj.PROJECT_NAME
+								self.PROJECT_ID =res.data.datas.ProjectObj.PROJECT_ID
+
+						 }
+					 }, function(err) {
+						 console.log(err);
+						 summer.hideProgress();
+					 });
+				 },
+				 selectAddr(){
+ 					summer.setStorage("selectFrom","baseMessage");
+ 					summer.openWin({
+ 						id:'selectProvince',
+ 						url:'html/fastReport/selectProvince.html',
+ 						create:false,
+ 						type:'actionBar',
+ 						actionBar: {
+ 						title:'选择省',
+ 						titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
+ 						backgroundColor: "#039BE5",
+ 						leftItem:{
+ 							 image: "img/back.png",
+ 							 method:'',//返回按钮自定义事件
+ 							 text:"返回",
+ 							 textColor:"#ffffff"  //返回文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
+ 						}
+ 						}
+ 					})
+ 				},
 				goBack() {
 					summer.closeWin();
 				},
@@ -127,34 +214,59 @@
 				onValuesChange1(picker, values) {
 					this.pickerProgram = values[0];
 				},
-				onValuesChange2(picker, values) {
-					this.pickerTask = values[0];
-				},
 				surePickerProgram(param) {
 					this.pickerProgramStatus = !this.pickerProgramStatus;
 					if (param == 'confirm') {
 						this.programStyle = this.pickerProgram;
 					}
 				},
-				surePickerTask(param) {
-					this.pickerTaskStatus = !this.pickerTaskStatus;
-					if (param == 'confirm') {
-						this.taskStyle = this.pickerTask;
-					}
-				},
 				save() {
+					let self=this;
 					if(this.programStyle==""){
 						summer.toast({msg:"请选择项目类型"});
 						return;
-					}else if(this.taskStyle==""){
-						summer.toast({msg:"请选择业务类型"});
+					}else if(this.CITY_ID==""){
+						summer.toast({msg:"请选择省市"});
 						return;
 					}
-					summer.execScript({
-					    winId: "setProject",
-					    script: "addRight('baseMessage')"
+					//此时需要调后端的ajax请求数据
+					let _programStyle=this.programStyle;
+					let _area_id=this.taskStyle;
+					let PLATFORM_TYPE;
+					let customId=this.customId;
+					baseMessage.totalData.business.map((e,i)=>{
+						if(e.FLAG==_programStyle){
+							PLATFORM_TYPE=baseMessage.totalData.business[i].CODE;
+						}
 					});
-					summer.closeWin()
+
+					summer.showProgress();
+					ajaxRequest({
+						  type: 'post',
+						  url: 'appservice/foundproject/saveProject',
+						  param: {
+								 "AREA_ID":self.AREA_ID,
+								 "PLATFORM_TYPE":PLATFORM_TYPE,
+								 "CLIENT_ID":customId,
+								 "CITY_ID":self.CITY_ID
+						  }
+					 }, function (res) {
+							  if(res.data.flag==1){
+								  console.log(res);
+								  let projectId=res.data.datas.PROJECT_ID;
+								  summer.hideProgress();
+								  summer.toast({msg:"保存成功"});
+									summer.execScript({
+									    winId: "setProject",
+									    script: "addRight('baseMessage','"+projectId+"')"
+									});
+									summer.closeWin()
+							  }
+						 }, function (err) {
+							alert(err);
+							 console.log(err);
+								 summer.hideProgress();
+						});
 				}
 			}
 			});

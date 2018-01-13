@@ -7,10 +7,10 @@
  */
 // 福昌测试地址
 window.G_COMMON_URL = "http://122.49.7.88:8080/";
-function getToken() {
+function userId() {
 	var userinfo = summer.getStorage("userinfo");
-	var token = userinfo ? userinfo.token : "";
-	return token;
+	var userId = userinfo ? userinfo.EMPLOYEE_ID : "";
+	return userId;
 }
 var CommonUtil = {
 	//图片加水印
@@ -92,9 +92,9 @@ function ajaxRequest(paramObj, successCallback, errorCallback) {
 	window.cordovaHTTP.settings = {
 		timeout : 5000
 	};
-	if (getToken()) {
+	if (userId()) {
 		paramData = paramObj.param;
-		paramData.TOKEN = getToken();
+		paramData.EMPLOYEE_ID = userId();
 	} else {
 		paramData = paramObj.param;
 	}
@@ -107,8 +107,14 @@ function ajaxRequest(paramObj, successCallback, errorCallback) {
 			"Content-Type" : "application/json"
 		}
 	}, function(response) {
+		 if (Object.prototype.toString.call(response.data) === '[object String]') {
+				response.data = JSON.parse(response.data);
+		 }
 		successCallback(response);
 	}, function(response) {
+		summer.hideProgress();
+		summer.toast({msg:"数据请求失败"+ JSON.stringify(response)});
+		return;
 		//此处还需要和后端沟通，统一失败状态码，统一处理
 		// 执行自己的其它逻辑
 		errorCallback(response)

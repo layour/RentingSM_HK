@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1">
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="../../css/iuapmobile.um.css">
+    <link rel="stylesheet" href="../../css/fonts/iconfont.css">
+    <link rel="stylesheet" href="index.css">
+    <script src="../../js/summer.js"></script>
+    <script src="../../js/jquery.min.js"></script>
+    <script src="../../js/Frameworks/iuapmobile.frameworks.ui.js"></script>
+    <script src="../../js/font.js" charset="utf-8"></script>
+    <script src="../../js/idangerous.swiper-2.0.min.js" charset="utf-8"></script>
+    <script src="../../js/common.js"></script>
+</head>
+
+<body>
+    <div class="um-win" id="wrap">
+        <!-- 轮播banner -->
+        <div id='banner-inner' class='swiper-container'>
+            <div class='swiper-wrapper'>
+                <div class="swiper-slide">
+                    <img src="../../img/g1.jpg" alt="" />
+                </div>
+                <div class="swiper-slide">
+                    <img src="../../img/g2.jpg" alt="" />
+                </div>
+                <div class="swiper-slide">
+                    <img src="../../img/g3.jpg" alt="" />
+                </div>
+                <div class="swiper-slide">
+                    <img src="../../img/g4.jpg" alt="" />
+                    <div class="tasteBtn" onclick="openWin()">立即体验</div>
+                </div>
+            </div>
+            <div class="pagination"></div>
+            <div class="skip" onclick="openWin()"></div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        function openWin() {
+            summer.setStorage("welcome", true);
+            summer.openWin({
+                id:'homePage',
+                url:'index.html',
+                isKeep: false,
+                addBackListener:true,
+                create:false,
+                type:'actionBar',
+                actionBar: {
+                    title: "",
+                    titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
+                    backgroundColor: "#039be5",
+                    bottomLineColor: "#039be5",
+                    leftItem:{
+                        text:"复昌租赁",
+                        textColor:"#ffffff",
+                        method:"none()",//返回按钮自定义事件
+                    },
+                    rightItems: [{
+                        image: "img/mine.png",
+                        method:"showUserInfo()",//返回按钮自定义事件
+                    }]
+                }
+            });
+        }
+        summerready = function() {
+            // 判断是否加载引导页
+			var bool = summer.getStorage("welcome") ? summer.getStorage("welcome") : false;
+			if (bool) {
+                summer.openWin({
+                    id:'homePage',
+                    url:'index.html',
+                    isKeep: false,
+                    addBackListener:true,
+                    create:false,
+                    type:'actionBar',
+                    actionBar: {
+                        title: "",
+                        titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
+                        backgroundColor: "#039be5",
+                        bottomLineColor: "#039be5",
+                        leftItem:{
+                            text:"复昌租赁",
+                            textColor:"#ffffff",
+                            method:"none()",//返回按钮自定义事件
+                        },
+                        rightItems: [{
+                            image: "img/mine.png",
+                            method:"showUserInfo()",//返回按钮自定义事件
+                        }]
+                    }
+                });
+			} else {
+                // 关闭启动图
+                setTimeout(function() {
+                    summer.hideLaunch();
+                }, 500);
+                var skip = $summer.dom(".skip");
+                var mySwiper = new Swiper('.swiper-container', {
+                    pagination : '.pagination'
+                });
+            }
+        }
+    </script>
+</body>
+
+</html>
