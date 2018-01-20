@@ -44,7 +44,7 @@
 			var workNum = $('.workNum').val();
 			var psw = $('.psw').val();
 			var base = new Base64();
-			psw = base.encode(psw); //ODg4ODg4
+			psw = base.encode(psw);
 			if (workNum == '') {
 				summer.toast({
 					msg: "工号不得为空"
@@ -69,14 +69,11 @@
 				timeout: 5000
 			}; //设置5秒超时
 			summer.ajax({
-				type: "post",
-				url: "http://122.49.7.88:8080/appservice/login/carLogin",
+				type: "get",
+				url: "http://122.49.7.88:8080/honor/appservice/login/carLogin",
 				param: {
-					"appFlag": "1",
-					"EMPLOYEE_PWD": "HKSD" + psw + "EFASD",
-					"EMPLOYEE_CODE": workNum,
-					"SYSUSERFLAG": "1",
-					"VER_NO": "2"
+					"loginName": workNum,
+					"password": "HKSD"+ psw +"EFASD"
 				},
 				header: {
 					"Content-Type": "application/json"
@@ -91,22 +88,17 @@
 					Data = response.data;
 				}
 				switch (Data.flag) {
-					case 1:
+					case "1":
 						summer.toast({
 							msg: "登录成功"
 						});
-						var userData = Data.datas;
-						var userId = userData.EMPLOYEE_CODE;
-						var userName = userData.EMPLOYEE_NAME;
-						var JOB_NAME = userData.JOB_NAME;
-						var ORG_NAME = userData.ORG_NAME;
-						var EMPLOYEE_ID = userData.EMPLOYEE_ID;
+						var token = Data.datas.token;
+						var loginName = Data.datas.loginName;
+						var userName = Data.datas.name;
 						var userinfo = {
-							userId: userId,
-							userName: userName,
-							JOB_NAME: JOB_NAME,
-							ORG_NAME: ORG_NAME,
-							EMPLOYEE_ID: EMPLOYEE_ID
+							token: token,
+							loginName:loginName,
+							userName:userName
 						};
 						summer.setStorage("userinfo", userinfo);
 						// 调用首页获取代办任务数量
@@ -118,7 +110,7 @@
 							id: "homePage"
 						});
 						break;
-					case 0:
+					case "0":
 						summer.toast({
 							msg: "用户名或密码错误"
 						});

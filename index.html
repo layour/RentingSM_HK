@@ -225,7 +225,7 @@
 		// 判断是否已登陆
 		function isLogin() {
 			if (summer.getStorage("userinfo")) {
-				if (summer.getStorage("userinfo").EMPLOYEE_ID) {
+				if (summer.getStorage("userinfo").token) {
 					return true;
 				} else {
 					return false;
