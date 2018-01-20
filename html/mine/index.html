@@ -62,7 +62,7 @@
 		// 判断是否已登陆
 		function isLogin() {
 			if (summer.getStorage("userinfo")) {
-				if (summer.getStorage("userinfo").EMPLOYEE_ID) {
+				if (summer.getStorage("userinfo").token) {
 					return true;
 				} else {
 					return false;
@@ -78,7 +78,7 @@
 		summerready = function() {
 			if (isLogin()) {
 				var userinfo = summer.getStorage("userinfo");
-				var name = userinfo ? userinfo.userName : "张帅经理";
+				var name = userinfo.userName ? userinfo.userName : "张帅经理";
 				$('.box').find('p').text(name);
 			} else {
 				$('.box').find('p').text("请登录");

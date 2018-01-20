@@ -19,21 +19,17 @@
 		<div class="um-content">
 			<div class="navbar">
 				<ul class="missionInfo">
-					<li class="active">项目信息</li>
-					<li>审批处理</li>
+					<li class="active">待办任务</li>
+					<li>已办任务</li>
 				</ul>
 			</div>
 		</div>
 	</div>
 	<script type="text/javascript">
 		summerready = function() {
-            var JBPM_ID = summer.pageParam.JBPM_ID;
-            var TASK_ID = summer.pageParam.TASK_ID;
-            var PROJECT_ID = summer.pageParam.PROJECT_ID;
-			var KTYPE = summer.pageParam.KTYPE;
 			var top = $('.um-header').height() + $('.navbar').height();
 			summer.openFrameGroup({
-				id: 'missionCheck',
+				id: 'todo',
 				background: '#ffffff',
 				scrollEnabled: false,
 				position: {
@@ -44,34 +40,16 @@
 				},
 				index: 0,
 				frames: [{
-					id: 'projectDetail',
-					url: 'html/mission/projectDetail.html',
+					id: 'missionList',
+					url: 'html/mission/missionList.html',
 					bgColor: '#ffffff',
-					hidden: false,
-					pageParam: {
-				        PROJECT_ID: PROJECT_ID
-				    }
+					hidden: false
 				}, {
-					id: 'missionDetail',
-					url: 'html/mission/missionDetail.html',
+					id: 'finished',
+					url: 'html/mission/finished.html',
 					bgColor: '#ffffff',
-					hidden: true,
-					pageParam: {
-                        JBPM_ID: JBPM_ID,
-                        TASK_ID: TASK_ID,
-						KTYPE: KTYPE
-				    }
-				}],
-				pageParam: [
-					{
-                        PROJECT_ID: PROJECT_ID
-					},
-					{
-                        JBPM_ID: JBPM_ID,
-                        TASK_ID: TASK_ID,
-						KTYPE: KTYPE
-					}
-				]
+					hidden: true
+				}]
 			}, function(ret, err) {
 				var index = ret.index;
 			});
@@ -82,7 +60,7 @@
 				$('.missionInfo li').removeClass('active');
 				$(this).addClass('active');
 				summer.setFrameGroupAttr({
-					id: 'missionCheck',
+					id: 'todo',
 					index: tar
 				});
 			});
