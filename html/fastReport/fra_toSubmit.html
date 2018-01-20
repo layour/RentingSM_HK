@@ -25,27 +25,27 @@
 		<div class="um-content" >
 			<div  id="content"></div>
 			<div class="list customList um-bgc-white" v-for="(item,index) in dataList">
-				<p class="pl10 title pr10">
-					{{item.CR_BECR_NAME}}<span class="status fr">
-						<i class="iconfont icon-customer mr5"></i>{{item.CLERK_NAME}}</span>
-				</p>
-				<div class="center" @click="openDetail(item.ID,item.JBPM_ID)">
-					<p class="type pl10">
-						<span>{{item.CR_BECR_TYPE}} </span> | <span>{{item.PLATFORM}}</span>
-					</p>
-					<p class="type card pl10 status h20">
-						{{item.LEASE_CODE}} <span class="fr">{{item.STATUS}}</span>
-					</p>
-					<p class="time pl10 pr10">
-						<span>创建时间：<span>{{item.CREATE_TIME}}</span></span>
-					</p>
-				</div>
-				<p class=" select um-box" v-if="item.STATUS=='草稿'">
-				<!--	<span class="um-bf1   tc" @click="upload(item.ID)"><i class="iconfont icon-Upload mr5"></i>上传资料</span>-->
-				<!--	<span class="um-bf1  tc" @click="submit(item.ID)"><i class="iconfont icon-submit mr5"></i>提交</span>-->
-					<span class="um-bf1   tc" @click="edit(item.ID)"><i class="iconfont icon-modify mr5"></i>修改</span>
-					<span class="um-bf1  tc" @click="openOpacity(item.ID,item.LEASE_CODE)"><i class="iconfont icon-nav_delete mr5"></i>删除</span>
-				</p>
+					<p class="pl10 title pr10">
+							{{item.cstNm}}<span class="status fr">
+							<i class="iconfont icon-customer mr5"></i>{{item.cstMgrNm}}</span>
+						</p>
+						<div class="center" @click="openDetail(item.id,item.JBPM_ID)">
+							<p class="type pl10">
+								<span>{{item.cstId?item.cstId.cstTypCdNm:"  "}} </span> | <span>{{item.bizTypNm}}</span>
+							</p>
+							<p class="type card pl10 status h20">
+								{{item.lsCntNo}} <span class="fr">{{item.prjStsCdNm}}</span>
+							</p>
+							<p class="time pl10 pr10">
+								<span>创建时间：<span>{{item.createDate}}</span></span>
+							</p>
+						</div>
+						<p class=" select um-box" v-if="item.prjStsCdNm=='未评审'">
+								<!--<span class="um-bf1   tc" @click="upload(item.ID)"><i class="iconfont icon-Upload mr5"></i>上传资料</span>-->
+								<!--<span class="um-bf1  tc" @click="submit(item.ID)"><i class="iconfont icon-submit mr5"></i>提交</span>-->
+								<span class="um-bf1   tc" @click="edit(item.id)"><i class="iconfont icon-modify mr5"></i>修改</span>
+								<span class="um-bf1  tc" @click="openOpacity(item.id)"><i class="iconfont icon-nav_delete mr5"></i>删除</span>
+							</p>
 				<p v-else></p>
 			</div>
 		</div>
@@ -119,12 +119,12 @@
 				getData(pageNum, flag) {
 					let self = this;
 					ajaxRequest({
-						type: 'post',
-						url: 'appservice/promc/projectList',
+						type: 'get',
+						url: 'appservice/project/prjbscinfo/initList.do',
 						param: {
 							"pageNo": pageNum,
 							"pageSize": 10,
-							"STATUS": "1"
+							"prjStsCd": "0"
 						}
 					}, function(res) {
 					//	summer.hideProgress();
@@ -157,7 +157,7 @@
 						summer.refreshFooterLoadDone(); //加载完成后调用方法恢复组件到默认状态
 					})
 				},
-				openOpacity(id, code) {
+				openOpacity(id) {
 					console.log(id);
 					summer.openFrame({
 						id: 'Opacity',
@@ -171,7 +171,6 @@
 						opaque: false,
 						pageParam: {
 							id: id,
-							code: code,
 							frameId: "fra_toSubmit"
 						}
 					})
