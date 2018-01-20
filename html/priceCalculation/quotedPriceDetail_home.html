@@ -20,8 +20,6 @@
 		<div class="um-win" id="quotedPriceDetail" v-cloak>
 			<div class="um-content quotedPriceDetail">
 				<ul>
-					<li><b>方案名称</b><span>{{SCHEME_NAME}}</span></li>
-					<li><b>方案编号</b><span>{{SCHEME_CODE}}</span></li>
 					<li v-if="PROJECT_ID!=''" class="spec"><b>合同金额</b><span>{{quoted.allPrice}}&nbsp;元</span></li>
 					<li v-else class="spec input">
 						<b>合同金额</b>
@@ -63,28 +61,6 @@
 							<b v-if="quoted.payType">{{quoted.payType}}</b>
 							<b v-else class="default">请选择</b>
 							<i class="icon iconfont icon-enter"></i>
-						</span>
-					</li>
-					<li @click="sureGkfsType">
-						<b>挂靠方式</b>
-						<span>
-							<b v-if="GKFS">{{GKFS}}</b>
-							<b v-else class="default">请选择</b>
-							<i class="icon iconfont icon-enter"></i>
-						</span>
-					</li>
-					<li class='spec' @click="selectFleet" v-if="gkfsCode=='2'||gkfsCode=='3'">
-							<b>挂靠车队</b>
-							<span>
-								<b v-if="GKCD">{{GKCD}}</b>
-								<b v-else class="default">请选择</b>
-								<i class="icon iconfont icon-enter"></i>
-							</span>
-					</li>
-					<li class='spec input' v-else>
-						<b>挂靠车队</b>
-						<span>
-							<input type="text" style="min-width:4rem;" @input="checkGkcd" placeholder="请输入挂靠车队" name="gkcd" v-model="GKCD">&nbsp;&nbsp;
 						</span>
 					</li>
 					<li @click="pickFirstRate">
@@ -141,10 +117,6 @@
 				<mt-popup v-model="pickerPayTypeStatus" class="pickerPrice" v-else-if="pickerPayTypeStatus" position='bottom' >
 					<mt-picker value-key="FLAG" :slots="payTypeSlots" @change="onPayTypeChange"></mt-picker>
 					<p><span class="fl" @click="surePickerpayType">取消</span><span class="fr" @click="surePickerpayType('confirm')">确定</span></p>
-				</mt-popup>
-				<mt-popup v-model="pickerGkfsStatus" class="pickerPrice" v-else-if="pickerGkfsStatus" position='bottom' >
-					<mt-picker value-key="FLAG" :slots="gkfsSlots" @change="onGkfsChange"></mt-picker>
-					<p><span class="fl" @click="sureGkfsType">取消</span><span class="fr" @click="sureGkfsType('confirm')">确定</span></p>
 				</mt-popup>
 				<mt-popup v-model="firstPayStatu" class="firstPayCont" v-else-if="firstPayStatu" position="bottom">
 					<ul v-if="moneyToRate">
@@ -219,14 +191,8 @@
     </div>
     <script>
 			summerready=function(){
-				if(summer.pageParam.projectId){
-					quotedVue.PROJECT_ID=summer.pageParam.projectId;
-				}
-				if(summer.pageParam.SCHEME_CODE){
-					quotedVue.SCHEME_CODE=summer.pageParam.SCHEME_CODE;
-				}
-				if(summer.pageParam.SCHEME_NAME){
-					quotedVue.SCHEME_NAME=summer.pageParam.SCHEME_NAME;
+				if(summer.pageParam.id){
+					quotedVue.PROJECT_ID=summer.pageParam.id;
 				}
 					quotedVue.getData();
 
@@ -244,19 +210,11 @@
 								className: 'slot1',
 								textAlign: 'center'
 							}],
-							gkfsSlots:[{
-								flex: 1,
-								values: [],
-								defaultIndex:0,
-								className: 'slot2',
-								textAlign: 'center'
-							}],
 							payTypeList:[],
 							bailList:["融资额","首期款"],
 							termTypeList:['期满处','里方式'],
 							pickerStatus:false,
 							pickerPayTypeStatus:false,
-							pickerGkfsStatus:false,
 							bailStatue:false,
 							firstPayStatu:false,
 							moneyToRate:true,
@@ -264,13 +222,6 @@
 							pickerType:'payType',
 							pickerVal:'',
 							PROJECT_ID:'',
-							SUPPLIERS_ID:'',
-							SCHEME_CODE:'',//报价方案code
-							SCHEME_NAME:'',
-							GKFS:'',
-							pickerCode:'',
-							gkfsCode:'2',
-							GKCD:'',//挂靠车队
 							quoted:{
 								allPrice:'',
 								term:'', //租赁期数
@@ -328,97 +279,26 @@
 						}
 					},
 					methods:{
-						checkGkcd(){
-							if(!this.GKFS){
-								this.GKCD=""
-								summer.toast({msg:'请先选择挂靠方式'})
-								return
-							}
-						},
-						selectFleet(){
-							if(!this.GKFS){
-								summer.toast({msg:'请先选择挂靠方式'})
-								return
-							}
-							var _this=this;
-							summer.setStorage("SUP_ID",this.SUPPLIERS_ID)
-							summer.openWin({
-								id:'pickerFleet',
-								url:'html/priceCalculation/pickerFleet.html',
-								create:false,
-								type:'actionBar',
-								actionBar: {
-						      title: "添加挂靠车队",
-						      titleColor: "#ffffff",
-						      backgroundColor: "#039BE5",
-						      leftItem:{
-						          image: "img/back.png",
-						          method:'',
-						          text:"返回",
-						          textColor:"#ffffff"
-						      }
-								},
-								pageParam:{
-									SUP_ID:_this.SUPPLIERS_ID
-								}
-							})
-						},
 						getData(){
 							console.log("PROJECT_ID",this.PROJECT_ID);
 							var _this=this
 							ajaxRequest({
 								type:'POST',
-								url:'appservice/foundproject/queryProjectScheme',
-								param:{PROJECT_ID:_this.PROJECT_ID}
+								url:'appservice/foundproject/toProjectSchemePrice',
+								param:{CODE:''}
 							},function(res){
 								console.log("res",res);
 								_this.payTypeSlots[0].values=res.data.datas.paywaylist
-								_this.SUPPLIERS_ID=res.data.datas.prj.SUPPLIERS_ID
-								_this.gkfsSlots[0].values=res.data.datas.GKFS
-								var data=res.data.datas.scheme
-								if(data){
-									_this.SCHEME_ID=data.ID
-									_this.GKCD=data.GKCD
-									_this.quoted.allPrice=data.LEASE_TOPRIC
-									_this.quoted.term=data.LEASE_TERM+"个月"
-									_this.quoted.contractTerm=data.LEASE_TERM
-									_this.quoted.rate=data.YEAR_INTEREST
-									_this.quoted.payType=data.PAY_WAY_NM
-									_this.quoted.sureFirstPayRate=data.START_PERCENT
-									_this.quoted.sureFirstPay=data.FIRST_MONEY
-									_this.quoted.lastBail=data.DEPOSIT_MONEY
-									// _this.quoted.sureBailType=data.LEASE_SUBFIRENT
-									_this.quoted.sureBailRate=data.BAIL_PERCENT
-									_this.quoted.consultingFee=data.POUNDAGE_PRICE
-									// _this.quoted.sureBail=data.DEPOSIT_MONEY
-									_this.resultData.firstPrice=data.FIRST_MONEY
-									_this.resultData.termPrice=data.MONTH_RENT
-									_this.resultData.term=data.LEASE_TERM
-								}else{
-									if(res.data.datas.prj.LEASE_TOPRIC){
-										_this.quoted.allPrice=res.data.datas.prj.LEASE_TOPRIC
-									}else{
-										if(_this.PROJECT_ID!=''){summer.toast({msg:'请先添加车辆'})}
 
-									}
-								}
 							},function(err){
 								console.log("err",err);
 							})
+
 						},
 						surePickerpayType(val){
 							this.pickerPayTypeStatus=!this.pickerPayTypeStatus
 							if(val=='confirm'){
 								this.quoted.payType=this.pickerVal
-								console.log(this.quoted.payType)
-							}
-						},
-						sureGkfsType(val){
-							this.pickerGkfsStatus=!this.pickerGkfsStatus
-							if(val=='confirm'){
-								this.GKFS=this.pickerVal
-								this.gkfsCode=this.pickerCode
-								this.GKCD=''
 								console.log(this.quoted.payType)
 							}
 						},
@@ -461,10 +341,6 @@
 				    },
 						onPayTypeChange(picker,values){
 							this.pickerVal=values[0].FLAG;
-						},
-						onGkfsChange(picker,values){
-							this.pickerVal=values[0].FLAG;
-							this.pickerCode=values[0].CODE;
 						},
 						surePicker(item,status){
 							this.pickerStatus=!this.pickerStatus;
@@ -560,7 +436,7 @@
 
 						},
 						quotedTest(){
-							if(!this.quoted.allPrice||!this.quoted.term||!this.quoted.rate||!this.quoted.payType||!this.GKCD||!this.quoted.sureFirstPayRate||!this.quoted.consultingFee){
+							if(!this.quoted.allPrice||!this.quoted.term||!this.quoted.rate||!this.quoted.payType||!this.quoted.sureFirstPayRate||!this.quoted.consultingFee){
 								summer.toast({msg:'请先完善报价信息'})
 								return
 							}
@@ -599,8 +475,6 @@
 							summer.showProgress();
 							var _this=this
 							var param={
-								SCHEME_CODE:_this.SCHEME_CODE,
-								GKCD:_this.GKCD,
 								PROJECT_ID:_this.PROJECT_ID,
 								SCHEME_ID:_this.SCHEME_ID,  //报价单id
 								TOTAL_MONTH_PRICE:_this.testData.TOTAL_REN_PRICE,
@@ -642,9 +516,6 @@
         })
 			function save(){
 				quotedVue.save()
-			}
-			function getFleet(){
-				quotedVue.GKCD=JSON.parse(summer.getStorage('pickerFleet')).FLAG;
 			}
     </script>
   </body>
