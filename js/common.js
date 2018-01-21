@@ -5,12 +5,12 @@
  * 3、日期时间格式化：datePattern("yyyy-MM-dd EE hh:mm:ss", date) =>2009-03-10 周二 08:09:04
  * 4、兼容获取权限：getPermission(["android.permission.ACCESS_FINE_LOCATION","android.permission.ACCESS_COARSE_LOCATION"], successFn)
  */
-// 福昌测试地址
-window.G_COMMON_URL = "http://122.49.7.88:8080/";
-function userId() {
+// 华科测试地址
+window.G_COMMON_URL = "http://122.49.7.88:8080/honor/";
+function getToken() {
 	var userinfo = summer.getStorage("userinfo");
-	var userId = userinfo ? userinfo.EMPLOYEE_ID : "";
-	return userId;
+	var token = userinfo ? userinfo.token : "";
+	return token;
 }
 var CommonUtil = {
 	//图片加水印
@@ -92,9 +92,9 @@ function ajaxRequest(paramObj, successCallback, errorCallback) {
 	window.cordovaHTTP.settings = {
 		timeout : 5000
 	};
-	if (userId()) {
+	if (getToken()) {
 		paramData = paramObj.param;
-		paramData.EMPLOYEE_ID = userId();
+		paramData.TOKEN = getToken();
 	} else {
 		paramData = paramObj.param;
 	}
