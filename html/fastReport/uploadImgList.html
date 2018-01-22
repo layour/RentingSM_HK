@@ -52,31 +52,46 @@
 	<body>
 		<div class="um-win" id="projectImgList" v-cloak>
 			<div class="um-content addCar">
-        <div class="um-list-item-bodys" @click="openContWin('uId','申请人身份证','承租人自然人','立项')">
-          申请人身份证
+        <div class="um-list-item-bodys" @click="openContWin('uId','身份证正反面','承租人自然人','立项')">
+          身份证正反面
           <span class="frp"> <i class="uId icon iconfont icon-right"></i>&nbsp; <i class="icon iconfont icon-enter"></i> </span>
         </div>
-        <div class="um-list-item-bodys" @click="openContWin('carId','机动车驾驶证','承租人自然人','立项')">
-          机动车驾驶证
+        <div class="um-list-item-bodys" @click="openContWin('carId','驾驶证','承租人自然人','立项')">
+          驾驶证
           <span class="frp"> <i class="carId icon iconfont icon-right"></i>&nbsp; <i class="icon iconfont icon-enter"></i> </span>
         </div>
-        <div class="um-list-item-bodys" @click="openContWin('customerId','融资租赁业务客户客户面谈记录表','承租人自然人','立项')">
-          融资租赁业务客户客户面谈记录表
+        <div class="um-list-item-bodys" @click="openContWin('customerId','授权书本人签字页','承租人自然人','立项')">
+          授权书本人签字页
           <span class="frp"> <i class="customerId icon iconfont icon-right"></i>&nbsp; <i class="icon iconfont icon-enter"></i> </span>
         </div>
-        <div class="um-list-item-bodys" @click="openContWin('imgId','现场照片','承租人自然人','立项')">
-          现场照片
+        <div class="um-list-item-bodys" @click="openContWin('imgId','客户手持授权书照片','承租人自然人','立项')">
+          客户手持授权书照片
           <span class="frp"> <i class="imgId icon iconfont icon-right"></i>&nbsp; <i class="icon iconfont icon-enter"></i> </span>
         </div>
-        <div class="um-list-item-bodys" @click="openContWin('promId','保证人身份证','担保人自然人','立项')">
-          保证人身份证
+        <div class="um-list-item-bodys" @click="openContWin('promId','身份证正反面复印件','担保人自然人','立项')">
+          身份证正反面复印件
           <span class="frp"> <i class="promId icon iconfont icon-right"></i>&nbsp; <i class="icon iconfont icon-enter"></i> </span>
         </div>
-        <div class="um-list-item-bodys" @click="openContWin('twoId','调查人员及保证人合影照片','担保人自然人','立项')">
-          调查人员及保证人合影照片
+        <div class="um-list-item-bodys" @click="openContWin('twoId','车辆信息','担保人自然人','立项')">
+          车辆信息
           <span class="frp"> <i class="twoId icon iconfont icon-right"></i>&nbsp; <i class="icon iconfont icon-enter"></i> </span>
         </div>
-
+				<div class="um-list-item-bodys" @click="openContWin('marryData','婚姻材料','担保人自然人','立项')">
+          婚姻材料
+          <span class="frp"> <i class="marryData icon iconfont icon-right"></i>&nbsp; <i class="icon iconfont icon-enter"></i> </span>
+        </div>
+				<div class="um-list-item-bodys" @click="openContWin('moneyData','收入材料','担保人自然人','立项')">
+          收入材料
+          <span class="frp"> <i class="moneyData icon iconfont icon-right"></i>&nbsp; <i class="icon iconfont icon-enter"></i> </span>
+        </div>
+				<div class="um-list-item-bodys" @click="openContWin('houseData','房产材料','担保人自然人','立项')">
+          房产材料
+          <span class="frp"> <i class="houseData icon iconfont icon-right"></i>&nbsp; <i class="icon iconfont icon-enter"></i> </span>
+        </div>
+				<div class="um-list-item-bodys" @click="openContWin('otherData','其他审核资料','担保人自然人','立项')">
+          其他审核资料
+          <span class="frp"> <i class="otherData icon iconfont icon-right"></i>&nbsp; <i class="icon iconfont icon-enter"></i> </span>
+        </div>
 			</div>
 		</div>
 		<script>
