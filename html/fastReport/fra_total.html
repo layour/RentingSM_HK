@@ -10,6 +10,7 @@
 	<script src="../../js/font.js"></script>
 	<link rel="stylesheet" href="css/fraCommon.css">
 </head>
+
 <body>
 	<div class="um-frame" id="fra_total" v-cloak>
 		<div class="um-header-light">
@@ -23,28 +24,35 @@
 			</div>
 		</div>
 		<div class="um-content">
-			<div  id="content"></div>
+			<div id="content"></div>
 			<div class="list customList um-bgc-white" v-for="(item,index) in dataList">
 				<p class="pl10 title pr10">
-					{{item.cstNm}}<span class="status fr">
-					<i class="iconfont icon-customer mr5"></i>{{item.cstMgrNm}}</span>
+					{{item.cstNm}}
+					<span class="status fr">
+						<i class="iconfont icon-customer mr5"></i>{{item.cstMgrNm}}</span>
 				</p>
 				<div class="center" @click="openDetail(item.id,item.JBPM_ID)">
 					<p class="type pl10">
-						<span>{{item.cstId?item.cstId.cstTypCdNm:"  "}} </span> | <span>{{item.bizTypNm}}</span>
+						<span>{{item.cstId?item.cstId.cstTypCdNm:" "}} </span> |
+						<span>{{item.bizTypNm}}</span>
 					</p>
 					<p class="type card pl10 status h20">
-						{{item.lsCntNo}} <span class="fr">{{item.prjStsCdNm}}</span>
+						{{item.lsCntNo}}
+						<span class="fr">{{item.prjStsCdNm}}</span>
 					</p>
 					<p class="time pl10 pr10">
-						<span>创建时间：<span>{{item.createDate}}</span></span>
+						<span>创建时间：
+							<span>{{item.createDate}}</span>
+						</span>
 					</p>
 				</div>
 				<p class=" select um-box" v-if="item.prjStsCdNm=='未评审'">
 					<!--<span class="um-bf1   tc" @click="upload(item.ID)"><i class="iconfont icon-Upload mr5"></i>上传资料</span>-->
 					<!--<span class="um-bf1  tc" @click="submit(item.ID)"><i class="iconfont icon-submit mr5"></i>提交</span>-->
-					<span class="um-bf1   tc" @click="edit(item.id)"><i class="iconfont icon-modify mr5"></i>修改</span>
-					<span class="um-bf1  tc" @click="openOpacity(item.id)"><i class="iconfont icon-nav_delete mr5"></i>删除</span>
+					<span class="um-bf1   tc" @click="edit(item.id)">
+						<i class="iconfont icon-modify mr5"></i>修改</span>
+					<span class="um-bf1  tc" @click="openOpacity(item.id)">
+						<i class="iconfont icon-nav_delete mr5"></i>删除</span>
 				</p>
 				<p v-else></p>
 			</div>
@@ -57,17 +65,17 @@
 	<script src="../../js/Frameworks/iuapmobile.frameworks.ui.js"></script>
 	<script>
 		function opensearch() {
-			summer.setStorage("searchFromSource","program");
+			summer.setStorage("searchFromSource", "program");
 			summer.openWin({
 				id: 'search',
 				url: 'html/fastReport/search.html',
-			/*	pageParam: {
-					fromSurce: "program"
-				}*/
+				/*	pageParam: {
+						fromSurce: "program"
+					}*/
 			});
 		}
 		var _endNum = 1;
-		summerready = function() {
+		summerready = function () {
 			summer.showProgress();
 			getData(1, true)
 			summer.setRefreshHeaderInfo({
@@ -78,7 +86,7 @@
 				textDown: '下拉刷新...',
 				textUp: '松开刷新...',
 				showTime: true
-			}, function(ret, err) {
+			}, function (ret, err) {
 				//通常在这里从服务器加载数据，t
 				getData(1, true);
 				_endNum = 1;
@@ -91,7 +99,7 @@
 				textDown: '上拉刷新...',
 				textUp: '松开刷新...',
 				showTime: true
-			}, function(ret, err) {
+			}, function (ret, err) {
 				//通常在这里从服务器加载数据，
 				_endNum += 1;
 				if (_endNum > fra_total.totalPage) {
@@ -104,6 +112,7 @@
 				getData(_endNum, false);
 			});
 		}
+
 		function getData(end, flag) {
 			fra_total.getData(end, flag);
 		}
@@ -127,7 +136,7 @@
 							"pageSize": 10,
 							"prjStsCd": ""
 						}
-					}, function(res) {
+					}, function (res) {
 						//alert(res);
 						summer.hideProgress();
 						var Data;
@@ -152,12 +161,12 @@
 
 							console.log(self.dataList);
 						}
-					}, function(err) {
+					}, function (err) {
 						//alert(err);
 						console.log(err);
 						summer.hideProgress();
 					});
-					this.$nextTick(function() {
+					this.$nextTick(function () {
 						summer.refreshHeaderLoadDone() //加载完成后调用方法恢复组件到默认状态
 						summer.refreshFooterLoadDone(); //加载完成后调用方法恢复组件到默认状态
 					})
@@ -181,29 +190,29 @@
 						}
 					})
 				},
-				openDetail(id,JBPM_ID) {
+				openDetail(id, JBPM_ID) {
 					console.log(id);
-						summer.openWin({
-							id: 'programDetail',
-							url: 'html/fastReport/programDetail.html',
-							create: false,
-							type: 'actionBar',
-							actionBar: {
-								title: "项目查看",
-								titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
-								backgroundColor: "#039be5",
-								leftItem: {
-									image: "img/back.png",
-									method: "", //返回按钮自定义事件
-									text: "返回",
-									textColor: "#ffffff" //返回文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
-								}
-							},
-							pageParam: {
-								id: id,
-								JBPM_ID:JBPM_ID
+					summer.openWin({
+						id: 'programDetail',
+						url: 'html/fastReport/programDetail.html',
+						create: false,
+						type: 'actionBar',
+						actionBar: {
+							title: "项目查看",
+							titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
+							backgroundColor: "#039be5",
+							leftItem: {
+								image: "img/back.png",
+								method: "", //返回按钮自定义事件
+								text: "返回",
+								textColor: "#ffffff" //返回文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
 							}
-						});
+						},
+						pageParam: {
+							id: id,
+							JBPM_ID: JBPM_ID
+						}
+					});
 				},
 				upload(id) {
 					summer.openWin({
@@ -236,26 +245,26 @@
 				},
 				submit(id) {
 					summer.openWin({
-							id : "submitSure",
-							url : "html/fastReport/submitSure.html",
-							create : false,
-							type : 'actionBar',
-							actionBar : {
-								title : "提交确认",
-								titleColor : "#ffffff",
-								backgroundColor : "#039BE5",
-								leftItem : {
-									image : "img/back.png",
-									method : "",
-									text : "返回",
-									textColor : "#ffffff"
-								}
-							},
-							pageParam:{
-								project_Id:	id
+						id: "submitSure",
+						url: "html/fastReport/submitSure.html",
+						create: false,
+						type: 'actionBar',
+						actionBar: {
+							title: "提交确认",
+							titleColor: "#ffffff",
+							backgroundColor: "#039BE5",
+							leftItem: {
+								image: "img/back.png",
+								method: "",
+								text: "返回",
+								textColor: "#ffffff"
 							}
+						},
+						pageParam: {
+							project_Id: id
+						}
 
-						})
+					})
 					/*summer.openWin({
 						id: 'submitSure',
 						url: 'html/fastReport/submitSure.html',
@@ -304,7 +313,7 @@
 						pageParam: {
 							projectId: id,
 							source: "programSelect",
-							isEdit:true
+							isEdit: true
 						}
 					});
 				}
