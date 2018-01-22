@@ -121,7 +121,7 @@
 
 		function help() {
 			if (isLogin()) {
-				summer.openWin({
+				/* summer.openWin({
 					id: 'help',
 					url: 'html/help/index.html',
 					create: false,
@@ -143,6 +143,9 @@
 							method: "uploadHr()"
 						}]
 					}
+				}); */
+				summer.toast({
+					msg: "敬请期待"
 				});
 			} else {
 				summer.toast({
@@ -153,7 +156,7 @@
 
 		function update() {
 			if (isLogin()) {
-				summer.showProgress();
+				/* summer.showProgress();
 				summer.ajax({
 					type: "post",
 					url: "http://122.49.7.88:8080/appservice/appsys/getNewapp",
@@ -195,6 +198,9 @@
 					summer.toast({
 						msg: "系统内部异常"
 					});
+				}); */
+				summer.toast({
+					msg: "敬请期待"
 				});
 			} else {
 				summer.toast({
@@ -205,7 +211,7 @@
 
 		function changePsw() {
 			if (isLogin()) {
-				summer.openWin({
+				/* summer.openWin({
 					id: 'changePsw',
 					url: 'html/changePsw/index.html',
 					create: false,
@@ -227,6 +233,9 @@
 							method: "submitPsw()"
 						}]
 					}
+				}); */
+				summer.toast({
+					msg: "敬请期待"
 				});
 			} else {
 				summer.toast({

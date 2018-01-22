@@ -46,13 +46,13 @@
 				</h2>
 			<div class="xmgl_con">
 				<ul class="xmgl_list clearfix">
-					<li onclick="mission()" class="">
+					<!-- <li onclick="mission()" class="">
 						<dl>
 							<dt class="iconfont icon-submit" style="color:#c79644"></dt>
 							<dd>审批管理</dd>
 						</dl>
 						<span class="missionNum" v-show='missionNum>0'>{{missionNum}}</span>
-					</li>
+					</li> -->
 					<li onclick="openFastReport()">
 						<dl>
 							<dt class="iconfont icon-nav_house" style="color:#88d27c"></dt>
@@ -163,7 +163,7 @@
 	</div>
 	<script>
 		summerready = function() {
-			if (isLogin()) {
+			/* if (isLogin()) {
 				getMissionData(); //获取代办任务个数
 			}
 			summer.setRefreshHeaderInfo({
@@ -177,7 +177,7 @@
 			}, function(ret, err) {
 				//通常在这里从服务器加载数据，t
 				getMissionData();
-			});
+			}); */
 			// 关闭启动图
 			setTimeout(function() {
 				summer.hideLaunch();
@@ -188,9 +188,9 @@
 			});
 		}
 
-		function getMissionData() {
+		/* function getMissionData() {
 			fistPage.getMissionData();
-		}
+		} */
 		var fistPage = new Vue({
 			el: '#win',
 			data: {
