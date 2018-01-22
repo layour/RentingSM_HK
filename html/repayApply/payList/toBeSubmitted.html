@@ -17,7 +17,7 @@
 </head>
 
 <body>
-	<div class="um-frame" id="index">
+	<div class="um-frame" id="index" v-cloak>
 		<div class="um-header-light">
 			<div class="sera">
 				<div class="s-box" onclick="opensearch()">
@@ -33,23 +33,23 @@
 			<ul class="userList">
 				<li v-for="k in items">
 					<div class="title">
-						<span class="name">{{k.RENTER_NAME}}</span>
-						<span class="state">{{k.CLERK_NAME}}</span>
+						<span class="name">{{k.cstNm}}</span>
+						<span class="state">{{k.splNm}}</span>
 						<span class="iconfont icon-customer"></span>
 					</div>
-					<div class="content" @click="payDetail(k.ID,k.PROJECT_ID,k.JBPM_ID ? k.JBPM_ID : null,k.PAYMENT_ID)">
+					<div class="content" @click="payDetail(k.id)">
 						<div class="leftCon">
-							<p class="p1">放款金额：￥{{k.TOPRIC_SUBFIRENT}}</p>
-							<p class="p2">合同号：{{k.LEASE_CODE}}</p>
-							<p class="p3">支付表号：{{k.PAYLIST_CODE}}</p>
-							<p class="p4">放款时间：{{k.BEGGIN_DATE}}</p>
+							<p class="p1">放款金额：￥{{k.actPayAmt}}</p>
+							<p class="p2">合同号：{{k.contNo}}</p>
+							<p class="p3">支付表号：{{k.paySchNo}}</p>
+							<p class="p4">放款时间：{{k.actPayTm}}</p>
 						</div>
 						<div class="enter">
 							<i class="iconfont icon-enter"></i>
-							<b>{{k.PSTATUS_NM}}</b>
+							<b>{{k.payStsCd}}</b>
 						</div>
 					</div>
-					<div class="footer" v-bind:style="[k.PSTATUS_NM == '未放款' ? {'display':'block'} : {'display':'none'}]">
+					<div class="footer" v-bind:style="[k.payStsCd == '未申请' ? {'display':'block'} : {'display':'none'}]">
 						<ul class="footerList">
 							<li class="first" @click="advance(k.ID,k.PROJECT_ID,k.PAY_ID,k.PAYMENT_ID)">
 								<div>
@@ -69,199 +69,202 @@
 			</ul>
 		</div>
 	</div>
-	<script type="text/javascript">
-		var toBeSubmitted = new Vue({
-			el: '#index',
-			data: {
-				items: [],
-				totalPage: null,
-				num: 1,
-				resetData: false
-			},
-			methods: {
-				payDetail(userId, PROJECT_ID, JBPM_ID, PAYMENT_ID) {
-					summer.openWin({
-						id: 'checkPay',
-						url: 'html/repayApply/checkPay/index.html',
-						create: false,
-						type: 'actionBar',
-						actionBar: {
-							title: "付款查看",
-							titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
-							backgroundColor: "#039be5",
-							leftItem: {
-								image: "img/back.png",
-								method: "", //返回按钮自定义事件
-								text: "返回",
-								textColor: "#ffffff" //返回文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
-							}
-						},
-						pageParam: {
-							info: {
-								userId: userId,
-								PROJECT_ID: PROJECT_ID,
-								JBPM_ID: JBPM_ID,
-								PAYMENT_ID: PAYMENT_ID
-							}
+</body>
+<script type="text/javascript">
+	var toBeSubmitted = new Vue({
+		el: '#index',
+		data: {
+			items: [],
+			totalPage: null,
+			num: 1,
+			resetData: false
+		},
+		methods: {
+			payDetail(userId) {
+				summer.openWin({
+					id: 'checkPay',
+					url: 'html/repayApply/checkPay/index.html',
+					create: false,
+					type: 'actionBar',
+					actionBar: {
+						title: "付款查看",
+						titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
+						backgroundColor: "#039be5",
+						leftItem: {
+							image: "img/back.png",
+							method: "", //返回按钮自定义事件
+							text: "返回",
+							textColor: "#ffffff" //返回文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
 						}
-					});
-				},
-				advance(userId,PROJECT_ID,PAY_ID,PAYMENT_ID) {
-					summer.openWin({
-						id: 'payApply',
-						url: 'html/repayApply/payApply/index.html',
-						create: false,
-						type: 'actionBar',
-						actionBar: {
-							title: "付款申请",
-							titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
-							backgroundColor: "#039be5",
-							leftItem: {
-								image: "img/back.png",
-								method: "", //返回按钮自定义事件
-								text: "返回",
-								textColor: "#ffffff" //返回文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
-							},
-							rightItems: [{
-								type: "text",
-								text: "下一步",
-								textColor: "#ffffff",
-								method: "payApply.toApply()"
-							}]
-						},
-						pageParam: {
-							show: false,
-							userId: userId,
-							PROJECT_ID: PROJECT_ID,
-							PAY_ID: PAY_ID,
-							PAYMENT_ID: PAYMENT_ID
-						}
-					});
-				},
-				normal(userId,PROJECT_ID,PAY_ID,PAYMENT_ID) {
-					summer.openWin({
-						id: 'payApply',
-						url: 'html/repayApply/payApply/index.html',
-						create: false,
-						type: 'actionBar',
-						actionBar: {
-							title: "付款申请",
-							titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
-							backgroundColor: "#039be5",
-							leftItem: {
-								image: "img/back.png",
-								method: "", //返回按钮自定义事件
-								text: "返回",
-								textColor: "#ffffff" //返回文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
-							},
-							rightItems: [{
-								type: "text",
-								text: "下一步",
-								textColor: "#ffffff",
-								method: "payApply.toApply()"
-							}]
-						},
-						pageParam: {
-							show: true,
-							userId: userId,
-							PROJECT_ID: PROJECT_ID,
-							PAY_ID: PAY_ID,
-							PAYMENT_ID: PAYMENT_ID
-						}
-					});
-				}
-			}
-		});
-		summerready = function() {
-			function getData(pageNum) {
-				summer.showProgress();
-				ajaxRequest({
-					type: 'post',
-					url: 'appservice/paytable/paylist',
-					param: {
-						"pageNo": pageNum,
-						"pageSize": 10,
-						"PSTATUS":"1"
-					}
-				}, function(res) {
-					summer.hideProgress();
-					var Data;
-					if (Object.prototype.toString.call(res.data) === '[object String]') {
-						Data = JSON.parse(res.data);
-					} else {
-						Data = res.data;
-					}
-					if (Data.flag == 1) {
-						toBeSubmitted.totalPage = Data.datas.totalPage;
-						if (Data.datas.list.length < 1) {
-							createNull("content", "../../../img/empty.png");
-							$('#content').css('display','block');
-						} else {
-							$('#content').css('display','none');
-							if (toBeSubmitted.resetData) {
-								toBeSubmitted.items = Data.datas.list;
-							} else {
-								toBeSubmitted.items.push(...Data.datas.list);
-							}
+					},
+					pageParam: {
+						info: {
+							userId: userId
 						}
 					}
-					console.log(toBeSubmitted.items);
-				}, function(err) {
-					summer.hideProgress();
-					summer.toast({
-						msg: "暂无数据"
-					});
-					console.log(err);
 				});
-			};
-			getData(toBeSubmitted.num);
-			summer.setRefreshHeaderInfo({
-				visible: true,
-				loadingImg: 'img/refresh.png',
-				bgColor: '#ffffff',
-				textColor: '#aaaaaa',
-				textDown: '下拉刷新...',
-				textUp: '松开刷新...',
-				showTime: true
-			}, function(ret, err) {
-				//通常在这里从服务器加载数据
-				toBeSubmitted.resetData = true;
-				getData(1);
-				summer.refreshHeaderLoadDone(); //加载完成后调用方法恢复组件到默认状态
-			});
-			summer.setRefreshFooterInfo({
-				visible: true,
-				loadingImg: 'img/refresh.png',
-				bgColor: '#ffffff',
-				textColor: '#aaaaaa',
-				textDown: '上拉刷新...',
-				textUp: '松开刷新...',
-				showTime: true
-			}, function(ret, err) {
-				//通常在这里从服务器加载数据，
-				var num = toBeSubmitted.num++;
-				if (num > toBeSubmitted.totalPage) {
-					summer.toast({
-						msg: "没有更多了"
-					});
-				} else {
-					toBeSubmitted.resetData = false;
-					getData(num);
-				}
-				summer.refreshFooterLoadDone(); //加载完成后调用方法恢复组件到默认状态
-			});
+			},
+			advance(userId, PROJECT_ID, PAY_ID, PAYMENT_ID) {
+				summer.openWin({
+					id: 'payApply',
+					url: 'html/repayApply/payApply/index.html',
+					create: false,
+					type: 'actionBar',
+					actionBar: {
+						title: "付款申请",
+						titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
+						backgroundColor: "#039be5",
+						leftItem: {
+							image: "img/back.png",
+							method: "", //返回按钮自定义事件
+							text: "返回",
+							textColor: "#ffffff" //返回文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
+						},
+						rightItems: [{
+							type: "text",
+							text: "下一步",
+							textColor: "#ffffff",
+							method: "payApply.toApply()"
+						}]
+					},
+					pageParam: {
+						show: false,
+						userId: userId,
+						PROJECT_ID: PROJECT_ID,
+						PAY_ID: PAY_ID,
+						PAYMENT_ID: PAYMENT_ID
+					}
+				});
+			},
+			normal(userId, PROJECT_ID, PAY_ID, PAYMENT_ID) {
+				summer.openWin({
+					id: 'payApply',
+					url: 'html/repayApply/payApply/index.html',
+					create: false,
+					type: 'actionBar',
+					actionBar: {
+						title: "付款申请",
+						titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
+						backgroundColor: "#039be5",
+						leftItem: {
+							image: "img/back.png",
+							method: "", //返回按钮自定义事件
+							text: "返回",
+							textColor: "#ffffff" //返回文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
+						},
+						rightItems: [{
+							type: "text",
+							text: "下一步",
+							textColor: "#ffffff",
+							method: "payApply.toApply()"
+						}]
+					},
+					pageParam: {
+						show: true,
+						userId: userId,
+						PROJECT_ID: PROJECT_ID,
+						PAY_ID: PAY_ID,
+						PAYMENT_ID: PAYMENT_ID
+					}
+				});
+			}
 		}
-		// 搜索
-		function opensearch() {
-			summer.openWin({
-				id: 'search',
-				url: 'html/fastReport/search.html',
-				pageParam: {
-					source: "program"
+	});
+	summerready = function () {
+		function getData(pageNum) {
+			summer.showProgress();
+			ajaxRequest({
+				type: 'get',
+				url: 'appservice/cap/cappayinfo/capPayList',
+				param: {
+					"pageNo": pageNum,
+					"pageSize": 10,
+					"payStsCd": "1"
 				}
+			}, function (res) {
+				summer.hideProgress();
+				var Data;
+				if (Object.prototype.toString.call(res.data) === '[object String]') {
+					Data = JSON.parse(res.data);
+				} else {
+					Data = res.data;
+				}
+				if (Data.flag == 1) {
+					toBeSubmitted.totalPage = Data.datas.count;
+					if (Data.datas.list.length < 1) {
+						createNull("content", "../../../img/empty.png");
+						$('#content').css('display', 'block');
+					} else {
+						$('#content').css('display', 'none');
+						Data.datas.list.forEach((e) => {
+							if (e.payStsCd == "1") {
+								e.payStsCd = "未申请"
+							} else if (e.payStsCd == "2") {
+								e.payStsCd = "申请中"
+							} else if (e.payStsCd == "3") {
+								e.payStsCd = "已放款"
+							}
+						});
+						if (toBeSubmitted.resetData) {
+							toBeSubmitted.items = Data.datas.list;
+						} else {
+							toBeSubmitted.items.push(...Data.datas.list);
+						}
+					}
+				}
+			}, function (err) {
+				summer.hideProgress();
+				summer.toast({
+					msg: "暂无数据"
+				});
+				console.log(err);
 			});
 		};
-	</script>
-</body>
+		getData(toBeSubmitted.num);
+		summer.setRefreshHeaderInfo({
+			visible: true,
+			loadingImg: 'img/refresh.png',
+			bgColor: '#ffffff',
+			textColor: '#aaaaaa',
+			textDown: '下拉刷新...',
+			textUp: '松开刷新...',
+			showTime: true
+		}, function (ret, err) {
+			//通常在这里从服务器加载数据
+			toBeSubmitted.resetData = true;
+			getData(1);
+			summer.refreshHeaderLoadDone(); //加载完成后调用方法恢复组件到默认状态
+		});
+		summer.setRefreshFooterInfo({
+			visible: true,
+			loadingImg: 'img/refresh.png',
+			bgColor: '#ffffff',
+			textColor: '#aaaaaa',
+			textDown: '上拉刷新...',
+			textUp: '松开刷新...',
+			showTime: true
+		}, function (ret, err) {
+			//通常在这里从服务器加载数据，
+			var num = toBeSubmitted.num++;
+			if (num > toBeSubmitted.totalPage) {
+				summer.toast({
+					msg: "没有更多了"
+				});
+			} else {
+				toBeSubmitted.resetData = false;
+				getData(num);
+			}
+			summer.refreshFooterLoadDone(); //加载完成后调用方法恢复组件到默认状态
+		});
+	}
+	// 搜索
+	function opensearch() {
+		summer.setStorage("searchFromSource", "payList");
+		summer.openWin({
+			id: 'search',
+			url: 'html/fastReport/search.html',
+		});
+	};
+</script>
 
 </html>
