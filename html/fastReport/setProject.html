@@ -641,6 +641,8 @@
 			});
 		}
 		function openBank(){
+			var projectId = setProgect.project_Id;
+			var clintId = setProgect.customId;
 			summer.openWin({
 				id: 'bankList',
 				url: 'html/fastReport/bankList.html',
@@ -660,7 +662,7 @@
 						type: "text",
 						text: "保存",
 						textColor: "#ffffff", //文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
-						method: "saveBank()" //在打开的window中自定义事件
+						method: "bankInfo.saveBank()" //在打开的window中自定义事件
 					}]
 				},
 				pageParam: {
