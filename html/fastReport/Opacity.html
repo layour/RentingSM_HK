@@ -90,7 +90,7 @@
 					type: 'post',
 					url: 'appservice/project/prjbscinfo/removeByIds.do',
 					param: {
-					"ids":[programId],
+					"ids":"["+programId+"]",
 					}
 				}, function (res) {
 					console.log(res);

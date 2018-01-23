@@ -26,13 +26,13 @@
 				<dl>
 					<dt class="iconfont icon-login"></dt>
 					<dd>
-						<input class="workNum" type="text" value="" placeholder="工号">
+						<input class="workNum" type="text" value="hktest001" placeholder="工号">
 					</dd>
 				</dl>
 				<dl>
 					<dt class="iconfont icon-key"></dt>
 					<dd>
-						<input class="psw" type="password" value="" placeholder="密码">
+						<input class="psw" type="password" value="000000" placeholder="密码">
 					</dd>
 				</dl>
 				<button type="button" class="loginBtn" onclick="toLogin()">登录</button>
@@ -102,10 +102,10 @@
 						};
 						summer.setStorage("userinfo", userinfo);
 						// 调用首页获取代办任务数量
-						summer.execScript({
+						/* summer.execScript({
 							winId: 'homePage',
 							script: "getMissionData()"
-						});
+						}); */
 						summer.closeToWin({
 							id: "homePage"
 						});

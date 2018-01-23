@@ -241,10 +241,10 @@
 			getData(id) {
 				let self = this;
 				ajaxRequest({
-					type: 'post',
-					url: 'appservice/foundproject/loadProjectPage',
+					type: 'get',
+					url: 'appservice/project/prjbscinfo/getById.do',
 					param: {
-						"PROJECT_ID": id,
+						"id": id,
 					}
 				}, function(res) {
 					summer.hideProgress();
