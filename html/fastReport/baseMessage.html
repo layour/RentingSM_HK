@@ -55,12 +55,12 @@
 							 <span class=""> <span  class="first">{{AREA_ID_NM}} {{CITY_ID_NM}}  </span> </span>
 						</p>
 					</li>
-					<li  v-else>
+					<!-- <li  v-else>
 						<p class="pl10 pr10 tr" @click="selectAddr">
 							<span class="fl">省市</span>
 							 <span class=""> <span  class="first">{{AREA_ID_NM}} {{CITY_ID_NM}}  </span> <i class="icon iconfont icon-enter"></i></span>
 						</p>
-					</li>
+					</li> -->
 					<li  v-if='hasProjectId'>
 						<p class="pl10 pr10 tr" >
 							<span class="fl">项目名称</span>
@@ -223,10 +223,11 @@
 				 getData(id){
 					 let self=this;
 					 ajaxRequest({
-						 type: 'post',
-						 url: 'appservice/foundproject/loadProjectPage',
+						 type: 'get',
+						 url: 'appservice/project/prjbscinfo/toAddPrj.do',
 						 param: {
-							  PROJECT_ID:id
+							  "cstId.id":self.customId,
+							  "id":id
 						 }
 					 }, function(res) {
 						 summer.hideProgress();
@@ -236,7 +237,6 @@
 								self.CITY_ID_NM =res.data.datas.ProjectObj.CITY_NAME
 								self.PROJECT_NAME =res.data.datas.ProjectObj.PROJECT_NAME
 								self.PROJECT_ID =res.data.datas.ProjectObj.PROJECT_ID
-
 						 }
 					 }, function(err) {
 						 console.log(err);
@@ -307,29 +307,50 @@
 						summer.toast({msg:"请选择项目类型"});
 						return;
 					}
+					if(this.taskStyle==""){
+						summer.toast({msg:"请选择业务类型"});
+						return;
+					}
+					if(this.lendRuleStyle==""){
+						summer.toast({msg:"请选择放款规则"});
+						return;
+					}
 					// }else if(this.CITY_ID==""){
 					// 	summer.toast({msg:"请选择省市"});
 					// 	return;
 					// }
 					//此时需要调后端的ajax请求数据
-					let _programStyle=this.programStyle;
-					let _area_id=this.taskStyle;
-					let PLATFORM_TYPE;
+					
 					let customId=this.customId;
-					// baseMessage.totalData.business.map((e,i)=>{
-					// 	if(e.FLAG==_programStyle){
-					// 		PLATFORM_TYPE=baseMessage.totalData.business[i].CODE;
-					// 	}
-					// });
+			        let _programStyle=this.programStyle;
+					let _taskStyle=this.taskStyle;
+					let _lendRuleStyle=this.lendRuleStyle;
+			  		var prjTypCd,bizTyp,fkgzCd;
+
+					baseMessage.totalData.prjTypCdArray.map((e,i)=>{
+						if(e.label==_programStyle){
+							bizTyp=baseMessage.totalData.prjTypCdArray[i].value;
+						}
+					});
+					baseMessage.totalData.bizTypeArray.map((e,i)=>{
+						if(e.label==_taskStyle){
+							prjTypCd=baseMessage.totalData.bizTypeArray[i].value;
+						}
+					});
+					baseMessage.totalData.fkgzCd.map((e,i)=>{
+						if(e.label==_lendRuleStyle){
+							fkgzCd=baseMessage.totalData.fkgzCd[i].value;
+						}
+					});
 
 					summer.showProgress();
 					ajaxRequest({
 						  type: 'get',
 						  url: 'appservice/project/prjbscinfo/add.do',
 						  param: {
-								 "prjTypCd":"1",
-								 "bizTyp":"1",
-								 "fkgzCd":"1",
+								 "prjTypCd":prjTypCd,
+								 "bizTyp":bizTyp,
+								 "fkgzCd":fkgzCd,
 								 "sign":"1",
 								 "cstId.id":customId
 						  }
