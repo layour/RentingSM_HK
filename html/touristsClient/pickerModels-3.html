@@ -12,7 +12,7 @@
 			<div class="um-content pickerModels">
         <ul class="modelsList">
           <li v-for="(it,index) in modelsList" @click="pickerModels(it)" :key="index">
-						{{it.NAME}}
+						{{it.equMdl}}
 					</li>
         </ul>
       </div>
@@ -26,6 +26,7 @@
     <script>
 				summerready=function() {
 					pickerModelsVue3.id=summer.pageParam.id;
+					pickerModelsVue3.equSet=summer.pageParam.equSet;
 					pickerModelsVue3.getData();
 				}
         var pickerModelsVue3=new Vue({
@@ -33,6 +34,7 @@
           data(){
             return {
 							id:'',
+							equSet:'',
               modelsList:[]
             }
           },
@@ -43,30 +45,42 @@
 							var _this=this;
 							console.log(this.id);
 							ajaxRequest({
-								type:'POST',
+								type:'GET',
 								url:'appservice/foundproject/queryCarBySeries',
 								param:{
-									CATENA_ID:_this.id
+									braId:_this.id,
+									equSet:_this.equSet
 								}
 							},function(res){
 								console.log("res",res);
-								if(res.data.datas.length==0){
+								if(res.data.datas.braList==0){
 									createNull("pickerModels-3")
 								}else {
-									_this.modelsList=res.data.datas
+									_this.modelsList=res.data.datas.braList
 								}
 							},function(err){
 								console.log("err",err);
 							})
 						},
 						pickerModels(it){
-							summer.setStorage('pickerModels3',JSON.stringify(it));
-							summer.execScript({
-							    winId: 'addCar',
-							    script: 'getModels()'
-							});
-							summer.closeToWin({
-								id:'addCar'
+							summer.setStorage('pickerModels3',it.equMdl);
+							summer.openWin({
+								id:'pickerModels-4',
+								url:'html/touristsClient/pickerModels-4.html',
+								create:false,
+								type:'actionBar',
+								pageParam:{id:_this.id,equSet:_this.equSet,equMdl:it.equMdl},
+								actionBar: {
+						      title: it.equMdl,
+						      titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
+						      backgroundColor: "#039BE5",
+						      leftItem:{
+						          image: "img/back.png",
+						          method:'',//返回按钮自定义事件
+						          text:"返回",
+						          textColor:"#ffffff"  //返回文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
+						      }
+								}
 							})
 						}
 					}

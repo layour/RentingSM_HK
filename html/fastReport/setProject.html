@@ -4,7 +4,6 @@
 <head>
 	<meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1">
 	<meta charset="UTF-8">
-	<title></title>
 	<link rel="stylesheet" href="../../css/iuapmobile.um.css">
 	<link rel="stylesheet" href="../../css/fonts/iconfont.css">
 	<link rel="stylesheet" href="../../css/mint.css">
@@ -336,10 +335,10 @@
 				url = '',
 				title = '';
 			if (param == 'addCarList') {
-				// url='html/touristsClient/addCar.html';
-				// title="添加车辆";
-				url = "html/touristsClient/addCarList.html";
-				title = '添加设备';
+				url='html/touristsClient/addCar.html';
+				title="添加车辆";
+				// url = "html/touristsClient/addCarList.html";
+				// title = '添加设备';
 				if (!setProgect.project_Id) {
 					summer.toast({
 						msg: '请先完善项目基础信息'
@@ -367,9 +366,9 @@
 						},
 						rightItems: [{
 							type: "text",
-							text: "添加",
-							textColor: "#ffffff",
-							method: "addCar()"
+							text: "确定",
+							method: 'goBack()',
+							textColor: "#ffffff"
 						}]
 					}
 				})

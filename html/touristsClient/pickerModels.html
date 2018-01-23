@@ -12,21 +12,14 @@
 	<body>
 		<div class="um-win" id="pickerModels" v-cloak>
 			<div class="um-content addCar">
-				<div class="um-input-group pr" id='search'>
+				<!-- <div class="um-input-group pr" id='search'>
           <i class="icon iconfont icon-nav_search"></i>
           <input type="text" name="search" class="form-control"  placeholder="搜索">
 					<span onclick="satartSearch('all')">取消</span>
-        </div>
+        </div> -->
 				<ul class="dealerList companyList">
           <li @click="pickerCarModels(item)" v-for="(item,index) in modelsList" :key="index">{{item.PRODUCT_NAME}}</li>
         </ul>
-				<!-- <mt-index-list>
-					<mt-index-section v-for="(item,index) in modelsList" :key="index" :index="index">
-						<div v-for="(it,i) in item"  @click="pickerCarModels(it)"  :key="i">
-							<mt-cell  :title="it.name"></mt-cell>
-						</div>
- 					</mt-index-section>
-				</mt-index-list> -->
       </div>
     </div>
 		<script src="../../js/summer.js" ></script>
@@ -39,9 +32,8 @@
     <script>
 				summerready=function() {
 					bindEvents();
-					console.log(summer.pageParam.id);
-					pickerModelsVue.id=summer.pageParam.id;
-					pickerModelsVue.getData('');
+					console.log(summer.pageParam.list);
+					pickerModelsVue.modelsList=JSON.parse(summer.pageParam.list);
 				}
 				function bindEvents(){
 						$('.form-control').on('input propertychange',satartSearch);
@@ -93,15 +85,15 @@
 							})
 						},
 						pickerCarModels(it){
-							summer.setStorage('pickerModels1',JSON.stringify(it));
+							summer.setStorage('pickerModels1',it.mfrNm);
 							summer.openWin({
 								id:'pickerModels-2',
 								url:'html/touristsClient/pickerModels-2.html',
 								create:false,
 								type:'actionBar',
-								pageParam:{id:it.PRODUCT_ID},
+								pageParam:{id:it.id},
 								actionBar: {
-						      title: it.PRODUCT_NAME,
+						      title: it.mfrNm,
 						      titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
 						      backgroundColor: "#039BE5",
 						      leftItem:{

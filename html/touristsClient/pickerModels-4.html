@@ -8,11 +8,11 @@
 		<link rel="stylesheet" href="./car.min.css">
 	</head>
 	<body>
-		<div class="um-win" id="pickerModels-2">
+		<div class="um-win" id="pickerModels-4">
 			<div class="um-content pickerModels">
         <ul class="modelsList">
           <li v-for="(it,index) in modelsList" @click="pickerModels(it)" :key="index">
-						{{it.equSet}}
+						{{it.NAME}}
 					</li>
         </ul>
       </div>
@@ -24,16 +24,19 @@
 		<script src="../../js/common.js" ></script>
 		<script src="../../js/Frameworks/iuapmobile.frameworks.ui.js" ></script>
     <script>
-			summerready=function() {
-				pickerModelsVue2.id=summer.pageParam.id;
-				console.log(pickerModelsVue2.id,summer.pageParam.id);
-				pickerModelsVue2.getData();
-			}
-      var pickerModelsVue2=new Vue({
-          el:'#pickerModels-2',
+				summerready=function() {
+					pickerModelsVue3.id=summer.pageParam.id;
+          pickerModelsVue3.equSet=summer.pageParam.equSet;
+          pickerModelsVue3.equMdl=summer.pageParam.equMdl;
+					pickerModelsVue3.getData();
+				}
+        var pickerModelsVue3=new Vue({
+          el:'#pickerModels-4',
           data(){
             return {
 							id:'',
+              equSet:'',
+              equMdl:'',
               modelsList:[]
             }
           },
@@ -42,16 +45,19 @@
 					methods:{
 						getData(){
 							var _this=this;
+							console.log(this.id);
 							ajaxRequest({
 								type:'GET',
 								url:'appservice/project/prjprdbscinfo/queryByBra.do',
 								param:{
-									braId:_this.id
+									braId:_this.id,
+                  equSet:_this.equSet,
+                  equMdl:_this.equMdl
 								}
 							},function(res){
 								console.log("res",res);
-								if(res.data.datas.modelsList==0){
-									createNull("pickerModels-2")
+								if(res.data.datas.braList==0){
+									createNull("pickerModels-4")
 								}else {
 									_this.modelsList=res.data.datas.braList
 								}
@@ -60,25 +66,13 @@
 							})
 						},
 						pickerModels(it){
-							summer.setStorage('pickerModels2',it.equSet);
-							var _this=this;
-							summer.openWin({
-								id:'pickerModels-3',
-								url:'html/touristsClient/pickerModels-3.html',
-								create:false,
-								type:'actionBar',
-								pageParam:{braId:_this.id,equSet:it.equSet},
-								actionBar: {
-						      title: it.equSet,
-						      titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
-						      backgroundColor: "#039BE5",
-						      leftItem:{
-						          image: "img/back.png",
-						          method:'',//返回按钮自定义事件
-						          text:"返回",
-						          textColor:"#ffffff"  //返回文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
-						      }
-								}
+							summer.setStorage('pickerModels4',it.equNm);
+							summer.execScript({
+							    winId: 'addCar',
+							    script: 'getModels()'
+							});
+							summer.closeToWin({
+								id:'addCar'
 							})
 						}
 					}
@@ -86,3 +80,4 @@
     </script>
   </body>
 </html>
+s
