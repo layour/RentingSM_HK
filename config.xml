@@ -2,9 +2,9 @@
 
 <application> 
   <app_start>html/guide/index.html</app_start>  
-  <app_name>复昌租赁</app_name>  
-  <project_name>RentingSM_FC</project_name>  
-  <package_name>com.skywish.rentingsm.fc</package_name>  
+  <app_name>华科租赁</app_name>  
+  <project_name>RentingSM_HK</project_name>  
+  <package_name>com.skywish.rentingsm.hk</package_name>  
   <frame_name>summer-um</frame_name>  
   <theme>blue</theme>  
   <icon relativePath="css/themes/default/app">app</icon>  
@@ -25,7 +25,7 @@
   <import id="cordova-plugin-file" type="web" ref="cordova"/>  
   <!--import id="cordova-plugin-summer-personscan" type="web" ref="cordova"/-->  
   <import id="cordova-plugin-amap" type="web" ref="cordova"> 
-    <parameter>AMAP_KEY=509c705cf6786d61f4a62913efb94029</parameter> 
+    <parameter>AMAP_KEY=1ce883e34f61ade8e137a400be5f9f2f</parameter> 
   </import>  
   <!--import id="summer-plugin-video" type="web" ref="cordova"/--> 
 </application>
