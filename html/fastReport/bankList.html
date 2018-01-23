@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1">
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="../../css/iuapmobile.um.css">
+    <link rel="stylesheet" href="../../css/fonts/iconfont.css">
+    <link rel="stylesheet" href="css/bankList.css">
+    <link rel="stylesheet" href="../../css/mint.css">
+    <script src="../../js/summer.js"></script>
+    <script src="../../js/jquery.min.js"></script>
+    <script src="../../js/Frameworks/iuapmobile.frameworks.ui.js"></script>
+    <script src="../../js/font.js"></script>
+    <script src="../../js/vue.js"></script>
+    <script src="../../js/mint.js"></script>
+    <script src="../../js/common.js"></script>
+</head>
+
+<body>
+    <div class="um-win" id="index">
+        <div class="um-content" v-cloak>
+            <ul class="loanList">
+                <li>
+                    <span>开户银行</span>
+                    <div @click="sureBank">
+						<span class="iconfont icon-enter"></span>
+						<i v-bind:style="[insurerBank == '请选择' ? {'color':'#9e9e9e'} : {'color':'#333'}]">{{insurerBank}}</i>
+					</div>
+                </li>
+                <li>
+                    <span>开户名称</span>
+                    <input v-model="kaihuName" type="text" placeholder="请输入" />
+                </li>
+                <li>
+                    <span>银行账号</span>
+                    <input v-model="bankID" type="number" placeholder="请输入" />
+                </li>
+                <li>
+                    <span>账号类型</span>
+                    <div @click="sureType">
+                        <span class="iconfont icon-enter"></span>
+                        <i v-bind:style="[insurerType == '请选择' ? {'color':'#9e9e9e'} : {'color':'#333'}]">{{insurerType}}</i>
+                    </div>
+                </li>
+                <li>
+                    <span>证件类型</span>
+                    <div @click="surePaper">
+                        <span class="iconfont icon-enter"></span>
+                        <i v-bind:style="[insurerPaper == '请选择' ? {'color':'#9e9e9e'} : {'color':'#333'}]">{{insurerPaper}}</i>
+                    </div>
+                </li>
+                <li>
+                    <span>证件号码</span>
+                    <input v-model="paperNum" type="number" placeholder="请输入" />
+                </li>
+                <li>
+                    <span>是否为代扣卡</span>
+                    <div class="type">
+                        <span v-bind:class="{ active: isActive }" @click="chooseYes">是</span>
+                        <span v-bind:class="{ active: !isActive }" @click="chooseNo">否</span>
+                    </div>
+                </li>
+            </ul>
+            <section v-if="bankStatus" class="insurer">
+				<mt-picker :slots="bankSlots" @change="onMethodChange"></mt-picker>
+				<p><span class="" @click="sureBank">取消</span><span class="" @click="sureBank('confirm')">确定</span></p>
+			</section>
+            <section v-if="typeStatus" class="insurer">
+				<mt-picker :slots="typeSlots" @change="onTypeChange"></mt-picker>
+				<p><span class="" @click="sureType">取消</span><span class="" @click="sureType('confirm')">确定</span></p>
+            </section>
+            <section v-if="paperStatus" class="insurer">
+                <mt-picker :slots="paperSlots" @change="onPaperChange"></mt-picker>
+                <p><span class="" @click="surePaper">取消</span><span class="" @click="surePaper('confirm')">确定</span></p>
+            </section>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var bankInfo = new Vue({
+            el: '#index',
+            data: {
+                projectId: "",
+                clintId: "",
+                // 开户名称
+                kaihuName: "",
+                // 银行帐号
+                bankID: "",
+                // 证件号码
+                paperNum: "",
+                // 是否代扣
+                withholding: true,
+                // 单选样式
+                isActive: true,
+                // 开户银行
+                bankStatus:false,
+                pickedBank:"",
+                insurerBank:"请选择",
+                bankArr:[],
+                bankSlots: [{
+                    flex: 1,
+                    values: ['银行一', '银行二'],
+                    defaultIndex: 0,
+                    className: 'slot1',
+                    textAlign: 'center'
+                }],
+                // 账号类型
+                typeStatus:false,
+                pickedType:"",
+                insurerType:"请选择",
+                typeArr:[],
+                typeSlots: [{
+                    flex: 1,
+                    values: ['账号类型一', '账号类型二'],
+                    defaultIndex: 0,
+                    className: 'slot1',
+                    textAlign: 'center'
+                }],
+                // 证件类型
+                paperStatus:false,
+                pickedPaper:"",
+                insurerPaper:"请选择",
+                paperArr:[],
+                paperSlots: [{
+                    flex: 1,
+                    values: ['证件类型一', '证件类型二'],
+                    defaultIndex: 0,
+                    className: 'slot1',
+                    textAlign: 'center'
+                }]
+            },
+            methods: {
+                // 选择开户银行
+                onMethodChange(picker, values) {
+					this.pickedBank = values[0];
+				},
+				sureBank(param) {
+					this.bankStatus = !this.bankStatus;
+                    this.typeStatus = false;
+                    this.paperStatus = false;
+					if (param == 'confirm') {
+						this.insurerBank = this.pickedBank;
+					}
+                },
+                // 选择账号类型
+                onTypeChange(picker, values) {
+					this.pickedType = values[0];
+				},
+				sureType(param) {
+					this.typeStatus = !this.typeStatus;
+                    this.bankStatus = false;
+                    this.paperStatus = false;
+					if (param == 'confirm') {
+						this.insurerType = this.pickedType;
+					}
+                },
+                // 选择证件类型
+                onPaperChange(picker, values) {
+					this.pickedPaper = values[0];
+				},
+				surePaper(param) {
+					this.paperStatus = !this.paperStatus;
+                    this.bankStatus = false;
+                    this.typeStatus = false;
+					if (param == 'confirm') {
+						this.insurerPaper = this.pickedPaper;
+					}
+                },
+                // 是否代扣
+                chooseYes() {
+                    this.isActive = true;
+                    this.withholding = true;
+                },
+                chooseNo() {
+                    this.isActive = false;
+                    this.withholding = false;
+                },
+                // 保存
+                saveBank(){
+                    if (this.insurerBank == "请选择") {
+                        summer.toast({
+                            msg: "请选择开户银行"
+                        });
+                        return;
+                    } else if (this.kaihuName == "") {
+                        summer.toast({
+                            msg: "请输入开户名称"
+                        });
+                        return;
+                    }  else if (this.bankID == "") {
+                        summer.toast({
+                            msg: "请输入银行帐号"
+                        });
+                        return;
+                    } else if (this.insurerType == "请选择") {
+                        summer.toast({
+                            msg: "请选择账号类型"
+                        });
+                        return;
+                    } else if (this.insurerPaper == "请选择") {
+                        summer.toast({
+                            msg: "请选择证件类型"
+                        });
+                        return;
+                    } else if (this.paperNum == "") {
+                        summer.toast({
+                            msg: "请输入证件号码"
+                        });
+                        return;
+                    } 
+                    var obj = {
+                        insurerBank: this.insurerBank,
+                        kaihuName: this.kaihuName,
+                        bankID: this.bankID,
+                        insurerType: this.insurerType,
+                        insurerPaper: this.insurerPaper,
+                        paperNum: this.paperNum,
+                        withholding: this.withholding
+                    }
+                    console.log(obj);
+                    /* summer.showProgress();
+					ajaxRequest({
+						type: 'post',
+						url: 'appservice/payment/startCarPayment',
+						param: {
+							ISDEKOU: ISDEKOU,
+                            PAYMENT_TYPE: PAYMENT_TYPE,
+                            CS_PRICE: this.pledge,
+                            LENDING_MODEL: LENDING_MODEL,
+                            GPS_MONEY: this.gps,
+                            PAY_ID: this.params.PAY_ID,
+                            PAYMONEY_TYPE: PAYMONEY_TYPE,
+                            DEKOU_SQ: this.collection,
+                            LAST_MONEY: this.LAST_MONEY,
+                            PAYMENT_ID: this.PAYMENT_ID
+						}
+					}, function(res) {
+						summer.hideProgress();
+						var Data;
+						if (Object.prototype.toString.call(res.data) === '[object String]') {
+							Data = JSON.parse(res.data);
+						} else {
+							Data = res.data;
+						}
+						if (Data.flag == 1) {
+							if (Data.datas.JBPM_ID) {
+								summer.toast({
+									msg: "申请成功"
+								});
+								summer.closeToWin({
+									id: 'payList'
+								});
+							} else {
+                                summer.toast({
+                                    msg: Data.datas.data
+                                });
+                                summer.closeToWin({
+                                    id: 'payList'
+                                });
+                            }
+						} else {
+							summer.toast({
+								msg: Data.msg
+							});
+						}
+					}, function(err) {
+						summer.hideProgress();
+						summer.toast({
+							msg: "申请失败"
+						});
+						console.log(err);
+					}); */
+                }
+            }
+        });
+        summerready = function() {
+            var projectId = summer.pageParam.projectId;
+            var clintId = summer.pageParam.clintId;
+            bankInfo.projectId = projectId;
+            bankInfo.clintId = clintId;
+            /* summer.showProgress();
+            ajaxRequest({
+                type: 'post',
+                url: 'appservice/payment/queryPaymentInfo',
+                param: {
+                    PAYMENT_ID: PAYMENT_ID
+                }
+            }, function(res) {
+                summer.hideProgress();
+                var Data;
+                if (Object.prototype.toString.call(res.data) === '[object String]') {
+                    Data = JSON.parse(res.data);
+                } else {
+                    Data = res.data;
+                }
+                if (Data.flag == 1) {
+                    
+                } else {
+                    summer.toast({
+                        msg: "暂无数据"
+                    });
+                }
+            }, function(err) {
+                summer.hideProgress();
+                summer.toast({
+                    msg: "暂无数据"
+                });
+                console.log(err);
+            }); */
+        };
+    </script>
+</body>
+
+</html>

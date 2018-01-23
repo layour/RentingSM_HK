@@ -25,7 +25,30 @@
 							 <span class="right"><span v-if='programStyle' class="first">{{programStyle}}</span><span v-else class="second">请选择</span> <i class="icon iconfont icon-enter"></i></span>
 						</p>
 					</li>
-
+					<li   v-if='hasProjectId'>
+						<p class="pl10 pr10 tr">
+							<span class="fl">业务类型</span>
+							 <span class="right"><span   class="first">{{taskStyle}}</span> </span>
+						</p>
+					</li>
+					<li @click="surePickerTask" v-else>
+						<p class="pl10 pr10 tr">
+							<span class="fl">业务类型</span>
+							 <span class="right"><span v-if='taskStyle' class="first">{{taskStyle}}</span><span v-else class="second">请选择</span> <i class="icon iconfont icon-enter"></i></span>
+						</p>
+					</li>
+					<li   v-if='hasProjectId'>
+						<p class="pl10 pr10 tr">
+							<span class="fl">放款规则</span>
+							 <span class="right"><span   class="first">{{lendRuleStyle}}</span> </span>
+						</p>
+					</li>
+					<li @click="surePickerLendRule" v-else>
+						<p class="pl10 pr10 tr">
+							<span class="fl">放款规则</span>
+							 <span class="right"><span v-if='lendRuleStyle' class="first">{{lendRuleStyle}}</span><span v-else class="second">请选择</span> <i class="icon iconfont icon-enter"></i></span>
+						</p>
+					</li>
 					<li  v-if='hasProjectId'>
 						<p class="pl10 pr10 tr" >
 							<span class="fl">省市</span>
@@ -89,6 +112,18 @@
 							<span class="fl" @click="surePickerProgram">取消</span><span class="fr" @click="surePickerProgram('confirm')">确定</span>
 						</p>
 				</mt-popup>
+				<mt-popup v-model="pickerTaskStatus" position='bottom' class="pickerColor">
+					<mt-picker :slots="slots2" @change="onValuesChange2"></mt-picker>
+					<p>
+						<span class="fl" @click="surePickerTask">取消</span><span class="fr" @click="surePickerTask('confirm')">确定</span>
+					</p>
+			</mt-popup>
+			<mt-popup v-model="pickerLendRuleStatus" position='bottom' class="pickerColor">
+				<mt-picker :slots="slots3" @change="onValuesChange3"></mt-picker>
+				<p>
+					<span class="fl" @click="surePickerLendRule">取消</span><span class="fr" @click="surePickerLendRule('confirm')">确定</span>
+				</p>
+		</mt-popup>
 			</div>
 		</div>
 		<script src="../../js/summer.js" ></script>
@@ -111,8 +146,14 @@
 			  }
 			  baseMessage.totalData=baseData;
 			  baseMessage.project_Id=_project_Id;
-			  baseData.business.map((e,i) =>{
-					baseMessage.slots1[0].values.push(e.FLAG);
+			  baseData.prjTypCdArray.map((e,i) =>{
+					baseMessage.slots1[0].values.push(e.label);
+			  })
+			  baseData.bizTypeArray.map((e,i) =>{
+					baseMessage.slots2[0].values.push(e.label);
+			  })
+			  baseData.fkgzCd.map((e,i) =>{
+					baseMessage.slots3[0].values.push(e.label);
 			  })
 		  }
 		  function getAddr(){
@@ -131,11 +172,33 @@
 					contractStatus : 'electron',
 					GroupStatus : 'no',
 					programStyle : '',
+					taskStyle : '',
+					lendRuleStyle : '',
 					holdPrice : 100,
 					pickerProgramStatus:false,
 					pickerProgram:'',
+					pickerTaskStatus:false,
+					pickerTask:'',
+					pickerLendRuleStatus:false,
+					pickerLendRule:'',
 					slots1 : [{
 						flex : 1,
+						values : [],
+						defaultIndex :0,
+						className : 'slot1',
+						textAlign : 'center'
+					}],
+					slots2 : [{
+						flex : 1,
+						//values : ["大客户","零售"],
+						values : [],
+						defaultIndex :0,
+						className : 'slot1',
+						textAlign : 'center'
+					}],
+					slots3 : [{
+						flex : 1,
+						//values : ["先放款后抵押","先抵押后放款"],
 						values : [],
 						defaultIndex :0,
 						className : 'slot1',
@@ -220,40 +283,60 @@
 						this.programStyle = this.pickerProgram;
 					}
 				},
+				onValuesChange2(picker, values) {
+					this.pickerTask = values[0];
+				},
+				surePickerTask(param) {
+					this.pickerTaskStatus = !this.pickerTaskStatus;
+					if (param == 'confirm') {
+						this.taskStyle = this.pickerTask;
+					}
+				},
+				onValuesChange3(picker, values) {
+					this.pickerLendRule = values[0];
+				},
+				surePickerLendRule(param) {
+					this.pickerLendRuleStatus = !this.pickerLendRuleStatus;
+					if (param == 'confirm') {
+						this.lendRuleStyle = this.pickerLendRule;
+					}
+				},
 				save() {
 					let self=this;
 					if(this.programStyle==""){
 						summer.toast({msg:"请选择项目类型"});
 						return;
-					}else if(this.CITY_ID==""){
-						summer.toast({msg:"请选择省市"});
-						return;
 					}
+					// }else if(this.CITY_ID==""){
+					// 	summer.toast({msg:"请选择省市"});
+					// 	return;
+					// }
 					//此时需要调后端的ajax请求数据
 					let _programStyle=this.programStyle;
 					let _area_id=this.taskStyle;
 					let PLATFORM_TYPE;
 					let customId=this.customId;
-					baseMessage.totalData.business.map((e,i)=>{
-						if(e.FLAG==_programStyle){
-							PLATFORM_TYPE=baseMessage.totalData.business[i].CODE;
-						}
-					});
+					// baseMessage.totalData.business.map((e,i)=>{
+					// 	if(e.FLAG==_programStyle){
+					// 		PLATFORM_TYPE=baseMessage.totalData.business[i].CODE;
+					// 	}
+					// });
 
 					summer.showProgress();
 					ajaxRequest({
-						  type: 'post',
-						  url: 'appservice/foundproject/saveProject',
+						  type: 'get',
+						  url: 'appservice/project/prjbscinfo/add.do',
 						  param: {
-								 "AREA_ID":self.AREA_ID,
-								 "PLATFORM_TYPE":PLATFORM_TYPE,
-								 "CLIENT_ID":customId,
-								 "CITY_ID":self.CITY_ID
+								 "prjTypCd":"1",
+								 "bizTyp":"1",
+								 "fkgzCd":"1",
+								 "sign":"1",
+								 "cstId.id":customId
 						  }
 					 }, function (res) {
 							  if(res.data.flag==1){
 								  console.log(res);
-								  let projectId=res.data.datas.PROJECT_ID;
+								  let projectId=res.data.datas.id;
 								  summer.hideProgress();
 								  summer.toast({msg:"保存成功"});
 									summer.execScript({
