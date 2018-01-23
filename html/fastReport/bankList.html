@@ -81,7 +81,6 @@
         var bankInfo = new Vue({
             el: '#index',
             data: {
-                projectId: "",
                 clintId: "",
                 // 开户名称
                 kaihuName: "",
@@ -90,7 +89,7 @@
                 // 证件号码
                 paperNum: "",
                 // 是否代扣
-                withholding: true,
+                withholding: 1,
                 // 单选样式
                 isActive: true,
                 // 开户银行
@@ -170,11 +169,11 @@
                 // 是否代扣
                 chooseYes() {
                     this.isActive = true;
-                    this.withholding = true;
+                    this.withholding = 1;
                 },
                 chooseNo() {
                     this.isActive = false;
-                    this.withholding = false;
+                    this.withholding = 2;
                 },
                 // 保存
                 saveBank(){
@@ -209,16 +208,6 @@
                         });
                         return;
                     } 
-                    var obj = {
-                        insurerBank: this.insurerBank,
-                        kaihuName: this.kaihuName,
-                        bankID: this.bankID,
-                        insurerType: this.insurerType,
-                        insurerPaper: this.insurerPaper,
-                        paperNum: this.paperNum,
-                        withholding: this.withholding
-                    }
-                    console.log(obj);
                     /* summer.showProgress();
 					ajaxRequest({
 						type: 'post',
@@ -275,16 +264,14 @@
             }
         });
         summerready = function() {
-            var projectId = summer.pageParam.projectId;
             var clintId = summer.pageParam.clintId;
-            bankInfo.projectId = projectId;
             bankInfo.clintId = clintId;
-            /* summer.showProgress();
+            summer.showProgress();
             ajaxRequest({
-                type: 'post',
-                url: 'appservice/payment/queryPaymentInfo',
+                type: 'get',
+                url: 'appservice/customer/cstBank/form.do',
                 param: {
-                    PAYMENT_ID: PAYMENT_ID
+                    clintId: clintId
                 }
             }, function(res) {
                 summer.hideProgress();
@@ -295,7 +282,35 @@
                     Data = res.data;
                 }
                 if (Data.flag == 1) {
-                    
+                    if (Data.datas.cstBank) {
+                        // 已经否存在银行卡信息
+                        bankInfo.insurerBank = Data.datas.cstBank.bkCd;
+                        bankInfo.kaihuName = Data.datas.cstBank.cstId.cstNm;
+                        bankInfo.bankID = Data.datas.cstBank.accNo;
+                        bankInfo.insurerType = Data.datas.cstBank.accTypCd;
+                        bankInfo.insurerPaper = Data.datas.cstBank.certTypCd;
+                        bankInfo.paperNum = Data.datas.cstBank.certNo;
+                        bankInfo.withholding = Data.datas.cstBank.isDeduct;
+                        if (Data.datas.cstBank.isDeduct == 1) {
+                            bankInfo.isActive = true;
+                        } else {
+                            bankInfo.isActive = false;
+                        }
+                    } else {
+                        // 还未存在银行卡信息
+                        bankInfo.bankArr = Data.datas.bankList;
+                        bankInfo.bankSlots[0].values = bankInfo.bankArr.map((e) => {
+                            return e.label;
+                        });
+                        bankInfo.typeArr = Data.datas.accTypList;
+                        bankInfo.typeSlots[0].values = bankInfo.typeArr.map((e) => {
+                            return e.label;
+                        });
+                        bankInfo.paperArr = Data.datas.certTypList;
+                        bankInfo.paperSlots[0].values = bankInfo.paperArr.map((e) => {
+                            return e.label;
+                        });
+                    }
                 } else {
                     summer.toast({
                         msg: "暂无数据"
@@ -307,7 +322,7 @@
                     msg: "暂无数据"
                 });
                 console.log(err);
-            }); */
+            });
         };
     </script>
 </body>
