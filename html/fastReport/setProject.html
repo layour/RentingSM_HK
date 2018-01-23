@@ -102,6 +102,12 @@
 						<span class="frp"> <i class="price icon iconfont icon-right"></i>&nbsp; <i class="icon iconfont icon-enter"></i> </span>
 					</div>
 				</a>
+				<a href="javascript:void(0);" id="version"  onclick="openBank()"  >
+					<div class="um-list-item-bodys">
+						银行账号
+						<span class="frp"> <i class="bank icon iconfont icon-right"></i>&nbsp; <i class="icon iconfont icon-enter"></i> </span>
+					</div>
+				</a>
 				<a href="javascript:void(0);" id="version" onclick="checkVersion('uploadImg')">
 					<div class="um-list-item-bodys">
 						上传评审资料
@@ -120,6 +126,7 @@
 						<span class="frp"> <i class="sponsor icon iconfont icon-right"></i>&nbsp; <i class="icon iconfont icon-enter"></i> </span>
 					</div>
 				</a>
+				
 
 				<!-- <a href="javascript:void(0);"  id="version" onclick="checkVersion('remark')">
 					<div class="um-list-item-bodys">
@@ -192,10 +199,10 @@
 				getData(id) {
 					let self = this;
 					ajaxRequest({
-						type: 'post',
-						url: 'appservice/foundproject/addProject',
+						type: 'get',
+						url: 'appservice/project/prjbscinfo/toAddPrj.do',
 						param: {
-							"CLIENT_ID": id,
+							"cstId.id": id,
 						}
 					}, function(res) {
 						summer.hideProgress();
@@ -633,7 +640,35 @@
 				}
 			});
 		}
-
+		function openBank(){
+			summer.openWin({
+				id: 'bankList',
+				url: 'html/fastReport/bankList.html',
+				create: false,
+				type: 'actionBar',
+				actionBar: {
+					title: "银行账号",
+					titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
+					backgroundColor: "#039be5",
+					leftItem: {
+						image: "img/back.png",
+						method: "", //返回按钮自定义事件
+						text: "返回",
+						textColor: "#ffffff" //返回文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
+					},
+					rightItems: [{
+						type: "text",
+						text: "保存",
+						textColor: "#ffffff", //文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
+						method: "saveBank()" //在打开的window中自定义事件
+					}]
+				},
+				pageParam: {
+					projectId: projectId,
+					clintId: clintId
+				}
+			});
+		}
 		function addRight(param, projectId) {
 			$("." + param).addClass('active').siblings('i').addClass("active");
 			if (projectId) {
