@@ -18,7 +18,7 @@
 					<span onclick="satartSearch('all')">取消</span>
         </div> -->
 				<ul class="dealerList companyList">
-          <li @click="pickerCarModels(item)" v-for="(item,index) in modelsList" :key="index">{{item.mfrNm}}</li>
+          <li @click="pickerCarModels(item)" v-for="(item,index) in modelsList" :key="index">{{item.name}}</li>
         </ul>
       </div>
     </div>
@@ -62,38 +62,38 @@
             }
           },
 					methods:{
-						getData(val){
-							var _this=this;
-							console.log(this.id);
-							ajaxRequest({
-								type:'get',
-								url:'appservice/foundproject/queryCarBrand',
-								param:{
-									BRAND_NAME:val,
-									COMPANY_ID:_this.id
-								}
-							},function(res){
-								console.log("res",res);
-								if(res.data.datas.length==0){
-									createNull("pickerModels")
-								}else {
-									_this.modelsList=res.data.datas
-								}
-
-							},function(err){
-								console.log("err",err);
-							})
-						},
+						// getData(val){
+						// 	var _this=this;
+						// 	console.log(this.id);
+						// 	ajaxRequest({
+						// 		type:'get',
+						// 		url:'appservice/foundproject/queryCarBrand',
+						// 		param:{
+						// 			BRAND_NAME:val,
+						// 			COMPANY_ID:_this.id
+						// 		}
+						// 	},function(res){
+						// 		console.log("res",res);
+						// 		if(res.data.datas.length==0){
+						// 			createNull("pickerModels")
+						// 		}else {
+						// 			_this.modelsList=res.data.datas
+						// 		}
+						//
+						// 	},function(err){
+						// 		console.log("err",err);
+						// 	})
+						// },
 						pickerCarModels(it){
-							summer.setStorage('pickerModels1',it.mfrNm);
+							summer.setStorage('pickerDealCity1',JSON.stringify(it));
 							summer.openWin({
-								id:'pickerModels-2',
-								url:'html/touristsClient/pickerModels-2.html',
+								id:'pickerDealCity-2',
+								url:'html/touristsClient/pickerDealCity-2.html',
 								create:false,
 								type:'actionBar',
 								pageParam:{id:it.id},
 								actionBar: {
-						      title: it.mfrNm,
+						      title: it.name,
 						      titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
 						      backgroundColor: "#039BE5",
 						      leftItem:{

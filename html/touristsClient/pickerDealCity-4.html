@@ -12,7 +12,7 @@
 			<div class="um-content pickerModels">
         <ul class="modelsList">
           <li v-for="(it,index) in modelsList" @click="pickerModels(it)" :key="index">
-						{{it.equNm}}
+						{{it.name}}
 					</li>
         </ul>
       </div>
@@ -26,8 +26,6 @@
     <script>
 				summerready=function() {
 					pickerModelsVue3.id=summer.pageParam.id;
-          pickerModelsVue3.equSet=summer.pageParam.equSet;
-          pickerModelsVue3.equMdl=summer.pageParam.equMdl;
 					pickerModelsVue3.getData();
 				}
         var pickerModelsVue3=new Vue({
@@ -48,29 +46,26 @@
 							console.log(this.id);
 							ajaxRequest({
 								type:'GET',
-								url:'appservice/project/prjprdbscinfo/queryByBra.do',
+								url:'appservice/sys/area/appTreeData.do',
 								param:{
-									braId:_this.id,
-                  equSet:_this.equSet,
-                  equMdl:_this.equMdl
+									cityId:_this.id
 								}
 							},function(res){
 								console.log("res",res);
-								if(res.data.datas.braList==0){
+								if(res.data==0){
 									createNull("pickerModels-4")
 								}else {
-									_this.modelsList=res.data.datas.braList
+									_this.modelsList=res.data
 								}
 							},function(err){
 								console.log("err",err);
 							})
 						},
 						pickerModels(it){
-              summer.setStorage('pickerModels4',it.equNm);
-              summer.setStorage('realityPrice',it.guidePc);
+              summer.setStorage('pickerDealCity4',JSON.stringify(it));
 							summer.execScript({
 							    winId: 'addCarList',
-							    script: 'getModels()'
+							    script: 'getCity()'
 							});
 							summer.closeToWin({
 								id:'addCarList'

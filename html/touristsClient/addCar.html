@@ -68,19 +68,21 @@
 					<tr>
 						<td>二手车里程数(公里)</td>
 						<td class='oldCar'>
-							<input type="text" name="mileage" placeholder="请输入二手车里程数(公里)" v-model="mileage">
+							<input type="text" name="mileage" placeholder="二手车里程数(公里)" v-model="mileage">
 						</td>
 					</tr>
 					<tr>
 						<td>二手车首次登记日期</td>
 						<td class='oldCar'>
-							<input type="text" name="firstDate" placeholder="请输入二手车首次登记日期" v-model="firstDate">
+							<input type="text" name="firstDate" placeholder="二手车首次登记日期" v-model="firstDate">
 						</td>
 					</tr>
-					<tr>
+					<tr @click="pickerDealCity">
 						<td>交易城市</td>
-						<td class='oldCar'>
-							<input type="text" name="dealCity" placeholder="请输入交易城市" v-model="dealCity">
+						<td class='oldCar lastCity'>
+							<span v-if='dealCity'>{{dealCity}}</span>
+							<span class="grayColor" v-else>请选择</span>
+							<i class="icon iconfont icon-enter"></i>
 						</td>
 					</tr>
 					<tr>
@@ -128,6 +130,7 @@
 	<script>
 		summerready = function () {
 			addCar.PROJECT_ID=summer.pageParam.id
+			console.log("PROJECT_ID",addCar.PROJECT_ID);
 			addCar.getData()
 		}
 		var addCar = new Vue({
@@ -164,6 +167,7 @@
 					id: '',
 					PROJECT_ID: '',
 					transParam:[],
+					regionArray:[],
 					slots: [{
 						flex: 1,
 						values: [],
@@ -185,49 +189,50 @@
 				getData() {
 					var _this = this;
 					ajaxRequest({
-						type: 'POST',
+						type: 'GET',
 						url: 'appservice/project/prjprdbscinfo/toAddPrd.do',
 						param: {
 							id:_this.PROJECT_ID
 						}
 					}, function (res) {
-						_this.slots[0].values = res.data.braTypeList
-						_this.transParam=res.data.braList
-						var resData=res.data.prjBscInfo.prjEquBscInfo;					
-						_this.dealer=resData.splNm
-						_this.dealerId=resData.splId
-						_this.isOldCar=resData.isNew=='1'?"是":"否"					
-						_this.colorId=resData.braTypCd
-						for(var i=0;i<res.data.braTypeList.length;i++){
-							if(res.data.braTypeList[i].value==resData.braTypCd){
-								_this.color=res.data.braTypeList[i].label
+						console.log("返回数据",JSON.stringify(res.data));
+						_this.slots[0].values = res.data.datas.braTypeList
+						_this.transParam=res.data.datas.braList
+						_this.regionArray=res.data.datas.regionArray
+						_this.dealer=res.data.datas.prjBscInfo.splBscInfo.splNm
+						var resData=res.data.datas.prjBscInfo.prjEquBscInfo;
+						if(resData){
+							_this.isOldCar=resData.isNew=='1'?"是":"否"
+							_this.colorId=resData.braTypCd
+							for(var i=0;i<res.data.datas.braTypeList.length;i++){
+								if(res.data.datas.braTypeList[i].value==resData.braTypCd){
+									_this.color=res.data.datas.braTypeList[i].label
+								}
+							}
+							_this.braNm=resData.braNm
+							_this.equNm=resData.equNm
+							_this.equSet=resData.equSet
+							_this.equMdl=resData.equMdl
+							_this.carModels=resData.equNm
+							_this.realityPrice=resData.equAmt
+							var oldCarData=res.data.datas.prjBscInfo.prjEqiDtlCar
+							_this.carColor=oldCarData.carCl
+							if(resData.isNew=='1'){
+								_this.carNumber=oldCarData.vinNo
+								_this.powerNumber=oldCarData.engNo
+								_this.mileage=oldCarData.usedCarMil
+								_this.firstDate=oldCarData.usedCarReg
+								_this.dealCity=oldCarData.rgnReCd.name+oldCarData.rgnPrCd.name+oldCarData.rgnCyCd.name+oldCarData.rgnToCd.name
+								_this.customerName=oldCarData.sellerNm
+								_this.carId=oldCarData.idCardNo
+								_this.rgnReCd=oldCarData.rgnReCd
+								_this.rgnPrCd=oldCarData.rgnPrCd
+								_this.rgnCyCd=oldCarData.rgnCyCd
+								_this.rgnToCd=oldCarData.rgnToCd
 							}
 						}
-						_this.braNm=resData.braNm
-						_this.equNm=resData.equNm
-						_this.equSet=resData.equSet
-						_this.equMdl=resData.equMdl
-						_this.carModels=resData.equNm
-						_this.realityPrice=resData.equAmt
-						var oldCarData=res.data.prjBscInfo.prjEqiDtlCar
-						_this.carColor=oldCarData.carCl
-						if(resData.isNew=='1'){
-							_this.carNumber=oldCarData.vinNo,
-							_this.powerNumber=oldCarData.engNo,
-							_this.mileage=oldCarData.usedCarMil,
-							_this.firstDate=oldCarData.usedCarReg,
-							_this.dealCity=oldCarData.vinNo,
-							_this.customerName=oldCarData.sellerNm,
-							_this.carId=oldCarData.idCardNo,
-							_this.rgnReCd=res.data.prjBscInfo.rgnReCd
-							_this.rgnPrCd=res.data.prjBscInfo.rgnPrCd
-							_this.rgnCyCd=res.data.prjBscInfo.rgnCyCd
-							_this.rgnToCd=res.data.prjBscInfo.rgnToCd
-						}
-						console.log("返回数据",JSON.stringify(res));
-
 					}, function (err) {
-						console.log("err", JSON.stringify(err));	
+						console.log("err", JSON.stringify(err));
 					})
 				},
 				checkNumber(e, param) {
@@ -244,7 +249,29 @@
 						}
 					}
 				},
-
+				pickerDealCity(){
+					var _this=this
+						summer.openWin({
+							id: 'pickerDealCity',
+							url: 'html/touristsClient/pickerDealCity.html',
+							create: false,
+							type: 'actionBar',
+							pageParam: {
+								list: JSON.stringify(_this.regionArray)
+							},
+							actionBar: {
+								title: "选择大区",
+								titleColor: "#ffffff",
+								backgroundColor: "#039BE5",
+								leftItem: {
+									image: "img/back.png",
+									method: '',
+									text: "返回",
+									textColor: "#ffffff"
+								}
+							}
+						})
+				},
 				pickerModels() {
 					var _this=this
 						summer.openWin({
@@ -279,57 +306,89 @@
 					if (param == 'confirm') {
 						this.color = this.pickedColor.label;
 						this.colorId = this.pickedColor.value;
+						if(this.color=="二手车"){
+							this.isOldCar="是"
+						}else {
+							this.isOldCar="否"
+						}
 					}
 				},
 				surePickerOldCar(param) {
 					this.pickerOldCarStatus = !this.pickerOldCarStatus;
 					if (param == 'confirm') {
 						this.isOldCar = this.pickedOldCar
+						if(this.isOldCar=="是"){
+							this.color = "二手车";
+							this.colorId = "6";
+						}
 					}
 				},
 				save() {
-					if (!this.dealer || !this.company || !this.color || !this.carModels || !this.guidePrice || !this.holdPrice ||
-						this.onePrice == '' || this.safePrice == '') {
+					var _this=this
+					if (!this.dealer  || !this.isOldCar||!this.color || !this.carModels ||!this.carColor|| this.realityPrice == '') {
 						summer.toast({
 							msg: '请填写车辆的所有信息'
 						})
 						return
 					}
-
-					var param = {};
-					// summer.showProgress();
-					param.isNew=this.isOldCar=="是"?1:2;				
-					param.braTypCd=this.colorId
-					
-
-					param.braNm=this.braNm
-					param.equSet=this.equSet
-					param.equMdl=this.equMdl
-					param.equNm=this.equNm
-					param.equAmt= this.realityPrice;
-					param.carCl=this.carColor
-					param.equQty="1"
 					if(this.isOldCar=="是"){
-						param.vinNo=this.carNumber
-						param.engNo=this.powerNumber
-						param.usedCarMil=this.mileage
-						param.usedCarReg=this.firstDate
-						param.sellerNm=this.customerName
-						param.idCardNo=this.carId
-						param.rgnReCd=this.rgnReCd
-						param.rgnPrCd=this.rgnPrCd
-						param.rgnCyCd=this.rgnCyCd
-						param.rgnToCd=this.rgnToCd
+						if (!this.carNumber  || !this.powerNumber||!this.mileage || !this.firstDate ||!this.customerName|| !this.carId||!this.dealCity) {
+							summer.toast({
+								msg: '请填写车辆的所有信息'
+							})
+							return
+						}
 					}
-					console.log("param", JSON.stringify(param));
-					ajaxRequest({
+					var prjEquBscInfo = {},prjEqiDtlCar={};
+					summer.showProgress();
+					prjEquBscInfo.isNew=this.isOldCar=="是"?1:2;
+					prjEquBscInfo.braTypCd=this.colorId
 
+					prjEquBscInfo.braNm=this.braNm
+					prjEquBscInfo.equSet=this.equSet
+					prjEquBscInfo.equMdl=this.equMdl
+					prjEquBscInfo.equNm=this.equNm
+					prjEquBscInfo.equAmt= this.realityPrice;
+					prjEqiDtlCar.carCl=this.carColor
+					prjEquBscInfo.equQty="1"
+					if(this.isOldCar=="是"){
+						prjEqiDtlCar.vinNo=this.carNumber
+						prjEqiDtlCar.engNo=this.powerNumber
+						prjEqiDtlCar.usedCarMil=this.mileage
+						prjEqiDtlCar.usedCarReg=this.firstDate
+						prjEqiDtlCar.sellerNm=this.customerName
+						prjEqiDtlCar.idCardNo=this.carId
+						prjEqiDtlCar.rgnReCd=this.rgnReCd
+						prjEqiDtlCar.rgnPrCd=this.rgnPrCd
+						prjEqiDtlCar.rgnCyCd=this.rgnCyCd
+						prjEqiDtlCar.rgnToCd=this.rgnToCd
+					}
+					console.log("param", JSON.stringify({
+							prjEquBscInfo:prjEquBscInfo,
+							prjEqiDtlCar:prjEqiDtlCar,
+							id:_this.PROJECT_ID
+					}));
+					ajaxRequest({
+						type:"GET",
+						url:'appservice/project/prjprdbscinfo/add.do',
+						param:{
+								prjEquBscInfo:prjEquBscInfo,
+								prjEqiDtlCar:prjEqiDtlCar,
+								id:_this.PROJECT_ID
+						}
 					},function(res){
 						console.log("返回数据",JSON.stringify(res));
+						summer.hideProgress();
+						summer.toast({msg:"保存成功"});
+						summer.execScript({
+								winId: "setProject",
+								script: "addRight('addCarList')"
+						});
+						summer.closeWin()
 					},function(err){
 						console.log("err", JSON.stringify(err));
 					})
-					summer.closeWin()
+
 				}
 			}
 		});
@@ -346,7 +405,13 @@
 				addCar.realityPrice = summer.getStorage('realityPrice')
 			}
 		}
-
+		function getCity() {
+			addCar.rgnReCd=JSON.parse(summer.getStorage("pickerDealCity1"))
+			addCar.rgnPrCd=JSON.parse(summer.getStorage("pickerDealCity2"))
+			addCar.rgnCyCd=JSON.parse(summer.getStorage("pickerDealCity3"))
+			addCar.rgnToCd=JSON.parse(summer.getStorage("pickerDealCity4"))
+			addCar.dealCity=addCar.rgnReCd.name+addCar.rgnPrCd.name+addCar.rgnCyCd.name+addCar.rgnToCd.name
+		}
 		function goBack() {
 			addCar.save()
 		}

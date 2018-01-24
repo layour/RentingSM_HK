@@ -12,6 +12,7 @@ function getToken() {
 	var token = userinfo ? userinfo.token : "";
 	return token;
 }
+
 var CommonUtil = {
 	//图片加水印
 	watermark : function(params) {
@@ -69,6 +70,7 @@ var CommonUtil = {
 	},
 };
 function ajaxRequest(paramObj, successCallback, errorCallback) {
+	console.log('用户的token'+getToken());
 	var testPath = '';
 	var paramData = {};
 	if (paramObj.fullUrl) {
