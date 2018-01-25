@@ -50,6 +50,7 @@
 			background: #ffffff;
 			border-bottom: 1px solid #f7f7f7;
 			font-size: 0.28rem;
+			height:44px;
 
 		}
 
@@ -116,28 +117,47 @@
 					<span class=""><span   class="first"> 个人</span>   </span>
 				</p>
 			</div>
-			<mt-field label="姓名" placeholder="请输入您的真实姓名" v-model="message.NAME"> </mt-field>
-			<mt-field label="身份证" placeholder="请输入您的身份证号码" v-model="message.ID_CARD_NO"></mt-field>
+			<mt-field label="姓名" placeholder="请输入您的真实姓名" v-model="message.wrtNm"> </mt-field>
 			<div @click="surePickerSex" class="item">
 				<p class="pl10 pr10 tr">
-					<span class="fl">性别</span>
+					<span class="fl">证件类型</span>
 					<span class=""><span v-if='message.SEX_NM' class="first">{{message.SEX_NM}}</span><span v-else class="second">请选择</span> <i class="icon iconfont icon-enter"></i></span>
 				</p>
 			</div>
-			<div @click="sureDateConfirm" class="item">
+			<div @click="surePickerSex" class="item">
+				<p class="pl10 pr10 tr">
+					<span class="fl">与客户关系</span>
+					<span class=""><span v-if='message.SEX_NM' class="first">{{message.SEX_NM}}</span><span v-else class="second">请选择</span> <i class="icon iconfont icon-enter"></i></span>
+				</p>
+			</div>
+			<mt-field label="证件号码" placeholder="请输入您的证件号码" v-model="message.certNo"></mt-field>
+			<div  class="item" >
+				<p class="pl10 pr10 tr" >
+					<span class="fl">性别</span>
+					 <span class=""> <span  class="first">{{areaTotal}} </span> </span>
+				</p>
+			</div>
+			<div  class="item">
+				<p class="pl10 pr10 tr" >
+					<span class="fl">年龄</span>
+					 <span class=""> <span  class="first">{{AGECOM}} </span> </span>
+				</p>
+			</div>
+			<!-- <div @click="sureDateConfirm" class="item">
 				<p class="pl10 pr10 tr">
 					<span class="fl">出生年月</span>
 					<span class=""><span v-if='message.BIRTHDAY' class="first">{{message.BIRTHDAY}}</span><span v-else class="second">请选择</span> <i class="icon iconfont icon-enter"></i></span>
 				</p>
-			</div>
-			<mt-field label="住址" placeholder="请输入您的住址" v-model="message.HOUSE_ADDRESS"></mt-field>
+			</div> -->
+			<mt-field label="家庭住址" placeholder="请输入您的住址" v-model="message.HOUSE_ADDRESS"></mt-field>
+			<mt-field label="单位名称" placeholder="请输入您的单位名称" v-model="message.HOUSE_ADDRESS"></mt-field>
 			<mt-field label="手机号" placeholder="请输入您的手机号码" v-model="message.TEL_PHONE"></mt-field>
-			<div class="item">
+			<!-- <div class="item">
 				<p class="pl10 pr10 tr" @click="selectAddr">
 					<span class="fl">省市</span>
 					<span class=""> <span  class="first">{{message.HOUSE_ADDRESS_PROVINCE_NM}} {{message.HOUSE_ADDRESS_CITY_NM}}</span> <i class="icon iconfont icon-enter"></i></span>
 				</p>
-			</div>
+			</div> -->
 			<div @click="surePickerMarrige" class="item">
 				<p class="pl10 pr10  um-box">
 					<span class="um-bf1">婚姻状况</span> <span class="um-bf1 tr"><span v-if='message.IS_MARRY_NM' class="first">{{message.IS_MARRY_NM}}</span><span v-else class="second">请选择</span> <i class="icon iconfont icon-enter"></i></span>
@@ -201,8 +221,8 @@
 					}],
 					isSelect:false,
 					message: {
-						NAME: '',
-						ID_CARD_NO: '',
+						wrtNm: '',//姓名
+						certNo: '',//身份证号
 						SEX: '',
 						SEX_NM:'',
 						HOUSE_ADDRESS: '',
@@ -222,40 +242,39 @@
 
 				}
 			},
+			computed:{
+				 SEXCOM:function () {
+					if(this.message.ID_CARD_NO.length=="18") {
+						let psidno=this.message.ID_CARD_NO;
+					   if(parseInt(psidno.substring(16,17))%2==0){
+						   return "女"
+					   }else{
+						   return "男"
+					   };
+					}
+				},
+				AGECOM:function () {
+					if(this.message.ID_CARD_NO.length=="18") {
+						var date = new Date();
+						var year = date.getFullYear(); 
+						var birthday_year = parseInt(this.message.ID_CARD_NO.substr(6,4));
+						return  year - birthday_year;
+					}
+				}
+			},
 			methods: {
-				getData(projectId) {
+				getType(projectId){
 					let self = this;
 					ajaxRequest({
-						type: 'post',
-						url: 'appservice/customer/guaranteeList',
+						type: 'get',
+						url: 'appservice/project/prjcstbscinfo/initList.do',
 						param: {
-							"PROJECT_ID": projectId,
+							"id": projectId,
 						}
 					}, function(res) {
 						summer.hideProgress();
 						if (res.data.flag == 1) {
 							console.log(res.data.datas);
-							let sponsor=res.data.datas.guaranteeList[0];
-							if (!isEmpty(sponsor)) {
-								self.isSelect=true;
-								self.message.NAME=sponsor.NAME;
-								self.message.ID_CARD_NO=sponsor.ID_CARD_NO;
-								self.message.SEX=sponsor.SEX;
-								self.message.SEX_NM=sponsor.SEX_NM;
-								self.message.HOUSE_ADDRESS=sponsor.HOUSE_ADDRESS;
-								self.message.TEL_PHONE=sponsor.TEL_PHONE;
-								self.message.IS_MARRY=sponsor.IS_MARRY;
-								self.message.IS_MARRY_NM=sponsor.IS_MARRY_NM;
-								self.message.BIRTHDAY=sponsor.BIRTHDAY;
-								self.message.HOUSE_ADDRESS_CITY=sponsor.HOUSE_ADDRESS_CITY;
-								self.message.HOUSE_ADDRESS_CITY_NM=sponsor.HOUSE_ADDRESS_CITY_NM;
-								self.message.HOUSE_ADDRESS_PROVINCE=sponsor.HOUSE_ADDRESS_PROVINCE;
-								self.message.HOUSE_ADDRESS_PROVINCE_NM=sponsor.HOUSE_ADDRESS_PROVINCE_NM;
-								self.message.PROJECT_ID=sponsor.PROJECT_ID;
-								self.message.GID=sponsor.GID;
-								self.message.CLIENT_ID=sponsor.CLIENT_ID;
-								self.message.TYPE=sponsor.TYPE;
-							}
 						}
 					}, function(err) {
 						alert(err);
@@ -521,6 +540,7 @@
 		summerready = function() {
 			let projectId = summer.pageParam.projectId;
 			newCreateCustom.message.projectId=projectId;
+			newCreateCustom.getType(projectId);
 			let clintId = summer.pageParam.clientId;
 			newCreateCustom.message.CLIENT_ID=clintId;
 			let item= summer.pageParam.item;

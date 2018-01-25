@@ -25,7 +25,7 @@
 		.flow p.title {
 			font-size: 0.28rem;
 			color: #333;
-			line-height: 0.9rem;
+			padding:0.2rem 0.2rem;
 		}
 
 		.contentFlow {
@@ -175,7 +175,7 @@
 						<p class="pl10 pr10">是否二手车<span class="fr">{{dataList&&(dataList.prjBscInfo.prjEquBscInfo.isNew=="1")?"是":"否"}}</span></p>
 						<p class="pl10 pr10">二手车里程数(公里)<span class="fr">{{dataList?dataList.prjBscInfo.prjEqiDtlCar.usedCarMil:""}}</span></p>
 						<p class="pl10 pr10">二手车首次登记日期<span class="fr">{{dataList?new Date(dataList.prjBscInfo.prjEqiDtlCar.usedCarReg).format("yyyy-MM-dd"):""}}</span></p>
-						<p class="pl10 pr10">交易城市<span class="fr">{{dataList?dataList.prjBscInfo.prjEqiDtlCar.rgnReCd.name:""}}-{{dataList?dataList.prjBscInfo.prjEqiDtlCar.rgnPrCd.name:""}}-{{dataList?dataList.prjBscInfo.prjEqiDtlCar.rgnCyCd.name:""}}-{{dataList?dataList.prjBscInfo.prjEqiDtlCar.rgnToCd.name:""}}</span></p>
+						<p class="pl10 pr10">交易城市<span class="fr">{{dataList?dataList.prjBscInfo.rgnReCd.name:""}}-{{dataList?dataList.prjBscInfo.rgnPrCd.name:""}}-{{dataList?dataList.prjBscInfo.rgnCyCd.name:""}}-{{dataList?dataList.prjBscInfo.rgnToCd.name:""}}</span></p>
 						<p class="pl10 pr10">卖家姓名<span class="fr">{{dataList?dataList.prjBscInfo.prjEqiDtlCar.sellerNm:""}}</span></p>
 						<p class="pl10 pr10">卖家证件号<span class="fr">{{dataList?dataList.prjBscInfo.prjEqiDtlCar.idCardNo:""}}</span></p>
 						<p class="pl10 pr10">车身颜色<span class="fr">{{dataList?dataList.prjBscInfo.prjEqiDtlCar.carCl:""}}</span></p>
@@ -199,15 +199,15 @@
 				</div>
 				<div class="flow" >
 					<div id="flowContent"></div>
-					<p class="title   tc um-bgc-white" v-show="JBPM_ID_NM" >流程ID： </p>
+					<p class="title  um-bgc-white" v-show="JBPM_ID" >流程ID：{{JBPM_ID.pdNo}} </p>
 					<div class="contentFlow um-bgc-white">
-						<div class="listItem" v-for="(item,index) in JBPM_ID">
+						<div class="listItem" v-for="(item,index) in JBPM_ID.histoicFlowList">
 							<div class="inside">
 								<img src="../../img/true.png" class="true" alt="" />
 								<p class="top">{{item.assigneeName}}</p>
 								<p class="content"> {{item.assigneeName}} </p>
 									<p class="content">审批意见：{{item.comment?item.comment:"无"}}  </p>
-								<p class="content"> {{item.durationTime}}</p>
+								<p class="content">任务历时： {{item.durationTime}}</p>
 							</div>
 						</div>
 					</div>
@@ -281,7 +281,7 @@
 					}, function(res) {
 						summer.hideProgress();
 						if (res.data.flag == 1) {
-							self.JBPM_ID=res.data.datas.histoicFlowList;
+							self.JBPM_ID=res.data.datas;
 							console.log(res);
 						}
 					}, function(err) {

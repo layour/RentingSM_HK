@@ -37,13 +37,13 @@
 							 <span class="right"><span v-if='taskStyle' class="first">{{taskStyle}}</span><span v-else class="second">请选择</span> <i class="icon iconfont icon-enter"></i></span>
 						</p>
 					</li>
-					<li   v-if='hasProjectId'>
+					<!-- <li   v-if='hasProjectId'>
 						<p class="pl10 pr10 tr">
 							<span class="fl">放款规则</span>
 							 <span class="right"><span   class="first">{{lendRuleStyle}}</span> </span>
 						</p>
-					</li>
-					<li @click="surePickerLendRule" v-else>
+					</li> -->
+					<li @click="surePickerLendRule"  >
 						<p class="pl10 pr10 tr">
 							<span class="fl">放款规则</span>
 							 <span class="right"><span v-if='lendRuleStyle' class="first">{{lendRuleStyle}}</span><span v-else class="second">请选择</span> <i class="icon iconfont icon-enter"></i></span>
@@ -51,8 +51,8 @@
 					</li>
 					<li  v-if='hasProjectId'>
 						<p class="pl10 pr10 tr" >
-							<span class="fl">省市</span>
-							 <span class=""> <span  class="first">{{AREA_ID_NM}} {{CITY_ID_NM}}  </span> </span>
+							<span class="fl">区域</span>
+							 <span class=""> <span  class="first">{{areaTotal}} </span> </span>
 						</p>
 					</li>
 					<!-- <li  v-else>
@@ -61,7 +61,7 @@
 							 <span class=""> <span  class="first">{{AREA_ID_NM}} {{CITY_ID_NM}}  </span> <i class="icon iconfont icon-enter"></i></span>
 						</p>
 					</li> -->
-					<li  v-if='hasProjectId'>
+					<!-- <li  v-if='hasProjectId'>
 						<p class="pl10 pr10 tr" >
 							<span class="fl">项目名称</span>
 							 <span class=""> <span  class="first">{{PROJECT_NAME}}   </span> </span>
@@ -74,7 +74,7 @@
 							 <span class=""> <span  class="first">{{PROJECT_ID}}   </span> </span>
 						</p>
 					</li>
-					<li v-else></li>
+					<li v-else></li> -->
 			<!--		<li>
 						<p class="pl10 pr10 tr" style="line-height:0.88rem;">
 							<span class="fl">合同签署方式</span>
@@ -213,7 +213,8 @@
 					customId:"",
 					hasProjectId:false,
 					PROJECT_NAME:'',
-					PROJECT_ID:''
+					PROJECT_ID:'',
+					areaTotal:''
 				}
 			},
 			created() {
@@ -232,11 +233,10 @@
 					 }, function(res) {
 						 summer.hideProgress();
 						 if (res.data.flag == 1) {
-								self.programStyle =res.data.datas.ProjectObj.PLATFORM
-								self.AREA_ID_NM =res.data.datas.ProjectObj.AREA_NAME
-								self.CITY_ID_NM =res.data.datas.ProjectObj.CITY_NAME
-								self.PROJECT_NAME =res.data.datas.ProjectObj.PROJECT_NAME
-								self.PROJECT_ID =res.data.datas.ProjectObj.PROJECT_ID
+								self.programStyle =res.data.datas.prjBscInfo.prjTypCdNm;
+								self.taskStyle =res.data.datas.prjBscInfo.bizTypNm;
+								let dataT=res.data.datas.prjBscInfo;
+								self.areaTotal =dataT.rgnReCd.name+"-"+dataT.rgnPrCd.name+"-"+dataT.rgnCyCd.name+"-"+dataT.rgnToCd.name;
 						 }
 					 }, function(err) {
 						 console.log(err);
@@ -345,14 +345,16 @@
 
 					summer.showProgress();
 					ajaxRequest({
-						  type: 'get',
+						  type: 'post',
 						  url: 'appservice/project/prjbscinfo/add.do',
 						  param: {
 								 "prjTypCd":prjTypCd,
 								 "bizTyp":bizTyp,
 								 "fkgzCd":fkgzCd,
 								 "sign":"1",
-								 "cstId.id":customId
+								 "cstId":{
+									 "id":customId
+								 }
 						  }
 					 }, function (res) {
 							  if(res.data.flag==1){
