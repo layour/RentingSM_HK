@@ -53,7 +53,7 @@
                 </li>
                 <li>
                     <span>证件号码</span>
-                    <input v-model="paperNum" type="number" placeholder="请输入" />
+                    <input v-model="paperNum" type="text" placeholder="请输入" />
                 </li>
                 <li>
                     <span>是否为代扣卡</span>
@@ -90,8 +90,10 @@
                 paperNum: "",
                 // 是否代扣
                 withholding: 1,
-                // 单选样式
-                isActive: true,
+                // 校验接口param
+                testParam:{
+                    id: ""
+                },
                 // 开户银行
                 bankStatus:false,
                 pickedBank:"",
@@ -128,6 +130,16 @@
                     className: 'slot1',
                     textAlign: 'center'
                 }]
+            },
+            computed: {
+                // 单选样式
+                isActive: function () {
+                    if (this.withholding == 1) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                },
             },
             methods: {
                 // 选择开户银行
@@ -168,15 +180,14 @@
                 },
                 // 是否代扣
                 chooseYes() {
-                    this.isActive = true;
                     this.withholding = 1;
                 },
                 chooseNo() {
-                    this.isActive = false;
                     this.withholding = 2;
                 },
                 // 保存
                 saveBank(){
+                    var This = this;
                     if (this.insurerBank == "请选择") {
                         summer.toast({
                             msg: "请选择开户银行"
@@ -208,24 +219,42 @@
                         });
                         return;
                     } 
-                    /* summer.showProgress();
+                    // 查询字典
+                    var AccountType, IdentificationType, bkCd;
+                    // 账户类型
+                    this.typeArr.forEach((e) => {
+                        if (e.label == this.insurerType) {
+                            AccountType = e.value;
+                        }
+                    });
+                    // 证件类型
+                    this.paperArr.forEach((e) => {
+                        if (e.label == this.insurerPaper) {
+                            IdentificationType = e.value;
+                        }
+                    });
+                    // 银行代码
+                    this.bankArr.forEach((e) => {
+                        if (e.label == this.insurerBank) {
+                            bkCd = e.value;
+                        }
+                    });
+                    // 点击保存先进行银行帐号校验
+                    summer.showProgress();
 					ajaxRequest({
-						type: 'post',
-						url: 'appservice/payment/startCarPayment',
+						type: 'get',
+						url: 'appservice/customer/cstBank/accCheck.do',
 						param: {
-							ISDEKOU: ISDEKOU,
-                            PAYMENT_TYPE: PAYMENT_TYPE,
-                            CS_PRICE: this.pledge,
-                            LENDING_MODEL: LENDING_MODEL,
-                            GPS_MONEY: this.gps,
-                            PAY_ID: this.params.PAY_ID,
-                            PAYMONEY_TYPE: PAYMONEY_TYPE,
-                            DEKOU_SQ: this.collection,
-                            LAST_MONEY: this.LAST_MONEY,
-                            PAYMENT_ID: this.PAYMENT_ID
+                            cstId: this.clintId,
+							id: this.testParam.id,
+                            BankID: this.insurerBank,
+                            AccountType: AccountType,
+                            AccountName: this.kaihuName,
+                            AccountNumber: this.bankID,
+                            IdentificationType: IdentificationType,
+                            IdentificationNumber: this.paperNum
 						}
 					}, function(res) {
-						summer.hideProgress();
 						var Data;
 						if (Object.prototype.toString.call(res.data) === '[object String]') {
 							Data = JSON.parse(res.data);
@@ -233,33 +262,69 @@
 							Data = res.data;
 						}
 						if (Data.flag == 1) {
-							if (Data.datas.JBPM_ID) {
-								summer.toast({
-									msg: "申请成功"
-								});
-								summer.closeToWin({
-									id: 'payList'
-								});
-							} else {
+							// 校验成功后保存
+                            ajaxRequest({
+                                type: 'get',
+                                url: 'appservice/customer/cstBank/save.do',
+                                param: {
+                                    id: This.testParam.id,
+                                    bkCd: bkCd,
+                                    accNo: This.bankID,
+                                    accTypCd: AccountType,
+                                    certTypCd: IdentificationType,
+                                    certNo: This.paperNum,
+                                    accNm: This.kaihuName,
+                                    isDeduct: This.withholding
+                                }
+                            }, function(res) {
+                                summer.hideProgress();
+                                var Data;
+                                if (Object.prototype.toString.call(res.data) === '[object String]') {
+                                    Data = JSON.parse(res.data);
+                                } else {
+                                    Data = res.data;
+                                }
+                                if (Data.flag == 1) {
+                                    // 立项页面打对勾
+                                    summer.toast({
+                                        msg: Data.datas.msg
+                                    });
+                                    summer.execScript({
+                                        winId: 'setProject',
+                                        script: "addRight('bank')"
+                                    });
+                                    summer.closeToWin({
+                                        id: "setProject"
+                                    });
+                                } else if (Data.flag == 0) {
+                                    summer.toast({
+                                        msg: Data.msg
+                                    });
+                                } else {
+                                    summer.toast({
+                                        msg: "保存失败"
+                                    });
+                                }
+                            }, function(err) {
+                                summer.hideProgress();
                                 summer.toast({
-                                    msg: Data.datas.data
+                                    msg: "保存失败"
                                 });
-                                summer.closeToWin({
-                                    id: 'payList'
-                                });
-                            }
+                                console.log(err);
+                            });
 						} else {
+                            summer.hideProgress();
 							summer.toast({
-								msg: Data.msg
+								msg: "校验失败"
 							});
 						}
 					}, function(err) {
 						summer.hideProgress();
 						summer.toast({
-							msg: "申请失败"
+							msg: "校验失败"
 						});
 						console.log(err);
-					}); */
+					});
                 }
             }
         });
@@ -271,7 +336,7 @@
                 type: 'get',
                 url: 'appservice/customer/cstBank/form.do',
                 param: {
-                    clintId: clintId
+                    cstId: clintId
                 }
             }, function(res) {
                 summer.hideProgress();
@@ -283,34 +348,37 @@
                 }
                 if (Data.flag == 1) {
                     if (Data.datas.cstBank) {
-                        // 已经否存在银行卡信息
-                        bankInfo.insurerBank = Data.datas.cstBank.bkCd;
-                        bankInfo.kaihuName = Data.datas.cstBank.cstId.cstNm;
-                        bankInfo.bankID = Data.datas.cstBank.accNo;
-                        bankInfo.insurerType = Data.datas.cstBank.accTypCd;
-                        bankInfo.insurerPaper = Data.datas.cstBank.certTypCd;
-                        bankInfo.paperNum = Data.datas.cstBank.certNo;
-                        bankInfo.withholding = Data.datas.cstBank.isDeduct;
-                        if (Data.datas.cstBank.isDeduct == 1) {
-                            bankInfo.isActive = true;
+                        // 已经存在银行卡信息的情况
+                        var cstBankInfo = Data.datas.cstBank;
+                        bankInfo.testParam.id = cstBankInfo.id ? cstBankInfo.id : "";
+                        bankInfo.insurerBank = cstBankInfo.bkNm ? cstBankInfo.bkNm : "请选择";
+                        bankInfo.kaihuName = cstBankInfo.cstId ? cstBankInfo.cstId.cstNm : "";
+                        bankInfo.bankID = cstBankInfo.accNo ? cstBankInfo.accNo : "";
+                        if (cstBankInfo.accTypCd) {
+                            if (cstBankInfo.accTypCd == "1") {
+                                bankInfo.insurerType = "对公账号";
+                            } else {
+                                bankInfo.insurerType = "对私账号";
+                            }
                         } else {
-                            bankInfo.isActive = false;
+                            bankInfo.insurerType = "请选择";
                         }
-                    } else {
-                        // 还未存在银行卡信息
-                        bankInfo.bankArr = Data.datas.bankList;
-                        bankInfo.bankSlots[0].values = bankInfo.bankArr.map((e) => {
-                            return e.label;
-                        });
-                        bankInfo.typeArr = Data.datas.accTypList;
-                        bankInfo.typeSlots[0].values = bankInfo.typeArr.map((e) => {
-                            return e.label;
-                        });
-                        bankInfo.paperArr = Data.datas.certTypList;
-                        bankInfo.paperSlots[0].values = bankInfo.paperArr.map((e) => {
-                            return e.label;
-                        });
-                    }
+                        bankInfo.insurerPaper = cstBankInfo.certTypNm ? cstBankInfo.certTypNm : "请选择";
+                        bankInfo.paperNum = cstBankInfo.certNo ? cstBankInfo.certNo : "";
+                        bankInfo.withholding = bankInfo.withholding ? bankInfo.withholding : 1;
+                    };
+                    bankInfo.bankArr = Data.datas.bankList;
+                    bankInfo.bankSlots[0].values = bankInfo.bankArr.map((e) => {
+                        return e.label;
+                    });
+                    bankInfo.typeArr = Data.datas.accTypList;
+                    bankInfo.typeSlots[0].values = bankInfo.typeArr.map((e) => {
+                        return e.label;
+                    });
+                    bankInfo.paperArr = Data.datas.certTypList;
+                    bankInfo.paperSlots[0].values = bankInfo.paperArr.map((e) => {
+                        return e.label;
+                    });
                 } else {
                     summer.toast({
                         msg: "暂无数据"
