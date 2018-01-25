@@ -101,10 +101,10 @@
 			<div class="um-content addContact">
 				<ul>
 					<li v-for="(item,index) in addContactList" :key='index'>
-						<mt-cell-swipe :title="item.name" :label="item.phone" :right="[{content: '&nbsp;&nbsp;&nbsp;删除&nbsp;&nbsp;&nbsp;',style: {lineHeight:'1.76rem', background: '#f44336', color: '#fff' },handler: () =>deleteItem(index)}]">
+						<mt-cell-swipe :title="item.rlNm" :label="item.mp" :right="[{content: '&nbsp;&nbsp;&nbsp;删除&nbsp;&nbsp;&nbsp;',style: {lineHeight:'1.76rem', background: '#f44336', color: '#fff' },handler: () =>deleteItem(index)}]">
 							<div  class="fr one inDiv">
 								<!-- <a href=""><i class="icon iconfont icon-call"></i></a> -->
-								{{item.type}}
+								{{item.rlTypCd}}
 							</div>
 						</mt-cell-swipe>
 					</li>
@@ -115,15 +115,15 @@
 					<ul>
 						<li>
 							<span>紧急联系人</span>
-							<input type="text" name="name" class='fr' maxlength='6' v-model="name" placeholder='请输入真实姓名'>
+							<input type="text" name="rlNm" class='fr' maxlength='6' v-model="rlNm" placeholder='请输入真实姓名'>
 						</li>
 						<li>
 							<span>电话</span>
-							<input type="number" class='fr' name="phone" v-model="phone" placeholder='请输入号码'>
+							<input type="number" class='fr' name="mp" v-model="mp" placeholder='请输入号码'>
 						</li>
 						<li>
 							<span>关系</span>
-							<input type="text" class='fr' name="type" v-model="type" placeholder='请输入你们的关系类型'>
+							<input type="text" class='fr' name="rlTypCd" v-model="rlTypCd" placeholder='请输入你们的关系类型'>
 						</li>
 					</ul>
 					<p><span  @click="addItem">取消</span><span class="fr" @click="sureAdd">确定</span></p>
@@ -139,18 +139,23 @@
 		<script src="../../js/common.js" ></script>
 		<script src="../../js/Frameworks/iuapmobile.frameworks.ui.js" ></script>
     <script>
+				summerready=function(){
+					vueTemplate.getData(summer.pageParam.id)
+				}
         var vueTemplate=new Vue({
           el:'#addContact',
           data(){
             return {
 							addStatus:false,
 							addContactList:[
-								{name:"张自忠",phone:'13146829922',type:'朋友'},
-								{name:"秦始皇",phone:'18646829984',type:'君臣'}
+								{rlNm:"张自忠",mp:'13146829922',rlTypCd:'朋友'},
+								{rlNm:"秦始皇",mp:'18646829984',rlTypCd:'君臣'}
 							],
-							name:'',
-							phone:'',
-							type:'',
+							rlNm:'',
+							mp:'',
+							rlTypCd:'',
+							id:'',
+							list:[],
 							swipeArr:[
 						    {
 						      content: '删除',
@@ -160,29 +165,27 @@
 						  ]
             }
           },
-					create(){
-						var that=this
-						summerready=function(){
-							if(summer.pageParam.id){
-								that.getData(summer.pageParam.id)
-							}
-						}
-					},
-					mounted(){
-						this.getData(1)
-					},
 					methods:{
 						getData(id){
+							var _this=this
 							ajaxRequest({
 								type:'get',
-								url:'project/prjlinkman/initList.do',
+								url:'appservice/customer/cstnpsocialrl/list.do?',
 								param:{
-									page:1,
-									pagesize:15,
-									prjId:id
+									cstId:id
 								}
 							},function(res){
-								console.log(res);
+								console.log(res,JSON.stringify(res));
+								_this.list=res.data.datas.rlTypArray
+								_this.addContactList=res.data.datas.jjList
+								for(var i=0;i<_this.addContactList.length;i++){
+									for(var j=0;j<_this.list.length;j++){
+										if(_this.addContactList[i].rlTypCd==_this.list[j].value){
+											_this.addContactList[i].guanXi=_this.list[j].label
+											continue
+										}
+									}
+								}
 							},function(err){
 								alert(err);
 							})
@@ -194,32 +197,47 @@
 							this.addStatus=!this.addStatus
 						},
 						sureAdd(){
-							if(!this.name){
+							if(!this.rlNm){
 								summer.toast({msg:'请输入联系人姓名'})
 								return
 							}
-							if(!this.type){
+							if(!this.rlTypCd){
 								summer.toast({msg:'请输入关系'})
 								return
 							}
 							var reg=/^1[3|4|5|6|8][0-9]\d{4,8}$/
-							if(!reg.test(this.phone)){
+							if(!reg.test(this.mp)){
 								summer.toast({msg:'手机号码格式有误'})
 								return
 							}
-							this.addContactList.push({name:this.name,phone:this.phone,type:this.type})
-							this.name=''
-							this.phone=''
-							this.type=''
+							this.addContactList.push({rlNm:this.rlNm,mp:this.mp,rlTypCd:this.rlTypCd,id:''})
+							this.rlNm=''
+							this.mp=''
+							this.rlTypCd=''
 							this.addStatus=false
 						},
 						save(){
 							//发请求
-							summer.execScript({
-							    winId: "setProject",
-							    script: "addRight('emergencyContract')"
-							});
-							summer.closeWin()
+							var _this=this
+							summer.showProgress()
+							ajaxRequest({
+								type:'POST',
+								url:'appservice/customer/cstNpBscInfo/saveJJL.do',
+								param:{
+									cstBscInfo:{id:_this.id},
+									cstNpSocialRlList:_this.addContactList
+								}
+							},function(res){
+								console.log(res,JSON.stringify(res));
+								summer.hideProgress()
+								summer.execScript({
+								    winId: "setProject",
+								    script: "addRight('emergencyContract')"
+								});
+								summer.closeWin()
+							},function(err){
+								alert(err);
+							})
 						}
 					}
         });
