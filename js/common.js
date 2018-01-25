@@ -95,15 +95,13 @@ function ajaxRequest(paramObj, successCallback, errorCallback) {
 		timeout : 5000
 	};
 	if (getToken()) {
-		paramData = paramObj.param;
-		paramData.TOKEN = getToken();
-	} else {
-		paramData = paramObj.param;
-	}
+		 let token = getToken();
+		testPath=testPath+"?TOKEN="+token;
+	}  
 	summer.ajax({
 		type : paramObj.type,
 		url : testPath,
-		param : paramData,
+		param : paramObj.param,
 		// 考虑接口安全，每个请求都需要将这个公告header带过去
 		header : {
 			"Content-Type" : "application/json"

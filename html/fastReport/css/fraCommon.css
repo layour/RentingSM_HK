@@ -129,6 +129,9 @@
     display: block;
     border: 0;
 }
+.marginTop0{
+	margin-top:0px;
+}
 .nullBox p{
     width: 100%;
     height: 0.28rem;
