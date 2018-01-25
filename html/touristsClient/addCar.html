@@ -36,7 +36,7 @@
 						<i class="icon iconfont icon-enter"></i>
 					</td>
 				</tr>
-				<tr @click="surePickerColor">
+				<tr @click="surePickerColor('color')">
 					<td>品牌类型</td>
 					<td>
 						<span v-if='color'>{{color}}</span>
@@ -110,6 +110,14 @@
 						<input type="text"  name="carColor" placeholder="请输入车身颜色" v-model="carColor">
 					</td>
 				</tr>
+				<tr @click="surePickerColor('guanXi')">
+					<td>驾驶员与主贷人关系</td>
+					<td>
+						<span v-if='guanXi'>{{guanXi}}</span>
+						<span class="grayColor" v-else>请选择</span>
+						<i class="icon iconfont icon-enter"></i>
+					</td>
+				</tr>
 			</table>
 			<mt-popup v-model="pickerColorStatus" position='bottom' class="pickerColor">
 				<mt-picker value-key="label" :slots="slots" @change="onValuesChange"></mt-picker>
@@ -152,6 +160,10 @@
 					pickerOldCarStatus: false,
 					pickedColor: '',
 					pickedOldCar: '',
+					guanXiArr:[{value:1,label:'哈哈'},{value:2,label:'呵呵'}],
+					guanXiOrColor:'',
+					guanXi:'',
+					guanXiId:'',
 					isOldCar: '',
 					carNumber: '',
 					powerNumber: '',
@@ -166,8 +178,11 @@
 					carId: '',
 					id: '',
 					PROJECT_ID: '',
+					prjEquBscInfo_id:'',
+					prjEqiDtlCar_id:'',
 					transParam:[],
 					regionArray:[],
+					colorArray:[],
 					slots: [{
 						flex: 1,
 						values: [],
@@ -196,7 +211,7 @@
 						}
 					}, function (res) {
 						console.log("返回数据",JSON.stringify(res.data.datas.prjBscInfo.prjEquBscInfo),JSON.stringify(res.data.datas.prjBscInfo.prjEqiDtlCar));
-						_this.slots[0].values = res.data.datas.braTypeList
+						_this.colorArray = res.data.datas.braTypeList
 						_this.transParam=res.data.datas.braList
 						_this.regionArray=res.data.datas.regionArray
 						_this.dealer=res.data.datas.prjBscInfo.splBscInfo.splNm
@@ -204,6 +219,7 @@
 						if(resData){
 							_this.isOldCar=resData.isNew=='1'?"是":"否"
 							_this.colorId=resData.braTypCd
+							_this.prjEquBscInfo_id=resData.id
 							for(var i=0;i<res.data.datas.braTypeList.length;i++){
 								if(res.data.datas.braTypeList[i].value==resData.braTypCd){
 									_this.color=res.data.datas.braTypeList[i].label
@@ -303,14 +319,28 @@
 				},
 				surePickerColor(param) {
 					this.pickerColorStatus = !this.pickerColorStatus;
+					if(param=='color'){
+						this.guanXiOrColor=param
+						this.slots[0].values=this.colorArray
+					}else if (param=='guanXi') {
+						this.guanXiOrColor=param
+						this.slots[0].values=this.guanXiArr
+					}
+
 					if (param == 'confirm') {
-						this.color = this.pickedColor.label;
-						this.colorId = this.pickedColor.value;
-						if(this.color=="二手车"){
-							this.isOldCar="是"
-						}else {
-							this.isOldCar="否"
+						if(this.guanXiOrColor=='color'){
+							this.color = this.pickedColor.label;
+							this.colorId = this.pickedColor.value;
+							if(this.color=="二手车"){
+								this.isOldCar="是"
+							}else {
+								this.isOldCar="否"
+							}
+						}else if (this.guanXiOrColor=='guanXi') {
+							this.guanXi = this.pickedColor.label;
+							this.guanXiId = this.pickedColor.value;
 						}
+
 					}
 				},
 				surePickerOldCar(param) {
@@ -343,7 +373,8 @@
 					summer.showProgress();
 					prjEquBscInfo.isNew=this.isOldCar=="是"?1:2;
 					prjEquBscInfo.braTypCd=this.colorId
-
+					prjEquBscInfo.id=this.prjEquBscInfo_id
+					prjEquBscInfo.braBscInfo={id:this.pickerModelsId}
 					prjEquBscInfo.braNm=this.braNm
 					prjEquBscInfo.equSet=this.equSet
 					prjEquBscInfo.equMdl=this.equMdl
@@ -351,7 +382,10 @@
 					prjEquBscInfo.equAmt= this.realityPrice;
 					prjEqiDtlCar.carCl=this.carColor
 					prjEquBscInfo.equQty="1"
+					prjEqiDtlCar.driverRlTypCd="1"
+					// prjEqiDtlCar.driverRlTypCd=this.guanXiId
 					if(this.isOldCar=="是"){
+						prjEqiDtlCar.id=this.prjEqiDtlCar_id
 						prjEqiDtlCar.vinNo=this.carNumber
 						prjEqiDtlCar.engNo=this.powerNumber
 						prjEqiDtlCar.usedCarMil=this.mileage
@@ -399,6 +433,7 @@
 			if (models) {
 				addCar.carModels =models
 				addCar.braNm=summer.getStorage('pickerModels1')
+				addcar.pickerModelsId=summer.getStorage('pickerModelsId');
 				addCar.equSet=summer.getStorage('pickerModels2')
 				addCar.equMdl=summer.getStorage('pickerModels3')
 				addCar.equNm=models
