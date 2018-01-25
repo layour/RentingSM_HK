@@ -220,7 +220,7 @@
                         return;
                     } 
                     // 查询字典
-                    var AccountType, IdentificationType, bkCd;
+                    var AccountType, IdentificationType, bkCd, BankID;
                     // 账户类型
                     this.typeArr.forEach((e) => {
                         if (e.label == this.insurerType) {
@@ -239,6 +239,12 @@
                             bkCd = e.value;
                         }
                     });
+                    // 银行ID
+                    this.bankArr.forEach((e) => {
+                        if (e.label == this.insurerBank) {
+                            BankID = e.id;
+                        }
+                    });
                     // 点击保存先进行银行帐号校验
                     summer.showProgress();
 					ajaxRequest({
@@ -247,7 +253,7 @@
 						param: {
                             cstId: this.clintId,
 							id: this.testParam.id,
-                            BankID: this.insurerBank,
+                            BankID: BankID,
                             AccountType: AccountType,
                             AccountName: this.kaihuName,
                             AccountNumber: this.bankID,
@@ -262,19 +268,22 @@
 							Data = res.data;
 						}
 						if (Data.flag == 1) {
-							// 校验成功后保存
+                            // 校验成功后保存
                             ajaxRequest({
-                                type: 'get',
+                                type: 'post',
                                 url: 'appservice/customer/cstBank/save.do',
                                 param: {
-                                    id: This.testParam.id,
-                                    bkCd: bkCd,
-                                    accNo: This.bankID,
-                                    accTypCd: AccountType,
-                                    certTypCd: IdentificationType,
-                                    certNo: This.paperNum,
-                                    accNm: This.kaihuName,
-                                    isDeduct: This.withholding
+                                    "id": This.testParam.id,
+                                    "bkCd": bkCd,
+                                    "accNo": This.bankID,
+                                    "accTypCd": AccountType,
+                                    "certTypCd": IdentificationType,
+                                    "certNo": This.paperNum,
+                                    "accNm": This.kaihuName,
+                                    "isDeduct": This.withholding,
+                                    "cstId": {
+                                        "id": This.clintId
+                                    }
                                 }
                             }, function(res) {
                                 summer.hideProgress();
