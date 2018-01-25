@@ -52,77 +52,57 @@
 	<body>
 		<div class="um-win" id="projectImgList" v-cloak>
 			<div class="um-content addCar">
-        <div class="um-list-item-bodys" @click="openContWin('uId','身份证正反面','承租人自然人','立项')">
-          身份证正反面
+        <div class="um-list-item-bodys" v-for="item in list" :key="item.id" @click="openContWin(item.value,item.label)">
+          {{item.label}}
           <span class="frp"> <i class="uId icon iconfont icon-right"></i>&nbsp; <i class="icon iconfont icon-enter"></i> </span>
-        </div>
-        <div class="um-list-item-bodys" @click="openContWin('carId','驾驶证','承租人自然人','立项')">
-          驾驶证
-          <span class="frp"> <i class="carId icon iconfont icon-right"></i>&nbsp; <i class="icon iconfont icon-enter"></i> </span>
-        </div>
-        <div class="um-list-item-bodys" @click="openContWin('customerId','授权书本人签字页','承租人自然人','立项')">
-          授权书本人签字页
-          <span class="frp"> <i class="customerId icon iconfont icon-right"></i>&nbsp; <i class="icon iconfont icon-enter"></i> </span>
-        </div>
-        <div class="um-list-item-bodys" @click="openContWin('imgId','客户手持授权书照片','承租人自然人','立项')">
-          客户手持授权书照片
-          <span class="frp"> <i class="imgId icon iconfont icon-right"></i>&nbsp; <i class="icon iconfont icon-enter"></i> </span>
-        </div>
-        <div class="um-list-item-bodys" @click="openContWin('promId','身份证正反面复印件','担保人自然人','立项')">
-          身份证正反面复印件
-          <span class="frp"> <i class="promId icon iconfont icon-right"></i>&nbsp; <i class="icon iconfont icon-enter"></i> </span>
-        </div>
-        <div class="um-list-item-bodys" @click="openContWin('twoId','车辆信息','担保人自然人','立项')">
-          车辆信息
-          <span class="frp"> <i class="twoId icon iconfont icon-right"></i>&nbsp; <i class="icon iconfont icon-enter"></i> </span>
-        </div>
-				<div class="um-list-item-bodys" @click="openContWin('marryData','婚姻材料','担保人自然人','立项')">
-          婚姻材料
-          <span class="frp"> <i class="marryData icon iconfont icon-right"></i>&nbsp; <i class="icon iconfont icon-enter"></i> </span>
-        </div>
-				<div class="um-list-item-bodys" @click="openContWin('moneyData','收入材料','担保人自然人','立项')">
-          收入材料
-          <span class="frp"> <i class="moneyData icon iconfont icon-right"></i>&nbsp; <i class="icon iconfont icon-enter"></i> </span>
-        </div>
-				<div class="um-list-item-bodys" @click="openContWin('houseData','房产材料','担保人自然人','立项')">
-          房产材料
-          <span class="frp"> <i class="houseData icon iconfont icon-right"></i>&nbsp; <i class="icon iconfont icon-enter"></i> </span>
-        </div>
-				<div class="um-list-item-bodys" @click="openContWin('otherData','其他审核资料','担保人自然人','立项')">
-          其他审核资料
-          <span class="frp"> <i class="otherData icon iconfont icon-right"></i>&nbsp; <i class="icon iconfont icon-enter"></i> </span>
         </div>
 			</div>
 		</div>
 		<script>
 				summerready=function(){
 					projectImgList.projectId=summer.pageParam.id
+					console.log("projectId"+projectImgList.projectId);
+					projectImgList.getData()
 				}
 				var projectImgList=new Vue({
 					el:'#projectImgList',
 					data(){
 						return{
-              projectId:''
+              projectId:'',
+							list:[]
 						}
 					},
 					created(){},
 					methods:{
-            openContWin(val,title,customerType,type){
+						getData(){
+							var _this=this
+							ajaxRequest({
+								type: 'GET',
+								url: 'appservice/project/prjbscinfo/prjFile.do',
+								param: {
+									id:_this.projectId
+								}
+							}, function(res) {
+								console.log(JSON.stringify(res));
+								_this.list=res.data.datas.mustArray.concat(res.data.datas.needArray)
+							},function(err){
+								console.log(JSON.stringify(err));
+							})
+						},
+            openContWin(id,name){
               var _this=this;
               summer.openWin({
-        				id: val,
+        				id: "uploadFile"+id,
         				url: "html/fastReport/uploadImg.html",
         				create: false,
         				type: 'actionBar',
         				pageParam: {
-        					PROJECT_ID: _this.projectId,
-                  TPM_TYPE:title,
-                  TPM_CUSTOMER_TYPE:customerType,
-                  TPM_BUSINESS_PLATE:type,
-                  CLASS_NAME:val
+        					id:id,
+									name:name,
+									projectId:_this.projectId
         				},
         				actionBar: {
-        					title: title,
+        					title: name,
         					titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
         					backgroundColor: "#039BE5",
         					leftItem: {

@@ -195,7 +195,7 @@
 							id:_this.PROJECT_ID
 						}
 					}, function (res) {
-						console.log("返回数据",JSON.stringify(res.data));
+						console.log("返回数据",JSON.stringify(res.data.datas.prjBscInfo.prjEquBscInfo),JSON.stringify(res.data.datas.prjBscInfo.prjEqiDtlCar));
 						_this.slots[0].values = res.data.datas.braTypeList
 						_this.transParam=res.data.datas.braList
 						_this.regionArray=res.data.datas.regionArray
