@@ -224,14 +224,16 @@
 					let self = this;
 					summer.showProgress();
 					ajaxRequest({
-						type: 'post',
-						url: 'appservice/customer/guaranteeList',
+						type: 'get',
+						url: 'appservice/project/prjcstbscinfo/initList.do',
 						param: {
-							"PROJECT_ID": self.PROJECT_ID
+							"id": self.PROJECT_ID
 						}
 					}, function(res) {
 						summer.hideProgress();
 						if (res.data.flag == 1) {
+							alert(JSON.stringify(res.data.datas));
+							console.log(res.data.datas);
 							if (res.data.datas.guaranteeList.length>0) {
 								$("#content").css('display', 'none');
 								self.sponsorListData = res.data.datas.guaranteeList;

@@ -37,13 +37,13 @@
 							 <span class="right"><span v-if='taskStyle' class="first">{{taskStyle}}</span><span v-else class="second">请选择</span> <i class="icon iconfont icon-enter"></i></span>
 						</p>
 					</li>
-					<!-- <li   v-if='hasProjectId'>
+					  <li   v-if='hasProjectId'>
 						<p class="pl10 pr10 tr">
 							<span class="fl">放款规则</span>
 							 <span class="right"><span   class="first">{{lendRuleStyle}}</span> </span>
 						</p>
-					</li> -->
-					<li @click="surePickerLendRule"  >
+					</li>  
+					<li @click="surePickerLendRule" v-else  >
 						<p class="pl10 pr10 tr">
 							<span class="fl">放款规则</span>
 							 <span class="right"><span v-if='lendRuleStyle' class="first">{{lendRuleStyle}}</span><span v-else class="second">请选择</span> <i class="icon iconfont icon-enter"></i></span>
@@ -235,6 +235,7 @@
 						 if (res.data.flag == 1) {
 								self.programStyle =res.data.datas.prjBscInfo.prjTypCdNm;
 								self.taskStyle =res.data.datas.prjBscInfo.bizTypNm;
+								self.lendRuleStyle =res.data.datas.prjBscInfo.fkgzCd=="1"?"先抵押后放款":"先放款后抵押";
 								let dataT=res.data.datas.prjBscInfo;
 								self.areaTotal =dataT.rgnReCd.name+"-"+dataT.rgnPrCd.name+"-"+dataT.rgnCyCd.name+"-"+dataT.rgnToCd.name;
 						 }
