@@ -160,7 +160,7 @@
 					pickerOldCarStatus: false,
 					pickedColor: '',
 					pickedOldCar: '',
-					guanXiArr:[{value:1,label:'哈哈'},{value:2,label:'呵呵'}],
+					guanXiArr:[],
 					guanXiOrColor:'',
 					guanXi:'',
 					guanXiId:'',
@@ -180,6 +180,7 @@
 					PROJECT_ID: '',
 					prjEquBscInfo_id:'',
 					prjEqiDtlCar_id:'',
+					pickerModelsId:'',
 					transParam:[],
 					regionArray:[],
 					colorArray:[],
@@ -203,6 +204,7 @@
 			methods: {
 				getData() {
 					var _this = this;
+					summer.showProgress()
 					ajaxRequest({
 						type: 'GET',
 						url: 'appservice/project/prjprdbscinfo/toAddPrd.do',
@@ -210,10 +212,18 @@
 							id:_this.PROJECT_ID
 						}
 					}, function (res) {
+						summer.hideProgress()
 						console.log("返回数据",JSON.stringify(res.data.datas.prjBscInfo.prjEquBscInfo),JSON.stringify(res.data.datas.prjBscInfo.prjEqiDtlCar));
 						_this.colorArray = res.data.datas.braTypeList
 						_this.transParam=res.data.datas.braList
 						_this.regionArray=res.data.datas.regionArray
+						_this.guanXiArr=res.data.datas.driverRlTypArray
+						_this.guanXiId=res.data.datas.prjBscInfo.prjEqiDtlCar.driverRlTypCd
+						for(var j=0;j<res.data.datas.driverRlTypArray.length;j++){
+							if(_this.guanXiId==res.data.datas.driverRlTypArray[j].value){
+								_this.guanXi=res.data.datas.driverRlTypArray[j].label
+							}
+						}
 						_this.dealer=res.data.datas.prjBscInfo.splBscInfo.splNm
 						var resData=res.data.datas.prjBscInfo.prjEquBscInfo;
 						if(resData){
@@ -226,6 +236,7 @@
 								}
 							}
 							_this.braNm=resData.braNm
+							_this.pickerModelsId=resData.braBscInfo.id
 							_this.equNm=resData.equNm
 							_this.equSet=resData.equSet
 							_this.equMdl=resData.equMdl
@@ -382,8 +393,7 @@
 					prjEquBscInfo.equAmt= this.realityPrice;
 					prjEqiDtlCar.carCl=this.carColor
 					prjEquBscInfo.equQty="1"
-					prjEqiDtlCar.driverRlTypCd="1"
-					// prjEqiDtlCar.driverRlTypCd=this.guanXiId
+					prjEqiDtlCar.driverRlTypCd=this.guanXiId
 					if(this.isOldCar=="是"){
 						prjEqiDtlCar.id=this.prjEqiDtlCar_id
 						prjEqiDtlCar.vinNo=this.carNumber
@@ -403,7 +413,7 @@
 							id:_this.PROJECT_ID
 					}));
 					ajaxRequest({
-						type:"GET",
+						type:"POST",
 						url:'appservice/project/prjprdbscinfo/add.do',
 						param:{
 								prjEquBscInfo:prjEquBscInfo,
@@ -431,13 +441,13 @@
 			var models = summer.getStorage('pickerModels4');
 			console.log(summer.getStorage('pickerModels1'), summer.getStorage('pickerModels2'),summer.getStorage('pickerModels3'), models);
 			if (models) {
-				addCar.carModels =models
-				addCar.braNm=summer.getStorage('pickerModels1')
-				addcar.pickerModelsId=summer.getStorage('pickerModelsId');
-				addCar.equSet=summer.getStorage('pickerModels2')
-				addCar.equMdl=summer.getStorage('pickerModels3')
-				addCar.equNm=models
-				addCar.realityPrice = summer.getStorage('realityPrice')
+				addCar.carModels =models;
+				addCar.braNm=summer.getStorage('pickerModels1');
+				addCar.pickerModelsId=summer.getStorage('pickerModelsId');
+				addCar.equSet=summer.getStorage('pickerModels2');
+				addCar.equMdl=summer.getStorage('pickerModels3');
+				addCar.equNm=models;
+				addCar.realityPrice = summer.getStorage('realityPrice');
 			}
 		}
 		function getCity() {
