@@ -175,7 +175,11 @@
 		var payInfo = new Vue({
 			el: '#index',
 			data: {
-				datas: null
+				datas: {
+					capPayList:[],
+					capPayeeInfo:{},
+					fileList:[]
+				}
 			}
 		});
 		summerready = function() {
