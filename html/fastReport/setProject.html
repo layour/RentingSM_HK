@@ -8,9 +8,37 @@
 	<link rel="stylesheet" href="../../css/fonts/iconfont.css">
 	<link rel="stylesheet" href="../../css/mint.css">
 	<style>
+		.pickerColor {
+			width: 100%;
+			z-index: 10;
+			background: #ffffff;
+		}
 
+		.pickerColor>p {
+			line-height: .88rem;
+			padding: 0 .56rem;
+			color: #039BE5;
+			border-top: 1px solid #E0E0E0;
+			overflow: hidden;
+		}
+
+		.pickerColor>p span {
+			color: #34aadc;
+		}
+
+		.mint-cell-wrapper {
+			background-size: 100% 0px;
+			border-bottom: 1px solid #f7f7f7;
+		}
+
+		.pickerColor>p span:last-child {
+			float: right;
+		}
+
+		.pickerColor>p span:first-child {
+			float: left;
+		}
 	.item .first {
-
 		color: #333;
 	}
 
@@ -120,7 +148,7 @@
 						<span class="frp"> <i class="emergencyContract icon iconfont icon-right"></i>&nbsp; <i class="icon iconfont icon-enter"></i> </span>
 					</div>
 				</a>
-				<a href="javascript:void(0);" id="version"  onclick="openSponsor('sponsorList')"  >
+				<a href="javascript:void(0);" id="version"  onclick="slectSponsor('sponsorList')"  >
 					<div class="um-list-item-bodys">
 						担保人
 						<span class="frp"> <i class="sponsor icon iconfont icon-right"></i>&nbsp; <i class="icon iconfont icon-enter"></i> </span>
@@ -134,6 +162,14 @@
 						<span class="frp"> <i class="remark icon iconfont icon-right"></i>&nbsp; <i class="icon iconfont icon-enter"></i> </span>
 					</div> </a> -->
 			</div>
+		</div>
+		<div class="um-footer" id="footer">
+			<mt-popup v-model="pickerSponsorTypeStatus" position='bottom' class="pickerColor">
+				<mt-picker :slots="slots1" @change="onValuesChange1"></mt-picker>
+				<p>
+					<span class="" @click="surePickerSponsorType">取消</span><span class="" @click="surePickerSponsorType('confirm')">确定</span>
+				</p>
+			</mt-popup>
 		</div>
 	</div>
 	<script src="../../js/summer.js"></script>
@@ -150,7 +186,7 @@
 				var customId = summer.pageParam.customId;
 			var __projectid = summer.pageParam.projectId;
 			setProgect.project_Id = __projectid;
-			setProgect.getProjectId(__projectid);
+		//	setProgect.getProjectId(__projectid);//此处应为从项目列表进来修改准备
 			console.log(JSON.stringify(summer.pageParam));
 		/*	if (sourceId == "programList") {
 				setProgect.getProjectId(__projectid);
@@ -187,6 +223,15 @@
 					project_Id: "",
 					carName:'',
 					sourceFrom:"",
+					slots1: [{
+						flex: 1,
+						values: ['企业', '个人'],
+						defaultIndex: 0,
+						className: 'slot1',
+						textAlign: 'center'
+					}],
+					pickerSponsorTypeStatus: false,
+					pickerSponsorType: "",
 				}
 			},
 			methods: {
@@ -195,6 +240,45 @@
 				},
 				openPicker() {
 					this.$refs.picker.open();
+				},	
+				surePickerSponsorType(param) {
+					this.pickerSponsorTypeStatus = !this.pickerSponsorTypeStatus;
+					if (param == 'confirm') {
+						var sponsorType = this.pickerSponsorType;
+						if (sponsorType == "个人") {
+							openSponsor('newSponsor');
+						} else {
+							openSponsor('newSponsor_company');
+						}
+
+					}
+				},
+				sureSponsorType() {
+					var self = this;
+					ajaxRequest({
+						type: 'get',
+						url: 'appservice/project/prjcstbscinfo/initList.do',
+						param: {
+							"id": self.project_Id,
+						}
+					}, function(res) {
+						summer.hideProgress();
+						if (res.data.flag == 1) {
+							console.log(res.data);
+							if (res.data.datas.warType=="法人") {
+								openSponsor('newSponsor_company',res.data.datas.npWarrList);
+							} else {
+								openSponsor('newSponsor',res.data.datas.npWarrList);
+							}
+						}
+					}, function(err) {
+						alert(err);
+						console.log(err);
+						summer.hideProgress();
+					});
+				},
+				onValuesChange1: function(picker, values) {
+					this.pickerSponsorType = values[0];
 				},
 				getData(id) {
 					var self = this;
@@ -510,7 +594,7 @@
 			})
 		}
 
-		function openSponsor(id) {
+		function slectSponsor() {
 			var projectId = setProgect.project_Id;
 			var clientId = setProgect.customId
 			if (!projectId) {
@@ -521,40 +605,47 @@
 			} else {
 				var isAdd;
 				if(!$(".sponsor").hasClass('active')){
+					setProgect.surePickerSponsorType();
 					isAdd= true;
 				}else{
 					isAdd=false;
+					setProgect.sureSponsorType();
 				}
-				summer.openWin({
-					id: id,
-					url: 'html/fastReport/'+id+'.html',
-					create: false,
-					type: 'actionBar',
-					actionBar: {
-						title: "添加担保人",
-						titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
-						backgroundColor: "#039BE5",
-						leftItem: {
-							image: "img/back.png",
-							method: "", //返回按钮自定义事件
-							text: "返回",
-							textColor: "#ffffff" //返回文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
-						},
-						rightItems: [{
-							type: "text",
-							text: "添加",
-							textColor: "#ffffff",
-							method: "surePickerSponsorType()"
-						}]
-
-					},
-					pageParam: {
-						projectId: projectId,
-						clientId: clientId,
-						isAdd:isAdd
-					}
-				});
 			}
+
+		}
+		function openSponsor(id,data) {
+			var projectId = setProgect.project_Id;
+			var clientId = setProgect.customId
+			summer.openWin({
+				id: id,
+				url: 'html/fastReport/' + id + '.html',
+				create: false,
+				type: 'actionBar',
+				actionBar: {
+					title: "添加担保人",
+					titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
+					backgroundColor: "#039BE5",
+					leftItem: {
+						image: "img/back.png",
+						method: "", //返回按钮自定义事件
+						text: "返回",
+						textColor: "#ffffff" //返回文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
+					},
+					rightItems: [{
+						type: "text",
+						text: "保存",
+						textColor: "#ffffff",
+						method: "complete()"
+					}]
+
+				},
+				pageParam: {
+					projectId: projectId,
+					clientId: clientId,
+					item:data
+				}
+			});
 
 		}
 		function nextStopInput() {

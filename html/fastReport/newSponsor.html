@@ -455,8 +455,8 @@
 						if (res.data.flag == 1) {
 								summer.toast({msg:"保存成功"});
 								summer.execScript({
-									 winId: "sponsorList",
-									 script: "getSponsorList()"
+									winId: "setProject",
+									script: "addRight('sponsor')"
 								});
 								summer.closeWin()
 							//self.baseMessageData=res.data.datas;
