@@ -75,9 +75,10 @@
 				border-top:1px solid #EFEFEF;
 				color:#333;
 				font-size: 14px;
+				position: relative;
 			}
 			input::-webkit-input-placeholder {
-					color: @grayColor;
+					color: #DEDEDE;
 					font-size: 14px;
 			}
 			input{
@@ -94,6 +95,32 @@
 				color: #fff;
 				background:#039BE5;
 			}
+			.grayColor{
+				margin-right: .3rem;
+			}
+			.icon-enter{
+				vertical-align: middle;
+				position: absolute;
+				right: .56rem;
+				top:50%;
+				-webkit-transform:translate(0,-50%);
+				transform:translate(0,-50%);
+				color:#DEDEDE;
+			}
+			.picker-item{
+		    font-size: 14px;
+		  }
+		  .picker-slot{
+		    font-size: 14px;
+		    color:#DEDEDE;
+		  }
+		  .picker-item.picker-selected{
+		    font-size: 22px;
+		    color:#333;
+		  }
+			.gray{
+				color:#DEDEDE;
+			}
 		</style>
 	</head>
 	<body>
@@ -104,7 +131,7 @@
 						<mt-cell-swipe :title="item.rlNm" :label="item.mp" :right="[{content: '&nbsp;&nbsp;&nbsp;删除&nbsp;&nbsp;&nbsp;',style: {lineHeight:'1.76rem', background: '#f44336', color: '#fff' },handler: () =>deleteItem(index)}]">
 							<div  class="fr one inDiv">
 								<!-- <a href=""><i class="icon iconfont icon-call"></i></a> -->
-								{{item.rlTypCd}}
+								{{item.rlTypNm}}
 							</div>
 						</mt-cell-swipe>
 					</li>
@@ -121,12 +148,21 @@
 							<span>电话</span>
 							<input type="number" class='fr' name="mp" v-model="mp" placeholder='请输入号码'>
 						</li>
-						<li>
+						<li @click="surePicker">
 							<span>关系</span>
-							<input type="text" class='fr' name="rlTypCd" v-model="rlTypCd" placeholder='请输入你们的关系类型'>
+							<span v-if='rlTypCd' class="grayColor fr">{{rlTypNm}}</span>
+							<span class="grayColor gray fr" v-else>请选择</span>
+							<i class="icon iconfont icon-enter"></i>
 						</li>
 					</ul>
 					<p><span  @click="addItem">取消</span><span class="fr" @click="sureAdd">确定</span></p>
+				</mt-popup>
+				<mt-popup v-model="pickerStatus" position='bottom' class="add">
+					<mt-picker value-key="label" :slots="slots" @change="onValuesChange"></mt-picker>
+					<p class="foop">
+						<span class="" @click="surePicker">取消</span>
+						<span class="fr" @click="surePicker('confirm')">确定</span>
+					</p>
 				</mt-popup>
 				<button class="btn um-btn-primary" style="background:#039BE5;height:.88rem;padding:5px 12px" @click="save">保存</button>
 			</div>
@@ -140,22 +176,31 @@
 		<script src="../../js/Frameworks/iuapmobile.frameworks.ui.js" ></script>
     <script>
 				summerready=function(){
-					vueTemplate.getData(summer.pageParam.id)
+					vueTemplate.id=summer.pageParam.id
+					console.log(vueTemplate.id);
+					vueTemplate.getData()
 				}
         var vueTemplate=new Vue({
           el:'#addContact',
           data(){
             return {
 							addStatus:false,
-							addContactList:[
-								{rlNm:"张自忠",mp:'13146829922',rlTypCd:'朋友'},
-								{rlNm:"秦始皇",mp:'18646829984',rlTypCd:'君臣'}
-							],
+							pickerStatus:false,
+							pickedValues:{},
+							addContactList:[],
 							rlNm:'',
 							mp:'',
 							rlTypCd:'',
+							rlTypNm:'',
 							id:'',
 							list:[],
+							slots: [{
+								flex: 1,
+								values: [],
+								defaultIndex: 0,
+								className: 'slot1',
+								textAlign: 'center'
+							}],
 							swipeArr:[
 						    {
 						      content: '删除',
@@ -166,22 +211,22 @@
             }
           },
 					methods:{
-						getData(id){
+						getData(){
 							var _this=this
 							ajaxRequest({
-								type:'get',
-								url:'appservice/customer/cstnpsocialrl/list.do?',
+								type:'GET',
+								url:'appservice/customer/cstnpsocialrl/list.do',
 								param:{
-									cstId:id
+									cstId:_this.id
 								}
 							},function(res){
 								console.log(res,JSON.stringify(res));
-								_this.list=res.data.datas.rlTypArray
+								_this.slots[0].values=res.data.datas.rlTypArray
 								_this.addContactList=res.data.datas.jjList
 								for(var i=0;i<_this.addContactList.length;i++){
 									for(var j=0;j<_this.list.length;j++){
 										if(_this.addContactList[i].rlTypCd==_this.list[j].value){
-											_this.addContactList[i].guanXi=_this.list[j].label
+											_this.addContactList[i].rlTypNm=_this.list[j].label
 											continue
 										}
 									}
@@ -195,6 +240,17 @@
 						},
 						addItem(){
 							this.addStatus=!this.addStatus
+						},
+						onValuesChange(picker, values) {
+							this.pickedValues = values[0];
+						},
+						surePicker(param) {
+							this.pickerStatus = !this.pickerStatus;
+							this.addStatus=!this.addStatus
+							if (param == 'confirm') {
+									this.rlTypNm = this.pickedValues.label;
+									this.rlTypCd = this.pickedValues.value;
+							}
 						},
 						sureAdd(){
 							if(!this.rlNm){
@@ -220,6 +276,10 @@
 							//发请求
 							var _this=this
 							summer.showProgress()
+							console.log(JSON.stringify({
+								cstBscInfo:{id:_this.id},
+								cstNpSocialRlList:_this.addContactList
+							}))
 							ajaxRequest({
 								type:'POST',
 								url:'appservice/customer/cstNpBscInfo/saveJJL.do',
