@@ -219,6 +219,7 @@
 					}],
 					isSelect:false,
 					totalData:'',
+					id:'',//担保人id,保存时需要
 					message: {
 						NAME: '',//姓名
 						ID_CARD_NO: '',//身份证号
@@ -411,10 +412,10 @@
 							mp1: self.message.TEL_PHONE,
 							homeAddr: self.message.HOUSE_ADDRESS,
 							workAddr: self.message.WORK_NAME,
-							genderCd:  self.SEXCOM=="男"?"0":"1",
+							genderCd:  self.SEXCOM=="男"?"1":"2",
 							age: self.AGECOM,
 							prjId: self.message.projectId,
-							id:self.message.CLIENT_ID
+							id:self.id
 						}
 					}else{
 						paramData={
@@ -459,8 +460,6 @@
 									script: "addRight('sponsor')"
 								});
 								summer.closeWin()
-							//self.baseMessageData=res.data.datas;
-							//console.log(self.baseMessageData);
 						}
 					}, function(err) {
 						alert(err);
@@ -485,24 +484,29 @@
 			newCreateCustom.message.CLIENT_ID=clintId;
 			var item= summer.pageParam.item;
 			if(item){
-				newCreateCustom.message.NAME=item.NAME;
-				newCreateCustom.message.ID_CARD_NO=item.ID_CARD_NO;
-				newCreateCustom.message.SEX=item.SEX;
-				newCreateCustom.message.SEX_NM=item.SEX_NM;
-				newCreateCustom.message.HOUSE_ADDRESS=item.HOUSE_ADDRESS;
-				newCreateCustom.message.TEL_PHONE=item.TEL_PHONE;
-				newCreateCustom.message.IS_MARRY=item.IS_MARRY;
-				newCreateCustom.message.IS_MARRY_NM=item.IS_MARRY_NM;
-				newCreateCustom.message.BIRTHDAY=item.BIRTHDAY;
-				newCreateCustom.message.HOUSE_ADDRESS_CITY=item.HOUSE_ADDRESS_CITY;
-				newCreateCustom.message.HOUSE_ADDRESS_CITY_NM=item.HOUSE_ADDRESS_CITY_NM;
-				newCreateCustom.message.HOUSE_ADDRESS_PROVINCE=item.HOUSE_ADDRESS_PROVINCE;
-				newCreateCustom.message.HOUSE_ADDRESS_PROVINCE_NM=item.HOUSE_ADDRESS_PROVINCE_NM;
-				newCreateCustom.message.PROJECT_ID=item.PROJECT_ID;
-				newCreateCustom.message.GID=item.GID;
-				newCreateCustom.message.CLIENT_ID=item.CLIENT_ID;
-				newCreateCustom.message.TYPE=item.TYPE;
-				newCreateCustom.isSelect=true;
+				newCreateCustom.message.NAME=item.wrtNm;
+				newCreateCustom.message.ID_CARD_NO=item.certNo;
+				newCreateCustom.message.WORK_NAME=item.workAddr;
+				newCreateCustom.message.SEXCOM=(item.genderCd=="1")?"男":"女";
+				newCreateCustom.message.HOUSE_ADDRESS=item.homeAddr;
+				newCreateCustom.message.TEL_PHONE=item.mp1;
+				newCreateCustom.AGECOM=item.age;
+				newCreateCustom.id=item.id;
+				newCreateCustom.totalData.carTypArray.map((e,i)=>{
+					if(e.value==item.certTypCd){
+						newCreateCustom.message.cardType=newCreateCustom.totalData.carTypArray[i].label
+					}
+				});
+				newCreateCustom.totalData.gxArray.map((e,i)=>{
+					if(e.value==item.gxCd){
+						newCreateCustom.message.cusRelation=newCreateCustom.totalData.gxArray[i].label
+					}
+				});
+				newCreateCustom.totalData.marStsArray.map((e,i)=>{
+					if(e.value==item.marStsCd){
+						newCreateCustom.message.IS_MARRY_NM=newCreateCustom.totalData.marStsArray[i].label
+					}
+				});
 			}
 			// var params = ["android.permission.ACCESS_FINE_LOCATION", "android.permission.ACCESS_COARSE_LOCATION", "android.permission.CAMERA", "android.permission.FLASHLIGHT", "android.permission.READ_EXTERNAL_STORAGE", "android.permission.READ_PHONE_STATE",
 			// 	"android.permission.WRITE_EXTERNAL_STORAGE", "android.permission.ACCESS_FINE_LOCATION", "android.permission.ACCESS_COARSE_LOCATION"
