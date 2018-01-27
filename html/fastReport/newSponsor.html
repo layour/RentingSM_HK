@@ -143,21 +143,9 @@
 					 <span class=""> <span  class="first" >{{AGECOM}} </span> </span>
 				</p>
 			</div>
-			<!-- <div @click="sureDateConfirm" class="item">
-				<p class="pl10 pr10 tr">
-					<span class="fl">出生年月</span>
-					<span class=""><span v-if='message.BIRTHDAY' class="first">{{message.BIRTHDAY}}</span><span v-else class="second">请选择</span> <i class="icon iconfont icon-enter"></i></span>
-				</p>
-			</div> -->
 			<mt-field label="家庭住址" placeholder="请输入您的住址" v-model="message.HOUSE_ADDRESS"></mt-field>
 			<mt-field label="单位名称" placeholder="请输入您的单位名称" v-model="message.WORK_NAME"></mt-field>
 			<mt-field label="手机号" placeholder="请输入您的手机号码" v-model="message.TEL_PHONE"></mt-field>
-			<!-- <div class="item">
-				<p class="pl10 pr10 tr" @click="selectAddr">
-					<span class="fl">省市</span>
-					<span class=""> <span  class="first">{{message.HOUSE_ADDRESS_PROVINCE_NM}} {{message.HOUSE_ADDRESS_CITY_NM}}</span> <i class="icon iconfont icon-enter"></i></span>
-				</p>
-			</div> -->
 			<div @click="surePickerMarrige" class="item">
 				<p class="pl10 pr10  um-box">
 					<span class="um-bf1">婚姻状况</span> <span class="um-bf1 tr"><span v-if='message.IS_MARRY_NM' class="first">{{message.IS_MARRY_NM}}</span><span v-else class="second">请选择</span> <i class="icon iconfont icon-enter"></i></span>
@@ -202,17 +190,12 @@
 					cardShow: false,
 					cardUrl: "",
 					pickerVisible: "",
-					pickerDate: "",
-					pickerValue: new Date(),
-					surePicekerDateVal: '',
 					pickerCardTypeStatus: false,
 					pickerCusRelationStatus: false,
-					pickerDateStatus: false,
 					pickerMarrigeStatus: false,
 					pickerCardType: "",
 					pickerCusRelationType: "",
 					pickerMarrige: "",
-					noweDate: new Date(),
 					slots1: [{
 						flex: 1,
 						values: [],
@@ -240,8 +223,6 @@
 						NAME: '',//姓名
 						ID_CARD_NO: '',//身份证号
 						WORK_NAME:'',
-						SEX: '',
-						SEX_NM:'',
 						HOUSE_ADDRESS: '',
 						TEL_PHONE: '',
 						IS_MARRY: '',
@@ -249,10 +230,6 @@
 						cusRelation:'',
 						cardType:'',
 						BIRTHDAY: '',
-						HOUSE_ADDRESS_PROVINCE: '',
-						HOUSE_ADDRESS_PROVINCE_NM:'',
-						HOUSE_ADDRESS_CITY: '',
-						HOUSE_ADDRESS_CITY_NM:'',
 						projectId:'',
 						GID:"",
 						CLIENT_ID:"",
@@ -263,7 +240,7 @@
 			computed:{
 				 SEXCOM:function () {
 					if(this.message.ID_CARD_NO&&this.message.ID_CARD_NO.length=="18") {
-						let psidno=this.message.ID_CARD_NO;
+						var psidno=this.message.ID_CARD_NO;
 					   if(parseInt(psidno.substring(16,17))%2==0){
 						   return "女"
 					   }else{
@@ -282,7 +259,7 @@
 			},
 			methods: {
 				getType(projectId){
-					let self = this;
+					var self = this;
 					ajaxRequest({
 						type: 'get',
 						url: 'appservice/project/prjcstbscinfo/initList.do',
@@ -293,7 +270,7 @@
 						summer.hideProgress();
 						if (res.data.flag == 1) {
 							console.log(res.data.datas);
-							let totalData=res.data.datas;
+							var totalData=res.data.datas;
 							self.totalData=totalData;
 							totalData.carTypArray.map((e,i) =>{
 								self.slots1[0].values.push(e.label);
@@ -310,26 +287,6 @@
 						console.log(err);
 						summer.hideProgress();
 					});
-				},
-				selectAddr() {
-					summer.setStorage("selectFrom", "newSponsor");
-					summer.openWin({
-						id: 'selectProvince',
-						url: 'html/fastReport/selectProvince.html',
-						create: false,
-						type: 'actionBar',
-						actionBar: {
-							title: '选择省',
-							titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
-							backgroundColor: "#039BE5",
-							leftItem: {
-								image: "img/back.png",
-								method: '', //返回按钮自定义事件
-								text: "返回",
-								textColor: "#ffffff" //返回文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
-							}
-						}
-					})
 				},
 				handleClick: function() {
 					this.$toast('Hello world!')
@@ -390,31 +347,6 @@
 						this.message.IS_MARRY_NM=this.pickerMarrige
 					}
 				},
-				sureDateConfirm: function() {
-					this.pickerDateStatus = !this.pickerDateStatus;
-					this.$refs.picker.open();
-				},
-				handleConfirm: function(pickerValue) {
-					this.pickerValue = pickerValue;
-					this.message.BIRTHDAY = getFormatDate(pickerValue)
-
-					function getFormatDate(date) {
-						var date = new Date(date),
-							seperator1 = "-";
-						var year = date.getFullYear(),
-							month = date.getMonth() + 1,
-							strDate = date.getDate();
-						if (month >= 1 && month <= 9) {
-							month = "0" + month;
-						}
-						if (strDate >= 0 && strDate <= 9) {
-							strDate = "0" + strDate;
-						}
-						return  year +'-'+ month +'-'+ strDate;
-
-					}
-
-				},
 				messageTest: function() {
 					var regCard = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/; //身份证校验
 					var phoneCard = /^[1][3,4,5,7,8,9][0-9]{9}$/;
@@ -467,11 +399,11 @@
 					return true;
 				},
 				complete: function() {
-					let self=this;
+					var self=this;
 					if (!this.messageTest()) {
 						return;
 					};
-					let paramData;
+					var paramData;
 					if(self.isSelect){
 						paramData={
 							wrtNm: self.message.NAME,
@@ -491,14 +423,14 @@
 							mp1: self.message.TEL_PHONE,
 							homeAddr: self.message.HOUSE_ADDRESS,
 							workAddr: self.message.WORK_NAME,
-							genderCd:  self.SEXCOM=="男"?"0":"1",
+							genderCd:  self.SEXCOM=="男"?"1":"2",
 							age: self.AGECOM,
 							prjId: self.message.projectId,
 						}
 					}
-					let _cardType=self.message.cardType;
-					let _cusRelation=self.message.cusRelation;
-					let _IS_MARRY_NM=self.message.IS_MARRY_NM;
+					var _cardType=self.message.cardType;
+					var _cusRelation=self.message.cusRelation;
+					var _IS_MARRY_NM=self.message.IS_MARRY_NM;
 					self.totalData.carTypArray.map((e,i)=>{
 						if(e.label==_cardType){
 							paramData.certTypCd=self.totalData.carTypArray[i].value;
@@ -535,34 +467,6 @@
 						console.log(err);
 						summer.hideProgress();
 					});
-					//此处ajax请求
-				/*	summer.openWin({
-						id: 'setProject',
-						url: 'html/fastReport/setProject.html',
-						create: false,
-						type: 'actionBar',
-						isKeep: false,
-						pageParam: {
-							source: "customer"
-						},
-						actionBar: {
-							title: "快捷报单",
-							titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
-							backgroundColor: "#039be5",
-							leftItem: {
-								image: "img/back.png",
-								method: "", //返回按钮自定义事件
-								text: "返回",
-								textColor: "#ffffff" //返回文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
-							},
-							rightItems: [{
-								type: "text",
-								text: "下一步",
-								textColor: "#ffffff", //文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
-								method: "nextStopInput()" //在打开的window中自定义事件
-							}]
-						}
-					});*/
 				},
 				openPicker: function() {
 					this.$refs.picker.open();
@@ -573,20 +477,13 @@
 		function complete() {
 			newCreateCustom.complete();
 		}
-		function getAddr() {
-			newCreateCustom.message.HOUSE_ADDRESS_PROVINCE_NM = JSON.parse(summer.getStorage('selectProvince')).AREA_NAME
-			newCreateCustom.message.HOUSE_ADDRESS_CITY_NM = JSON.parse(summer.getStorage('selectCity')).AREA_NAME
-			newCreateCustom.message.HOUSE_ADDRESS_PROVINCE=JSON.parse(summer.getStorage('selectProvince')).AREA_ID
-			newCreateCustom.message.HOUSE_ADDRESS_CITY=JSON.parse(summer.getStorage('selectCity')).AREA_ID
-			//newCreateCustom.message.HOUSE_ADDRESS_COUNTY = JSON.parse(summer.getStorage('selectArea')).AREA_NAME
-		}
 		summerready = function() {
-			let projectId = summer.pageParam.projectId;
+			var projectId = summer.pageParam.projectId;
 			newCreateCustom.message.projectId=projectId;
 			newCreateCustom.getType(projectId);
-			let clintId = summer.pageParam.clientId;
+			var clintId = summer.pageParam.clientId;
 			newCreateCustom.message.CLIENT_ID=clintId;
-			let item= summer.pageParam.item;
+			var item= summer.pageParam.item;
 			if(item){
 				newCreateCustom.message.NAME=item.NAME;
 				newCreateCustom.message.ID_CARD_NO=item.ID_CARD_NO;

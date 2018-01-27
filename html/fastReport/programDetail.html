@@ -249,7 +249,7 @@
 		},
 		methods: {
 			getData(id) {
-				let self = this;
+				var self = this;
 				ajaxRequest({
 					type: 'get',
 					url: 'appservice/project/prjbscinfo/getById.do',
@@ -271,7 +271,7 @@
 
 			},
 		  getJBPMData(id){
-				let self = this;
+				var self = this;
 					ajaxRequest({
 						type: 'get',
 						url: 'appservice/project/prjbscinfo/showPrjAct.do',

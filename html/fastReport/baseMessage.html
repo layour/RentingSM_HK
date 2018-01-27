@@ -138,7 +138,7 @@
 			  var baseData=summer.pageParam.baseData;
 			  var customId=summer.pageParam.customId;
 			  baseMessage.customId=customId;
-			  let _project_Id=summer.pageParam.project_Id;
+			  var _project_Id=summer.pageParam.project_Id;
 
 			  if(_project_Id){
 				  baseMessage.hasProjectId=true;
@@ -222,7 +222,7 @@
 			},
 			 methods: {
 				 getData(id){
-					 let self=this;
+					 var self=this;
 					 ajaxRequest({
 						 type: 'get',
 						 url: 'appservice/project/prjbscinfo/toAddPrj.do',
@@ -236,7 +236,7 @@
 								self.programStyle =res.data.datas.prjBscInfo.prjTypCdNm;
 								self.taskStyle =res.data.datas.prjBscInfo.bizTypNm;
 								self.lendRuleStyle =res.data.datas.prjBscInfo.fkgzCd=="1"?"先抵押后放款":"先放款后抵押";
-								let dataT=res.data.datas.prjBscInfo;
+								var dataT=res.data.datas.prjBscInfo;
 								self.areaTotal =dataT.rgnReCd.name+"-"+dataT.rgnPrCd.name+"-"+dataT.rgnCyCd.name+"-"+dataT.rgnToCd.name;
 						 }
 					 }, function(err) {
@@ -303,7 +303,7 @@
 					}
 				},
 				save() {
-					let self=this;
+					var self=this;
 					if(this.programStyle==""){
 						summer.toast({msg:"请选择项目类型"});
 						return;
@@ -322,10 +322,10 @@
 					// }
 					//此时需要调后端的ajax请求数据
 					
-					let customId=this.customId;
-			        let _programStyle=this.programStyle;
-					let _taskStyle=this.taskStyle;
-					let _lendRuleStyle=this.lendRuleStyle;
+					var customId=this.customId;
+			        var _programStyle=this.programStyle;
+					var _taskStyle=this.taskStyle;
+					var _lendRuleStyle=this.lendRuleStyle;
 			  		var prjTypCd,bizTyp,fkgzCd;
 
 					baseMessage.totalData.prjTypCdArray.map((e,i)=>{
@@ -360,7 +360,7 @@
 					 }, function (res) {
 							  if(res.data.flag==1){
 								  console.log(res);
-								  let projectId=res.data.datas.id;
+								  var projectId=res.data.datas.id;
 								  summer.hideProgress();
 								  summer.toast({msg:"保存成功"});
 									summer.execScript({

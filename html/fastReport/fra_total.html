@@ -128,7 +128,7 @@
 			mounted() {},
 			methods: {
 				getData(pageNum, flag) {
-					let self = this;
+					var self = this;
 					ajaxRequest({
 						type: 'get',
 						url: 'appservice/project/prjbscinfo/initList.do',

@@ -95,7 +95,7 @@ function ajaxRequest(paramObj, successCallback, errorCallback) {
 		timeout : 5000
 	};
 	if (getToken()) {
-		 let token = getToken();
+		 var token = getToken();
 		testPath=testPath+"?TOKEN="+token;
 	}  
 	summer.ajax({
