@@ -239,7 +239,7 @@
 							_this.realityPrice=resData.equAmt
 							var oldCarData=res.data.datas.prjBscInfo.prjEqiDtlCar
 							if(oldCarData){
-								_this.guanXiId=oldCarData.driverRlTypCd
+								_this.guanXiId=res.data.datas.prjBscInfo.prjEqiDtlCar.driverRlTypCd
 								for(var j=0;j<res.data.datas.driverRlTypArray.length;j++){
 									if(_this.guanXiId==res.data.datas.driverRlTypArray[j].value){
 										_this.guanXi=res.data.datas.driverRlTypArray[j].label
@@ -280,6 +280,7 @@
 					}
 				},
 				pickerDealCity(){
+					summer.setStorage('fromToSelectCityId','addCarList')
 					var _this=this
 						summer.openWin({
 							id: 'pickerDealCity',

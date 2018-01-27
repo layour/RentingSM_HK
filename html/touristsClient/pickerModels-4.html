@@ -69,11 +69,11 @@
               summer.setStorage('pickerModels4',it.equNm);
               summer.setStorage('realityPrice',it.guidePc);
 							summer.execScript({
-							    winId: 'addCarList',
+							    winId: summer.getStorage('fromToSelectCityId'),
 							    script: 'getModels()'
 							});
 							summer.closeToWin({
-								id:'addCarList'
+								id:summer.getStorage('fromToSelectCityId')
 							})
 						}
 					}

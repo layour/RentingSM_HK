@@ -20,9 +20,17 @@
 		<div class="um-win" id="quotedPriceDetail" v-cloak>
 			<div class="um-content quotedPriceDetail">
 				<ul>
-					<li><b>方案名称</b><span>{{SCHEME_NAME}}</span></li>
+					<!-- <li><b>方案名称</b><span>{{SCHEME_NAME}}</span></li> -->
 					<!-- 不再显示方案编号了 -->
 					<!-- <li><b>方案编号</b><span>{{SCHEME_CODE}}</span></li> -->
+					<li @click="sureGkfsType">
+						<b>报价方案</b>
+						<span>
+							<b v-if="GKFS">{{GKFS}}</b>
+							<b v-else class="default">请选择</b>
+							<i class="icon iconfont icon-enter"></i>
+						</span>
+					</li>
 					<li v-if="PROJECT_ID!=''" class="spec"><b>合同金额</b><span>{{quoted.allPrice}}&nbsp;元</span></li>
 					<li v-else class="spec input">
 						<b>合同金额</b>
@@ -223,13 +231,7 @@
 				if(summer.pageParam.projectId){
 					quotedVue.PROJECT_ID=summer.pageParam.projectId;
 				}
-				if(summer.pageParam.SCHEME_CODE){
-					quotedVue.SCHEME_CODE=summer.pageParam.SCHEME_CODE;
-				}
-				if(summer.pageParam.SCHEME_NAME){
-					quotedVue.SCHEME_NAME=summer.pageParam.SCHEME_NAME;
-				}
-					quotedVue.getData();
+				quotedVue.getData();
 
 			}
       var quotedVue=new Vue({
@@ -369,9 +371,9 @@
 							console.log("PROJECT_ID",this.PROJECT_ID);
 							var _this=this
 							ajaxRequest({
-								type:'POST',
-								url:'appservice/foundproject/queryProjectScheme',
-								param:{PROJECT_ID:_this.PROJECT_ID}
+								type:'GET',
+								url:'appservice/project/prdbscsch/selectScheme.do',
+								param:{id:_this.PROJECT_ID}
 							},function(res){
 								console.log("res",res);
 								_this.payTypeSlots[0].values=res.data.datas.paywaylist
