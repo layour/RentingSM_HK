@@ -31,7 +31,7 @@
 						</span>
 					</li>
 					<li @click="surePicker('term')">
-						<b>租赁期数</b>
+						<b>还款期限</b>
 						<span>
 							<b v-if="quoted.term">{{quoted.term}}</b>
 							<b v-else class="default">请选择</b>
@@ -39,21 +39,21 @@
 						</span>
 					</li>
 					<li class="liContr">
-						<b>合同周期</b>
+						<b>还款期限单位</b>
 						<span class="fr">
 							{{quoted.contractTerm}}&nbsp;个月
 						</span>
 					</li>
-					<!-- <li @click="surePicker('termType')">
+					<li @click="surePicker('termType')">
 						<b>期满处理方式</b>
 						<span>
 							<b v-if="quoted.termType">{{quoted.termType}}</b>
 							<b v-else class="default">请选择</b>
 							<i class="icon iconfont icon-enter"></i>
 						</span>
-					</li> -->
+					</li>
 					<li  class='input'>
-						<b>租赁年利率</b>
+						<b>贷款年利率</b>
 						<span>
 							<input type="text" v-model="quoted.rate" @input="rateCheck" name='rate' placeholder="请输入年利率">&nbsp;%
 						</span>
@@ -66,7 +66,7 @@
 							<i class="icon iconfont icon-enter"></i>
 						</span>
 					</li>
-					<li @click="sureGkfsType">
+					<!-- <li @click="sureGkfsType">
 						<b>挂靠方式</b>
 						<span>
 							<b v-if="GKFS">{{GKFS}}</b>
@@ -87,7 +87,7 @@
 						<span>
 							<input type="text" style="min-width:4rem;" @input="checkGkcd" placeholder="请输入挂靠车队" name="gkcd" v-model="GKCD">&nbsp;&nbsp;
 						</span>
-					</li>
+					</li> -->
 					<li @click="pickFirstRate">
 						<b>首付比例</b>
 						<span>
@@ -153,7 +153,7 @@
 							<b>首付金额</b>
 							<span><input type="text" @input="changeFirstPayRate" placeholder="请输入您的金额" name="firstPay" v-model="quoted.firstPay">&nbsp;元</span>
 						</li>
-						<li class="alertLi">当前为金额计算，<button @click="moneyToRateStatus">改为百分比计算</button></li>
+						<!-- <li class="alertLi">当前为金额计算，<button @click="moneyToRateStatus">改为百分比计算</button></li> -->
 						<li>
 							<b>百分百</b>
 							<span> <b v-if="quoted.firstPayRate">{{quoted.firstPayRate}}</b>
@@ -165,7 +165,7 @@
 							<b>百分百</b>
 							<span><input type="text" maxlength='5' @input="changeFirstPay" placeholder='请输入百分百' name="firstPayRate" v-model="quoted.firstPayRate">&nbsp;%</span>
 						</li>
-						<li class="alertLi">当前为百分百计算，<button @click="moneyToRateStatus">改为金额计算</button></li>
+						<!-- <li class="alertLi">当前为百分百计算，<button @click="moneyToRateStatus">改为金额计算</button></li> -->
 						<li class="input">
 							<b>首付金额</b>
 							<span>
@@ -190,7 +190,7 @@
 							<b>保证金金额</b>
 							<span><input type="text" @input="changBailRate" placeholder="请输入您的金额" name="bail" v-model="quoted.bail">&nbsp;元</span>
 						</li>
-						<li class="alertLi">当前为金额计算，<button @click="bailToRateStatus">改为百分比计算</button></li>
+						<!-- <li class="alertLi">当前为金额计算，<button @click="bailToRateStatus">改为百分比计算</button></li> -->
 						<li>
 							<b>百分百</b>
 							<span> <b v-if="quoted.bailRate">{{quoted.bailRate}}</b>
@@ -202,7 +202,7 @@
 							<b>百分百</b>
 							<span><input type="text" maxlength='5' @input="changeBail" placeholder="请输入百分百" name="bail" v-model="quoted.bailRate">&nbsp;%</span>
 						</li>
-						<li class="alertLi">当前为百分百计算，<button @click="bailToRateStatus">改为金额计算</button></li>
+						<!-- <li class="alertLi">当前为百分百计算，<button @click="bailToRateStatus">改为金额计算</button></li> -->
 						<li class="input">
 							<b>保证金金额</b>
 							<span>
@@ -260,8 +260,8 @@
 							pickerGkfsStatus:false,
 							bailStatue:false,
 							firstPayStatu:false,
-							moneyToRate:true,
-							bailToRate:true,
+							moneyToRate:false,
+							bailToRate:false,
 							pickerType:'payType',
 							pickerVal:'',
 							PROJECT_ID:'',

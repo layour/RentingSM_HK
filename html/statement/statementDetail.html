@@ -14,22 +14,23 @@
 			<div class="um-content statementDetail">
 				<table>
 					<tr>
-						<td class="first"><i class="icon iconfont icon-user"></i></td>
+						<!-- <td class="first"><i class="icon iconfont icon-user"></i></td> -->
 						<td>
 							<p>{{name}}</p>
 							<p>{{number}}</p>
 						</td>
 					</tr>
 				</table>
+
 				<section>
-					<p>来款时间</p>
+					<p class="f16">来款时间</p>
 					<div>
 						<p>
 							<span @click="openPicker('start')" :class="{default:!startDate}"><template v-if="!startDate" class="default">请选择开始日期</template><template v-else>{{startDate}}</template></span>
 							<b>至</b>
 							<span  @click="openPicker('end')" :class="{default:!endDate}"><template v-if="!endDate">请选择开始日期</template><template v-else>{{endDate}}</template></span>
 						</p>
-						<p>	例：2016年01月01日</p>
+						<p class="eg">	例：2016年01月01日</p>
 					</div>
 					<button class="fr">查询</button>
 				</section>
