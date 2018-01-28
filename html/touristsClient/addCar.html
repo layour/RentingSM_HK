@@ -280,7 +280,11 @@
 					}
 				},
 				pickerDealCity(){
-					summer.setStorage('fromToSelectCityId','addCarList')
+					var selectParam={
+						id:'addCarList',
+						dataSource:'dealCity'
+					}
+					summer.setStorage('fromToSelectCityId',selectParam)
 					var _this=this
 						summer.openWin({
 							id: 'pickerDealCity',
