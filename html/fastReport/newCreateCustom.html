@@ -106,6 +106,16 @@
 		.um-footer {
 			min-height: 0px;
 		}
+		.item input{
+			border: none;
+			height: .7rem;
+			width: 2.92rem;
+			text-align: right;
+			line-height: .7rem;
+			outline: none;
+			margin-top: .09rem;
+			font-size: 0.28rem;
+		}
 	</style>
 </head>
 
@@ -115,8 +125,27 @@
 			<!-- <div class="topheader tc um-header-light" @click="cardIdentify">
 				<img v-bind:src="cardUrl" v-show="cardShow" alt="" />
 			</div> -->
-			<mt-field label="姓名" placeholder="请输入您的姓名" v-model="message.cstNm"> </mt-field>
-			<mt-field label="身份证" placeholder="请输入您的身份证号码" v-model="message.certNo"></mt-field>
+			<div class="item um-box pl10 pr10" v-if="hasCheckFinish">
+				<span class="um-bf1">姓名</span>  <span class="um-bf3 tr">{{message.cstNm}}</span>  
+			</div>
+			<div class="item um-box pl10 pr10" v-else>
+					<span class="um-bf1">姓名</span><input  placeholder="请输入您的姓名" type="text" v-model="message.cstNm" class="um-bf3">
+			</div>
+			<div class="item um-box pl10 pr10" v-if="hasCheckFinish">
+					<span class="um-bf1">手机号</span>  <span class="um-bf3 tr">{{message.mp1}}</span>  
+			</div>
+			<div class="item um-box pl10 pr10" v-else>
+					<span class="um-bf1">手机号</span><input  placeholder="请输入您的手机号码" type="text"  @blur="checkPhone()"  v-model="message.mp1" class="um-bf3">
+			</div>
+			<div class="item um-box pl10 pr10" v-if="hasCheckFinish">
+					<span class="um-bf1">身份证号</span>  <span class="um-bf3 tr">{{message.certNo}}</span>  
+			</div>
+			<div class="item um-box pl10 pr10" v-else>
+					<span class="um-bf1">身份证号</span><input  placeholder="请输入您的身份证号码" @blur="checkName()" type="text" v-model="message.certNo" class="um-bf3">
+			</div>
+			<!-- <mt-field label="姓名"   placeholder="请输入您的姓名" v-model="message.cstNm"> </mt-field>
+			<mt-field label="手机号" placeholder="请输入您的手机号码" v-model="message.mp1"></mt-field>
+			<mt-field label="身份证号"   placeholder="请输入您的身份证号码" v-model="message.certNo" ></mt-field> -->
 			<div class="item">
 				<p class="pl10 pr10 tr">
 					<span class="fl">性别</span>
@@ -141,8 +170,7 @@
 					</span>
 				</p>
 			</div>
-			<mt-field label="手机号" placeholder="请输入您的手机号码" v-model="message.mp1"></mt-field>
-			<div @click="surePickerMarStsCd" class="item">
+			<div @click="surePickerMarStsCd" class="item" v-show="hasCheckFinish">
 				<p class="pl10 pr10  um-box">
 					<span class="um-bf1">婚姻状况</span>
 					<span class="um-bf1 tr">
@@ -152,7 +180,7 @@
 					</span>
 				</p>
 			</div>
-			<div class="item">
+			<div class="item" v-show="hasCheckFinish">
 				<p class="pl10 pr10 tr" @click="selectAddr">
 					<span class="fl">户口所在地城市</span>
 					<span class="">
@@ -161,8 +189,8 @@
 					</span>
 				</p>
 			</div>
-			<mt-field label="户口所在地详细地址" placeholder="请输入户口所在地详细地址" v-model="message.idAddr"></mt-field>
-			<div class="item">
+			<mt-field v-show="hasCheckFinish" label="户口所在地详细地址" placeholder="请输入户口所在地详细地址" v-model="message.idAddr"></mt-field>
+			<div class="item" v-show="hasCheckFinish">
 				<p class="pl10 pr10 tr" @click="selectAddr">
 					<span class="fl">通讯地址城市</span>
 					<span class="">
@@ -171,8 +199,8 @@
 					</span>
 				</p>
 			</div>
-			<mt-field label="通讯详细地址" placeholder="请输入通讯详细地址" v-model="message.postAddr"></mt-field>
-			<div @click="surePickerIsHasLicense" class="item">
+			<mt-field v-show="hasCheckFinish" label="通讯详细地址" placeholder="请输入通讯详细地址" v-model="message.postAddr"></mt-field>
+			<div @click="surePickerIsHasLicense" class="item" v-show="hasCheckFinish">
 				<p class="pl10 pr10  um-box">
 					<span class="um-bf1">是否有驾照</span>
 					<span class="um-bf1 tr">
@@ -182,7 +210,7 @@
 					</span>
 				</p>
 			</div>
-			<div @click="surePickerDriverLicenseType" class="item">
+			<div @click="surePickerDriverLicenseType" class="item" v-show="hasCheckFinish">
 				<p class="pl10 pr10  um-box">
 					<span class="um-bf1">准驾车型</span>
 					<span class="um-bf1 tr">
@@ -192,7 +220,7 @@
 					</span>
 				</p>
 			</div>
-			<div @click="surePickerHousingOwnership" class="item">
+			<div @click="surePickerHousingOwnership" class="item " v-show="hasCheckFinish">
 				<p class="pl10 pr10  um-box">
 					<span class="um-bf1">居住状况</span>
 					<span class="um-bf1 tr">
@@ -202,7 +230,7 @@
 					</span>
 				</p>
 			</div>
-			<div @click="surePickerIndustry" class="item">
+			<div @click="surePickerIndustry" class="item" v-show="hasCheckFinish">
 				<p class="pl10 pr10  um-box">
 					<span class="um-bf1">从事行业</span>
 					<span class="um-bf1 tr">
@@ -212,9 +240,9 @@
 					</span>
 				</p>
 			</div>
-			<mt-field label="现工作单位名称" placeholder="请输入现工作单位名称" v-model="message.mp1"></mt-field>
-			<mt-field label="现工作单位年限(年)" placeholder="请输入现工作单位年限" v-model="message.mp1">年</mt-field>
-			<div @click="surePickerWorkTypCd" class="item">
+			<mt-field v-show="hasCheckFinish" label="现工作单位名称" placeholder="请输入现工作单位名称" v-model="message.mp1"></mt-field>
+			<mt-field v-show="hasCheckFinish" label="现工作单位年限(年)" placeholder="请输入现工作单位年限" v-model="message.mp1">年</mt-field>
+			<div @click="surePickerWorkTypCd" class="item" v-show="hasCheckFinish">
 				<p class="pl10 pr10  um-box">
 					<span class="um-bf1">工作单位性质</span>
 					<span class="um-bf1 tr">
@@ -224,7 +252,7 @@
 					</span>
 				</p>
 			</div>
-			<div class="item">
+			<div class="item" v-show="hasCheckFinish">
 				<p class="pl10 pr10 tr" @click="selectAddr">
 					<span class="fl">现工作地址城市</span>
 					<span class="">
@@ -233,9 +261,9 @@
 					</span>
 				</p>
 			</div>
-			<mt-field label="现工作单位详细地址" placeholder="请输入现工作单位详细地址" v-model="message.mp1"></mt-field>
-			<mt-field label="现工作单位电话" placeholder="请输入现工作单位电话" v-model="message.mp1"></mt-field>
-			<mt-field label="现工作单位职位" placeholder="请输入现工作单位职位" v-model="message.mp1"></mt-field>
+			<mt-field v-show="hasCheckFinish" label="现工作单位详细地址" placeholder="请输入现工作单位详细地址" v-model="message.mp1"></mt-field>
+			<mt-field v-show="hasCheckFinish" label="现工作单位电话" placeholder="请输入现工作单位电话" v-model="message.mp1"></mt-field>
+			<mt-field v-show="hasCheckFinish" label="现工作单位职位" placeholder="请输入现工作单位职位" v-model="message.mp1"></mt-field>
 		</div>
 		<div class="um-footer">
 			<mt-popup v-model="pickerMarStsCdStatus" position='bottom' class="pickerColor">
@@ -377,6 +405,7 @@
 					isNativeData_total: "",
 					transportData_total: '',
 					clintId: '',
+					hasCheckFinish:false   //根据这个判断是否可以输入
 
 				}
 			},
@@ -405,9 +434,99 @@
 						var birthday_year = parseInt(this.message.certNo.substr(6, 4));
 						return year - birthday_year;
 					}
+				},
+				HASVERIFY: function () {
+					if (this.message.certNo && this.message.certNo.length == "18") {
+						var date = new Date();
+						var year = date.getFullYear();
+						var birthday_year = parseInt(this.message.certNo.substr(6, 4));
+						return year - birthday_year;
+					}
 				}
 			},
+			watch:{ 
+				'message.certNo':function(val,oldval){  
+					 if(val.length>0&&(this.message.cstNm==""||this.message.mp1=="")){
+							console.log(1);
+							 summer.toast({msg:"请先输入姓名和手机号"});
+					 }
+					 if(val.length == "18"){
+						   summer.showProgress();
+							verifyCard(val);
+					 }
+           		 },
+			},
 			methods: {
+				checkPhone(){
+					var phoneCard = /^[1][3,4,5,7,8,9][0-9]{9}$/;
+				    if (!phoneCard.test(this.message.mp1)) {
+						//alert(1);
+						//this.message.mp1="";
+						summer.toast({
+							msg: "手机号格式不正确"
+						});
+						return false;
+					}
+				},
+				checkName(){
+					if( this.message.cstNm==""||this.message.mp1==""){
+							console.log(1);
+							 summer.toast({msg:"请输入姓名和手机号"});
+							 return;
+					 }
+					 var regCard = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/; //身份证校验
+					 if (this.message.certNo == "" || regCard.test(this.message.certNo) === false) {
+						 summer.toast({
+							 msg: "请输入正确的身份证号"
+						 });
+						 return ;
+					 }
+					 verifyCard();
+
+				},
+				verifyCard(){
+					var self = this;
+					ajaxRequest({
+						type: 'post',
+						url: 'appservice/customer/cstbscinfo/getExistNp.do',
+						param: {
+							cstNm:self.message.cstNm,
+							certNo:self.message.certNo,
+							cstTypCd:'1'
+						}
+					}, function (res) {
+						summer.hideProgress();
+						if (res.data.flag == 1) {
+							saveCustomBaseM(); 
+						}
+					}, function (err) {
+						alert(err);
+						console.log(err);
+						summer.hideProgress();
+					});
+				},
+				saveCustomBaseM(){
+					var self = this;
+					ajaxRequest({
+						type: 'post',
+						url: 'appservice/customer/cstbscinfo/getExistNp.do',
+						param: {
+							cstNm:self.message.cstNm,
+							certNo:self.message.certNo,
+							cstPhoneNumber:self.message.mp1,
+							cstTypCd:'1'
+						}
+					}, function (res) {
+						summer.hideProgress();
+						if (res.data.flag == 1) {
+							 self.hasCheckFinish=true;
+						}
+					}, function (err) {
+						alert(err);
+						console.log(err);
+						summer.hideProgress();
+					});
+				},
 				getData(projectId, clintId) {
 					var self = this;
 					ajaxRequest({
@@ -733,6 +852,10 @@
 					return true;
 				},
 				savePerson: function () {
+					if(!this.hasCheckFinish){
+						summer.toast({msg:"请先输入客户基本信息"});
+						return;
+					}
 					var self = this;
 					if (!this.messageTest()) {
 						return;
