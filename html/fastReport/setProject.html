@@ -256,7 +256,7 @@
 				sureSponsorType() {
 					var self = this;
 					ajaxRequest({
-						type: 'get',
+						type: 'post',
 						url: 'appservice/project/prjcstbscinfo/initList.do',
 						param: {
 							"id": self.project_Id,
@@ -265,10 +265,10 @@
 						summer.hideProgress();
 						if (res.data.flag == 1) {
 							console.log(res.data);
-							if (res.data.datas.warType=="法人") {
-								openSponsor('newSponsor_company',res.data.datas.npWarrList);
+							if (res.data.datas.warTyp=="法人") {
+								openSponsor('newSponsor_company',res.data.datas.corpWarrList[0]);
 							} else {
-								openSponsor('newSponsor',res.data.datas.npWarrList);
+								openSponsor('newSponsor',res.data.datas.npWarrList[0]);
 							}
 						}
 					}, function(err) {
