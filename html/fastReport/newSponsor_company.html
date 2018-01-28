@@ -299,8 +299,8 @@
 					} 
 					var paramData;
 					if(self.isSelect){
-							self.message.id=self.id
 							paramData=self.message
+							paramData.id=self.id
 							paramData=JSON.parse(JSON.stringify(paramData));
 					}else{
 						paramData=self.message;
@@ -347,6 +347,7 @@
 				newCreateCustom.message.corpRepName=item.corpRepName;
 				newCreateCustom.message.corpRepTel=item.corpRepTel;
 				newCreateCustom.id=item.id
+				newCreateCustom.isSelect=true;
 			}
 			var params = ["android.permission.ACCESS_FINE_LOCATION", "android.permission.ACCESS_COARSE_LOCATION", "android.permission.CAMERA", "android.permission.FLASHLIGHT", "android.permission.READ_EXTERNAL_STORAGE", "android.permission.READ_PHONE_STATE",
 				"android.permission.WRITE_EXTERNAL_STORAGE", "android.permission.ACCESS_FINE_LOCATION", "android.permission.ACCESS_COARSE_LOCATION"

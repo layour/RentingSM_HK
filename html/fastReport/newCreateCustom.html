@@ -58,7 +58,9 @@
 		div.item span {
 			color: #333;
 		}
-
+		div.item span.um-red {
+			color:red;
+		}
 		div.item span i {
 			color: #dbdbdb;
 		}
@@ -125,54 +127,42 @@
 			<!-- <div class="topheader tc um-header-light" @click="cardIdentify">
 				<img v-bind:src="cardUrl" v-show="cardShow" alt="" />
 			</div> -->
-			<div class="item um-box pl10 pr10" v-if="hasCheckFinish">
-				<span class="um-bf1">姓名</span>  <span class="um-bf3 tr">{{message.cstNm}}</span>  
+			<div class="item um-box pl10 pr10"  >
+			<span class="um-red mr5">*</span>	<span class="um-bf1">姓名</span>  <span class="um-bf3 tr">{{message.cstNm}}</span>  
 			</div>
-			<div class="item um-box pl10 pr10" v-else>
-					<span class="um-bf1">姓名</span><input  placeholder="请输入您的姓名" type="text" v-model="message.cstNm" class="um-bf3">
+			<div class="item um-box pl10 pr10" >
+					<span class="um-red mr5">*</span>	<span class="um-bf1">手机号</span>  <span class="um-bf3 tr">{{message.mp1}}</span>  
 			</div>
-			<div class="item um-box pl10 pr10" v-if="hasCheckFinish">
-					<span class="um-bf1">手机号</span>  <span class="um-bf3 tr">{{message.mp1}}</span>  
+			<div class="item um-box pl10 pr10"  >
+					<span class="um-red mr5">*</span>	<span class="um-bf1">身份证号</span>  <span class="um-bf3 tr">{{message.certNo}}</span>  
 			</div>
-			<div class="item um-box pl10 pr10" v-else>
-					<span class="um-bf1">手机号</span><input  placeholder="请输入您的手机号码" type="text"  @blur="checkPhone()"  v-model="message.mp1" class="um-bf3">
-			</div>
-			<div class="item um-box pl10 pr10" v-if="hasCheckFinish">
-					<span class="um-bf1">身份证号</span>  <span class="um-bf3 tr">{{message.certNo}}</span>  
-			</div>
-			<div class="item um-box pl10 pr10" v-else>
-					<span class="um-bf1">身份证号</span><input  placeholder="请输入您的身份证号码" @blur="checkName()" type="text" v-model="message.certNo" class="um-bf3">
-			</div>
-			<!-- <mt-field label="姓名"   placeholder="请输入您的姓名" v-model="message.cstNm"> </mt-field>
-			<mt-field label="手机号" placeholder="请输入您的手机号码" v-model="message.mp1"></mt-field>
-			<mt-field label="身份证号"   placeholder="请输入您的身份证号码" v-model="message.certNo" ></mt-field> -->
 			<div class="item">
 				<p class="pl10 pr10 tr">
-					<span class="fl">性别</span>
+						<span class="um-red mr5 fl">*</span><span class="fl">性别</span>
 					<span class="">
-						<span class="first">{{SEXCOM}} </span>
+						<span class="first">{{message.genderNm}} </span>
 					</span>
 				</p>
 			</div>
 			<div class="item">
 				<p class="pl10 pr10 tr">
-					<span class="fl">出生年月</span>
+						<span class="um-red mr5 fl">*</span><span class="fl">出生年月</span>
 					<span class="">
-						<span class="first">{{BIRTHCOM}} </span>
+						<span class="first">{{message.birthday}} </span>
 					</span>
 				</p>
 			</div>
 			<div class="item">
 				<p class="pl10 pr10 tr">
-					<span class="fl">年龄</span>
+						<span class="um-red mr5 fl">*</span><span class="fl">年龄</span>
 					<span class="">
-						<span class="first">{{AGECOM}} </span>
+						<span class="first">{{message.age}} </span>
 					</span>
 				</p>
 			</div>
-			<div @click="surePickerMarStsCd" class="item" v-show="hasCheckFinish">
+			<div @click="surePickerMarStsCd" class="item" >
 				<p class="pl10 pr10  um-box">
-					<span class="um-bf1">婚姻状况</span>
+						<span class="um-red mr5 fl">*</span><span class="um-bf1">婚姻状况</span>
 					<span class="um-bf1 tr">
 						<span v-if='message.marStsNm' class="first">{{message.marStsNm}}</span>
 						<span v-else class="second">请选择</span>
@@ -180,90 +170,104 @@
 					</span>
 				</p>
 			</div>
-			<div class="item" v-show="hasCheckFinish">
-				<p class="pl10 pr10 tr" @click="selectAddr">
-					<span class="fl">户口所在地城市</span>
+			<div class="item" >
+				<p class="pl10 pr10 tr" @click="selectHukouCity">
+						<span class="um-red mr5 fl">*</span><span class="fl">户口所在地城市</span>
 					<span class="">
-						<span class="first">{{message.HOUSE_ADDRESS_PROVINCE_NM}} {{message.HOUSE_ADDRESS_CITY_NM}}</span>
+						<span class="first">{{HukouCity}}</span>
 						<i class="icon iconfont icon-enter"></i>
 					</span>
 				</p>
 			</div>
-			<mt-field v-show="hasCheckFinish" label="户口所在地详细地址" placeholder="请输入户口所在地详细地址" v-model="message.idAddr"></mt-field>
-			<div class="item" v-show="hasCheckFinish">
-				<p class="pl10 pr10 tr" @click="selectAddr">
-					<span class="fl">通讯地址城市</span>
+			<div class="item um-box pl10 pr10"  >
+					<span class="um-red mr5">*</span>	<span class="um-bf1">户口所在地详细地址</span><input placeholder="请输入户口所在地详细地址" v-model="message.idAddr" type="text">   
+			</div>
+			<div class="item" >
+				<p class="pl10 pr10 tr" @click="selectCurrentCity">
+					<span class="um-red mr5 fl">*</span><span class="fl">现居城市</span>
 					<span class="">
-						<span class="first">{{message.HOUSE_ADDRESS_PROVINCE_NM}} {{message.HOUSE_ADDRESS_CITY_NM}}</span>
+						<span class="first">{{CurrentCity}}</span>
 						<i class="icon iconfont icon-enter"></i>
 					</span>
 				</p>
 			</div>
-			<mt-field v-show="hasCheckFinish" label="通讯详细地址" placeholder="请输入通讯详细地址" v-model="message.postAddr"></mt-field>
-			<div @click="surePickerIsHasLicense" class="item" v-show="hasCheckFinish">
+			<div class="item um-box pl10 pr10"  >
+					<span class="um-red mr5">*</span>	<span class="um-bf1">现居详细地址</span><input placeholder="请输入现居详细地址"  v-model="message.postAddr" type="text">   
+			</div>
+			<div @click="surePickerIsHasLicense" class="item" >
 				<p class="pl10 pr10  um-box">
 					<span class="um-bf1">是否有驾照</span>
 					<span class="um-bf1 tr">
-						<span v-if='message.isHasLicense_NM' class="first">{{message.isHasLicense_NM}}</span>
+						<span v-if='message.isHasLicenseNm' class="first">{{message.isHasLicenseNm}}</span>
 						<span v-else class="second">请选择</span>
 						<i class="icon iconfont icon-enter"></i>
 					</span>
 				</p>
 			</div>
-			<div @click="surePickerDriverLicenseType" class="item" v-show="hasCheckFinish">
+			<div @click="surePickerDriverLicenseType" class="item" >
 				<p class="pl10 pr10  um-box">
 					<span class="um-bf1">准驾车型</span>
 					<span class="um-bf1 tr">
-						<span v-if='message.driverLicenseType_NM' class="first">{{message.driverLicenseType_NM}}</span>
+						<span v-if='message.driverLicenseNm' class="first">{{message.driverLicenseNm}}</span>
 						<span v-else class="second">请选择</span>
 						<i class="icon iconfont icon-enter"></i>
 					</span>
 				</p>
 			</div>
-			<div @click="surePickerHousingOwnership" class="item " v-show="hasCheckFinish">
+			<div @click="surePickerHousingOwnership" class="item " >
 				<p class="pl10 pr10  um-box">
-					<span class="um-bf1">居住状况</span>
+					<span class="um-red mr5 fl">*</span><span class="um-bf1">住房所有权</span>
 					<span class="um-bf1 tr">
-						<span v-if='message.housingOwnership_NM' class="first">{{message.housingOwnership_NM}}</span>
+						<span v-if='message.housingOwnershipNm' class="first">{{message.housingOwnershipNm}}</span>
 						<span v-else class="second">请选择</span>
 						<i class="icon iconfont icon-enter"></i>
 					</span>
 				</p>
 			</div>
-			<div @click="surePickerIndustry" class="item" v-show="hasCheckFinish">
+			<div @click="surePickerIndustry" class="item" >
 				<p class="pl10 pr10  um-box">
 					<span class="um-bf1">从事行业</span>
 					<span class="um-bf1 tr">
-						<span v-if='message.industry_NM' class="first">{{message.industry_NM}}</span>
+						<span v-if='message. industryNm' class="first">{{message. industryNm}}</span>
 						<span v-else class="second">请选择</span>
 						<i class="icon iconfont icon-enter"></i>
 					</span>
 				</p>
 			</div>
-			<mt-field v-show="hasCheckFinish" label="现工作单位名称" placeholder="请输入现工作单位名称" v-model="message.mp1"></mt-field>
-			<mt-field v-show="hasCheckFinish" label="现工作单位年限(年)" placeholder="请输入现工作单位年限" v-model="message.mp1">年</mt-field>
-			<div @click="surePickerWorkTypCd" class="item" v-show="hasCheckFinish">
+			<div class="item um-box pl10 pr10"  >
+					<span class="um-red mr5">*</span>	<span class="um-bf1">现工作单位名称</span><input placeholder="请输入现工作单位名称" v-model="message.workPlc" type="text">   
+			</div>
+			<div class="item um-box pl10 pr10"  >
+					<span class="um-red mr5">*</span>	<span class="um-bf1">现工作单位年限(年)</span><input placeholder="请输入现工作单位年限"  v-model="message.workYrs" type="text">   
+			</div>
+			<div @click="surePickerWorkTypCd" class="item" >
 				<p class="pl10 pr10  um-box">
 					<span class="um-bf1">工作单位性质</span>
 					<span class="um-bf1 tr">
-						<span v-if='message.workTypCd_NM' class="first">{{message.workTypCd_NM}}</span>
+						<span v-if='message. workTypNm' class="first">{{message. workTypNm}}</span>
 						<span v-else class="second">请选择</span>
 						<i class="icon iconfont icon-enter"></i>
 					</span>
 				</p>
 			</div>
-			<div class="item" v-show="hasCheckFinish">
-				<p class="pl10 pr10 tr" @click="selectAddr">
-					<span class="fl">现工作地址城市</span>
+			<div class="item" >
+				<p class="pl10 pr10 tr" @click="selectWorkCity">
+						<span class="um-red mr5 fl">*</span><span class="fl">现工作地址城市</span>
 					<span class="">
-						<span class="first">{{message.HOUSE_ADDRESS_PROVINCE_NM}} {{message.HOUSE_ADDRESS_CITY_NM}}</span>
+						<span class="first">{{WorkCity}}</span>
 						<i class="icon iconfont icon-enter"></i>
 					</span>
 				</p>
 			</div>
-			<mt-field v-show="hasCheckFinish" label="现工作单位详细地址" placeholder="请输入现工作单位详细地址" v-model="message.mp1"></mt-field>
-			<mt-field v-show="hasCheckFinish" label="现工作单位电话" placeholder="请输入现工作单位电话" v-model="message.mp1"></mt-field>
-			<mt-field v-show="hasCheckFinish" label="现工作单位职位" placeholder="请输入现工作单位职位" v-model="message.mp1"></mt-field>
+			<div class="item um-box pl10 pr10"  >
+					<span class="um-red mr5">*</span>	<span class="um-bf1">现工作单位详细地址</span><input placeholder="请输入现工作单位详细地址"   v-model="message.workAddr" type="text">   
+			</div>
+			<div class="item um-box pl10 pr10"  >
+					<span class="um-red mr5">*</span>	<span class="um-bf1">现工作单位电话</span><input placeholder="请输入现工作单位电话" v-model="message.workTel" type="text">   
+			</div>
+			<div class="item um-box pl10 pr10"  >
+					<span class="um-red mr5">*</span>	<span class="um-bf1">现工作单位职位</span><input placeholder="请输入现工作单位职位"  v-model="message.position" type="text">   
+			</div>
 		</div>
 		<div class="um-footer">
 			<mt-popup v-model="pickerMarStsCdStatus" position='bottom' class="pickerColor">
@@ -339,7 +343,8 @@
 					pickerWorkTypCd: "",
 					slots1: [{
 						flex: 1,
-						values: ['未婚', '已婚', '离婚', '丧偶', '未说明的婚姻状况'],
+						//values: ['未婚', '已婚', '离婚', '丧偶', '未说明的婚姻状况'],
+						values: [],
 						defaultIndex: 0,
 						className: 'slot1',
 						textAlign: 'center'
@@ -353,53 +358,105 @@
 					}],
 					slots3: [{
 						flex: 1,
-						values: ["货车", "汽车"],
+						//values: ["货车", "汽车"],
+						values: [],
 						defaultIndex: 0,
 						className: 'slot1',
 						textAlign: 'center'
 					}],
 					slots4: [{
 						flex: 1,
-						values: ["自置", "租房", "房贷"],
+						//values: ["自置", "租房", "房贷"],
+						values: [],
 						defaultIndex: 0,
 						className: 'slot1',
 						textAlign: 'center'
 					}],
 					slots5: [{
 						flex: 1,
-						values: ["农林", "IT", "牧业"],
+						//values: ["农林", "IT", "牧业"],
+						values: [],
 						defaultIndex: 0,
 						className: 'slot1',
 						textAlign: 'center'
 					}],
 					slots6: [{
 						flex: 1,
-						values: ["国企", "私企", "上市企业"],
+						//values: ["国企", "私企", "上市企业"],
+						values: [],
 						defaultIndex: 0,
 						className: 'slot1',
 						textAlign: 'center'
 					}],
+					regionArray:'',//大区列表
 					message: {
 						cstNm: '',
 						certNo: '',
 						marStsCd: '',
-						marStsNm: '',
 						idAddr: '',
 						postAddr: '',
-						MarStsNm:'',//婚姻状况
+						genderCd:'',
+						genderNm:'',
+						age:'',
+						birthday:'',
+						marStsNm:'',//婚姻状况
 						MarStsCd:'',
-						isHasLicense_NM: '',
+						isHasLicenseNm: '',
 						isHasLicense: '', //是否有驾照
-						driverLicenseType_NM: '',
+						driverLicenseNm: '',
 						driverLicenseType: '', //准驾类型
-						housingOwnership_NM: '',
+						housingOwnershipNm: '',
 						housingOwnership: '', //住房情况
-						industry_NM: '',
+						industryNm: '',
 						industry: '', //从事行业
-						workTypCd_NM: '',
-						workTypCd: '' //工作单位性质
+						workTypNm: '',
+						workTypCd: '',//工作单位性质
+						workPlc:'',//工作单位名字
+						workYrs:'',//工作单位年限
+						workAddr:'',//单位详细地址
+						workTel:'',//单位电话
+						position:'',//单位职位
+						cstIdRegion:{
+							id:""  //户口大区id
+						},
+						cstIdProvince:{
+							id:""  //户口省id
+						},
+						cstIdCity:{
+							id:""  //户口市id
+						},
+						cstIdDistrict:{
+							id:""  //户口县id
+						},
 
+						cstRegion:{
+							id:""  //通讯地址大区id
+						},
+						cstProvince:{
+							id:""  //通讯地址省id
+						},
+						cstCity:{
+							id:""  //通讯地址市id
+						},
+						cstDistrict:{
+							id:""  //通讯地址县id
+						},
+						cstWorkRegion:{
+							id:""  //工作地址大区id
+						},
+						cstWorkProvince:{
+							id:""  //工作地址省id
+						},
+						cstWorkCity:{
+							id:""  //工作地址市id
+						},
+						cstWorkDistrict:{
+							id:""  //工作地址县id
+						}
 					},
+					HukouCity:'',
+					CurrentCity:'',
+					WorkCity:'',
 					spoustObjMes: "",
 					sourceFrom: '',
 					isNativeData_total: "",
@@ -409,123 +466,90 @@
 
 				}
 			},
-			computed: {
-				SEXCOM: function () {
-					if (this.message.certNo && this.message.certNo.length == "18") {
-						var psidno = this.message.certNo;
-						if (parseInt(psidno.substring(16, 17)) % 2 == 0) {
-							return "女"
-						} else {
-							return "男"
-						};
-					}
-				},
-				BIRTHCOM: function () {
-					if (this.message.certNo && this.message.certNo.length == "18") {
-						var psidno = this.message.certNo;
-						return psidno.substr(6, 8).replace(/(.{4})(.{2})/, "$1-$2-");
-
-					}
-				},
-				AGECOM: function () {
-					if (this.message.certNo && this.message.certNo.length == "18") {
-						var date = new Date();
-						var year = date.getFullYear();
-						var birthday_year = parseInt(this.message.certNo.substr(6, 4));
-						return year - birthday_year;
-					}
-				},
-				HASVERIFY: function () {
-					if (this.message.certNo && this.message.certNo.length == "18") {
-						var date = new Date();
-						var year = date.getFullYear();
-						var birthday_year = parseInt(this.message.certNo.substr(6, 4));
-						return year - birthday_year;
-					}
-				}
-			},
-			watch:{ 
-				'message.certNo':function(val,oldval){  
-					 if(val.length>0&&(this.message.cstNm==""||this.message.mp1=="")){
-							console.log(1);
-							 summer.toast({msg:"请先输入姓名和手机号"});
-					 }
-					 if(val.length == "18"){
-						   summer.showProgress();
-							verifyCard(val);
-					 }
-           		 },
-			},
 			methods: {
-				checkPhone(){
-					var phoneCard = /^[1][3,4,5,7,8,9][0-9]{9}$/;
-				    if (!phoneCard.test(this.message.mp1)) {
-						//alert(1);
-						//this.message.mp1="";
-						summer.toast({
-							msg: "手机号格式不正确"
-						});
-						return false;
+				selectHukouCity(){
+					var selectParam={
+						id:'newCreateCustom',
+						dataSource:'HukouCity'
 					}
+					summer.setStorage('fromToSelectCityId',selectParam)
+					var _this=this
+						summer.openWin({
+							id: 'pickerDealCity',
+							url: 'html/touristsClient/pickerDealCity.html',
+							create: false,
+							type: 'actionBar',
+							pageParam: {
+								list: JSON.stringify(_this.regionArray)
+							},
+							actionBar: {
+								title: "选择大区",
+								titleColor: "#ffffff",
+								backgroundColor: "#039BE5",
+								leftItem: {
+									image: "img/back.png",
+									method: '',
+									text: "返回",
+									textColor: "#ffffff"
+								}
+							}
+						})
 				},
-				checkName(){
-					if( this.message.cstNm==""||this.message.mp1==""){
-							console.log(1);
-							 summer.toast({msg:"请输入姓名和手机号"});
-							 return;
-					 }
-					 var regCard = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/; //身份证校验
-					 if (this.message.certNo == "" || regCard.test(this.message.certNo) === false) {
-						 summer.toast({
-							 msg: "请输入正确的身份证号"
-						 });
-						 return ;
-					 }
-					 verifyCard();
-
+				selectCurrentCity(){
+					var selectParam={
+						id:'newCreateCustom',
+						dataSource:'CurrentCity'
+					}
+					summer.setStorage('fromToSelectCityId',selectParam)
+					var _this=this
+						summer.openWin({
+							id: 'pickerDealCity',
+							url: 'html/touristsClient/pickerDealCity.html',
+							create: false,
+							type: 'actionBar',
+							pageParam: {
+								list: JSON.stringify(_this.regionArray)
+							},
+							actionBar: {
+								title: "选择大区",
+								titleColor: "#ffffff",
+								backgroundColor: "#039BE5",
+								leftItem: {
+									image: "img/back.png",
+									method: '',
+									text: "返回",
+									textColor: "#ffffff"
+								}
+							}
+						})
 				},
-				verifyCard(){
-					var self = this;
-					ajaxRequest({
-						type: 'post',
-						url: 'appservice/customer/cstbscinfo/getExistNp.do',
-						param: {
-							cstNm:self.message.cstNm,
-							certNo:self.message.certNo,
-							cstTypCd:'1'
-						}
-					}, function (res) {
-						summer.hideProgress();
-						if (res.data.flag == 1) {
-							saveCustomBaseM(); 
-						}
-					}, function (err) {
-						alert(err);
-						console.log(err);
-						summer.hideProgress();
-					});
-				},
-				saveCustomBaseM(){
-					var self = this;
-					ajaxRequest({
-						type: 'post',
-						url: 'appservice/customer/cstbscinfo/getExistNp.do',
-						param: {
-							cstNm:self.message.cstNm,
-							certNo:self.message.certNo,
-							cstPhoneNumber:self.message.mp1,
-							cstTypCd:'1'
-						}
-					}, function (res) {
-						summer.hideProgress();
-						if (res.data.flag == 1) {
-							 self.hasCheckFinish=true;
-						}
-					}, function (err) {
-						alert(err);
-						console.log(err);
-						summer.hideProgress();
-					});
+				selectWorkCity(){
+					var selectParam={
+						id:'newCreateCustom',
+						dataSource:'WorkCity'
+					}
+					summer.setStorage('fromToSelectCityId',selectParam)
+					var _this=this
+						summer.openWin({
+							id: 'pickerDealCity',
+							url: 'html/touristsClient/pickerDealCity.html',
+							create: false,
+							type: 'actionBar',
+							pageParam: {
+								list: JSON.stringify(_this.regionArray)
+							},
+							actionBar: {
+								title: "选择大区",
+								titleColor: "#ffffff",
+								backgroundColor: "#039BE5",
+								leftItem: {
+									image: "img/back.png",
+									method: '',
+									text: "返回",
+									textColor: "#ffffff"
+								}
+							}
+						})
 				},
 				getData(projectId, clintId) {
 					var self = this;
@@ -540,27 +564,47 @@
 					}, function (res) {
 						summer.hideProgress();
 						if (res.data.flag == 1) {
-							var holeData = res.data.datas.custinfo;
+							var holeData = res.data.datas.cstNpBscInfo;
 							var totalData = res.data.datas;
-							self.isNativeData_total = totalData.caste;
-							self.transportData_total = totalData.industry;
-							var isNativeData = [],
-								transportData = [],
-								houseData = [];
-							for (var i = 0; i < totalData.caste.length; i++) {
-								isNativeData.push(totalData.caste[i].FLAG);
+							self.regionArray = totalData.regionArray;
+							var marStsNmData=[],isHasLicenseNmData=[],driverLicenseNmData=[],housingOwnershipNmData=[],industryNmData=[],workTypNmData=[];
+							for (var i = 0; i < totalData.marStsCd.length; i++) {
+								marStsNmData.push(totalData.marStsCd[i].label);
 							}
-							self.slots3[0].values = isNativeData;
+							self.slots1[0].values = marStsNmData;
+							// for (var i = 0; i < totalData.industry.length; i++) {
+							// 	isHasLicenseNmData.push(totalData.industry[i].label);
+							// }
+							// self.slots2[0].values = transportData;
+							for (var i = 0; i < totalData.driverLicenseType.length; i++) {
+								driverLicenseNmData.push(totalData.driverLicenseType[i].label);
+							}
+							self.slots3[0].values = driverLicenseNmData;
+							for (var i = 0; i < totalData.housingOwnership.length; i++) {
+								housingOwnershipNmData.push(totalData.housingOwnership[i].label);
+							}
+							self.slots4[0].values = housingOwnershipNmData;
 							for (var i = 0; i < totalData.industry.length; i++) {
-								transportData.push(totalData.industry[i].FLAG);
+								industryNmData.push(totalData.industry[i].label);
 							}
-							self.slots4[0].values = transportData;
-							for (var i = 0; i < totalData.residential.length; i++) {
-								houseData.push(totalData.residential[i].FLAG);
+							self.slots5[0].values = industryNmData;
+							for (var i = 0; i < totalData.workTypCd.length; i++) {
+								workTypNmData.push(totalData.workTypCd[i].label);
 							}
-							self.slots5[0].values = houseData;
+							self.slots6[0].values = workTypNmData;
 							if (holeData) {
-								self.spoustObjMes = res.data.datas.spoustObj
+								self.message.age = totalData.age;
+								self.message.birthday = totalData.birthday;
+								self.message.age = totalData.age;
+								self.message.age = totalData.age;
+								self.message.age = totalData.age;
+								self.message.age = totalData.age;
+								self.message.age = totalData.age;
+								self.message.age = totalData.age;
+								self.message.age = totalData.age;
+								self.message.age = totalData.age;
+								self.message.age = totalData.age;
+								self.message.age = totalData.age;
 								self.message.NAME = holeData.NAME;
 								self.message.certNo = holeData.certNo;
 								self.message.SEX_NM = holeData.SEX_NM;
@@ -725,7 +769,7 @@
 				surePickerIsHasLicense: function (param) {
 					this.pickerIsHasLicenseStatus = !this.pickerIsHasLicenseStatus;
 					if (param == 'confirm') {
-						this.message.isHasLicense_NM = this.pickerIsHasLicense;
+						this.message.isHasLicenseNm = this.pickerIsHasLicense;
 					}
 				},
 
@@ -735,7 +779,7 @@
 				surePickerDriverLicenseType: function (param) {
 					this.pickerDriverLicenseTypeStatus = !this.pickerDriverLicenseTypeStatus;
 					if (param == 'confirm') {
-						this.message.driverLicenseType_NM = this.pickerDriverLicenseType;
+						this.message.driverLicenseNm = this.pickerDriverLicenseType;
 					}
 				},
 				onValuesChange4: function (picker, values) {
@@ -744,7 +788,7 @@
 				surePickerHousingOwnership: function (param) {
 					this.pickerHousingOwnershipStatus = !this.pickerHousingOwnershipStatus;
 					if (param == 'confirm') {
-						this.message.housingOwnership_NM = this.pickerHousingOwnership;
+						this.message.housingOwnershipNm = this.pickerHousingOwnership;
 					}
 				},
 				onValuesChange5: function (picker, values) {
@@ -753,7 +797,7 @@
 				surePickerIndustry: function (param) {
 					this.pickerIndustryStatus = !this.pickerIndustryStatus;
 					if (param == 'confirm') {
-						this.message.industry_NM = this.pickerIndustry;
+						this.message. industryNm = this.pickerIndustry;
 					}
 				},
 				onValuesChange6: function (picker, values) {
@@ -762,7 +806,7 @@
 				surePickerWorkTypCd: function (param) {
 					this.pickerWorkTypCdStatus = !this.pickerWorkTypCdStatus;
 					if (param == 'confirm') {
-						this.message.workTypCd_NM = this.pickerWorkTypCd;
+						this.message. workTypNm = this.pickerWorkTypCd;
 					}
 				},
 				handleConfirm: function (pickerValue) {
@@ -788,42 +832,12 @@
 				messageTest: function () {
 					var regCard = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/; //身份证校验
 					var phoneCard = /^[1][3,4,5,7,8,9][0-9]{9}$/;
-					if (this.message.NAME == "") {
-						summer.toast({
-							msg: "姓名不能为空"
-						});
-						return false;
-					} else if (this.message.certNo == "" || regCard.test(this.message.certNo) === false) {
-						summer.toast({
-							msg: "请输入正确的身份证号"
-						});
-						return false;
-					} else if (this.message.SEX_NM == "") {
-						summer.toast({
-							msg: "性别不能为空"
-						});
-						return false;
-					} else if (this.message.BIRTHDAY == "") {
-						summer.toast({
-							msg: "出生年月不能为空"
-						});
-						return false;
-					} else if (this.message.HOUSE_ADDRESS == "") {
+					 if (this.message.HOUSE_ADDRESS == "") {
 						summer.toast({
 							msg: "住址不能为空"
 						});
 						return false;
-					} else if (this.message.mp1 == "") {
-						summer.toast({
-							msg: "手机号不能为空"
-						});
-						return false;
-					} else if (!phoneCard.test(this.message.mp1)) {
-						summer.toast({
-							msg: "手机号格式不正确"
-						});
-						return false;
-					} else if (this.message.IS_MARRY_NM == "") {
+					}  else if (this.message.IS_MARRY_NM == "") {
 						summer.toast({
 							msg: "请选择婚姻状况"
 						});
@@ -1024,18 +1038,41 @@
 		function nextStopAction() {
 			newCreateCustom.nextStopAction();
 		}
-
-		function getAddr() {
-			newCreateCustom.message.HOUSE_ADDRESS_PROVINCE_NM = JSON.parse(summer.getStorage('selectProvince')).AREA_NAME
-			newCreateCustom.message.HOUSE_ADDRESS_CITY_NM = JSON.parse(summer.getStorage('selectCity')).AREA_NAME
-			newCreateCustom.message.HOUSE_ADDRESS_PROVINCE = JSON.parse(summer.getStorage('selectProvince')).AREA_ID
-			newCreateCustom.message.HOUSE_ADDRESS_CITY = JSON.parse(summer.getStorage('selectCity')).AREA_ID
-			//newCreateCustom.message.HOUSE_ADDRESS_COUNTY = JSON.parse(summer.getStorage('selectArea')).AREA_NAME
+		function getCity(dataSource) {
+			if(dataSource=="HukouCity"){
+				newCreateCustom.message.cstIdRegion =JSON.parse(summer.getStorage("pickerDealCity1")).id;
+				newCreateCustom.message.cstIdProvince =JSON.parse(summer.getStorage("pickerDealCity2")).id;
+				newCreateCustom.message.cstIdCity =JSON.parse(summer.getStorage("pickerDealCity3")).id;
+				newCreateCustom.message.cstIdDistrict =JSON.parse(summer.getStorage("pickerDealCity4")).id;
+				newCreateCustom.HukouCity=JSON.parse(summer.getStorage("pickerDealCity1")).name+" "+JSON.parse(summer.getStorage("pickerDealCity2")).name+" "+JSON.parse(summer.getStorage("pickerDealCity3")).name+" "+JSON.parse(summer.getStorage("pickerDealCity4")).name
+			}else if(dataSource=="CurrentCity"){
+				newCreateCustom.message.cstRegion =JSON.parse(summer.getStorage("pickerDealCity1")).id;
+				newCreateCustom.message.cstProvince =JSON.parse(summer.getStorage("pickerDealCity2")).id;
+				newCreateCustom.message.cstCity =JSON.parse(summer.getStorage("pickerDealCity3")).id;
+				newCreateCustom.message.cstDistrict =JSON.parse(summer.getStorage("pickerDealCity4")).id;
+				newCreateCustom.CurrentCity=JSON.parse(summer.getStorage("pickerDealCity1")).name+" "+JSON.parse(summer.getStorage("pickerDealCity2")).name+" "+JSON.parse(summer.getStorage("pickerDealCity3")).name+" "+JSON.parse(summer.getStorage("pickerDealCity4")).name
+			}else if(dataSource=="WorkCity"){
+				newCreateCustom.message.cstWorkRegion =JSON.parse(summer.getStorage("pickerDealCity1")).id;
+				newCreateCustom.message.cstWorkProvince =JSON.parse(summer.getStorage("pickerDealCity2")).id;
+				newCreateCustom.message.cstWorkCity =JSON.parse(summer.getStorage("pickerDealCity3")).id;
+				newCreateCustom.message.cstWorkDistrict =JSON.parse(summer.getStorage("pickerDealCity4")).id;
+				newCreateCustom.WorkCity=JSON.parse(summer.getStorage("pickerDealCity1")).name+" "+JSON.parse(summer.getStorage("pickerDealCity2")).name+" "+JSON.parse(summer.getStorage("pickerDealCity3")).name+" "+JSON.parse(summer.getStorage("pickerDealCity4")).name
+			}
 		}
 		summerready = function () {
 			var projectId = summer.pageParam.projectId;
 			var clintId = summer.pageParam.clintId;
 			var sourceFrom = summer.pageParam.sourceFrom;
+			var customBaseMessage=summer.pageParam.personBaseMessage;
+			if(sourceFrom=="newCreateCustom_verify"&&customBaseMessage){
+				newCreateCustom.message.genderNm=customBaseMessage.sex;
+				newCreateCustom.message.genderCd=customBaseMessage.sex=="男"?"1":"2";
+				newCreateCustom.message.age=customBaseMessage.age;
+				newCreateCustom.message.birthday=customBaseMessage.birth;
+				newCreateCustom.message.cstNm=customBaseMessage.cstNm;
+				newCreateCustom.message.certNo=customBaseMessage.certNo;
+				newCreateCustom.message.mp1=customBaseMessage.mp1;
+			}
 			newCreateCustom.sourceFrom = sourceFrom;
 			newCreateCustom.clintId = clintId;
 			newCreateCustom.getData(projectId, clintId);
