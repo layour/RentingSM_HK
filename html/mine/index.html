@@ -43,11 +43,13 @@
 					<span class="iconfont icon-call"></span>
 					<i>客服电话</i>
 					<div class="companyInfo">
-						<b class="company"><a href="tel:010-84705470">010-84705470</a></b>
+						<b class="company">
+							<a href="tel:010-84705470">010-84705470</a>
+						</b>
 					</div>
 				</li>
 				<li onclick="update()">
-					<strong>新</strong>
+					<strong></strong>
 					<span class="iconfont icon-version"></span>
 					<i>版本更新</i>
 					<div class="companyInfo">
@@ -71,11 +73,11 @@
 				return false;
 			}
 		}
-        // 如果未登录，按钮改变
+		// 如果未登录，按钮改变
 		if (!isLogin()) {
 			$('.logout').text('立即登录');
 		}
-		summerready = function() {
+		summerready = function () {
 			if (isLogin()) {
 				var userinfo = summer.getStorage("userinfo");
 				var name = userinfo.userName ? userinfo.userName : "张帅经理";
@@ -83,6 +85,8 @@
 			} else {
 				$('.box').find('p').text("请登录");
 			}
+			var appVersion = JSON.parse(summer.getAppVersion()).versionName;
+			$('strong').eq(0).text(appVersion);
 		};
 
 		function logout() {
@@ -92,7 +96,7 @@
 					title: '确定要退出吗？',
 					btnText: ["取消", "确定"],
 					overlay: true,
-					ok: function() {
+					ok: function () {
 						summer.setStorage("userinfo", {});
 						summer.openWin({
 							id: 'login',
