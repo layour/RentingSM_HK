@@ -269,7 +269,7 @@
 					<p class="pl10 pr10  um-box">
 						<span class="um-bf1">现工作单位职位</span>
 						<span class="um-bf1 tr">
-							<span v-if='message.position' class="first">{{message.position}}</span>
+							<span v-if='message.positionNm' class="first">{{message.positionNm}}</span>
 							<span v-else class="second">请选择</span>
 							<i class="icon iconfont icon-enter"></i>
 						</span>
@@ -406,8 +406,8 @@
 					}],
 					slots7: [{
 						flex: 1,
-						values: ["员工", "经理"],
-						//values: [],
+						//values: ["员工", "经理"],
+						values: [],
 						defaultIndex: 0,
 						className: 'slot1',
 						textAlign: 'center'
@@ -415,6 +415,7 @@
 					regionArray:'',//大区列表
 					message: {
 						cstNm: '',
+						mp1:'',
 						certNo: '',
 						marStsCd: '',
 						idAddr: '',
@@ -440,43 +441,24 @@
 						workAddr:'',//单位详细地址
 						workTel:'',//单位电话
 						position:'',//单位职位
-						cstIdRegion:{
-							id:""  //户口大区id
-						},
-						cstIdProvince:{
-							id:""  //户口省id
-						},
-						cstIdCity:{
-							id:""  //户口市id
-						},
-						cstIdDistrict:{
-							id:""  //户口县id
-						},
+						positionNm:'',
+						cstIdRegion: '',//户口大区
+						cstIdProvince:'',//户口省
+						cstIdCity:'',//户口市
+						cstIdDistrict: '',//户口县
 
-						cstRegion:{
-							id:""  //通讯地址大区id
-						},
-						cstProvince:{
-							id:""  //通讯地址省id
-						},
-						cstCity:{
-							id:""  //通讯地址市id
-						},
-						cstDistrict:{
-							id:""  //通讯地址县id
-						},
-						cstWorkRegion:{
-							id:""  //工作地址大区id
-						},
-						cstWorkProvince:{
-							id:""  //工作地址省id
-						},
-						cstWorkCity:{
-							id:""  //工作地址市id
-						},
-						cstWorkDistrict:{
-							id:""  //工作地址县id
-						}
+						cstHomeRegion:'',//通讯地址大区
+						cstHomeProvince:'',//通讯地址省
+						cstHomeCity:'',//通讯地址市
+						cstHomeDistrict:'',//通讯地址县
+
+						cstWorkRegion:'',//工作地址大区
+						cstWorkProvince:'' ,//工作地址省
+						cstWorkCity: '',//工作地址市
+						cstWorkDistrict:'',//工作地址县
+						cstNpSocialRl:'',//配偶信息
+						id:'',//客户id
+
 					},
 					HukouCity:'',
 					CurrentCity:'',
@@ -588,7 +570,8 @@
 					}, function (res) {
 						summer.hideProgress();
 						if (res.data.flag == 1) {
-							var holeData = res.data.datas.cstNpBscInfo;
+							var holeDataBase = res.data.datas.cstBscInfo;
+							var holeDataDetail = res.data.datas.cstNpBscInfo;
 							var totalData = res.data.datas;
 							self.regionArray = totalData.regionArray;
 							var marStsNmData=[],isHasLicenseNmData=[],driverLicenseNmData=[],housingOwnershipNmData=[],industryNmData=[],workTypNmData=[],positionData=[];
@@ -619,21 +602,52 @@
 							for (var i = 0; i < totalData.positonArray.length; i++) {
 								positionData.push(totalData.positonArray[i].label);
 							}
-							self.slots7[0].values = positonData;
-							if (holeData) {
-								self.message.age = totalData.age;
-								self.message.birthday = totalData.birthday;
-								self.message.age = totalData.age;
-								self.message.age = totalData.age;
-								self.message.age = totalData.age;
-								self.message.age = totalData.age;
-								self.message.age = totalData.age;
-								self.message.age = totalData.age;
-								self.message.age = totalData.age;
-								self.message.age = totalData.age;
-								self.message.age = totalData.age;
-								self.message.age = totalData.age;
-								if (self.message.IS_MARRY == "20") {
+							self.slots7[0].values = positionData;
+							if (holeDataBase&&holeDataDetail) {
+								self.message.cstNpSocialRl=holeDataDetail.cstNpSocialRl;//先存配偶信息
+								self.message.cstNm = holeDataBase.cstNm;
+								self.message.certNo = holeDataBase.certNo;
+								self.message.mp1 = holeDataBase.cstPhoneNumber;
+								self.message.genderCd = holeDataDetail.genderCd;
+								self.message.genderNm = holeDataDetail.genderCd=="1"?"男":"女";
+								self.message.birthday = holeDataDetail.birthday;
+								self.message.age = holeDataDetail.age;
+								self.message.marStsNm = holeDataDetail.marStsNm;
+								self.message.MarStsCd = holeDataDetail.marStsCd;
+								self.message.cstIdRegion = holeDataDetail.cstIdRegion;
+								self.message.cstIdProvince = holeDataDetail.cstIdProvince;
+								self.message.cstIdCity = holeDataDetail.cstIdCity;
+								self.message.cstIdDistrict = holeDataDetail.cstIdDistrict;
+								self.HukouCity=self.message.cstIdRegion.name+"-"+self.message.cstIdProvince.name+"-"+self.message.cstIdCity.name+"-"+self.message.cstIdDistrict.name;
+								self.message.cstWorkRegion = holeDataDetail.cstWorkRegion;
+								self.message.cstWorkProvince = holeDataDetail.cstWorkProvince;
+								self.message.cstWorkCity = holeDataDetail.cstWorkCity;
+								self.message.cstWorkDistrict = holeDataDetail.cstWorkDistrict;
+								self.WorkCity=self.message.cstWorkRegion.name+"-"+self.message.cstWorkProvince.name+"-"+self.message.cstWorkCity.name+"-"+self.message.cstWorkDistrict.name;
+								self.message.cstHomeRegion = holeDataDetail.cstHomeRegion;
+								self.message.cstHomeProvince = holeDataDetail.cstHomeProvince;
+								self.message.cstHomeCity = holeDataDetail.cstHomeCity;
+								self.message.cstHomeDistrict = holeDataDetail.cstHomeDistrict;
+								self.CurrentCity=self.message.cstHomeRegion.name+"-"+self.message.cstHomeProvince.name+"-"+self.message.cstHomeCity.name+"-"+self.message.cstHomeDistrict.name;
+								self.message.idAddr = holeDataDetail.idAddr;
+								self.message.postAddr = holeDataDetail.postAddr;
+								self.message.isHasLicenseNm = holeDataDetail.isHasLicenseNm;
+								self.message.isHasLicense = holeDataDetail.isHasLicense;
+								self.message.driverLicenseNm = holeDataDetail.driverLicenseNm;
+								self.message.driverLicenseType = holeDataDetail.driverLicenseType;
+								self.message.housingOwnership = holeDataDetail.housingOwnership;
+								self.message.housingOwnershipNm = holeDataDetail.housingOwnershipNm;
+								self.message.industry = holeDataDetail.industry;
+								self.message.industryNm = holeDataDetail.industryNm;
+								self.message.workPlc = holeDataDetail.workPlc;
+								self.message.workYrs = holeDataDetail.workYrs;
+								self.message.workTypCd = holeDataDetail.workTypCd;
+								self.message.workTypNm = holeDataDetail.workTypNm;
+								self.message.workAddr = holeDataDetail.workAddr;
+								self.message.workTel = holeDataDetail.workTel;
+								self.message.positionNm = holeDataDetail.positionNm;
+								self.message.position = holeDataDetail.position;
+								if (self.message.MarStsCd == "3"||self.message.MarStsCd == "21"||self.message.MarStsCd == "22"||self.message.MarStsCd == "23") {
 									summer.setWinAttr({
 										actionBar: {
 											title: "客户信息",
@@ -825,7 +839,7 @@
 				surePickerPosition: function (param) {
 					this.pickerPositionStatus = !this.pickerPositionStatus;
 					if (param == 'confirm') {
-						this.message. position = this.pickerPosition;
+						this.message. positionNm = this.pickerPosition;
 					}
 				},
 				handleConfirm: function (pickerValue) {
@@ -1006,13 +1020,9 @@
 						return;
 					};
 					var self = this;
-					if (self.message.SEX_NM == "男") {
-						self.message.SEX = '0'
-					} else {
-						self.message.SEX = '1'
-					};
+					 
 					if (self.clintId) {
-						self.message.CLIENT_ID = self.clintId;
+						self.message.id = self.clintId;
 					}
 					//此处ajax请求
 					summer.openWin({
@@ -1039,7 +1049,6 @@
 						},
 						pageParam: {
 							personMessage: self.message,
-							spoustObjMes: self.spoustObjMes,
 							sourceFrom: self.sourceFrom
 						}
 					});
