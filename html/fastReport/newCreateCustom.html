@@ -265,9 +265,16 @@
 			<div class="item um-box pl10 pr10"  >
 					<span class="um-red mr5">*</span>	<span class="um-bf1">现工作单位电话</span><input placeholder="请输入现工作单位电话" v-model="message.workTel" type="text">   
 			</div>
-			<div class="item um-box pl10 pr10"  >
-					<span class="um-red mr5">*</span>	<span class="um-bf1">现工作单位职位</span><input placeholder="请输入现工作单位职位"  v-model="message.position" type="text">   
-			</div>
+			<div @click="surePickerPosition" class="item" >
+					<p class="pl10 pr10  um-box">
+						<span class="um-bf1">现工作单位职位</span>
+						<span class="um-bf1 tr">
+							<span v-if='message.positionNm' class="first">{{message.positionNm}}</span>
+							<span v-else class="second">请选择</span>
+							<i class="icon iconfont icon-enter"></i>
+						</span>
+					</p>
+				</div>
 		</div>
 		<div class="um-footer">
 			<mt-popup v-model="pickerMarStsCdStatus" position='bottom' class="pickerColor">
@@ -313,6 +320,13 @@
 					<span class="" @click="surePickerWorkTypCd('confirm')">确定</span>
 				</p>
 			</mt-popup>
+			<mt-popup v-model="pickerPositionStatus" position='bottom' class="pickerColor">
+					<mt-picker :slots="slots7" @change="onValuesChange7"></mt-picker>
+					<p>
+						<span class="" @click="surePickerPosition">取消</span>
+						<span class="" @click="surePickerPosition('confirm')">确定</span>
+					</p>
+				</mt-popup>
 		</div>
 	</div>
 	<script src="../../js/summer.js"></script>
@@ -335,12 +349,14 @@
 					pickerHousingOwnershipStatus: false,
 					pickerIndustryStatus: false,
 					pickerWorkTypCdStatus: false,
+					pickerPositionStatus: false,
 					pickerMarStsCd: "",
 					pickerIsHasLicense: "",
 					pickerDriverLicenseType: "",
 					pickerHousingOwnership: "",
 					pickerIndustry: "",
 					pickerWorkTypCd: "",
+					pickerPosition: "",
 					slots1: [{
 						flex: 1,
 						//values: ['未婚', '已婚', '离婚', '丧偶', '未说明的婚姻状况'],
@@ -388,9 +404,18 @@
 						className: 'slot1',
 						textAlign: 'center'
 					}],
+					slots7: [{
+						flex: 1,
+						//values: ["员工", "经理"],
+						values: [],
+						defaultIndex: 0,
+						className: 'slot1',
+						textAlign: 'center'
+					}],
 					regionArray:'',//大区列表
 					message: {
 						cstNm: '',
+						mp1:'',
 						certNo: '',
 						marStsCd: '',
 						idAddr: '',
@@ -416,43 +441,24 @@
 						workAddr:'',//单位详细地址
 						workTel:'',//单位电话
 						position:'',//单位职位
-						cstIdRegion:{
-							id:""  //户口大区id
-						},
-						cstIdProvince:{
-							id:""  //户口省id
-						},
-						cstIdCity:{
-							id:""  //户口市id
-						},
-						cstIdDistrict:{
-							id:""  //户口县id
-						},
+						positionNm:'',
+						cstIdRegion: '',//户口大区
+						cstIdProvince:'',//户口省
+						cstIdCity:'',//户口市
+						cstIdDistrict: '',//户口县
 
-						cstRegion:{
-							id:""  //通讯地址大区id
-						},
-						cstProvince:{
-							id:""  //通讯地址省id
-						},
-						cstCity:{
-							id:""  //通讯地址市id
-						},
-						cstDistrict:{
-							id:""  //通讯地址县id
-						},
-						cstWorkRegion:{
-							id:""  //工作地址大区id
-						},
-						cstWorkProvince:{
-							id:""  //工作地址省id
-						},
-						cstWorkCity:{
-							id:""  //工作地址市id
-						},
-						cstWorkDistrict:{
-							id:""  //工作地址县id
-						}
+						cstHomeRegion:'',//通讯地址大区
+						cstHomeProvince:'',//通讯地址省
+						cstHomeCity:'',//通讯地址市
+						cstHomeDistrict:'',//通讯地址县
+
+						cstWorkRegion:'',//工作地址大区
+						cstWorkProvince:'' ,//工作地址省
+						cstWorkCity: '',//工作地址市
+						cstWorkDistrict:'',//工作地址县
+						cstNpSocialRl:'',//配偶信息
+						id:'',//客户id
+
 					},
 					HukouCity:'',
 					CurrentCity:'',
@@ -564,10 +570,11 @@
 					}, function (res) {
 						summer.hideProgress();
 						if (res.data.flag == 1) {
-							var holeData = res.data.datas.cstNpBscInfo;
+							var holeDataBase = res.data.datas.cstBscInfo;
+							var holeDataDetail = res.data.datas.cstNpBscInfo;
 							var totalData = res.data.datas;
 							self.regionArray = totalData.regionArray;
-							var marStsNmData=[],isHasLicenseNmData=[],driverLicenseNmData=[],housingOwnershipNmData=[],industryNmData=[],workTypNmData=[];
+							var marStsNmData=[],isHasLicenseNmData=[],driverLicenseNmData=[],housingOwnershipNmData=[],industryNmData=[],workTypNmData=[],positionData=[];
 							for (var i = 0; i < totalData.marStsCd.length; i++) {
 								marStsNmData.push(totalData.marStsCd[i].label);
 							}
@@ -592,38 +599,55 @@
 								workTypNmData.push(totalData.workTypCd[i].label);
 							}
 							self.slots6[0].values = workTypNmData;
-							if (holeData) {
-								self.message.age = totalData.age;
-								self.message.birthday = totalData.birthday;
-								self.message.age = totalData.age;
-								self.message.age = totalData.age;
-								self.message.age = totalData.age;
-								self.message.age = totalData.age;
-								self.message.age = totalData.age;
-								self.message.age = totalData.age;
-								self.message.age = totalData.age;
-								self.message.age = totalData.age;
-								self.message.age = totalData.age;
-								self.message.age = totalData.age;
-								self.message.NAME = holeData.NAME;
-								self.message.certNo = holeData.certNo;
-								self.message.SEX_NM = holeData.SEX_NM;
-								self.message.SEX = holeData.SEX;
-								self.message.HOUSE_ADDRESS = holeData.HOUSE_ADDRESS;
-								self.message.mp1 = holeData.PHONE;
-								self.message.IS_MARRY_NM = holeData.IS_MARRY_NM;
-								self.message.IS_MARRY = holeData.IS_MARRY;
-								self.message.BIRTHDAY = holeData.BIRTHDAY;
-								self.message.SCALE_SOURCE = holeData.SCALE_SOURCE;
-								self.message.SCALE_SOURCE_NM = holeData.SCALE_SOURCE_NM;
-								self.message.INDUSTRY_FICATION = holeData.INDUSTRY_FICATION;
-								self.message.INDUSTRY_FICATION_NM = holeData.INDUSTRY_FICATION_NM;
-								self.message.HOME_XZ = holeData.HOME_XZ;
-								self.message.HOUSE_ADDRESS_PROVINCE = holeData.HOUSE_ADDRESS_PROVINCE;
-								self.message.HOUSE_ADDRESS_PROVINCE_NM = holeData.HOUSE_ADDRESS_PROVINCE_NM;
-								self.message.HOUSE_ADDRESS_CITY = holeData.HOUSE_ADDRESS_CITY;
-								self.message.HOUSE_ADDRESS_CITY_NM = holeData.HOUSE_ADDRESS_CITY_NM;
-								if (self.message.IS_MARRY == "20") {
+							for (var i = 0; i < totalData.positonArray.length; i++) {
+								positionData.push(totalData.positonArray[i].label);
+							}
+							self.slots7[0].values = positionData;
+							if (holeDataBase&&holeDataDetail) {
+								self.message.cstNpSocialRl=holeDataDetail.cstNpSocialRl;//先存配偶信息
+								self.message.cstNm = holeDataBase.cstNm;
+								self.message.certNo = holeDataBase.certNo;
+								self.message.mp1 = holeDataBase.cstPhoneNumber;
+								self.message.genderCd = holeDataDetail.genderCd;
+								self.message.genderNm = holeDataDetail.genderCd=="1"?"男":"女";
+								self.message.birthday = holeDataDetail.birthday;
+								self.message.age = holeDataDetail.age;
+								self.message.marStsNm = holeDataDetail.marStsNm;
+								self.message.MarStsCd = holeDataDetail.marStsCd;
+								self.message.cstIdRegion = holeDataDetail.cstIdRegion;
+								self.message.cstIdProvince = holeDataDetail.cstIdProvince;
+								self.message.cstIdCity = holeDataDetail.cstIdCity;
+								self.message.cstIdDistrict = holeDataDetail.cstIdDistrict;
+								self.HukouCity=self.message.cstIdRegion.name+"-"+self.message.cstIdProvince.name+"-"+self.message.cstIdCity.name+"-"+self.message.cstIdDistrict.name;
+								self.message.cstWorkRegion = holeDataDetail.cstWorkRegion;
+								self.message.cstWorkProvince = holeDataDetail.cstWorkProvince;
+								self.message.cstWorkCity = holeDataDetail.cstWorkCity;
+								self.message.cstWorkDistrict = holeDataDetail.cstWorkDistrict;
+								self.WorkCity=self.message.cstWorkRegion.name+"-"+self.message.cstWorkProvince.name+"-"+self.message.cstWorkCity.name+"-"+self.message.cstWorkDistrict.name;
+								self.message.cstHomeRegion = holeDataDetail.cstHomeRegion;
+								self.message.cstHomeProvince = holeDataDetail.cstHomeProvince;
+								self.message.cstHomeCity = holeDataDetail.cstHomeCity;
+								self.message.cstHomeDistrict = holeDataDetail.cstHomeDistrict;
+								self.CurrentCity=self.message.cstHomeRegion.name+"-"+self.message.cstHomeProvince.name+"-"+self.message.cstHomeCity.name+"-"+self.message.cstHomeDistrict.name;
+								self.message.idAddr = holeDataDetail.idAddr;
+								self.message.postAddr = holeDataDetail.postAddr;
+								self.message.isHasLicenseNm = holeDataDetail.isHasLicenseNm;
+								self.message.isHasLicense = holeDataDetail.isHasLicense;
+								self.message.driverLicenseNm = holeDataDetail.driverLicenseNm;
+								self.message.driverLicenseType = holeDataDetail.driverLicenseType;
+								self.message.housingOwnership = holeDataDetail.housingOwnership;
+								self.message.housingOwnershipNm = holeDataDetail.housingOwnershipNm;
+								self.message.industry = holeDataDetail.industry;
+								self.message.industryNm = holeDataDetail.industryNm;
+								self.message.workPlc = holeDataDetail.workPlc;
+								self.message.workYrs = holeDataDetail.workYrs;
+								self.message.workTypCd = holeDataDetail.workTypCd;
+								self.message.workTypNm = holeDataDetail.workTypNm;
+								self.message.workAddr = holeDataDetail.workAddr;
+								self.message.workTel = holeDataDetail.workTel;
+								self.message.positionNm = holeDataDetail.positionNm;
+								self.message.position = holeDataDetail.position;
+								if (self.message.MarStsCd == "3"||self.message.MarStsCd == "21"||self.message.MarStsCd == "22"||self.message.MarStsCd == "23") {
 									summer.setWinAttr({
 										actionBar: {
 											title: "客户信息",
@@ -809,6 +833,15 @@
 						this.message. workTypNm = this.pickerWorkTypCd;
 					}
 				},
+				onValuesChange7: function (picker, values) {
+					this.pickerPosition = values[0];
+				},
+				surePickerPosition: function (param) {
+					this.pickerPositionStatus = !this.pickerPositionStatus;
+					if (param == 'confirm') {
+						this.message. positionNm = this.pickerPosition;
+					}
+				},
 				handleConfirm: function (pickerValue) {
 					this.pickerValue = pickerValue;
 					this.message.BIRTHDAY = getFormatDate(pickerValue)
@@ -987,13 +1020,9 @@
 						return;
 					};
 					var self = this;
-					if (self.message.SEX_NM == "男") {
-						self.message.SEX = '0'
-					} else {
-						self.message.SEX = '1'
-					};
+					 
 					if (self.clintId) {
-						self.message.CLIENT_ID = self.clintId;
+						self.message.id = self.clintId;
 					}
 					//此处ajax请求
 					summer.openWin({
@@ -1020,7 +1049,6 @@
 						},
 						pageParam: {
 							personMessage: self.message,
-							spoustObjMes: self.spoustObjMes,
 							sourceFrom: self.sourceFrom
 						}
 					});
@@ -1063,6 +1091,8 @@
 			var projectId = summer.pageParam.projectId;
 			var clintId = summer.pageParam.clintId;
 			var sourceFrom = summer.pageParam.sourceFrom;
+			newCreateCustom.sourceFrom = sourceFrom;
+			newCreateCustom.clintId = clintId;
 			var customBaseMessage=summer.pageParam.personBaseMessage;
 			if(sourceFrom=="newCreateCustom_verify"&&customBaseMessage){
 				newCreateCustom.message.genderNm=customBaseMessage.sex;
@@ -1072,10 +1102,9 @@
 				newCreateCustom.message.cstNm=customBaseMessage.cstNm;
 				newCreateCustom.message.certNo=customBaseMessage.certNo;
 				newCreateCustom.message.mp1=customBaseMessage.mp1;
+				newCreateCustom.clintId = customBaseMessage.id;
 			}
-			newCreateCustom.sourceFrom = sourceFrom;
-			newCreateCustom.clintId = clintId;
-			newCreateCustom.getData(projectId, clintId);
+			newCreateCustom.getData(projectId, newCreateCustom.clintId);
 			var params = ["android.permission.ACCESS_FINE_LOCATION", "android.permission.ACCESS_COARSE_LOCATION",
 				"android.permission.CAMERA", "android.permission.FLASHLIGHT", "android.permission.READ_EXTERNAL_STORAGE",
 				"android.permission.READ_PHONE_STATE",

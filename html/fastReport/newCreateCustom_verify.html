@@ -240,32 +240,11 @@
 					 verifyCard();
 
 				},
-				verifyCard(){
-					var self = this;
-					ajaxRequest({
-						type: 'post',
-						url: 'appservice/customer/cstbscinfo/getExistNp.do',
-						param: {
-							cstNm:self.message.cstNm,
-							certNo:self.message.certNo,
-							cstTypCd:'1'
-						}
-					}, function (res) {
-						summer.hideProgress();
-						if (res.data.flag == 1) {
-							saveCustomBaseM(); 
-						}
-					}, function (err) {
-						alert(err);
-						console.log(err);
-						summer.hideProgress();
-					});
-				},
 				saveCustomBaseM(){
 					var self = this;
 					ajaxRequest({
 						type: 'post',
-						url: 'appservice/customer/cstbscinfo/getExistNp.do',
+						url: 'appservice/customer/cstbscinfo/saveCst.do',
 						param: {
 							cstNm:self.message.cstNm,
 							certNo:self.message.certNo,
@@ -275,6 +254,11 @@
 					}, function (res) {
 						summer.hideProgress();
 						if (res.data.flag == 1) {
+							var totalMessage=self.message;
+							totalMessage.age=self.AGECOM;
+							totalMessage.sex=self.SEXCOM;
+							totalMessage.birth=self.BIRTHCOM;
+							totalMessage.id=res.data.datas.id;
 							summer.openWin({
 								id: 'newCreateCustom',
 								url: 'html/fastReport/newCreateCustom.html',
@@ -298,7 +282,8 @@
 									}]
 								},
 								pageParam: {
-									personBaseMessage: self.message,
+									personBaseMessage: totalMessage,
+									sourceFrom:"newCreateCustom_verify"
 								}
 							}); 
 						}
@@ -350,39 +335,8 @@
 						}
 					}, function (res) {
 						summer.hideProgress();
-						if (res.data.flag == 2) {
-							//saveCustomBaseM(); 
-							var totalMessage=self.message;
-							totalMessage.age=self.AGECOM;
-							totalMessage.sex=self.SEXCOM;
-							totalMessage.birth=self.BIRTHCOM;
-							summer.openWin({
-								id: 'newCreateCustom',
-								url: 'html/fastReport/newCreateCustom.html',
-								create: false,
-								type: 'actionBar',
-								actionBar: {
-									title: "客户信息",
-									titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
-									backgroundColor: "#039be5",
-									leftItem: {
-										image: "img/back.png",
-										method: "", //返回按钮自定义事件
-										text: "返回",
-										textColor: "#ffffff" //返回文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
-									},
-									rightItems: [{
-										type: "text",
-										text: "保存",
-										textColor: "#ffffff", //文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
-										method: "savePerson()" //在打开的window中自定义事件
-									}]
-								},
-								pageParam: {
-									personBaseMessage:totalMessage,
-									sourceFrom:"newCreateCustom_verify"
-								}
-							}); 
+						if (res.data.flag == 1) {
+							self.saveCustomBaseM();
 						}
 					}, function (err) {
 						alert(err);
