@@ -251,10 +251,12 @@
 			getData(id) {
 				var self = this;
 				ajaxRequest({
-					type: 'get',
-					url: 'appservice/project/prjbscinfo/getById.do',
+					type: 'post',
+					url: 'appservice/project/prjprdbscinfo/getById.do',
 					param: {
-						"id": id,
+						prjEquBscInfo:{
+							"id": id,
+						}
 					}
 				}, function(res) {
 					summer.hideProgress();

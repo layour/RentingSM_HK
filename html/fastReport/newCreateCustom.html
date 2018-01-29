@@ -265,9 +265,16 @@
 			<div class="item um-box pl10 pr10"  >
 					<span class="um-red mr5">*</span>	<span class="um-bf1">现工作单位电话</span><input placeholder="请输入现工作单位电话" v-model="message.workTel" type="text">   
 			</div>
-			<div class="item um-box pl10 pr10"  >
-					<span class="um-red mr5">*</span>	<span class="um-bf1">现工作单位职位</span><input placeholder="请输入现工作单位职位"  v-model="message.position" type="text">   
-			</div>
+			<div @click="surePickerPosition" class="item" >
+					<p class="pl10 pr10  um-box">
+						<span class="um-bf1">现工作单位职位</span>
+						<span class="um-bf1 tr">
+							<span v-if='message.position' class="first">{{message.position}}</span>
+							<span v-else class="second">请选择</span>
+							<i class="icon iconfont icon-enter"></i>
+						</span>
+					</p>
+				</div>
 		</div>
 		<div class="um-footer">
 			<mt-popup v-model="pickerMarStsCdStatus" position='bottom' class="pickerColor">
@@ -313,6 +320,13 @@
 					<span class="" @click="surePickerWorkTypCd('confirm')">确定</span>
 				</p>
 			</mt-popup>
+			<mt-popup v-model="pickerPositionStatus" position='bottom' class="pickerColor">
+					<mt-picker :slots="slots7" @change="onValuesChange7"></mt-picker>
+					<p>
+						<span class="" @click="surePickerPosition">取消</span>
+						<span class="" @click="surePickerPosition('confirm')">确定</span>
+					</p>
+				</mt-popup>
 		</div>
 	</div>
 	<script src="../../js/summer.js"></script>
@@ -335,12 +349,14 @@
 					pickerHousingOwnershipStatus: false,
 					pickerIndustryStatus: false,
 					pickerWorkTypCdStatus: false,
+					pickerPositionStatus: false,
 					pickerMarStsCd: "",
 					pickerIsHasLicense: "",
 					pickerDriverLicenseType: "",
 					pickerHousingOwnership: "",
 					pickerIndustry: "",
 					pickerWorkTypCd: "",
+					pickerPosition: "",
 					slots1: [{
 						flex: 1,
 						//values: ['未婚', '已婚', '离婚', '丧偶', '未说明的婚姻状况'],
@@ -384,6 +400,14 @@
 						flex: 1,
 						//values: ["国企", "私企", "上市企业"],
 						values: [],
+						defaultIndex: 0,
+						className: 'slot1',
+						textAlign: 'center'
+					}],
+					slots7: [{
+						flex: 1,
+						values: ["员工", "经理"],
+						//values: [],
 						defaultIndex: 0,
 						className: 'slot1',
 						textAlign: 'center'
@@ -567,7 +591,7 @@
 							var holeData = res.data.datas.cstNpBscInfo;
 							var totalData = res.data.datas;
 							self.regionArray = totalData.regionArray;
-							var marStsNmData=[],isHasLicenseNmData=[],driverLicenseNmData=[],housingOwnershipNmData=[],industryNmData=[],workTypNmData=[];
+							var marStsNmData=[],isHasLicenseNmData=[],driverLicenseNmData=[],housingOwnershipNmData=[],industryNmData=[],workTypNmData=[],positionData=[];
 							for (var i = 0; i < totalData.marStsCd.length; i++) {
 								marStsNmData.push(totalData.marStsCd[i].label);
 							}
@@ -592,6 +616,10 @@
 								workTypNmData.push(totalData.workTypCd[i].label);
 							}
 							self.slots6[0].values = workTypNmData;
+							for (var i = 0; i < totalData.positonArray.length; i++) {
+								positionData.push(totalData.positonArray[i].label);
+							}
+							self.slots7[0].values = positonData;
 							if (holeData) {
 								self.message.age = totalData.age;
 								self.message.birthday = totalData.birthday;
@@ -605,24 +633,6 @@
 								self.message.age = totalData.age;
 								self.message.age = totalData.age;
 								self.message.age = totalData.age;
-								self.message.NAME = holeData.NAME;
-								self.message.certNo = holeData.certNo;
-								self.message.SEX_NM = holeData.SEX_NM;
-								self.message.SEX = holeData.SEX;
-								self.message.HOUSE_ADDRESS = holeData.HOUSE_ADDRESS;
-								self.message.mp1 = holeData.PHONE;
-								self.message.IS_MARRY_NM = holeData.IS_MARRY_NM;
-								self.message.IS_MARRY = holeData.IS_MARRY;
-								self.message.BIRTHDAY = holeData.BIRTHDAY;
-								self.message.SCALE_SOURCE = holeData.SCALE_SOURCE;
-								self.message.SCALE_SOURCE_NM = holeData.SCALE_SOURCE_NM;
-								self.message.INDUSTRY_FICATION = holeData.INDUSTRY_FICATION;
-								self.message.INDUSTRY_FICATION_NM = holeData.INDUSTRY_FICATION_NM;
-								self.message.HOME_XZ = holeData.HOME_XZ;
-								self.message.HOUSE_ADDRESS_PROVINCE = holeData.HOUSE_ADDRESS_PROVINCE;
-								self.message.HOUSE_ADDRESS_PROVINCE_NM = holeData.HOUSE_ADDRESS_PROVINCE_NM;
-								self.message.HOUSE_ADDRESS_CITY = holeData.HOUSE_ADDRESS_CITY;
-								self.message.HOUSE_ADDRESS_CITY_NM = holeData.HOUSE_ADDRESS_CITY_NM;
 								if (self.message.IS_MARRY == "20") {
 									summer.setWinAttr({
 										actionBar: {
@@ -807,6 +817,15 @@
 					this.pickerWorkTypCdStatus = !this.pickerWorkTypCdStatus;
 					if (param == 'confirm') {
 						this.message. workTypNm = this.pickerWorkTypCd;
+					}
+				},
+				onValuesChange7: function (picker, values) {
+					this.pickerPosition = values[0];
+				},
+				surePickerPosition: function (param) {
+					this.pickerPositionStatus = !this.pickerPositionStatus;
+					if (param == 'confirm') {
+						this.message. position = this.pickerPosition;
 					}
 				},
 				handleConfirm: function (pickerValue) {
@@ -1063,6 +1082,8 @@
 			var projectId = summer.pageParam.projectId;
 			var clintId = summer.pageParam.clintId;
 			var sourceFrom = summer.pageParam.sourceFrom;
+			newCreateCustom.sourceFrom = sourceFrom;
+			newCreateCustom.clintId = clintId;
 			var customBaseMessage=summer.pageParam.personBaseMessage;
 			if(sourceFrom=="newCreateCustom_verify"&&customBaseMessage){
 				newCreateCustom.message.genderNm=customBaseMessage.sex;
@@ -1072,10 +1093,9 @@
 				newCreateCustom.message.cstNm=customBaseMessage.cstNm;
 				newCreateCustom.message.certNo=customBaseMessage.certNo;
 				newCreateCustom.message.mp1=customBaseMessage.mp1;
+				newCreateCustom.clintId = customBaseMessage.id;
 			}
-			newCreateCustom.sourceFrom = sourceFrom;
-			newCreateCustom.clintId = clintId;
-			newCreateCustom.getData(projectId, clintId);
+			newCreateCustom.getData(projectId, newCreateCustom.clintId);
 			var params = ["android.permission.ACCESS_FINE_LOCATION", "android.permission.ACCESS_COARSE_LOCATION",
 				"android.permission.CAMERA", "android.permission.FLASHLIGHT", "android.permission.READ_EXTERNAL_STORAGE",
 				"android.permission.READ_PHONE_STATE",
