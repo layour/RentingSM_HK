@@ -43,10 +43,10 @@
 						getData(){
 							var _this=this;
 							ajaxRequest({
-								type:'GET',
+								type:'POST',
 								url:'appservice/project/prjprdbscinfo/queryByBra.do',
 								param:{
-									braId:_this.id
+									braBscInfo:{id:_this.id}								
 								}
 							},function(res){
 								console.log("res",res);

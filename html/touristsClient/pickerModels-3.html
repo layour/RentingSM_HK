@@ -45,10 +45,10 @@
 							var _this=this;
 							console.log(this.id);
 							ajaxRequest({
-								type:'GET',
+								type:'POST',
 								url:'appservice/project/prjprdbscinfo/queryByBra.do',
 								param:{
-									braId:_this.id,
+									braBscInfo:{id:_this.id},
 									equSet:_this.equSet
 								}
 							},function(res){

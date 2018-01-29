@@ -156,6 +156,7 @@
 					color: '',
 					carColor:'',
 					realityPrice: '',
+					guidePrice:'',
 					pickerColorStatus: false,
 					pickerOldCarStatus: false,
 					pickedColor: '',
@@ -237,6 +238,7 @@
 							_this.equMdl=resData.equMdl
 							_this.carModels=resData.equNm
 							_this.realityPrice=resData.equAmt
+							_this.guidePrice=resData.guidePc
 							var oldCarData=res.data.datas.prjBscInfo.prjEqiDtlCar
 							if(oldCarData){
 								_this.guanXiId=res.data.datas.prjBscInfo.prjEqiDtlCar.driverRlTypCd
@@ -457,6 +459,7 @@
 				addCar.equNm=models;
 				if(summer.getStorage('realityPrice')!="undefined"){
 					addCar.realityPrice = summer.getStorage('realityPrice');
+					addCar.guidePrice = summer.getStorage('realityPrice');
 				}
 			}
 		}

@@ -37,7 +37,7 @@
 					<li class="input" v-if="lsPdStatus">
 						<b>还款期限</b>
 						<span>
-							{{lsPd}}&nbsp;元
+							{{lsPd}}&nbsp;
 						</span>
 					</li>
 					<li class="input" v-else>
@@ -63,7 +63,7 @@
 					<li @click="pickLspd('yearRate')" v-if="AnnIntRatePctList.length>1">
 						<b>贷款年利率</b>
 						<span>
-							<b v-if="annIntRatePct">{{annIntRatePct}}%</b>
+							<b v-if="annIntRatePct">{{annIntRatePct}}&nbsp;%</b>
 							<b v-else class="default">请选择</b>
 							<i class="icon iconfont icon-enter"></i>
 						</span>
@@ -71,7 +71,7 @@
 					<li v-else>
 						<b>贷款年利率</b>
 						<span>
-							<b>{{annIntRatePct}}</b>
+							<b>{{annIntRatePct}}&nbsp;%</b>
 						</span>
 					</li>
 					<li @click="pickLspd('payType')">
@@ -309,10 +309,7 @@
 							lsPdUntCd:'',
 							lsPdUntCdName:'',
 							pickLspdStatus:false,
-							LspdList:[
-								{ label:"月",value:1},
-								{ label:"双月",value:2}
-							],
+							LspdList:[],
 							pickerLspdList:[{
 								flex: 1,
 								values: [],
@@ -419,51 +416,56 @@
 								},function(res){
 									console.log("res",JSON.stringify(res));
 									summer.hideProgress()
-									_this.pickerSchemeList[0].values=res.data.datas.quatList
+									_this.pickerSchemeList[0].values=res.data.quatList
 									if(_this.prjId){
-										var dataObj=res.data.datas.prjQuatPrps
-										_this.allPrice=dataObj.totLsItmAmt
-										_this.SCHEME_NAME_ID=dataObj.proQuatPrpsCfgM3.id
-										_this.lsPd=dataObj.lsPd
-										_this.lsPdUntCd=dataObj.lsPdUntCd
-										_this.lsPdUntCdName=dataObj.lsPdUntNm
-										_this.payWayCd=dataObj.payWayCd
-										_this.payWay=dataObj.payWay
-										_this.hirePct=dataObj.hirePct
-										_this.hirePctMoney=parseFloat(_this.hirePct*_this.allPrice).toFixed(2)
-										_this.bailPct=dataObj.bailPct
-										_this.bailPctMoney=parseFloat(_this.bailPct*_this.allPrice).toFixed(2)
-										_this.gpsIns=dataObj.gpsIns
-										_this.gpsInsName=dataObj.gpsInsNm
-										_this.gpsTyp=dataObj.gpsTyp
-										_this.GPSTypArray=_this.gpsTyp.split(",")
-										_this.gpsTypList=res.data.datas.GPSTypArray
-										for(var k=0;k<_this.GPSTypArray.length;k++){
-											for(var m=0;m<_this.gpsTypList.length;m++){
-												if(_this.GPSTypArray[k]==_this.gpsTypList[m].value){
-													_this.gpsTypName+=_this.gpsTypList[m].label
+										var dataObj=res.data.prjQuatPrps
+										_this.allPrice=res.data.carZe
+										if(dataObj){
+											_this.allPrice=dataObj.totLsItmAmt
+											_this.SCHEME_NAME_ID=res.data.schemeCode
+											_this.SCHEME_NAME=res.data.SCHEME_NAME
+											_this.lsPd=dataObj.lsPd
+											_this.lsPdUntCd=dataObj.lsPdUntCd
+											_this.lsPdUntCdName=dataObj.lsPdUntNm
+											_this.payWayCd=dataObj.payWayCd
+											_this.payWay=dataObj.payWay
+											_this.annIntRatePct=dataObj.annIntRatePct
+											_this.hirePct=dataObj.hirePct
+											_this.hirePctMoney=parseFloat(_this.hirePct*_this.allPrice).toFixed(2)
+											_this.bailPct=dataObj.bailPct
+											_this.bailPctMoney=parseFloat(_this.bailPct*_this.allPrice).toFixed(2)
+											_this.gpsIns=dataObj.gpsIns
+											_this.gpsInsName=dataObj.gpsInsNm
+											_this.gpsTyp=dataObj.gpsTyp
+											_this.GPSTypArray=_this.gpsTyp.split(",")
+											_this.gpsTypList=res.data.GPSTypArray
+											for(var k=0;k<_this.GPSTypArray.length;k++){
+												for(var m=0;m<_this.gpsTypList.length;m++){
+													if(_this.GPSTypArray[k]==_this.gpsTypList[m].value){
+														_this.gpsTypName+=_this.gpsTypList[m].label
+													}
 												}
 											}
-										}
-										_this.everyPrice=dataObj.prjQuatPrpsPaySchList.rntAmt
-										for(var j=0;j<dataObj.prjQuatPrpsFeeList.length;j++){
-											if(dataObj.prjQuatPrpsFeeList[j]=='04'){
-												_this.groessPrice=dataObj.prjQuatPrpsFeeList[j].feeAmt
-											}else if(dataObj.prjQuatPrpsFeeList[j]=='10'){
-												_this.gpsPrice=dataObj.prjQuatPrpsFeeList[j].feeAmt
-												_this.gpsPriceId=dataObj.prjQuatPrpsFeeList[j].cntWayCd
-											}else if(dataObj.prjQuatPrpsFeeList[j]=='30'){
-												_this.gouZhiPrice=dataObj.prjQuatPrpsFeeList[j].feeAmt
-												_this.gouZhiPriceId=dataObj.prjQuatPrpsFeeList[j].cntWayCd
-											}else if(dataObj.prjQuatPrpsFeeList[j]=='32'){
-												_this.safePrice=dataObj.prjQuatPrpsFeeList[j].feeAmt
-												_this.safePriceId=dataObj.prjQuatPrpsFeeList[j].cntWayCd
-											}else if(dataObj.prjQuatPrpsFeeList[j]=='51'){
-												_this.zhuangXiuPrice=dataObj.prjQuatPrpsFeeList[j].feeAmt
-												_this.zhuangXiuPriceId=dataObj.prjQuatPrpsFeeList[j].cntWayCd
+											_this.everyPrice=dataObj.prjQuatPrpsPaySchList.rntAmt
+											for(var j=0;j<dataObj.prjQuatPrpsFeeList.length;j++){
+												if(dataObj.prjQuatPrpsFeeList[j]=='04'){
+													_this.groessPrice=dataObj.prjQuatPrpsFeeList[j].feeAmt
+												}else if(dataObj.prjQuatPrpsFeeList[j]=='10'){
+													_this.gpsPrice=dataObj.prjQuatPrpsFeeList[j].feeAmt
+													_this.gpsPriceId=dataObj.prjQuatPrpsFeeList[j].cntWayCd
+												}else if(dataObj.prjQuatPrpsFeeList[j]=='30'){
+													_this.gouZhiPrice=dataObj.prjQuatPrpsFeeList[j].feeAmt
+													_this.gouZhiPriceId=dataObj.prjQuatPrpsFeeList[j].cntWayCd
+												}else if(dataObj.prjQuatPrpsFeeList[j]=='32'){
+													_this.safePrice=dataObj.prjQuatPrpsFeeList[j].feeAmt
+													_this.safePriceId=dataObj.prjQuatPrpsFeeList[j].cntWayCd
+												}else if(dataObj.prjQuatPrpsFeeList[j]=='51'){
+													_this.zhuangXiuPrice=dataObj.prjQuatPrpsFeeList[j].feeAmt
+													_this.zhuangXiuPriceId=dataObj.prjQuatPrpsFeeList[j].cntWayCd
+												}
 											}
+											_this.checkDate()
 										}
-										_this.checkDate()
 									}
 								},function(err){
 									console.log("err",err);
@@ -631,6 +633,16 @@
 										}
 									}
 								}
+								if(_this.lsPd&&_this.lsPdUntCd){
+									_this.AnnIntRatePctList=[];
+									var num=_this.lsPd*_this.lsPdUntCd
+									for (var i = 0; i < _this.listYearRate.length; i++) {
+										if(num>=_this.listYearRate[i].leaseTermS&&num<=_this.listYearRate[i].leaseTermE){
+											_this.AnnIntRatePctList.push({label:_this.listYearRate[i].yearRate,value:_this.listYearRate[i].yearRate})
+										}
+									}
+									if(_this.AnnIntRatePctList.length==1){_this.annIntRatePct=_this.AnnIntRatePctList[0].value}
+								}
 								summer.hideProgress()
 							},function(err){
 								console.log("err",err);
@@ -642,17 +654,40 @@
 							if(values=='confirm'){
 								this.SCHEME_NAME=this.pickingObj.schemeName
 								this.SCHEME_NAME_ID=this.pickingObj.schemeCode
+								this.lsPd=''
+								this.lsPdUntCd=''
+								this.lsPdUntCdName=''
+								this.annIntRatePct=''
+								this.payWayCd=''
+								this.payWay=''
+								this.hirePct=''
+								this.hirePctMoney=''
+								this.bailPct=''
+								this.bailPctMoney=''
+								this.gpsIns=''
+								this.gpsInsName=''
+								this.gpsTyp=''
+								this.gpsTypName=''
+								this.selectdGpsArr=[]
+								this.gpsPriceId=''
+								this.gpsPriceName=''
+								this.gouZhiPriceId=''
+								this.gouZhiPriceName=''
+								this.safePriceId=''
+								this.safePriceName=''
+								this.zhuangXiuPriceId=''
+								this.zhuangXiuPriceName=''
 								this.checkDate()
 							}
 						},
 						pickLspd(status,values){
+							if(!this.SCHEME_NAME){
+								summer.toast({msg:'请先选择产品方案'});
+								return;
+							}
 							this.pickLspdStatus=!this.pickLspdStatus
 							if(status){
 								this.currentName=status
-								if(!this.SCHEME_NAME){
-									summer.toast({msg:'请先选择产品方案'});
-									return;
-								}
 								if(status=='lspd'){
 									if(!this.lsPd){
 										summer.toast({msg:'请先输入还款期限'});
@@ -836,13 +871,18 @@
 							console.log(JSON.stringify(params));
 							ajaxRequest({
 								type:'POST',
-								url:'appservice/foundproject/projectQuotationPMTTest',
+								url:'appservice/project/prjquatprps/quatPmt.do',
 								param:params
 							},function(res){
 								console.log("res",res);
 								summer.toast({msg:"测算完成"});
-								_this.isTest=true;
-								_this.everyPrice=res.data.datas
+								if(res.data.flag=='1'){
+									_this.isTest=true;
+									_this.everyPrice=res.data.datas
+								}else {
+									summer.toast({msg:res.data.msg})
+								}
+
 							},function(err){
 								console.log("err",err);
 							})
