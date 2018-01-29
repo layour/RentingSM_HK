@@ -455,7 +455,9 @@
 				addCar.equSet=summer.getStorage('pickerModels2');
 				addCar.equMdl=summer.getStorage('pickerModels3');
 				addCar.equNm=models;
-				addCar.realityPrice = summer.getStorage('realityPrice');
+				if(summer.getStorage('realityPrice')!="undefined"){
+					addCar.realityPrice = summer.getStorage('realityPrice');
+				}
 			}
 		}
 		function getCity() {
