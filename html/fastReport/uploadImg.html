@@ -102,11 +102,11 @@
 			<ul>
 				<template v-if="!isVideo">
 					<li v-for="(item,index) in oldImgList" :key="index">
-						<div @click="lookBig(item.PDF_PATH)">
-							<img v-if="item.PDF_PATH" :src="item.PDF_PATH" alt="">
+						<div @click="lookBig(item.filePath)">
+							<img v-if="item.filePath" :src="item.filePath" alt="">
 							<i v-else class="icon iconfont icon-add"></i>
 						</div>
-						<img class="close" @click="deleteOld(item.ID,index)" src="../../img/close.png" alt="">
+						<img class="close" @click="deleteOld(item.id,index)" src="../../img/close.png" alt="">
 						<p>{{param.name}}</p>
 					</li>
 					<li v-for="(item,index) in imgList" :key="index">
@@ -206,26 +206,25 @@
 					var _this = this;
 					ajaxRequest({
 						type: 'POST',
-						url: 'appservice/business/getFileByProject',
+						url: 'appservice/project/sysuploadfile/prjFileList.do',
 						param: {
-							PROJECT_ID: _this.param.PROJECT_ID,
-							TPM_BUSINESS_PLATE: _this.param.TPM_BUSINESS_PLATE,
-							TPM_CUSTOMER_TYPE: _this.param.TPM_CUSTOMER_TYPE,
-							name: _this.param.name
+							tableId: _this.param.projectId,
+							tableName: 'PRJ_BSC_INFO',
+							remarks: _this.param.id
 						}
 					}, function (res) {
 						console.log(JSON.stringify(res));
-						if (res.data.datas.length > 0) {
-							_this.oldImgList = res.data.datas
+						if (res.data.length > 0) {
+							_this.oldImgList = res.data.fileList
 							for (var i = 0; i < _this.oldImgList.length; i++) {
-								_this.oldImgList[i].PDF_PATH = window.G_COMMON_URL + "appservice/business/downloadFiles?PATH=" + _this.oldImgList[
-									i].PDF_PATH
+								_this.oldImgList[i].filePath = window.G_COMMON_URL + "project/sysuploadfile/appDownload.do?PATH=" + _this.oldImgList[
+									i].filePath
 
 							}
 						}
-						if (res.data.datas.length > 0 && res.data.datas[0].name == '面签视频材料') {
-							_this.videoUrl = 'oldVideo'
-						}
+						// if (res.data.datas.length > 0 && res.data.datas[0].name == '面签视频材料') {
+						// 	_this.videoUrl = 'oldVideo'
+						// }
 					}, function (err) {
 						alert(JSON.stringify(err));
 					})
@@ -238,9 +237,9 @@
 					summer.showProgress();
 					ajaxRequest({
 						type: 'POST',
-						url: 'appservice/business/deleteFile',
+						url: 'appservice/project/sysuploadfile/delByFilePath.do',
 						param: {
-							ID: id
+							id: id
 						}
 					}, function (res) {
 						console.log(JSON.stringify(res));
@@ -404,7 +403,7 @@
 					}
 					var dataParams = {
 						fileValue: that.param.id,
-						id: that.param.projectId
+						prjId: that.param.projectId
 					};
 					console.log("上传的参数" + JSON.stringify(dataParams))
 					console.log("文件数组" + JSON.stringify(this.uploadImgArr));

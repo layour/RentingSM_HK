@@ -121,11 +121,37 @@
 			.gray{
 				color:#DEDEDE;
 			}
+			.alignCenter{
+
+			    position:absolute;;
+			    top:50%;
+			    left:50%;
+			    -ms-transform:translate(-50%,-50%);
+			    -webkit-transform:translate(-50%,-50%);
+			    -o-transform:translate(-50%,-50%);
+			    -moz-transform:translate(-50%,-50%);
+			    transform:translate(-50%,-50%);
+			    text-align:center;
+
+			}
+			.alignCenter p{
+			  // line-height: .8rem;
+			  font-size: 14px;
+			  color: #CBCBCB;
+			  padding-top:20px;
+			}
+			.alignCenter img{
+			  width: 3rem;
+			}
 		</style>
 	</head>
 	<body>
 		<div class="um-win" id="addContact" v-cloak>
 			<div class="um-content addContact">
+				<div class="alignCenter" v-if="addContactList.length==0">
+					<img src="../../img/empty.png" alt="">
+					<p>暂无数据</p>
+	      </div>
 				<ul>
 					<li v-for="(item,index) in addContactList" :key='index'>
 						<mt-cell-swipe :title="item.rlNm" :label="item.mp" :right="[{content: '&nbsp;&nbsp;&nbsp;删除&nbsp;&nbsp;&nbsp;',style: {lineHeight:'1.76rem', background: '#f44336', color: '#fff' },handler: () =>deleteItem(index)}]">
@@ -213,6 +239,7 @@
 					methods:{
 						getData(){
 							var _this=this
+							summer.showProgress()
 							ajaxRequest({
 								type:'GET',
 								url:'appservice/customer/cstnpsocialrl/list.do',
@@ -223,15 +250,17 @@
 								console.log(res,JSON.stringify(res));
 								_this.slots[0].values=res.data.datas.rlTypArray
 								_this.addContactList=res.data.datas.jjList
-								for(var i=0;i<_this.addContactList.length;i++){
-									for(var j=0;j<_this.list.length;j++){
-										if(_this.addContactList[i].rlTypCd==_this.list[j].value){
-											_this.addContactList[i].rlTypNm=_this.list[j].label
-											continue
-										}
-									}
-								}
+								summer.hideProgress()
+								// for(var i=0;i<_this.addContactList.length;i++){
+								// 	for(var j=0;j<_this.list.length;j++){
+								// 		if(_this.addContactList[i].rlTypCd==_this.list[j].value){
+								// 			_this.addContactList[i].rlTypNm=_this.list[j].label
+								// 			continue
+								// 		}
+								// 	}
+								// }
 							},function(err){
+								summer.hideProgress()
 								alert(err);
 							})
 						},
@@ -276,6 +305,9 @@
 							//发请求
 							var _this=this
 							summer.showProgress()
+							for(var i=0;i<_this.addContactList.length;i++){
+								delete _this.addContactList[i].rlTypNm
+							}
 							console.log(JSON.stringify({
 								cstBscInfo:{id:_this.id},
 								cstNpSocialRlList:_this.addContactList

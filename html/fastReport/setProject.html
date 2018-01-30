@@ -501,6 +501,12 @@
 				})
 				return
 			} else if (param == 'uploadImg') {
+				if(!$(".price").hasClass('active')){
+					summer.toast({
+						msg: '请先选择报价方案'
+					});
+					return
+				}
 				id="uploadImg"
 				url = "html/fastReport/uploadImgList.html";
 				title = '资料上传';
@@ -572,12 +578,6 @@
 		}
 
 		function addContact() {
-			if(!$(".price").hasClass('active')){
-				summer.toast({
-					msg: '请先选择报价方案'
-				});
-				return
-			}
 			summer.openWin({
 				id: 'emergencyContract',
 				url: "html/fastReport/addEmergencyContact.html",
