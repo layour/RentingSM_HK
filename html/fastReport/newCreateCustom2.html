@@ -103,6 +103,16 @@
 		.um-footer{
 			min-height:0px;
 		}
+		.item input{
+			border: none;
+			height: .7rem;
+			width: 2.92rem;
+			text-align: right;
+			line-height: .7rem;
+			outline: none;
+			margin-top: .09rem;
+			font-size: 0.28rem;
+		}
 	</style>
 </head>
 
@@ -136,28 +146,17 @@
 						</span>
 					</p>
 			</div>
-			<mt-field label="手机号" placeholder="请输入您的手机号码" v-model="message.cstNpSocialRl.mp"></mt-field>
-			<mt-field label="户口所在地" placeholder="请输入您的户口所在地" v-model="message.cstNpSocialRl.idAddr"></mt-field>
-			<mt-field label="工作单位" placeholder="请输入您的工作单位" v-model="message.cstNpSocialRl.workPlc"></mt-field>
-			<!--<div class="item">
-				<p class="pl10 pr10 tr" @click="selectAddr">
-					<span class="fl">省市县</span>
-					<span class=""> <span  class="first">{{message.HOUSE_ADDRESS_PROVINCE}} {{message.HOUSE_ADDRESS_CITY}} {{message.HOUSE_ADDRESS_COUNTY}}</span> <i class="icon iconfont icon-enter"></i></span>
-				</p>
-			</div>-->
-			<!-- <mt-field label="通讯地址" placeholder="请输入您的通讯地址" v-model="message.phoneAddress"></mt-field> -->
+			<div class="item um-box pl10 pr10"  >
+					 	<span class="um-bf1">手机号</span><input placeholder="请输入您的手机号码"v-model="message.cstNpSocialRl.mp" type="text">   
+			</div>
+			<div class="item um-box pl10 pr10"  >
+					 	<span class="um-bf1">户口所在地</span><input placeholder="请输入您的户口所在地" v-model="message.cstNpSocialRl.idAddr" type="text">   
+			</div>
+			<div class="item um-box pl10 pr10"  >
+					 	<span class="um-bf1">工作单位</span><input placeholder="请输入您的工作单位" v-model="message.cstNpSocialRl.workPlc" type="text">   
+			</div>
 		</div>
-		<div class="um-footer">
-			<!-- <mt-popup v-model="pickerSexStatus" position='bottom' class="pickerColor">
-				<mt-picker :slots="slots1" @change="onValuesChange1"></mt-picker>
-				<p>
-					<span class="" @click="surePickerSex">取消</span><span class="" @click="surePickerSex('confirm')">确定</span>
-				</p>
-			</mt-popup>
-			<mt-datetime-picker ref="picker" v-model="pickerValue" type="date" cancel-text='取消' confirm-text='确定' :start-date='new Date("1950-01-01")' :end-date="noweDate" @confirm="handleConfirm">
-			</mt-datetime-picker> -->
-
-		</div>
+	 
 	</div>
 	<script src="../../js/summer.js"></script>
 	<script src="../../js/jquery.min.js"></script>
@@ -192,12 +191,12 @@
 						cstNpSocialRl:{
 							rlNm:'',
 							certNo:'',
+							certTypCd:'1',
 							genderCd:'',
-							SPOUST_SEX_NM:'',
-							SPOUST_BIRTHDAY:'',
-							SPOUST_HOUSR_RE_ADDRESS:'',
-							mp
-:''
+							idAddr:'',
+							workPlc:'',
+							mp:'',
+							id:''//配偶id，修改需要带上
 						}
 					},
 					sourceFrom:'',
@@ -323,31 +322,15 @@
 
 				},
 				messageTest: function() {
-					var regCard = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/; //身份证校验
 					var phoneCard = /^[1][3,4,5,7,8,9][0-9]{9}$/;
-					if (this.message.cstNpSocialRl.rlNm == "") {
+				   if (this.message.cstNpSocialRl.idAddr == "") {
 						summer.toast({
-							msg: "姓名不能为空"
+							msg: "户口所在地不能为空"
 						});
 						return false;
-					} else if (this.message.cstNpSocialRl.certNo == "" || regCard.test(this.message.cstNpSocialRl.certNo) === false) {
+					} else if (this.message.cstNpSocialRl.workPlc == "") {
 						summer.toast({
-							msg: "请输入正确的身份证号"
-						});
-						return false;
-					} else if (this.message.cstNpSocialRl.SPOUST_SEX_NM == "") {
-						summer.toast({
-							msg: "性别不能为空"
-						});
-						return false;
-					} else if (this.message.cstNpSocialRl.SPOUST_BIRTHDAY == "") {
-						summer.toast({
-							msg: "出生年月不能为空"
-						});
-						return false;
-					} else if (this.message.cstNpSocialRl.SPOUST_HOUSR_RE_ADDRESS == "") {
-						summer.toast({
-							msg: "住址不能为空"
+							msg: "工作单位不能为空"
 						});
 						return false;
 					} else if (this.message.cstNpSocialRl.mp == "") {
@@ -369,24 +352,20 @@
 						return;
 					};
 					self.personMes.cstNpSocialRl=self.message.cstNpSocialRl;
-					if (self.personMes.cstNpSocialRl.SPOUST_SEX_NM=="男") {
-						self.personMes.cstNpSocialRl.genderCd="0"
-					} else {
-						self.personMes.cstNpSocialRl.genderCd="1"
-					}
+				 
 					var finanlInput=JSON.parse(JSON.stringify(self.personMes));
 					ajaxRequest({
 						type: 'post',
-						url: 'appservice/customer/saveCust',
-						param:self.personMes
+						url: 'appservice/customer/cstNpBscInfo/save.do',
+						param:finanlInput
 					}, function(res) {
 						summer.hideProgress();
 						if (res.data.flag == 1) {
 							//self.baseMessageData=res.data.datas;
 							//console.log(self.baseMessageData);
 							summer.toast({msg:"保存成功"});
-							var clint_Id=res.data.datas.CLIENT_ID;
-							if (self.sourceFrom=="newCustom") {
+							var clint_Id=res.data.datas.id;
+							if (self.sourceFrom=="newCreateCustom_verify") {
 								summer.openWin({
 									id : 'setProject',
 									url : 'html/fastReport/setProject.html',
@@ -440,21 +419,29 @@
 		}
 		summerready = function() {
 			var personMessage = summer.pageParam.personMessage;
+			var sponseBase=summer.pageParam.sponseBase;
 			var sourceFrom=summer.pageParam.sourceFrom;
-			newCreateCustom.sourceFrom=sourceFrom;
-			if(personMessage||personMessage.cstNpSocialRl){
-				newCreateCustom.message.cstNpSocialRl.rlNm=personMessage.cstNpSocialRl.rlNm
-				newCreateCustom.message.cstNpSocialRl.certNo=personMessage.cstNpSocialRl.certNo
-				newCreateCustom.message.cstNpSocialRl.genderCd=personMessage.cstNpSocialRl.genderCd
-				newCreateCustom.message.cstNpSocialRl.idAddr=personMessage.cstNpSocialRl.idAddr
-				newCreateCustom.message.cstNpSocialRl.workPlc=personMessage.cstNpSocialRl.workPlc
-				newCreateCustom.message.cstNpSocialRl.mp=personMessage.cstNpSocialRl.mp
+			if(sourceFrom=="newCreateCustom_verify2"){
+				if(sponseBase){
+					newCreateCustom.message.cstNpSocialRl.rlNm=sponseBase.cstNm;
+					newCreateCustom.message.cstNpSocialRl.certNo=sponseBase.certNo;
+					newCreateCustom.message.cstNpSocialRl.genderCd=sponseBase.genderNm=="男"?"1":"2";
+				}
+			}else{
+				if(personMessage||personMessage.cstNpSocialRl){
+					newCreateCustom.message.cstNpSocialRl.rlNm=personMessage.cstNpSocialRl.rlNm
+					newCreateCustom.message.cstNpSocialRl.certNo=personMessage.cstNpSocialRl.certNo
+					newCreateCustom.message.cstNpSocialRl.genderCd=personMessage.cstNpSocialRl.genderCd
+					newCreateCustom.message.cstNpSocialRl.idAddr=personMessage.cstNpSocialRl.idAddr
+					newCreateCustom.message.cstNpSocialRl.workPlc=personMessage.cstNpSocialRl.workPlc
+					newCreateCustom.message.cstNpSocialRl.mp=personMessage.cstNpSocialRl.mp;
+					newCreateCustom.message.cstNpSocialRl.id=personMessage.cstNpSocialRl.id
+				}
 			}
+			newCreateCustom.sourceFrom=sourceFrom;
+			
 			newCreateCustom.personMes=personMessage;
 		}
-		$(function(){
-			$('body').height($('body')[0].clientHeight);
-		});
 	</script>
 </body>
 

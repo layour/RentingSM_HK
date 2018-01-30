@@ -180,7 +180,10 @@
 					message: {
 						cstNm: '',
 						certNo: '',
-						mp1:''
+						mp1:'',
+						cstBscInfo:{
+							id:''
+						}
 					},
 					sourceFrom: '',
 				}
@@ -258,7 +261,7 @@
 							totalMessage.age=self.AGECOM;
 							totalMessage.sex=self.SEXCOM;
 							totalMessage.birth=self.BIRTHCOM;
-							totalMessage.id=res.data.datas.id;
+							totalMessage.cstBscInfo.id=res.data.datas.id;
 							summer.openWin({
 								id: 'newCreateCustom',
 								url: 'html/fastReport/newCreateCustom.html',
