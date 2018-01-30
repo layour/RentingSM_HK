@@ -425,7 +425,7 @@
 						age:'',
 						birthday:'',
 						marStsNm:'',//婚姻状况
-						MarStsCd:'',
+						marStsCd:'',
 						isHasLicenseNm: '',
 						isHasLicense: '', //是否有驾照
 						driverLicenseNm: '',
@@ -613,13 +613,14 @@
 								self.message.cstNm = holeDataBase.cstNm;
 								self.message.certNo = holeDataBase.certNo;
 								self.message.mp1 = holeDataBase.cstPhoneNumber;
+								self.message.cstBscInfo.id = holeDataBase.id;//保存客户基本信息
 								self.message.id = holeDataDetail.id;//存的是客户详情id,编辑保存必须带上
 								self.message.genderCd = holeDataDetail.genderCd;
 								self.message.genderNm = holeDataDetail.genderCd=="1"?"男":"女";
 								self.message.birthday = holeDataDetail.birthday;
 								self.message.age = holeDataDetail.age;
 								self.message.marStsNm = holeDataDetail.marStsNm;
-								self.message.MarStsCd = holeDataDetail.marStsCd;
+								self.message.marStsCd = holeDataDetail.marStsCd;
 								self.message.cstIdRegion = holeDataDetail.cstIdRegion;
 								self.message.cstIdProvince = holeDataDetail.cstIdProvince;
 								self.message.cstIdCity = holeDataDetail.cstIdCity;
@@ -653,7 +654,7 @@
 								self.message.workTel = holeDataDetail.workTel;
 								self.message.positionNm = holeDataDetail.positionNm;
 								self.message.position = holeDataDetail.position;
-								if (self.message.MarStsCd == "3"||self.message.MarStsCd == "21"||self.message.MarStsCd == "22"||self.message.MarStsCd == "23") {
+								if (self.message.marStsCd == "3"||self.message.marStsCd == "21"||self.message.marStsCd == "22"||self.message.marStsCd == "23") {
 									summer.setWinAttr({
 										actionBar: {
 											title: "客户信息",
@@ -752,10 +753,10 @@
 						 this.message.marStsNm = this.pickerMarStsCd;
 					this.totalData.marStsCd.map((e,i)=>{
 						if(e.label==this.message.marStsNm){
-							this.message.MarStsCd=this.totalData.marStsCd[i].value;
+							this.message.marStsCd=this.totalData.marStsCd[i].value;
 						}
 					});
-					if (this.message.MarStsCd == "3"||this.message.MarStsCd == "21"||this.message.MarStsCd == "22"||this.message.MarStsCd == "23") {
+					if (this.message.marStsCd == "3"||this.message.marStsCd == "21"||this.message.marStsCd == "22"||this.message.marStsCd == "23") {
 						summer.setWinAttr({
 								actionBar: {
 									title: "客户信息",
@@ -974,7 +975,8 @@
 								msg: "保存成功"
 							});
 							if (self.sourceFrom == "newCreateCustom_verify") {
-								var clint_Id = res.data.datas.id;
+								var clint_Id =self.message.cstBscInfo.id;
+								self.message.id=res.data.datas.id;//保存详情id
 								summer.openWin({
 									id: 'setProject',
 									url: 'html/fastReport/setProject.html',

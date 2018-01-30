@@ -364,8 +364,9 @@
 							//self.baseMessageData=res.data.datas;
 							//console.log(self.baseMessageData);
 							summer.toast({msg:"保存成功"});
-							var clint_Id=res.data.datas.id;
-							if (self.sourceFrom=="newCreateCustom_verify") {
+							//var clint_Id=res.data.datas.id;
+							var clint_Id=self.personMes.cstBscInfo.id
+							if (self.sourceFrom=="newCreateCustom_verify2") {
 								summer.openWin({
 									id : 'setProject',
 									url : 'html/fastReport/setProject.html',
