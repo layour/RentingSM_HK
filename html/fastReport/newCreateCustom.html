@@ -192,7 +192,7 @@
 				</p>
 			</div>
 			<div class="item um-box pl10 pr10"  >
-					<span class="um-red mr5">*</span>	<span class="um-bf1">现居详细地址</span><input placeholder="请输入现居详细地址"  v-model="message.postAddr" type="text">   
+					<span class="um-red mr5">*</span>	<span class="um-bf1">现居详细地址</span><input placeholder="请输入现居详细地址"  v-model="message.homeAddr" type="text">   
 			</div>
 			<div @click="surePickerIsHasLicense" class="item" >
 				<p class="pl10 pr10  um-box">
@@ -419,13 +419,13 @@
 						certNo: '',
 						marStsCd: '',
 						idAddr: '',
-						postAddr: '',
+						homeAddr: '',
 						genderCd:'',
 						genderNm:'',
 						age:'',
 						birthday:'',
 						marStsNm:'',//婚姻状况
-						MarStsCd:'',
+						marStsCd:'',
 						isHasLicenseNm: '',
 						isHasLicense: '', //是否有驾照
 						driverLicenseNm: '',
@@ -457,9 +457,12 @@
 						cstWorkCity: '',//工作地址市
 						cstWorkDistrict:'',//工作地址县
 						cstNpSocialRl:'',//配偶信息
-						id:'',//客户id
-
+						cstBscInfo:{
+							id:''//客户基本信息id
+						},
+						id:'',//客户详情id,如果编辑后保存，必须带上
 					},
+					totalData:'',//字典所有数据
 					HukouCity:'',
 					CurrentCity:'',
 					WorkCity:'',
@@ -468,6 +471,7 @@
 					isNativeData_total: "",
 					transportData_total: '',
 					clintId: '',
+					isAdd:'',//根据这个判断是否打开配偶验证页
 					hasCheckFinish:false   //根据这个判断是否可以输入
 
 				}
@@ -573,6 +577,7 @@
 							var holeDataBase = res.data.datas.cstBscInfo;
 							var holeDataDetail = res.data.datas.cstNpBscInfo;
 							var totalData = res.data.datas;
+							self.totalData=totalData;
 							self.regionArray = totalData.regionArray;
 							var marStsNmData=[],isHasLicenseNmData=[],driverLicenseNmData=[],housingOwnershipNmData=[],industryNmData=[],workTypNmData=[],positionData=[];
 							for (var i = 0; i < totalData.marStsCd.length; i++) {
@@ -608,12 +613,14 @@
 								self.message.cstNm = holeDataBase.cstNm;
 								self.message.certNo = holeDataBase.certNo;
 								self.message.mp1 = holeDataBase.cstPhoneNumber;
+								self.message.cstBscInfo.id = holeDataBase.id;//保存客户基本信息
+								self.message.id = holeDataDetail.id;//存的是客户详情id,编辑保存必须带上
 								self.message.genderCd = holeDataDetail.genderCd;
 								self.message.genderNm = holeDataDetail.genderCd=="1"?"男":"女";
 								self.message.birthday = holeDataDetail.birthday;
 								self.message.age = holeDataDetail.age;
 								self.message.marStsNm = holeDataDetail.marStsNm;
-								self.message.MarStsCd = holeDataDetail.marStsCd;
+								self.message.marStsCd = holeDataDetail.marStsCd;
 								self.message.cstIdRegion = holeDataDetail.cstIdRegion;
 								self.message.cstIdProvince = holeDataDetail.cstIdProvince;
 								self.message.cstIdCity = holeDataDetail.cstIdCity;
@@ -630,7 +637,7 @@
 								self.message.cstHomeDistrict = holeDataDetail.cstHomeDistrict;
 								self.CurrentCity=self.message.cstHomeRegion.name+"-"+self.message.cstHomeProvince.name+"-"+self.message.cstHomeCity.name+"-"+self.message.cstHomeDistrict.name;
 								self.message.idAddr = holeDataDetail.idAddr;
-								self.message.postAddr = holeDataDetail.postAddr;
+								self.message.homeAddr = holeDataDetail.homeAddr;
 								self.message.isHasLicenseNm = holeDataDetail.isHasLicenseNm;
 								self.message.isHasLicense = holeDataDetail.isHasLicense;
 								self.message.driverLicenseNm = holeDataDetail.driverLicenseNm;
@@ -647,7 +654,7 @@
 								self.message.workTel = holeDataDetail.workTel;
 								self.message.positionNm = holeDataDetail.positionNm;
 								self.message.position = holeDataDetail.position;
-								if (self.message.MarStsCd == "3"||self.message.MarStsCd == "21"||self.message.MarStsCd == "22"||self.message.MarStsCd == "23") {
+								if (self.message.marStsCd == "3"||self.message.marStsCd == "21"||self.message.marStsCd == "22"||self.message.marStsCd == "23") {
 									summer.setWinAttr({
 										actionBar: {
 											title: "客户信息",
@@ -743,48 +750,42 @@
 				surePickerMarStsCd: function (param) {
 					this.pickerMarStsCdStatus = !this.pickerMarStsCdStatus;
 					 if (param == 'confirm') {
-					 	this.message.marStsNm = this.pickerMarStsCd
-					// 	if (this.pickerMarrige == "已婚") {
-					// 		this.message.IS_MARRY = 20
-					// 	} else if (this.pickerMarrige == "未婚") {
-					// 		this.message.IS_MARRY = 10
-					// 	} else if (this.pickerMarrige == "离婚") {
-					// 		this.message.IS_MARRY = 40
-					// 	} else if (this.pickerMarrige == "丧偶") {
-					// 		this.message.IS_MARRY = 30
-					// 	} else if (this.pickerMarrige == "未说明的婚姻状况") {
-					// 		this.message.IS_MARRY = 90
-					// 	}
-					// 	if (this.message.IS_MARRY == "20") {
-					// 		summer.setWinAttr({
-					// 			actionBar: {
-					// 				title: "客户信息",
-					// 				titleColor: "#ffffff",
-					// 				backgroundColor: "#039be5",
-					// 				rightItems: [{
-					// 					type: "text",
-					// 					text: "下一步",
-					// 					textColor: "#ffffff", //文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
-					// 					method: "nextStopAction()" //在打开的window中自定义事件
-					// 				}]
-					// 			}
-					// 		});
-
-					// 	} else {
-					// 		summer.setWinAttr({
-					// 			actionBar: {
-					// 				title: "客户信息",
-					// 				titleColor: "#ffffff",
-					// 				backgroundColor: "#039be5",
-					// 				rightItems: [{
-					// 					type: "text",
-					// 					text: "保存",
-					// 					textColor: "#ffffff",
-					// 					method: "savePerson()" //自定义事件
-					// 				}]
-					// 			}
-					// 		});
-					// 	}
+						 this.message.marStsNm = this.pickerMarStsCd;
+					this.totalData.marStsCd.map((e,i)=>{
+						if(e.label==this.message.marStsNm){
+							this.message.marStsCd=this.totalData.marStsCd[i].value;
+						}
+					});
+					if (this.message.marStsCd == "3"||this.message.marStsCd == "21"||this.message.marStsCd == "22"||this.message.marStsCd == "23") {
+						summer.setWinAttr({
+								actionBar: {
+									title: "客户信息",
+									titleColor: "#ffffff",
+									backgroundColor: "#039be5",
+									rightItems: [{
+										type: "text",
+										text: "下一步",
+										textColor: "#ffffff", //文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
+										method: "nextStopAction()" //在打开的window中自定义事件
+									}]
+								}
+							});
+						}else{
+							summer.setWinAttr({
+									actionBar: {
+										title: "客户信息",
+										titleColor: "#ffffff",
+										backgroundColor: "#039be5",
+										rightItems: [{
+											type: "text",
+											text: "保存",
+											textColor: "#ffffff",
+											method: "savePerson()" //自定义事件
+										}]
+									}
+								});
+						}
+					 
 					}
 				},
 				onValuesChange2: function (picker, values) {
@@ -794,6 +795,11 @@
 					this.pickerIsHasLicenseStatus = !this.pickerIsHasLicenseStatus;
 					if (param == 'confirm') {
 						this.message.isHasLicenseNm = this.pickerIsHasLicense;
+					     if(this.message.isHasLicenseNm=="是"){
+							this.message.isHasLicense=1
+						 }else{
+							this.message.isHasLicense=2
+						 }
 					}
 				},
 
@@ -804,6 +810,11 @@
 					this.pickerDriverLicenseTypeStatus = !this.pickerDriverLicenseTypeStatus;
 					if (param == 'confirm') {
 						this.message.driverLicenseNm = this.pickerDriverLicenseType;
+						this.totalData.driverLicenseType.map((e,i)=>{
+							if(e.label==this.message.driverLicenseNm){
+								this.message.driverLicenseType=this.totalData.driverLicenseType[i].value;
+							}
+						});
 					}
 				},
 				onValuesChange4: function (picker, values) {
@@ -813,6 +824,11 @@
 					this.pickerHousingOwnershipStatus = !this.pickerHousingOwnershipStatus;
 					if (param == 'confirm') {
 						this.message.housingOwnershipNm = this.pickerHousingOwnership;
+						this.totalData.housingOwnership.map((e,i)=>{
+							if(e.label==this.message.housingOwnershipNm){
+								this.message.housingOwnership=this.totalData.housingOwnership[i].value;
+							}
+						});
 					}
 				},
 				onValuesChange5: function (picker, values) {
@@ -822,6 +838,11 @@
 					this.pickerIndustryStatus = !this.pickerIndustryStatus;
 					if (param == 'confirm') {
 						this.message. industryNm = this.pickerIndustry;
+						this.totalData.industry.map((e,i)=>{
+							if(e.label==this.message.industryNm){
+								this.message.industry=this.totalData.industry[i].value;
+							}
+						});
 					}
 				},
 				onValuesChange6: function (picker, values) {
@@ -831,6 +852,11 @@
 					this.pickerWorkTypCdStatus = !this.pickerWorkTypCdStatus;
 					if (param == 'confirm') {
 						this.message. workTypNm = this.pickerWorkTypCd;
+						this.totalData.workTypCd.map((e,i)=>{
+							if(e.label==this.message.workTypNm){
+								this.message.workTypCd=this.totalData.workTypCd[i].value;
+							}
+						});
 					}
 				},
 				onValuesChange7: function (picker, values) {
@@ -840,6 +866,11 @@
 					this.pickerPositionStatus = !this.pickerPositionStatus;
 					if (param == 'confirm') {
 						this.message. positionNm = this.pickerPosition;
+						this.totalData.positonArray.map((e,i)=>{
+							if(e.label==this.message.positionNm){
+								this.message.position=this.totalData.positonArray[i].value;
+							}
+						});
 					}
 				},
 				handleConfirm: function (pickerValue) {
@@ -865,72 +896,77 @@
 				messageTest: function () {
 					var regCard = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/; //身份证校验
 					var phoneCard = /^[1][3,4,5,7,8,9][0-9]{9}$/;
-					 if (this.message.HOUSE_ADDRESS == "") {
-						summer.toast({
-							msg: "住址不能为空"
-						});
-						return false;
-					}  else if (this.message.IS_MARRY_NM == "") {
+				 if (this.message.marStsNm == "") {
 						summer.toast({
 							msg: "请选择婚姻状况"
 						});
 						return false;
-					} else if (this.message.INDUSTRY_FICATION_NM == "") {
+					} else if (this.HukouCity == "") {
 						summer.toast({
-							msg: "请选择运输货物"
+							msg: "请选择户口所在地城市"
 						});
 						return false;
-					} else if (this.message.HOUSE_ADDRESS_CITY_NM == "") {
+					} else if (this.message.idAddr == "") {
 						summer.toast({
-							msg: "请选择省市"
+							msg: "请输入户口所在地详细地址"
 						});
 						return false;
-					} else if (this.message.HOME_XZ == "") {
+					} else if (this.CurrentCity == "") {
 						summer.toast({
-							msg: "请选择住房情况"
+							msg: "请选择现在居住城市"
 						});
 						return false;
-					} else if (this.message.SCALE_SOURCE_NM == "") {
+					} else if (this.message.homeAddr == "") {
 						summer.toast({
-							msg: "请选择是否本地人"
+							msg: "请选择现在居住详细地址"
 						});
 						return false;
-					}
+					}else if (this.message.housingOwnershipNm == "") {
+						summer.toast({
+							msg: "请选择住房所有权"
+						});
+						return false;
+					}else if (this.message.workPlc == "") {
+						summer.toast({
+							msg: "请输入工作单位名称"
+						});
+						return false;
+					}else if (this.message.workYrs == "") {
+						summer.toast({
+							msg: "请输入工作单位年限"
+						});
+						return false;
+					}else if (this.message.WorkCity == "") {
+						summer.toast({
+							msg: "请选择工作地城市"
+						});
+						return false;
+					}else if (this.message.workAddr == "") {
+						summer.toast({
+							msg: "请选择工作单位详细地址"
+						});
+						return false;
+					}else if (this.message.workTel == "") {
+						summer.toast({
+							msg: "请输入工作单位电话"
+						});
+						return false;
+					} 
 					return true;
 				},
 				savePerson: function () {
-					if(!this.hasCheckFinish){
-						summer.toast({msg:"请先输入客户基本信息"});
-						return;
-					}
 					var self = this;
 					if (!this.messageTest()) {
 						return;
 					};
 					summer.showProgress();
-					var paramData = {
-						NAME: self.message.NAME,
-						certNo: self.message.certNo,
-						SEX: self.message.SEX_NM == "男" ? "0" : "1",
-						HOUSE_ADDRESS: self.message.HOUSE_ADDRESS,
-						mp1: self.message.mp1,
-						IS_MARRY: self.message.IS_MARRY,
-						BIRTHDAY: self.message.BIRTHDAY,
-						SCALE_SOURCE_NM: self.message.SCALE_SOURCE_NM,
-						SCALE_SOURCE: self.message.SCALE_SOURCE,
-						INDUSTRY_FICATION: self.message.INDUSTRY_FICATION,
-						INDUSTRY_FICATION_NM: self.message.INDUSTRY_FICATION_NM,
-						HOME_XZ: self.message.HOME_XZ,
-						HOUSE_ADDRESS_PROVINCE: self.message.HOUSE_ADDRESS_PROVINCE,
-						HOUSE_ADDRESS_CITY: self.message.HOUSE_ADDRESS_CITY,
-						spoustObj: {}
-					};
-					if (self.clintId) {
-						paramData.CLIENT_ID = self.clintId;
-					}
+					var paramData =$.extend({}, self.message);
+					delete paramData.cstNm;
+					delete paramData.certNo;
+					console.log(self.message);
 					ajaxRequest({
 						type: 'post',
-						url: 'appservice/customer/saveCust',
+						url: 'appservice/customer/cstNpBscInfo/save.do',
 						param: paramData
 					}, function (res) {
 						summer.hideProgress();
@@ -938,8 +974,9 @@
 							summer.toast({
 								msg: "保存成功"
 							});
-							if (self.sourceFrom == "newCustom") {
-								var clint_Id = res.data.datas.CLIENT_ID;
+							if (self.sourceFrom == "newCreateCustom_verify") {
+								var clint_Id =self.message.cstBscInfo.id;
+								self.message.id=res.data.datas.id;//保存详情id
 								summer.openWin({
 									id: 'setProject',
 									url: 'html/fastReport/setProject.html',
@@ -986,18 +1023,20 @@
 						console.log(err);
 						summer.hideProgress();
 					});
-					//此处ajax请求
-					/*	summer.openWin({
-							id: 'setProject',
-							url: 'html/fastReport/setProject.html',
+				},
+				nextStopAction: function () {
+					if (!this.messageTest()) {
+						return;
+					};
+					var self = this;
+					if(self.isAdd){
+						summer.openWin({
+							id: 'newCreateCustom_verify2',
+							url: 'html/fastReport/newCreateCustom_verify2.html',
 							create: false,
 							type: 'actionBar',
-							isKeep: false,
-							pageParam: {
-								source: "customer"
-							},
 							actionBar: {
-								title: "快捷报单",
+								title: "配偶信息验证",
 								titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
 								backgroundColor: "#039be5",
 								leftItem: {
@@ -1008,50 +1047,47 @@
 								},
 								rightItems: [{
 									type: "text",
-									text: "下一步",
+									text: "验证",
 									textColor: "#ffffff", //文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
-									method: "nextStopInput()" //在打开的window中自定义事件
+									method: "verifyMessage()" //在打开的window中自定义事件
 								}]
+							},
+							pageParam: {
+								personMessage: self.message,
+								sourceFrom: self.sourceFrom
 							}
-						});*/
-				},
-				nextStopAction: function () {
-					if (!this.messageTest()) {
-						return;
-					};
-					var self = this;
-					 
-					if (self.clintId) {
-						self.message.id = self.clintId;
+						});
+					}else{
+						summer.openWin({
+							id: 'newCreateCustom2',
+							url: 'html/fastReport/newCreateCustom2.html',
+							create: false,
+							type: 'actionBar',
+							actionBar: {
+								title: "配偶信息",
+								titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
+								backgroundColor: "#039be5",
+								leftItem: {
+									image: "img/back.png",
+									method: "", //返回按钮自定义事件
+									text: "返回",
+									textColor: "#ffffff" //返回文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
+								},
+								rightItems: [{
+									type: "text",
+									text: "保存",
+									textColor: "#ffffff", //文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
+									method: "saveAllPerMessage()" //在打开的window中自定义事件
+								}]
+							},
+							pageParam: {
+								personMessage: self.message,
+								sourceFrom: self.sourceFrom
+							}
+						});
 					}
 					//此处ajax请求
-					summer.openWin({
-						id: 'newCreateCustom2',
-						url: 'html/fastReport/newCreateCustom2.html',
-						create: false,
-						type: 'actionBar',
-						actionBar: {
-							title: "配偶信息",
-							titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
-							backgroundColor: "#039be5",
-							leftItem: {
-								image: "img/back.png",
-								method: "", //返回按钮自定义事件
-								text: "返回",
-								textColor: "#ffffff" //返回文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
-							},
-							rightItems: [{
-								type: "text",
-								text: "保存",
-								textColor: "#ffffff", //文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
-								method: "saveAllPerMessage()" //在打开的window中自定义事件
-							}]
-						},
-						pageParam: {
-							personMessage: self.message,
-							sourceFrom: self.sourceFrom
-						}
-					});
+					
 				},
 				openPicker: function () {
 					this.$refs.picker.open();
@@ -1068,28 +1104,30 @@
 		}
 		function getCity(dataSource) {
 			if(dataSource=="HukouCity"){
-				newCreateCustom.message.cstIdRegion =JSON.parse(summer.getStorage("pickerDealCity1")).id;
-				newCreateCustom.message.cstIdProvince =JSON.parse(summer.getStorage("pickerDealCity2")).id;
-				newCreateCustom.message.cstIdCity =JSON.parse(summer.getStorage("pickerDealCity3")).id;
-				newCreateCustom.message.cstIdDistrict =JSON.parse(summer.getStorage("pickerDealCity4")).id;
+				newCreateCustom.message.cstIdRegion =JSON.parse(summer.getStorage("pickerDealCity1"));
+				newCreateCustom.message.cstIdProvince =JSON.parse(summer.getStorage("pickerDealCity2"));
+				newCreateCustom.message.cstIdCity =JSON.parse(summer.getStorage("pickerDealCity3"));
+				newCreateCustom.message.cstIdDistrict =JSON.parse(summer.getStorage("pickerDealCity4"));
 				newCreateCustom.HukouCity=JSON.parse(summer.getStorage("pickerDealCity1")).name+" "+JSON.parse(summer.getStorage("pickerDealCity2")).name+" "+JSON.parse(summer.getStorage("pickerDealCity3")).name+" "+JSON.parse(summer.getStorage("pickerDealCity4")).name
 			}else if(dataSource=="CurrentCity"){
-				newCreateCustom.message.cstRegion =JSON.parse(summer.getStorage("pickerDealCity1")).id;
-				newCreateCustom.message.cstProvince =JSON.parse(summer.getStorage("pickerDealCity2")).id;
-				newCreateCustom.message.cstCity =JSON.parse(summer.getStorage("pickerDealCity3")).id;
-				newCreateCustom.message.cstDistrict =JSON.parse(summer.getStorage("pickerDealCity4")).id;
+				newCreateCustom.message.cstHomeRegion =JSON.parse(summer.getStorage("pickerDealCity1"));
+				newCreateCustom.message.cstHomeProvince =JSON.parse(summer.getStorage("pickerDealCity2"));
+				newCreateCustom.message.cstHomeCity =JSON.parse(summer.getStorage("pickerDealCity3"));
+				newCreateCustom.message.cstHomeDistrict =JSON.parse(summer.getStorage("pickerDealCity4"));
 				newCreateCustom.CurrentCity=JSON.parse(summer.getStorage("pickerDealCity1")).name+" "+JSON.parse(summer.getStorage("pickerDealCity2")).name+" "+JSON.parse(summer.getStorage("pickerDealCity3")).name+" "+JSON.parse(summer.getStorage("pickerDealCity4")).name
 			}else if(dataSource=="WorkCity"){
-				newCreateCustom.message.cstWorkRegion =JSON.parse(summer.getStorage("pickerDealCity1")).id;
-				newCreateCustom.message.cstWorkProvince =JSON.parse(summer.getStorage("pickerDealCity2")).id;
-				newCreateCustom.message.cstWorkCity =JSON.parse(summer.getStorage("pickerDealCity3")).id;
-				newCreateCustom.message.cstWorkDistrict =JSON.parse(summer.getStorage("pickerDealCity4")).id;
+				newCreateCustom.message.cstWorkRegion =JSON.parse(summer.getStorage("pickerDealCity1"));
+				newCreateCustom.message.cstWorkProvince =JSON.parse(summer.getStorage("pickerDealCity2"));
+				newCreateCustom.message.cstWorkCity =JSON.parse(summer.getStorage("pickerDealCity3"));
+				newCreateCustom.message.cstWorkDistrict =JSON.parse(summer.getStorage("pickerDealCity4"));
 				newCreateCustom.WorkCity=JSON.parse(summer.getStorage("pickerDealCity1")).name+" "+JSON.parse(summer.getStorage("pickerDealCity2")).name+" "+JSON.parse(summer.getStorage("pickerDealCity3")).name+" "+JSON.parse(summer.getStorage("pickerDealCity4")).name
 			}
 		}
 		summerready = function () {
 			var projectId = summer.pageParam.projectId;
 			var clintId = summer.pageParam.clintId;
+			var isAdd=summer.pageParam.isAdd;
+			newCreateCustom.isAdd = isAdd;
 			var sourceFrom = summer.pageParam.sourceFrom;
 			newCreateCustom.sourceFrom = sourceFrom;
 			newCreateCustom.clintId = clintId;
@@ -1102,7 +1140,8 @@
 				newCreateCustom.message.cstNm=customBaseMessage.cstNm;
 				newCreateCustom.message.certNo=customBaseMessage.certNo;
 				newCreateCustom.message.mp1=customBaseMessage.mp1;
-				newCreateCustom.clintId = customBaseMessage.id;
+				newCreateCustom.clintId = customBaseMessage.cstBscInfo.id;
+				newCreateCustom.message.cstBscInfo.id = customBaseMessage.cstBscInfo.id;//保存客户基本信息id
 			}
 			newCreateCustom.getData(projectId, newCreateCustom.clintId);
 			var params = ["android.permission.ACCESS_FINE_LOCATION", "android.permission.ACCESS_COARSE_LOCATION",
@@ -1117,6 +1156,9 @@
 				//alert(args); //失败返回illegal access
 			})
 		}
+		$(function(){
+			$('body').height($('body')[0].clientHeight);
+		});
 	</script>
 </body>
 
