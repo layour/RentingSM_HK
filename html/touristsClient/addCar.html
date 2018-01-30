@@ -156,6 +156,7 @@
 					color: '',
 					carColor:'',
 					realityPrice: '',
+					guidePrice:'',
 					pickerColorStatus: false,
 					pickerOldCarStatus: false,
 					pickedColor: '',
@@ -218,12 +219,7 @@
 						_this.transParam=res.data.datas.braList
 						_this.regionArray=res.data.datas.regionArray
 						_this.guanXiArr=res.data.datas.driverRlTypArray
-						_this.guanXiId=res.data.datas.prjBscInfo.prjEqiDtlCar.driverRlTypCd
-						for(var j=0;j<res.data.datas.driverRlTypArray.length;j++){
-							if(_this.guanXiId==res.data.datas.driverRlTypArray[j].value){
-								_this.guanXi=res.data.datas.driverRlTypArray[j].label
-							}
-						}
+
 						_this.dealer=res.data.datas.prjBscInfo.splBscInfo.splNm
 						var resData=res.data.datas.prjBscInfo.prjEquBscInfo;
 						if(resData){
@@ -242,7 +238,16 @@
 							_this.equMdl=resData.equMdl
 							_this.carModels=resData.equNm
 							_this.realityPrice=resData.equAmt
+							_this.guidePrice=resData.guidePc
 							var oldCarData=res.data.datas.prjBscInfo.prjEqiDtlCar
+							if(oldCarData){
+								_this.guanXiId=res.data.datas.prjBscInfo.prjEqiDtlCar.driverRlTypCd
+								for(var j=0;j<res.data.datas.driverRlTypArray.length;j++){
+									if(_this.guanXiId==res.data.datas.driverRlTypArray[j].value){
+										_this.guanXi=res.data.datas.driverRlTypArray[j].label
+									}
+								}
+							}
 							_this.carColor=oldCarData.carCl
 							if(resData.isNew=='1'){
 								_this.carNumber=oldCarData.vinNo
@@ -277,6 +282,11 @@
 					}
 				},
 				pickerDealCity(){
+					var selectParam={
+						id:'addCarList',
+						dataSource:'dealCity'
+					}
+					summer.setStorage('fromToSelectCityId',selectParam)
 					var _this=this
 						summer.openWin({
 							id: 'pickerDealCity',
@@ -447,7 +457,10 @@
 				addCar.equSet=summer.getStorage('pickerModels2');
 				addCar.equMdl=summer.getStorage('pickerModels3');
 				addCar.equNm=models;
-				addCar.realityPrice = summer.getStorage('realityPrice');
+				if(summer.getStorage('realityPrice')!="undefined"){
+					addCar.realityPrice = summer.getStorage('realityPrice');
+					addCar.guidePrice = summer.getStorage('realityPrice');
+				}
 			}
 		}
 		function getCity() {

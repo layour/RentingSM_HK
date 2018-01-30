@@ -20,287 +20,373 @@
 		<div class="um-win" id="quotedPriceDetail" v-cloak>
 			<div class="um-content quotedPriceDetail">
 				<ul>
-					<li><b>方案名称</b><span>{{SCHEME_NAME}}</span></li>
-					<!-- 不再显示方案编号了 -->
-					<!-- <li><b>方案编号</b><span>{{SCHEME_CODE}}</span></li> -->
-					<li v-if="PROJECT_ID!=''" class="spec"><b>合同金额</b><span>{{quoted.allPrice}}&nbsp;元</span></li>
-					<li v-else class="spec input">
-						<b>合同金额</b>
+					<li v-if="!prjId" class="input">
+						<b>车辆单价</b>
 						<span>
-							<input type="text" v-model="quoted.allPrice" @input="checkVal('allPrice')" placeholder="请输入合同金额" name="allPrice">&nbsp;元
+							<input type="text" v-model="allPrice" @input="checkVal('allPrice')" placeholder="请输入车辆单价" name="allPrice">&nbsp;元
 						</span>
 					</li>
-					<li @click="surePicker('term')">
-						<b>租赁期数</b>
+					<li @click="pickerScheme">
+						<b>产品方案</b>
 						<span>
-							<b v-if="quoted.term">{{quoted.term}}</b>
+							<b v-if="SCHEME_NAME">{{SCHEME_NAME}}</b>
 							<b v-else class="default">请选择</b>
 							<i class="icon iconfont icon-enter"></i>
 						</span>
 					</li>
-					<li class="liContr">
-						<b>合同周期</b>
-						<span class="fr">
-							{{quoted.contractTerm}}&nbsp;个月
+					<li class="input" v-if="lsPdStatus">
+						<b>还款期限</b>
+						<span>
+							{{lsPd}}&nbsp;
 						</span>
 					</li>
-					<!-- <li @click="surePicker('termType')">
-						<b>期满处理方式</b>
+					<li class="input" v-else>
+						<b>还款期限</b>
 						<span>
-							<b v-if="quoted.termType">{{quoted.termType}}</b>
+							<input type="text" v-model="lsPd" @input="checkVal('lsPd')" placeholder="请输入还款期限" name="lsPd">&nbsp;元
+						</span>
+					</li>
+					<li @click="pickLspd('lspd')"  class="spec" v-if="LspdList.length>1">
+						<b>还款期限单位</b>
+						<span>
+							<b v-if="lsPdUntCdName">{{lsPdUntCdName}}</b>
 							<b v-else class="default">请选择</b>
 							<i class="icon iconfont icon-enter"></i>
 						</span>
-					</li> -->
-					<li  class='input'>
-						<b>租赁年利率</b>
+					</li>
+					<li v-else class="spec">
+						<b>还款期限单位</b>
 						<span>
-							<input type="text" v-model="quoted.rate" @input="rateCheck" name='rate' placeholder="请输入年利率">&nbsp;%
+							<b>{{lsPdUntCdName}}</b>
 						</span>
 					</li>
-					<li class='spec' @click="surePickerpayType('payType')">
+					<li @click="pickLspd('yearRate')" v-if="AnnIntRatePctList.length>1">
+						<b>贷款年利率</b>
+						<span>
+							<b v-if="annIntRatePct">{{annIntRatePct}}&nbsp;%</b>
+							<b v-else class="default">请选择</b>
+							<i class="icon iconfont icon-enter"></i>
+						</span>
+					</li>
+					<li v-else>
+						<b>贷款年利率</b>
+						<span>
+							<b>{{annIntRatePct}}&nbsp;%</b>
+						</span>
+					</li>
+					<li @click="pickLspd('payType')">
 						<b>支付方式</b>
 						<span>
-							<b v-if="quoted.payType">{{quoted.payType}}</b>
+							<b v-if="payWay">{{payWay}}</b>
 							<b v-else class="default">请选择</b>
 							<i class="icon iconfont icon-enter"></i>
 						</span>
 					</li>
-					<li @click="sureGkfsType">
-						<b>挂靠方式</b>
+					<li v-if='hirePctStatue'>
+						<b>首付款</b>
 						<span>
-							<b v-if="GKFS">{{GKFS}}</b>
+							<b>{{hirePct}}&nbsp;% &nbsp;&nbsp;&nbsp;{{hirePctMoney}}&nbsp;元</b>
+						</span>
+					</li>
+					<li @click="sureFristPay" v-else>
+						<b>首付款</b>
+						<span>
+							<b v-if="hirePct">{{hirePct}}&nbsp;% &nbsp;&nbsp;&nbsp;{{hirePctMoney}}&nbsp;元</b>
 							<b v-else class="default">请选择</b>
 							<i class="icon iconfont icon-enter"></i>
 						</span>
 					</li>
-					<li class='spec' @click="selectFleet" v-if="gkfsCode=='2'||gkfsCode=='3'">
-							<b>挂靠车队</b>
-							<span>
-								<b v-if="GKCD">{{GKCD}}</b>
-								<b v-else class="default">请选择</b>
-								<i class="icon iconfont icon-enter"></i>
-							</span>
-					</li>
-					<li class='spec input' v-else>
-						<b>挂靠车队</b>
-						<span>
-							<input type="text" style="min-width:4rem;" @input="checkGkcd" placeholder="请输入挂靠车队" name="gkcd" v-model="GKCD">&nbsp;&nbsp;
-						</span>
-					</li>
-					<li @click="pickFirstRate">
-						<b>首付比例</b>
-						<span>
-							<b v-if="quoted.sureFirstPay">{{quoted.sureFirstPayRate}}&nbsp;% &nbsp;&nbsp;&nbsp;{{quoted.sureFirstPay}}&nbsp;元</b>
-							<b v-else class="default">请选择</b>
-							<i class="icon iconfont icon-enter"></i>
-						</span>
-					</li>
-					<li @click="pickerBail">
+					<li v-if="bailPctStatue">
 						<b>保证金</b>
 						<span>
-							<b v-if="quoted.lastBail">{{quoted.sureBailRate}}&nbsp;% &nbsp;&nbsp;&nbsp;{{quoted.lastBail}}&nbsp;元</b>
+							<b>{{bailPct}}&nbsp;% &nbsp;&nbsp;&nbsp;{{bailPctMoney}}&nbsp;元</b>
+						</span>
+					</li>
+					<li @click="sureBail" v-else>
+						<b>保证金</b>
+						<span>
+							<b v-if="bailPct">{{bailPct}}&nbsp;% &nbsp;&nbsp;&nbsp;{{bailPctMoney}}&nbsp;元</b>
 							<b v-else class="default">请选择</b>
 							<i class="icon iconfont icon-enter"></i>
-							<!-- <button type="button" name="button" v-if="!quoted.bailType" @click="surePicker('bail')">点击选择基数</button>
-							<button type="button" name="button" v-else @click="surePicker('bail')">{{quoted.bailType}}</button>
-
-							<input type="text" name="bailRate" @input="changeBail" v-model="quoted.bailRate"> %
-							<input type="text" name="bail" @blur="changBailRate" v-model="quoted.bail">&nbsp;元 -->
 						</span>
 					</li>
-					<li class="input spec">
-						<b>咨询费</b>
+					<li class='input'>
+						<b>手续费</b>
 						<span>
-							<input type="text" @input="checkVal('fee')" placeholder="请输入咨询费" name="consultingFee" v-model="quoted.consultingFee">&nbsp;元
+							<input type="text" @input="checkVal('groessPrice')" placeholder="请输入手续费" name="groessPrice" v-model="groessPrice">&nbsp;元
 						</span>
 					</li>
-					<!-- <li class="input">
-						<b>保险保证金</b>
+					<li class='input spec'>
+						<b>贴息金额</b>
 						<span>
-							<input type="text" @input="checkVal('bail')" placeholder="请输入保险保证金" name="sureBail" v-model="quoted.sureBail">&nbsp;元
+							<input type="text" @input="checkVal('txJe')" placeholder="请输入贴息金额" name="txJe" v-model="txJe">&nbsp;元
 						</span>
-
-					</li> -->
-					<!-- <li class='spec input'>
+					</li>
+					<li class='input' v-if='gpsInsStatus'>
+						<b>GPS是否安装</b>
+						<span>
+							<b v-if="gpsInsName">{{gpsInsName}}</b>
+						</span>
+					</li>
+					<li class='input' @click="pickLspd('hasGps')" v-else>
+						<b>GPS是否安装</b>
+						<span>
+							<b v-if="gpsInsName">{{gpsInsName}}</b>
+							<b v-else class="default">请选择</b>
+							<i class="icon iconfont icon-enter"></i>
+						</span>
+					</li>
+					<li class='input' v-if="gpsInsName=='是'" @click="sureGpsType()">
+						<b>GPS类型</b>
+						<span>
+							<b v-if="gpsTypName">{{gpsTypName}}</b>
+							<b v-else class="default">请选择</b>
+							<i class="icon iconfont icon-enter"></i>
+						</span>
+					</li>
+					<li class='input'>
 						<b>GPS费</b>
 						<span>
-							<input type="text" @input="checkVal('gps')" placeholder="请输入GPS费" name="gps" v-model="quoted.gps">&nbsp;元
+							<input type="text" @input="checkVal('gpsPrice')" placeholder="请输入GPS费" name="gpsPrice" v-model="gpsPrice">&nbsp;元
 						</span>
-					</li> -->
-					<li><b>首期款</b><span>{{resultData.firstPrice}}&nbsp;元</span></li>
-					<li><b>每期租金</b><span>{{resultData.termPrice}}&nbsp;元</span></li>
-					<li><b>期数</b><span>{{resultData.term}}&nbsp;期</span></li>
+					</li>
+					<li class='input' v-if="gpsPriceStatus">
+						<b>GPS费计入方式</b>
+						<span>
+							{{gpsPriceName}}
+						</span>
+					</li>
+					<li class='input' @click="pickLspd('gpsPrice')" v-else>
+						<b>GPS费计入方式</b>
+						<span>
+							<b v-if="gpsPriceName">{{gpsPriceName}}</b>
+							<b v-else class="default">请选择</b>
+							<i class="icon iconfont icon-enter"></i>
+						</span>
+					</li>
+					<li class='input'>
+						<b>购置税</b>
+						<span>
+							<input type="text" @input="checkVal('gouZhiPrice')" placeholder="请输入购置税" name="gouZhiPrice" v-model="gouZhiPrice">&nbsp;元
+						</span>
+					</li>
+					<li class='input' v-if="gouZhiPriceStatus">
+						<b>购置税计入方式</b>
+						<span>
+							{{gouZhiPriceName}}
+						</span>
+					</li>
+					<li class='input' @click="pickLspd('gouZhiPrice')"  v-else>
+						<b>购置税计入方式</b>
+						<span>
+							<b v-if="gouZhiPriceName">{{gouZhiPriceName}}</b>
+							<b v-else class="default">请选择</b>
+							<i class="icon iconfont icon-enter"></i>
+						</span>
+					</li>
+					<li class='input'>
+						<b>保险费</b>
+						<span>
+							<input type="text" @input="checkVal('safePrice')" placeholder="请输入保险费" name="safePrice" v-model="safePrice">&nbsp;元
+						</span>
+					</li>
+					<li class='input' v-if="safePriceStatus">
+						<b>保险费计入方式</b>
+						<span>
+							{{safePriceName}}
+						</span>
+					</li>
+					<li class='input' @click="pickLspd('safePrice')"   v-else>
+						<b>保险费计入方式</b>
+						<span>
+							<b v-if="safePriceName">{{safePriceName}}</b>
+							<b v-else class="default">请选择</b>
+							<i class="icon iconfont icon-enter"></i>
+						</span>
+					</li>
+					<li class='input'>
+						<b>精品装潢</b>
+						<span>
+							<input type="text" @input="checkVal('zhuangXiuPrice')" placeholder="请输入精品装潢费" name="zhuangXiuPrice" v-model="zhuangXiuPrice">&nbsp;元
+						</span>
+					</li>
+					<li class='input' v-if="zhuangXiuPriceStatus">
+						<b>精品装潢计入方式</b>
+						<span>
+							{{zhuangXiuPriceName}}
+						</span>
+					</li>
+					<li class='input spec'  @click="pickLspd('zhuangXiuPrice')" v-else>
+						<b>精品装潢计入方式</b>
+						<span>
+							<b v-if="zhuangXiuPriceName">{{zhuangXiuPriceName}}</b>
+							<b v-else class="default">请选择</b>
+							<i class="icon iconfont icon-enter"></i>
+						</span>
+					</li>
+					<li><b>每期租金</b><span>{{everyPrice}}&nbsp;元</span></li>
 				</ul>
-
       </div>
 			<div class="um-footer" id="footer">
-				<mt-popup v-model="pickerStatus" v-if="pickerStatus" position="bottom" class="pickerPrice">
-					<mt-picker :slots="slots" @change="onValuesChange"></mt-picker>
-					<p><span class="fl" @click="surePicker">取消</span><span class="fr" @click="surePicker('','confirm')">确定</span></p>
+				<mt-popup v-model="pickerSchemeStatue" class="pickerPrice"  position='bottom' >
+					<mt-picker value-key="schemeName" :slots="pickerSchemeList" @change="pickerSchemeChange"></mt-picker>
+					<p><span class="fl" @click="pickerScheme">取消</span><span class="fr" @click="pickerScheme('confirm')">确定</span></p>
 				</mt-popup>
-				<mt-popup v-model="pickerPayTypeStatus" class="pickerPrice" v-else-if="pickerPayTypeStatus" position='bottom' >
-					<mt-picker value-key="FLAG" :slots="payTypeSlots" @change="onPayTypeChange"></mt-picker>
-					<p><span class="fl" @click="surePickerpayType">取消</span><span class="fr" @click="surePickerpayType('confirm')">确定</span></p>
+				<mt-popup v-model="pickLspdStatus" class="pickerPrice"  position='bottom' >
+					<mt-picker value-key="label" :slots="pickerLspdList" @change="pickerSchemeChange"></mt-picker>
+					<p><span class="fl" @click="pickLspd()">取消</span><span class="fr" @click="pickLspd('','confirm')">确定</span></p>
 				</mt-popup>
-				<mt-popup v-model="pickerGkfsStatus" class="pickerPrice" v-else-if="pickerGkfsStatus" position='bottom' >
-					<mt-picker value-key="FLAG" :slots="gkfsSlots" @change="onGkfsChange"></mt-picker>
-					<p><span class="fl" @click="sureGkfsType">取消</span><span class="fr" @click="sureGkfsType('confirm')">确定</span></p>
-				</mt-popup>
-				<mt-popup v-model="firstPayStatu" class="firstPayCont" v-else-if="firstPayStatu" position="bottom">
-					<ul v-if="moneyToRate">
+				<mt-popup v-model="firstPayStatu" class="firstPayCont" position="bottom">
+					<ul>
 						<li class="input">
-							<b>首付金额</b>
-							<span><input type="text" @input="changeFirstPayRate" placeholder="请输入您的金额" name="firstPay" v-model="quoted.firstPay">&nbsp;元</span>
+							<b>首付比例</b>
+							<span><input type="text" maxlength='5' @input="changeFirstPay" placeholder='请输入百分比' name="hirePct" v-model.trim="firstPayRate">&nbsp;%</span>
 						</li>
-						<li class="alertLi">当前为金额计算，<button @click="moneyToRateStatus">改为百分比计算</button></li>
-						<li>
-							<b>百分百</b>
-							<span> <b v-if="quoted.firstPayRate">{{quoted.firstPayRate}}</b>
-							<b v-else class="default">自动计算</b>&nbsp;%</span>
-						</li>
-					</ul>
-					<ul v-else>
 						<li class="input">
-							<b>百分百</b>
-							<span><input type="text" maxlength='5' @input="changeFirstPay" placeholder='请输入百分百' name="firstPayRate" v-model="quoted.firstPayRate">&nbsp;%</span>
-						</li>
-						<li class="alertLi">当前为百分百计算，<button @click="moneyToRateStatus">改为金额计算</button></li>
-						<li class="input">
-							<b>首付金额</b>
+							<b>首付款</b>
 							<span>
-								<b v-if="quoted.firstPay">{{quoted.firstPay}}</b>
+								<b v-if="firstPay">{{firstPay}}</b>
 								<b v-else class="default">自动计算</b>&nbsp;元
 							</span>
 						</li>
 					</ul>
-					<p><span class="fl" @click="pickFirstRate">取消</span><span class="fr" @click="sureFristPay">确定</span></p>
+					<p><span class="fl" @click="sureFristPay">取消</span><span class="fr" @click="sureFristPay('confirm')">确定</span></p>
 				</mt-popup>
-				<mt-popup v-model="bailStatue" class="firstPayCont" v-else-if="bailStatue" position="bottom">
-					<!-- <ul>
-						<li>
-							<b>保证金方式</b>
+				<mt-popup v-model="bailStatue" class="firstPayCont"  position="bottom">
+					<ul>
+						<li class="input">
+							<b>保证金比例</b>
+							<span><input type="text" maxlength='5' @input="changeBail" placeholder="请输入百分比" name="bailPct" v-model.trim="bailRate">&nbsp;%</span>
+						</li>
+						<li class="input">
+							<b>保证金</b>
 							<span>
-								<button type="button" name="button" @click="toggleClass($event,'首期款')">首期款</button><button type="button" name="button" class="active" @click="toggleClass($event,'融资额')">融资额</button>
-							</span>
-						</li> -->
-					</ul>
-					<ul v-if="bailToRate">
-						<li class="input">
-							<b>保证金金额</b>
-							<span><input type="text" @input="changBailRate" placeholder="请输入您的金额" name="bail" v-model="quoted.bail">&nbsp;元</span>
-						</li>
-						<li class="alertLi">当前为金额计算，<button @click="bailToRateStatus">改为百分比计算</button></li>
-						<li>
-							<b>百分百</b>
-							<span> <b v-if="quoted.bailRate">{{quoted.bailRate}}</b>
-							<b v-else class="default">自动计算</b>&nbsp;%</span>
-						</li>
-					</ul>
-					<ul v-else>
-						<li class="input">
-							<b>百分百</b>
-							<span><input type="text" maxlength='5' @input="changeBail" placeholder="请输入百分百" name="bail" v-model="quoted.bailRate">&nbsp;%</span>
-						</li>
-						<li class="alertLi">当前为百分百计算，<button @click="bailToRateStatus">改为金额计算</button></li>
-						<li class="input">
-							<b>保证金金额</b>
-							<span>
-								<b v-if="quoted.bail">{{quoted.bail}}</b>
+								<b v-if="bail">{{bail}}</b>
 								<b v-else class="default">自动计算</b>&nbsp;元
 							</span>
 						</li>
 					</ul>
-					<p><span class="fl" @click="pickerBail">取消</span><span class="fr" @click="sureBail">确定</span></p>
+					<p><span class="fl" @click="sureBail">取消</span><span class="fr" @click="sureBail('confirm')">确定</span></p>
 				</mt-popup>
-				<div class="bButton" v-else>
+				<mt-popup v-model="gpsTypStatus" class="firstPayCont"  position="bottom">
+					<ul class="gpsTypeList">
+						<li class="input" v-for="(item,index) in gpsTypList" @click="toggleGpsType($event,item.value,item.label)" :key="index+'item'" :class="{active:checkSelected('item.value')}">
+							{{item.label}} <i class="icon iconfont icon-right"></i>
+						</li>
+					</ul>
+					<p><span class="fl" @click="sureGpsType">取消</span><span class="fr" @click="sureGpsType('confirm')">确定</span></p>
+				</mt-popup>
+				<div class="bButton" v-if="!pickerSchemeStatue&&!gpsTypStatus&&!pickLspdStatus&&!firstPayStatu&&!bailStatue">
 					<button @click="quotedTest">测算</button>
 				</div>
 			</div>
     </div>
     <script>
 			summerready=function(){
-				if(summer.pageParam.projectId){
-					quotedVue.PROJECT_ID=summer.pageParam.projectId;
-				}
-				if(summer.pageParam.SCHEME_CODE){
-					quotedVue.SCHEME_CODE=summer.pageParam.SCHEME_CODE;
-				}
-				if(summer.pageParam.SCHEME_NAME){
-					quotedVue.SCHEME_NAME=summer.pageParam.SCHEME_NAME;
-				}
-					quotedVue.getData();
-
+				quotedVue.prjId=summer.pageParam.id;
+				quotedVue.getData();
 			}
       var quotedVue=new Vue({
           el:'#quotedPriceDetail',
           data(){
             return {
-							termList:['3个月','6个月','12个月','18个月','24个月','48个月'],
-							// termType:['月'],
-							payTypeSlots:[{
+							isTest:false,
+							prjId:'',
+							SCHEME_NAME:'',
+							SCHEME_NAME_ID:'',
+							pickerSchemeStatue:false,
+							pickingObj:{},
+							pickerSchemeList:[{
 								flex: 1,
 								values: [],
 								defaultIndex:0,
 								className: 'slot1',
 								textAlign: 'center'
 							}],
-							gkfsSlots:[{
+							currentName:'',
+							lsPd:'',
+							lsPdStatus:false,
+							lsPdUntCd:'',
+							lsPdUntCdName:'',
+							pickLspdStatus:false,
+							LspdList:[],
+							pickerLspdList:[{
 								flex: 1,
 								values: [],
 								defaultIndex:0,
-								className: 'slot2',
+								className: 'slot1',
 								textAlign: 'center'
 							}],
-							payTypeList:[],
-							bailList:["融资额","首期款"],
-							termTypeList:['期满处','里方式'],
-							pickerStatus:false,
-							pickerPayTypeStatus:false,
-							pickerGkfsStatus:false,
-							bailStatue:false,
+							annIntRatePct:'',
+							listYearRate:[],
+							AnnIntRatePctList:[],
+							payWayCd:'',
+							payWay:'',
+							pickerPayWayList:[],
 							firstPayStatu:false,
-							moneyToRate:true,
-							bailToRate:true,
-							pickerType:'payType',
-							pickerVal:'',
-							PROJECT_ID:'',
-							SUPPLIERS_ID:'',
-							SCHEME_CODE:'',//报价方案code
-							SCHEME_NAME:'',
-							SCHEME_ROW_NUM:'',
-							GKFS:'',
-							pickerCode:'',
-							gkfsCode:'2',
-							GKCD:'',//挂靠车队
-							quoted:{
-								allPrice:'',
-								term:'', //租赁期数
-								termType:'',
-								contractTerm:'',
-								rate:'',
-								payType:'',
-								firstPayRate:'', //待定首付比例
-								sureFirstPayRate:'', //选择的首付比例
-								firstPay:'',
-								sureFirstPay:'',
-								bail:'', //保证金
-								lastBail:'', //保证金
-								bailRate:'',  //保证金比例
-								sureBailRate:'',  //保证金比例
-								bailType:'融资额',  //选择的保证金类型
-								sureBailType:'',  //确认的保证金类型
-								gps:'',
-								consultingFee:'',
-								sureBail:'',
-							},
-							resultData:{
-								firstPrice:'',
-								termPrice:'',
-								term:''
-							},
-							testData:{},
-							isTest:false
+							bailStatue:false,
+							firstPay:'',
+							firstPayRate:'',
+							hirePct:'',
+							hirePctMoney:'',
+							hirePctStatue:false,
+							bail:'',
+							bailRate:'',
+							bailPct:'',
+							bailPctStatue:false,
+							bailPctMoney:'',
+							txJe:'',
+							groessPrice:'',
+
+							gpsIns:'',
+							gpsInsStatus:false, //字典一个值为true
+							gpsInsName:'',
+							pickerGpsInsList:[
+								{label:'是',value:1},
+								{label:'否',value:2}
+							],
+
+							gpsTyp:'',
+							gpsTypStatus:false,
+							gpsTypName:'',
+							selectdGpsArr:[],
+							gpsTypList:[
+								{label:'明',value:1},
+								{label:'暗',value:2}
+							],
+
+							gpsPrice:'',
+							gpsPriceStatus:'',
+							gpsPriceId:'',
+							gpsPriceName:'',
+							gouZhiPrice:'',
+							gouZhiPriceStatus:'',
+							gouZhiPriceId:'',
+							gouZhiPriceName:'',
+							safePrice:'',
+							safePriceStatus:'',
+							safePriceId:'',
+							safePriceName:'',
+							zhuangXiuPrice:'',
+							zhuangXiuPriceStatus:'',
+							zhuangXiuPriceId:'',
+							zhuangXiuPriceName:'',
+
+							pickerCntWayList:[
+								{label:'融资额',value:2},
+								{label:'首期款',value:1}
+							],
+							allPrice:'',
+							everyPrice:'',
+
+							cntWaySlots:[{
+								flex: 1,
+								values: [],
+								defaultIndex:0,
+								className: 'slot1',
+								textAlign: 'center'
+							}],
+
             }
           },
 					computed:{
@@ -312,283 +398,491 @@
 								className: 'slot1',
 								textAlign: 'center'
 							},i='';
-							if(this.pickerType=='term'){
-								pickerObj.values=this.termList;
-								i=this.termList.indexOf(this.quoted.term);
-							}else if(this.pickerType=='termType'){
-								pickerObj.values=this.termTypeList;
-								i=this.termTypeList.indexOf(this.quoted.termType);
-							}else if(this.pickerType=='payType'){
-								pickerObj.values=this.payTypeList;
-								i=this.payTypeList.indexOf(this.quoted.payType);
-							}else if(this.pickerType=='bail'){
-								pickerObj.values=this.bailList;
-								i=this.bailList.indexOf(this.quoted.bailType);
-							}
+
 							if(i>-1){pickerObj.defaultIndex=i}
 							return [pickerObj]
 						}
 					},
 					methods:{
-						checkGkcd(){
-							if(!this.GKFS){
-								this.GKCD=""
-								summer.toast({msg:'请先选择挂靠方式'})
-								return
-							}
-						},
-						selectFleet(){
-							if(!this.GKFS){
-								summer.toast({msg:'请先选择挂靠方式'})
-								return
-							}
-							var _this=this;
-							summer.setStorage("SUP_ID",this.SUPPLIERS_ID)
-							summer.openWin({
-								id:'pickerFleet',
-								url:'html/priceCalculation/pickerFleet.html',
-								create:false,
-								type:'actionBar',
-								actionBar: {
-						      title: "添加挂靠车队",
-						      titleColor: "#ffffff",
-						      backgroundColor: "#039BE5",
-						      leftItem:{
-						          image: "img/back.png",
-						          method:'',
-						          text:"返回",
-						          textColor:"#ffffff"
-						      }
-								},
-								pageParam:{
-									SUP_ID:_this.SUPPLIERS_ID
-								}
-							})
-						},
 						getData(){
-							console.log("PROJECT_ID",this.PROJECT_ID);
+							console.log("prjId"+this.prjId);
 							var _this=this
-							ajaxRequest({
-								type:'POST',
-								url:'appservice/foundproject/queryProjectScheme',
-								param:{PROJECT_ID:_this.PROJECT_ID}
-							},function(res){
-								console.log("res",res);
-								_this.payTypeSlots[0].values=res.data.datas.paywaylist
-								_this.SUPPLIERS_ID=res.data.datas.prj.SUPPLIERS_ID
-								_this.SCHEME_ROW_NUM=res.data.datas.prj.SCHEME_ROW_NUM
-								_this.gkfsSlots[0].values=res.data.datas.GKFS
-								var data=res.data.datas.scheme
-								if(data){
-									_this.SCHEME_ID=data.ID
-									_this.GKCD=data.GKCD
-									_this.GKFS=data.GKFS
-									_this.quoted.allPrice=data.LEASE_TOPRIC
-									_this.quoted.term=data.LEASE_TERM+"个月"
-									_this.quoted.contractTerm=data.LEASE_TERM
-									_this.quoted.rate=data.YEAR_INTEREST
-									_this.quoted.payType=data.PAY_WAY_NM
-									_this.quoted.sureFirstPayRate=data.START_PERCENT
-									_this.quoted.sureFirstPay=data.FIRST_MONEY
-									_this.quoted.lastBail=data.DEPOSIT_MONEY
-									// _this.quoted.sureBailType=data.LEASE_SUBFIRENT
-									_this.quoted.sureBailRate=data.BAIL_PERCENT
-									_this.quoted.consultingFee=data.POUNDAGE_PRICE
-									// _this.quoted.sureBail=data.DEPOSIT_MONEY
-									_this.resultData.firstPrice=data.FIRST_MONEY
-									_this.resultData.termPrice=data.MONTH_RENT
-									_this.resultData.term=data.LEASE_TERM
-								}else{
-									if(res.data.datas.prj.LEASE_TOPRIC){
-										_this.quoted.allPrice=res.data.datas.prj.LEASE_TOPRIC
+							if(this.prjId){
+								summer.showProgress();
+								ajaxRequest({
+									type:'POST',
+									url:"appservice/project/prjquatprps/getById.do",
+									param:{prjId:_this.prjId}
+								},function(res){
+									console.log("res",JSON.stringify(res));
+									summer.hideProgress()
+									_this.pickerSchemeList[0].values=res.data.quatList
+									if(_this.prjId){
+										var dataObj=res.data.prjQuatPrps
+										_this.allPrice=res.data.carZe
+										if(dataObj){
+											_this.allPrice=dataObj.totLsItmAmt
+											_this.SCHEME_NAME_ID=res.data.schemeCode
+											_this.SCHEME_NAME=res.data.SCHEME_NAME
+											_this.lsPd=dataObj.lsPd
+											_this.lsPdUntCd=dataObj.lsPdUntCd
+											_this.lsPdUntCdName=dataObj.lsPdUntNm
+											_this.payWayCd=dataObj.payWayCd
+											_this.payWay=dataObj.payWay
+											_this.annIntRatePct=dataObj.annIntRatePct
+											_this.hirePct=dataObj.hirePct
+											_this.hirePctMoney=parseFloat(_this.hirePct*_this.allPrice).toFixed(2)
+											_this.bailPct=dataObj.bailPct
+											_this.bailPctMoney=parseFloat(_this.bailPct*_this.allPrice).toFixed(2)
+											_this.gpsIns=dataObj.gpsIns
+											_this.gpsInsName=dataObj.gpsInsNm
+											_this.gpsTyp=dataObj.gpsTyp
+											_this.GPSTypArray=_this.gpsTyp.split(",")
+											_this.gpsTypList=res.data.GPSTypArray
+											for(var k=0;k<_this.GPSTypArray.length;k++){
+												for(var m=0;m<_this.gpsTypList.length;m++){
+													if(_this.GPSTypArray[k]==_this.gpsTypList[m].value){
+														_this.gpsTypName+=_this.gpsTypList[m].label
+													}
+												}
+											}
+											_this.everyPrice=dataObj.prjQuatPrpsPaySchList.rntAmt
+											for(var j=0;j<dataObj.prjQuatPrpsFeeList.length;j++){
+												if(dataObj.prjQuatPrpsFeeList[j]=='04'){
+													_this.groessPrice=dataObj.prjQuatPrpsFeeList[j].feeAmt
+												}else if(dataObj.prjQuatPrpsFeeList[j]=='10'){
+													_this.gpsPrice=dataObj.prjQuatPrpsFeeList[j].feeAmt
+													_this.gpsPriceId=dataObj.prjQuatPrpsFeeList[j].cntWayCd
+												}else if(dataObj.prjQuatPrpsFeeList[j]=='30'){
+													_this.gouZhiPrice=dataObj.prjQuatPrpsFeeList[j].feeAmt
+													_this.gouZhiPriceId=dataObj.prjQuatPrpsFeeList[j].cntWayCd
+												}else if(dataObj.prjQuatPrpsFeeList[j]=='32'){
+													_this.safePrice=dataObj.prjQuatPrpsFeeList[j].feeAmt
+													_this.safePriceId=dataObj.prjQuatPrpsFeeList[j].cntWayCd
+												}else if(dataObj.prjQuatPrpsFeeList[j]=='51'){
+													_this.zhuangXiuPrice=dataObj.prjQuatPrpsFeeList[j].feeAmt
+													_this.zhuangXiuPriceId=dataObj.prjQuatPrpsFeeList[j].cntWayCd
+												}
+											}
+											_this.checkDate()
+										}
+									}
+								},function(err){
+									console.log("err",err);
+									summer.hideProgress()
+								})
+							}else{
+								summer.showProgress();
+								ajaxRequest({
+									type:'POST',
+									url:"appservice/project/prdbscsch/selectSchemeTest.do",
+									param:{id:''}
+								},function(res){
+									console.log("res",JSON.stringify(res));
+									summer.hideProgress()
+									_this.pickerSchemeList[0].values=res.data.datas.quatList
+								},function(err){
+									console.log("err",err);
+									summer.hideProgress()
+								})
+							}
+						},
+						pickerSchemeChange(picker,values){
+							this.pickingObj=values[0]
+						},
+						checkSelected(value){
+							if(this.gpsTyp.indexOf(value)>-1){
+								return true
+							}else{
+								return false
+							}
+						},
+						toggleGpsType(e,value,label){
+							$(e.currentTarget).toggleClass('active')
+							for (var i = 0; i < this.selectdGpsArr.length; i++) {
+								if(this.selectdGpsArr[i].value==value){
+									this.selectdGpsArr.splice(i,1)
+									return
+								}
+							}
+							this.selectdGpsArr.push({value:value,label:label})
+						},
+						sureGpsType(values){
+							this.gpsTypStatus=!this.gpsTypStatus
+							if(values=='confirm'){
+								this.gpsTypName=''
+								this.gpsTyp=''
+								for (var i = 0; i < this.selectdGpsArr.length; i++) {
+									if(i==0){
+										this.gpsTypName+=this.selectdGpsArr[i].label
+										this.gpsTyp+=this.selectdGpsArr[i].value
 									}else{
-										if(_this.PROJECT_ID!=''){summer.toast({msg:'请先添加车辆'})}
-
+										this.gpsTypName+=","+this.selectdGpsArr[i].label
+										this.gpsTyp+=","+this.selectdGpsArr[i].value
 									}
 								}
+							}
+						},
+						checkDate(){
+							var _this=this;
+							summer.showProgress();
+							console.log("schemeCode"+JSON.stringify({schemeCode:_this.SCHEME_NAME_ID}));
+							ajaxRequest({
+								type:'POST',
+								url:'appservice/project/prdbscsch/selectDetailScheme.do',
+								param:{schemeCode:_this.SCHEME_NAME_ID}
+							},function(res){
+								console.log("res",JSON.stringify(res));
+								var resultData=res.data.datas;
+								if(resultData.lsPdUntArray.length>1){
+									_this.LspdList=resultData.lsPdUntArray
+								}else {
+									_this.lsPdUntCd=resultData.lsPdUntArray[0].value
+									_this.lsPdUntCdName=resultData.lsPdUntArray[0].label
+								}
+								_this.listYearRate=resultData.listYearRate
+								_this.pickerPayWayList=resultData.payWayArray
+								_this.pickerGpsInsList=resultData.GPSInsArray
+								if(_this.pickerGpsInsList.length==1){
+									_this.gpsInsStatus=true
+									_this.gpsInsName=_this.pickerGpsInsList[0].label
+									_this.gpsIns=_this.pickerGpsInsList[0].value
+								}else {
+									_this.gpsInsStatus=false
+								}
+								_this.gpsTypList=resultData.GPSTypArray
+
+								for (var i = 0; i < resultData.schList.length; i++) {
+									if(resultData.schList[i].keyNameEn=='ZLQS'){
+										if(resultData.schList[i].valueStatus=='1'){
+											_this.lsPd=resultData.schList[i].valueStr
+											_this.lsPdStatus=true
+										}else{_this.lsPdStatus=false}
+									}else if(resultData.schList[i].keyNameEn=='START_PERCENT'){
+										if(resultData.schList[i].valueStatus=='1'){
+											_this.hirePct=resultData.schList[i].valueStr
+											_this.hirePctMoney=parseFloat(resultData.schList[i].valueStr*_this.allPrice).toFixed(2)
+											_this.hirePctStatue=true
+										}else{_this.hirePctStatue=false}
+									}else if(resultData.schList[i].keyNameEn=='BZJBL_PERCENT'){
+										if(resultData.schList[i].valueStatus=='1'){
+											_this.bailPct=resultData.schList[i].valueStr
+											_this.bailPctMoney=parseFloat(resultData.schList[i].valueStr*_this.allPrice).toFixed(2)
+											_this.bailPctStatue=true
+										}else{_this.bailPctStatue=false}
+									}else if(resultData.schList[i].keyNameEn=='BUY_TAX_PRICE'){
+
+										if(resultData.schList[i].valueStatus=='0'){
+											if(resultData.schList[i].fygs.length<6){
+												_this.gouZhiPriceStatus=true
+												if(resultData.schList[i].fygs=='JRRZE'){
+													_this.gouZhiPriceId=2
+													_this.gouZhiPriceName='融资额'
+												}else{
+													_this.gouZhiPriceId=1
+													_this.gouZhiPriceName='首付款'
+												}
+											}else{
+												_this.gouZhiPriceStatus=false
+											}
+										}
+									}else if(resultData.schList[i].keyNameEn=='GPS_PRICE'){
+										if(resultData.schList[i].valueStatus=='0'){
+											if(resultData.schList[i].fygs.length<6){
+												_this.gpsPriceStatus=true
+												if(resultData.schList[i].fygs=='JRRZE'){
+													_this.gpsPriceId=2
+													_this.gpsPriceName='融资额'
+												}else{
+													_this.gpsPriceId=1
+													_this.gpsPriceName='首付款'
+												}
+											}else{
+												_this.gpsPriceStatus=false
+											}
+										}
+									}else if(resultData.schList[i].keyNameEn=='BXF_PRICE'){
+										if(resultData.schList[i].valueStatus=='0'){
+											if(resultData.schList[i].fygs.length<6){
+												_this.safePriceStatus=true
+												if(resultData.schList[i].fygs=='JRRZE'){
+													_this.safePriceId=2
+													_this.safePriceName='融资额'
+												}else{
+													_this.safePriceId=1
+													_this.safePriceName='首付款'
+												}
+											}else{
+												_this.safePriceStatus=false
+											}
+										}
+									}else if(resultData.schList[i].keyNameEn=='JPZH_PRICE'){
+										if(resultData.schList[i].valueStatus=='0'){
+											if(resultData.schList[i].fygs.length<6){
+												_this.zhuangXiuPriceStatus=true
+												if(resultData.schList[i].fygs=='JRRZE'){
+													_this.zhuangXiuPriceId=2
+													_this.zhuangXiuPriceName='融资额'
+												}else{
+													_this.zhuangXiuPriceId=1
+													_this.zhuangXiuPriceName='首付款'
+												}
+											}else{
+												_this.zhuangXiuPriceStatus=false
+											}
+										}
+									}
+								}
+								if(_this.lsPd&&_this.lsPdUntCd){
+									_this.AnnIntRatePctList=[];
+									var num=_this.lsPd*_this.lsPdUntCd
+									for (var i = 0; i < _this.listYearRate.length; i++) {
+										if(num>=_this.listYearRate[i].leaseTermS&&num<=_this.listYearRate[i].leaseTermE){
+											_this.AnnIntRatePctList.push({label:_this.listYearRate[i].yearRate,value:_this.listYearRate[i].yearRate})
+										}
+									}
+									if(_this.AnnIntRatePctList.length==1){_this.annIntRatePct=_this.AnnIntRatePctList[0].value}
+								}
+								summer.hideProgress()
 							},function(err){
 								console.log("err",err);
+								summer.hideProgress()
 							})
 						},
-						surePickerpayType(val){
-							this.pickerPayTypeStatus=!this.pickerPayTypeStatus
-							if(val=='confirm'){
-								this.quoted.payType=this.pickerVal
-								console.log(this.quoted.payType)
+						pickerScheme(values){
+							this.pickerSchemeStatue=!this.pickerSchemeStatue
+							if(values=='confirm'){
+								this.SCHEME_NAME=this.pickingObj.schemeName
+								this.SCHEME_NAME_ID=this.pickingObj.schemeCode
+								this.lsPd=''
+								this.lsPdUntCd=''
+								this.lsPdUntCdName=''
+								this.annIntRatePct=''
+								this.payWayCd=''
+								this.payWay=''
+								this.hirePct=''
+								this.hirePctMoney=''
+								this.bailPct=''
+								this.bailPctMoney=''
+								this.gpsIns=''
+								this.gpsInsName=''
+								this.gpsTyp=''
+								this.gpsTypName=''
+								this.selectdGpsArr=[]
+								this.gpsPriceId=''
+								this.gpsPriceName=''
+								this.gouZhiPriceId=''
+								this.gouZhiPriceName=''
+								this.safePriceId=''
+								this.safePriceName=''
+								this.zhuangXiuPriceId=''
+								this.zhuangXiuPriceName=''
+								this.checkDate()
 							}
 						},
-						sureGkfsType(val){
-							this.pickerGkfsStatus=!this.pickerGkfsStatus
-							if(val=='confirm'){
-								this.GKFS=this.pickerVal
-								this.gkfsCode=this.pickerCode
-								this.GKCD=''
-								console.log(this.quoted.payType)
+						pickLspd(status,values){
+							if(!this.SCHEME_NAME){
+								summer.toast({msg:'请先选择产品方案'});
+								return;
 							}
-						},
-						sureBail(){
-							this.quoted.lastBail=this.quoted.bail
-							this.quoted.sureBailRate=this.quoted.bailRate
-							this.quoted.sureBailType=this.quoted.bailType
-							this.bailStatue=false
-						},
-						bailToRateStatus(){
-							this.bailToRate=!this.bailToRate
-						},
-						toggleClass(e,str){
-							if(str=="首期款"&&!this.quoted.sureFirstPay){
-								// summer.toast({msg:"请先选择首付比例"})
-								console.log("ss");
+							this.pickLspdStatus=!this.pickLspdStatus
+							if(status){
+								this.currentName=status
+								if(status=='lspd'){
+									if(!this.lsPd){
+										summer.toast({msg:'请先输入还款期限'});
+										return;
+									}
+									this.pickerLspdList[0].values=this.LspdList
+								}else if(status=='yearRate'){
+									if(this.lsPdUntCdName){
+										this.pickerLspdList[0].values=this.AnnIntRatePctList
+									}else {
+										summer.toast({msg:'请先选择还款期限单位'});
+										return;
+									}
+								}else if (status=='payType') {
+									this.pickerLspdList[0].values=this.pickerPayWayList
+								}else if (status=='hasGps') {
+									this.pickerLspdList[0].values=this.pickerGpsInsList
+								}else {
+									this.pickerLspdList[0].values=this.pickerCntWayList
+								}
 								return
 							}
-							this.quoted.bail=''
-							this.quoted.bailRate=''
-							$(e.currentTarget).addClass('active').siblings().removeClass('active')
-							this.quoted.bailType=str
-						},
-						pickerBail(){
-							this.bailStatue=!this.bailStatue
-						},
-						moneyToRateStatus(){
-							this.moneyToRate=!this.moneyToRate
-						},
-						sureFristPay(){
-							this.quoted.sureFirstPay=this.quoted.firstPay
-							this.quoted.sureFirstPayRate=this.quoted.firstPayRate
-							this.firstPayStatu=false
-						},
-						pickFirstRate(){
-							this.firstPayStatu=!this.firstPayStatu
-						},
-						onValuesChange(picker,values) {
-							this.pickerVal=values[0];
-				    },
-						onPayTypeChange(picker,values){
-							this.pickerVal=values[0].FLAG;
-						},
-						onGkfsChange(picker,values){
-							this.pickerVal=values[0].FLAG;
-							this.pickerCode=values[0].CODE;
-						},
-						surePicker(item,status){
-							this.pickerStatus=!this.pickerStatus;
-							if(status=='confirm'){
-								if(this.pickerType=='term'){
-									this.quoted.term=this.pickerVal
-									var i=this.quoted.term.indexOf("个");
-									this.quoted.contractTerm=this.quoted.term.substring(0,i);
-								}else if(this.pickerType=='termType'){
-									this.quoted.termType=this.pickerVal
-								}else if(this.pickerType=='payType'){
-									this.quoted.payType=this.pickerVal
+							if(values=='confirm'){
+								if(this.currentName=='lspd'){
+									this.lsPdUntCd=this.pickingObj.value
+									this.lsPdUntCdName=this.pickingObj.label
+									this.AnnIntRatePctList=[];
+									var num=this.lsPd*this.lsPdUntCd
+									for (var i = 0; i < this.listYearRate.length; i++) {
+										if(num>=this.listYearRate[i].leaseTermS&&num<=this.listYearRate[i].leaseTermE){
+											this.AnnIntRatePctList.push({label:this.listYearRate[i].yearRate,value:this.listYearRate[i].yearRate})
+										}
+									}
+									if(this.AnnIntRatePctList.length==1){this.annIntRatePct=this.AnnIntRatePctList[0].value}
+								}else if (this.currentName=='yearRate') {
+									this.annIntRatePct=this.pickingObj.value
+								}else if (this.currentName=='payType') {
+									this.payWayCd=this.pickingObj.value
+									this.payWay=this.pickingObj.label
+								}else if (this.currentName=='gpsPrice') {
+									this.gpsPriceId=this.pickingObj.value
+									this.gpsPriceName=this.pickingObj.label
+								}else if (this.currentName=='gouZhiPrice') {
+									this.gouZhiPriceId=this.pickingObj.value
+									this.gouZhiPriceName=this.pickingObj.label
+								}else if (this.currentName=='safePrice') {
+									this.safePriceId=this.pickingObj.value
+									this.safePriceName=this.pickingObj.label
+								}else if (this.currentName=='zhuangXiuPrice') {
+									this.zhuangXiuPriceId=this.pickingObj.value
+									this.zhuangXiuPriceName=this.pickingObj.label
+								}else if (this.currentName=='hasGps') {
+									this.gpsIns=this.pickingObj.value
+									this.gpsInsName=this.pickingObj.label
 								}
-							}else if(item){
-								this.pickerType=item;
-							}
-						},
-						rateCheck(){
-							var val=String(this.quoted.rate).trim();
-							if(!/^([1-9]\d{0,9}|0)([.]?|(\.\d{1,6})?)$/.test(val)||!val||val<0||val>100){
-								this.quoted.rate=''
-							}
-						},
-						changeFirstPay(){
-							var val=String(this.quoted.firstPayRate).trim();
-							if(!/^([1-9]\d{0,9}|0)([.]?|(\.\d{1,6})?)$/.test(val)||!val||val<0||val>100){
-								this.quoted.firstPayRate=''
-								this.quoted.firstPay=''
-							}else {
-								this.quoted.firstPay=parseFloat(this.quoted.firstPayRate*this.quoted.allPrice*0.01).toFixed(2)
-								if(!this.quoted.firstPay){this.quoted.firstPay=''}
-							}
 
-						},
-						changeFirstPayRate(){
-							var val=String(this.quoted.firstPay).trim();
-							if(!/^([1-9]\d{0,9}|0)([.]?|(\.\d{1,2})?)$/.test(val)||!val||val<0||val>parseFloat(this.quoted.allPrice)){
-								this.quoted.firstPay=''
-								this.quoted.firstPayRate=''
-							}else {
-								this.quoted.firstPayRate=parseFloat(100*this.quoted.firstPay/this.quoted.allPrice).toFixed(6);
 							}
 						},
 						changeBail(){
-							var val=parseFloat(String(this.quoted.bailRate).trim());
+							var val=parseFloat(this.bailRate);
 							if(!/^([1-9]\d{0,9}|0)([.]?|(\.\d{1,6})?)$/.test(val)||!val||val<0||val>100){
-								this.quoted.bailRate=''
-								this.quoted.bail=''
+								this.bailRate=''
+								this.bail=''
 							}else {
-								if(!this.quoted.bailRate){this.quoted.bail='';return}
-								var number=this.bailTypeReset();
-								this.quoted.bail=parseFloat(this.quoted.bailRate*number*0.01).toFixed(2)
+								if(!this.bailRate){this.bail='';return}
+								this.bail=parseFloat(this.bailRate*this.allPrice*0.01).toFixed(2)
 							}
 						},
-						bailTypeReset(){
-							var number=0;
-							if(this.quoted.bailType=="融资额"){
-								number=this.quoted.allPrice;
-							}else if(this.quoted.bailType=="首期款"){
-								number=this.quoted.firstPay;
-							}
-							return parseFloat(number)
-						},
-						changBailRate(){
-							var val=parseFloat(String(this.quoted.bail).trim()),number=this.bailTypeReset();
-							console.log(val,number);
-							if(!/^([1-9]\d{0,9}|0)([.]?|(\.\d{1,2})?)$/.test(val)||!val||val<0||val>number){
-								this.quoted.bail=''
-								this.quoted.bailRate=''
+						changeFirstPay(){
+							var val=this.firstPayRate
+							if(!/^([1-9]\d{0,9}|0)([.]?|(\.\d{1,6})?)$/.test(val)||!val||val<0||val>100){
+								this.firstPayRate=''
+								this.firstPay=''
 							}else {
-								this.quoted.bailRate=parseFloat(100*this.quoted.bail/number).toFixed(6);
-							}
-						},
-						checkVal(value){
-							var val='';
-							if(value=='fee'){
-								val=this.quoted.consultingFee;
-								if(!this.quoted.allPrice){summer.toast({msg:'请先输入合同金额'});return}
-								if(!/^([1-9]\d{0,9}|0)([.]?|(\.\d{1,2})?)$/.test(val)||!val||val<0||val>=parseFloat(this.quoted.allPrice)){
-									this.quoted.consultingFee=''
-								}
-							}else if (value=='allPrice') {
-								val=this.quoted.allPrice;
-								if(!/^([1-9]\d{0,9}|0)([.]?|(\.\d{1,2})?)$/.test(val)||!val||val<0){
-									this.quoted.allPrice=''
-								}
-							}else if (value=='gps') {
-								val=this.quoted.gps;
-								if(!/^([1-9]\d{0,9}|0)([.]?|(\.\d{1,2})?)$/.test(val)||!val||val<0||val>=parseFloat(this.quoted.allPrice)){
-									this.quoted.gps=''
-								}
+								this.firstPay=parseFloat(this.firstPayRate*this.allPrice*0.01).toFixed(2)
+								if(!this.firstPayRate){this.firstPay=''}
 							}
 
 						},
+						sureBail(value){
+							if(!this.allPrice){
+								summer.toast({msg:'请先填写车辆单价'});
+								return;
+							}
+							this.bailStatue=!this.bailStatue
+							if(value=='confirm'){
+								this.bailPctMoney=this.bail
+								this.bailPct=this.bailRate
+							}
+						},
+						sureFristPay(value){
+							if(!this.allPrice){
+								summer.toast({msg:'请先填写车辆单价'});
+								return;
+							}
+							this.firstPayStatu=!this.firstPayStatu
+							if(value=='confirm'){
+								this.hirePctMoney=this.firstPay
+								this.hirePct=this.firstPayRate
+							}
+						},
+						checkVal(value){
+							if (value=='allPrice') {
+								val=this.allPrice;
+								if(!/^([1-9]\d{0,9}|0)([.]?|(\.\d{1,2})?)$/.test(val)||!val||val<0){
+									this.allPrice=''
+								}
+							}else if(value==="lsPd"){
+								val=this.lsPd;
+								if(!/^([1-9]\d{0,9}|0)([.]?|(\.\d{1,2})?)$/.test(val)||!val||val<0){
+									this.lsPd=''
+								}
+							}else if(value==="txJe"){
+								val=this.txJe;
+								if(!/^([1-9]\d{0,9}|0)([.]?|(\.\d{1,2})?)$/.test(val)||!val||val<0){
+									this.txJe=''
+								}
+							}else if(value==="groessPrice"){
+								val=this.groessPrice;
+								if(!/^([1-9]\d{0,9}|0)([.]?|(\.\d{1,2})?)$/.test(val)||!val||val<0){
+									this.groessPrice=''
+								}
+							}else if(value==="gpsPrice"){
+								val=this.gpsPrice;
+								if(!/^([1-9]\d{0,9}|0)([.]?|(\.\d{1,2})?)$/.test(val)||!val||val<0){
+									this.gpsPrice=''
+								}
+							}else if(value==="gouZhiPrice"){
+								val=this.gouZhiPrice;
+								if(!/^([1-9]\d{0,9}|0)([.]?|(\.\d{1,2})?)$/.test(val)||!val||val<0){
+									this.gouZhiPrice=''
+								}
+							}else if(value==="safePrice"){
+								val=this.safePrice;
+								if(!/^([1-9]\d{0,9}|0)([.]?|(\.\d{1,2})?)$/.test(val)||!val||val<0){
+									this.safePrice=''
+								}
+							}else if(value==="zhuangXiuPrice"){
+								val=this.zhuangXiuPrice;
+								if(!/^([1-9]\d{0,9}|0)([.]?|(\.\d{1,2})?)$/.test(val)||!val||val<0){
+									this.zhuangXiuPrice=''
+								}
+							}
+						},
 						quotedTest(){
-							if(!this.quoted.allPrice||!this.quoted.term||!this.quoted.rate||!this.quoted.payType||!this.GKCD||!this.quoted.sureFirstPayRate||!this.quoted.consultingFee){
+							var params={
+								lsPd:this.lsPd,
+								lsPdUntCd:this.lsPdUntCd,
+								annIntRatePct:this.annIntRatePct,
+								payWayCd:this.payWayCd,
+								payWay:this.payWay,
+								hirePct:this.hirePct,
+								bailPct:this.bailPct,
+								txJe:this.txJe,
+								gpsIns:this.gpsIns,
+								gpsTyp:this.gpsTyp,
+								prjQuatPrpsFeeList:[
+									{feeTypCd:'04',cntWayCd:'1',feeAmt:this.groessPrice},
+									{feeTypCd:'10',cntWayCd:this.gpsPriceId,feeAmt:this.gpsPrice},
+									{feeTypCd:'30',cntWayCd:this.gouZhiPriceId,feeAmt:this.gouZhiPrice},
+									{feeTypCd:'32',cntWayCd:this.safePriceId,feeAmt:this.safePrice},
+									{feeTypCd:'51',cntWayCd:this.zhuangXiuPriceId,feeAmt:this.zhuangXiuPrice},
+								]
+							};
+							if(this.prjId){
+								params.prjId=this.prjId
+							}else {
+								params.totLsItmAmt=this.allPrice
+							}
+							for (var k in params) {
+								if(k!='gpsTyp'&&!params[k]){
+									summer.toast({msg:'请先完善报价信息'})
+									return
+								}
+							}
+							if(!this.gpsPriceId||!this.gpsPrice||!this.gouZhiPriceId||!this.gouZhiPrice||!this.safePriceId||!this.safePrice||!this.zhuangXiuPriceId||!this.zhuangXiuPrice){
 								summer.toast({msg:'请先完善报价信息'})
 								return
 							}
 							var _this=this;
-							var params={
-								LEASE_SUBFIRENT:parseFloat(_this.quoted.allPrice-_this.quoted.sureFirstPay).toFixed(2),
-								YEAR_INTEREST:_this.quoted.rate,
-								LEASE_TERM:_this.quoted.contractTerm,
-								PAY_WAY:_this.quoted.payType,
-								LEASE_PERIOD:1,
-							};
 							console.log(JSON.stringify(params));
 							ajaxRequest({
 								type:'POST',
-								url:'appservice/foundproject/projectQuotationPMTTest',
+								url:'appservice/project/prjquatprps/quatPmt.do',
 								param:params
 							},function(res){
 								console.log("res",res);
 								summer.toast({msg:"测算完成"});
-								_this.isTest=true;
-								_this.testData=res.data.datas
-								_this.resultData.firstPrice=_this.quoted.sureFirstPay
-								_this.resultData.termPrice=res.data.datas.MONTH_PRICE
-								_this.resultData.term=_this.quoted.contractTerm
+								if(res.data.flag=='1'){
+									_this.isTest=true;
+									_this.everyPrice=res.data.datas
+								}else {
+									summer.toast({msg:res.data.msg})
+								}
+
 							},function(err){
 								console.log("err",err);
 							})
@@ -602,34 +896,31 @@
 							}
 							summer.showProgress();
 							var _this=this
-							var param={
-								SCHEME_CODE:_this.SCHEME_CODE,
-								GKCD:_this.GKCD,
-								GKFS:_this.GKFS,
-								SCHEME_ROW_NUM:_this.SCHEME_ROW_NUM,
-								PROJECT_ID:_this.PROJECT_ID,
-								SCHEME_ID:_this.SCHEME_ID,  //报价单id
-								TOTAL_MONTH_PRICE:_this.testData.TOTAL_REN_PRICE,
-								LEASE_TOPRIC:_this.quoted.allPrice,
-								LEASE_SUBFIRENT:parseFloat(_this.quoted.allPrice-_this.quoted.sureFirstPay).toFixed(2),
-								LEASE_TERM:_this.quoted.contractTerm,
-								LEASE_PERIOD:1,
-								YEAR_INTEREST:String(_this.quoted.rate),
-								PAY_WAY:_this.quoted.payType,
-								MONTH_RENT:String(_this.resultData.termPrice),
-								FIRST_MONEY:_this.quoted.sureFirstPay,
-								START_PERCENT:String(_this.quoted.sureFirstPayRate),
-								DEPOSIT_MONEY:_this.quoted.lastBail,
-								BAIL_PERCENT:String(_this.quoted.sureBailRate),
-								// '':_this.quoted.sureBailType, 保证金方式
-								POUNDAGE_PRICE:_this.quoted.consultingFee,
-
-								// LEASE_SUBFIRENT:_this.quoted.sureBail, 保险保证金
+							var params={
+								prjId:this.prjId,
+								lsPd:this.lsPd,
+								lsPdUntCd:this.lsPdUntCd,
+								annIntRatePct:this.annIntRatePct,
+								payWayCd:this.payWayCd,
+								payWay:this.payWay,
+								hirePct:this.hirePct,
+								bailPct:this.bailPct,
+								txJe:this.txJe,
+								gpsIns:this.gpsIns,
+								gpsTyp:this.gpsTyp,
+								proQuatPrpsCfgM3:{id:this.SCHEME_NAME_ID},
+								prjQuatPrpsFeeList:[
+									{feeTypCd:'04',cntWayCd:'1',feeAmt:this.groessPrice},
+									{feeTypCd:'10',cntWayCd:this.gpsPriceId,feeAmt:this.gpsPrice},
+									{feeTypCd:'30',cntWayCd:this.gouZhiPriceId,feeAmt:this.gouZhiPrice},
+									{feeTypCd:'32',cntWayCd:this.safePriceId,feeAmt:this.safePrice},
+									{feeTypCd:'51',cntWayCd:this.zhuangXiuPriceId,feeAmt:this.zhuangXiuPrice},
+								]
 							};
 							console.log(JSON.stringify(param));
 							ajaxRequest({
 								type:'POST',
-								url:'appservice/foundproject/saveProjectScheme',
+								url:'appservice/project/prjquatprps/savePrjQuat.do',
 								param:param
 							},function(res){
 								console.log("res",JSON.stringify(res));
@@ -648,9 +939,6 @@
         })
 			function save(){
 				quotedVue.save()
-			}
-			function getFleet(){
-				quotedVue.GKCD=JSON.parse(summer.getStorage('pickerFleet')).FLAG;
 			}
     </script>
   </body>

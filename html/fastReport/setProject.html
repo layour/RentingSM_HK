@@ -240,7 +240,7 @@
 				},
 				openPicker() {
 					this.$refs.picker.open();
-				},	
+				},
 				surePickerSponsorType(param) {
 					this.pickerSponsorTypeStatus = !this.pickerSponsorTypeStatus;
 					if (param == 'confirm') {
@@ -256,7 +256,7 @@
 				sureSponsorType() {
 					var self = this;
 					ajaxRequest({
-						type: 'get',
+						type: 'post',
 						url: 'appservice/project/prjcstbscinfo/initList.do',
 						param: {
 							"id": self.project_Id,
@@ -265,10 +265,10 @@
 						summer.hideProgress();
 						if (res.data.flag == 1) {
 							console.log(res.data);
-							if (res.data.datas.warType=="法人") {
-								openSponsor('newSponsor_company',res.data.datas.npWarrList);
+							if (res.data.datas.warTyp=="法人") {
+								openSponsor('newSponsor_company',res.data.datas.corpWarrList[0]);
 							} else {
-								openSponsor('newSponsor',res.data.datas.npWarrList);
+								openSponsor('newSponsor',res.data.datas.npWarrList[0]);
 							}
 						}
 					}, function(err) {
@@ -465,7 +465,7 @@
 				})
 				return
 			} else if (param == 'quotedPriceList') {
-				url = "html/priceCalculation/quotedPriceList.html";
+				url = "html/priceCalculation/quotedPriceDetail.html";
 				title = "报价方案"
 				if(!$(".addCarList").hasClass('active')){
 					summer.toast({
@@ -491,6 +491,12 @@
 							text: "返回",
 							textColor: "#ffffff" //返回文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
 						},
+						rightItems: [{
+							type: "text",
+							text: "保存",
+							method: 'save()',
+							textColor: "#ffffff"
+						}]
 					}
 				})
 				return
@@ -586,9 +592,9 @@
 					},
 					rightItems: [{
 						type: "text",
-						text: "保存",
+						text: "添加",
 						textColor: "#ffffff",
-						method: "save()"
+						method: "addEmergencyContract()"
 					}]
 				}
 			})

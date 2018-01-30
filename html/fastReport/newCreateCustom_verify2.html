@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1">
+	<meta charset="UTF-8">
+	<title></title>
+	<link rel="stylesheet" href="../../css/iuapmobile.um.css">
+	<link rel="stylesheet" href="../../css/fonts/iconfont.css">
+	<link rel="stylesheet" href="../../css/mint.css">
+	<script src="../../js/font.js"></script>
+	<style>
+		input::-webkit-input-placeholder {
+			color: #DEDEDE;
+			font-size: 0.28rem;
+		}
+
+		.topheader {
+			position: relative;
+			height: 180px;
+			background-image: url("img/cardBgc.png");
+			background-repeat: no-repeat;
+			background-size: 100% 100%;
+		}
+
+		.topheader img {
+			margin-top: 0.8rem;
+			width: 2.8rem;
+			height: 1.8rem;
+		}
+
+		.mint-field-core {
+			text-align: right;
+		}
+
+		.mint-cell-wrapper {
+			color: #333;
+			font-size: 0.28rem;
+		}
+
+		.mint-cell {
+			min-height: 40px;
+			/* height: 0.88rem; */
+			height: 44px;
+			color: #333;
+			font-size: 0.28rem;
+		}
+
+		div.item {
+			/* line-height: 0.88rem; */
+			line-height: 44px;
+			background: #ffffff;
+			border-bottom: 1px solid #f7f7f7;
+			font-size: 0.28rem;
+			height: 44px;
+		}
+
+		div.item span {
+			color: #333;
+		}
+
+		div.item span i {
+			color: #dbdbdb;
+		}
+
+		.pickerColor {
+			width: 100%;
+			z-index: 10;
+			background: #ffffff;
+		}
+
+		.pickerColor>p {
+			line-height: .88rem;
+			padding: 0 .56rem;
+			color: #039BE5;
+			border-top: 1px solid #E0E0E0;
+			overflow: hidden;
+		}
+
+		.pickerColor>p span {
+			color: #34aadc;
+		}
+
+		.mint-cell-wrapper {
+			background-size: 100% 0px;
+			border-bottom: 1px solid #f7f7f7;
+		}
+
+		.pickerColor>p span:last-child {
+			float: right;
+		}
+
+		.pickerColor>p span:first-child {
+			float: left;
+		}
+
+		.item .first {
+
+			color: #333;
+		}
+
+		.item .second {
+			color: #9e9e9e;
+		}
+
+		.um-footer {
+			min-height: 0px;
+		}
+		.item input{
+			border: none;
+			height: .7rem;
+			width: 2.92rem;
+			text-align: right;
+			line-height: .7rem;
+			outline: none;
+			margin-top: .09rem;
+			font-size: 0.28rem;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="um-win" id="app" v-cloak>
+		<div class="um-content">
+			<!-- <div class="topheader tc um-header-light" @click="cardIdentify">
+				<img v-bind:src="cardUrl" v-show="cardShow" alt="" />
+			</div> -->
+			<div class="item um-box pl10 pr10"  >
+					<span class="um-bf1">配偶姓名</span><input  placeholder="请输入您配偶姓名" type="text" v-model="message.cstNm" class="um-bf3">
+			</div>
+			 
+			<!-- <div class="item um-box pl10 pr10" >
+					<span class="um-bf1">手机号</span><input  placeholder="请输入您的手机号码" type="text"    v-model="message.mp1" class="um-bf3">
+			</div> -->
+			 
+			<div class="item um-box pl10 pr10" >
+					<span class="um-bf1">配偶身份证号</span><input  placeholder="请输入您配偶身份证号"   type="text" v-model="message.certNo" class="um-bf3">
+			</div>
+			 
+			<div class="item">
+				<p class="pl10 pr10 tr">
+					<span class="fl">性别</span>
+					<span class="">
+						<span class="first">{{SEXCOM}} </span>
+					</span>
+				</p>
+			</div>
+			<!-- <div class="item">
+				<p class="pl10 pr10 tr">
+					<span class="fl">出生年月</span>
+					<span class="">
+						<span class="first">{{BIRTHCOM}} </span>
+					</span>
+				</p>
+			</div>
+			<div class="item">
+				<p class="pl10 pr10 tr">
+					<span class="fl">年龄</span>
+					<span class="">
+						<span class="first">{{AGECOM}} </span>
+					</span>
+				</p>
+			</div> -->
+		</div>
+	</div>
+	<script src="../../js/summer.js"></script>
+	<script src="../../js/jquery.min.js"></script>
+	<script src="../../js/vue.js"></script>
+	<script src="../../js/mint.js"></script>
+	<script src="../../js/common.js"></script>
+	<script src="../../js/Frameworks/iuapmobile.frameworks.ui.js"></script>
+	<script>
+		var newCreateCustom = new Vue({
+			el: '#app',
+			data() {
+				return {
+					cardShow: false,
+					cardUrl: "",
+					pickerVisible: "",
+					message: {
+						cstNm: '',
+						certNo: '',
+						mp1:''
+					},
+					sourceFrom: '',
+				}
+			},
+			computed: {
+				 SEXCOM: function () {
+					if (this.message.certNo && this.message.certNo.length == "18") {
+						var psidno = this.message.certNo;
+						if (parseInt(psidno.substring(16, 17)) % 2 == 0) {
+							return "女"
+						} else {
+							return "男"
+						};
+					}
+				}
+			 
+			},
+			methods: {
+				saveCustomBaseM(){
+					var self = this;
+					ajaxRequest({
+						type: 'post',
+						url: 'appservice/customer/cstbscinfo/saveCst.do',
+						param: {
+							cstNm:self.message.cstNm,
+							certNo:self.message.certNo,
+							cstPhoneNumber:self.message.mp1,
+							cstTypCd:'1'
+						}
+					}, function (res) {
+						summer.hideProgress();
+						if (res.data.flag == 1) {
+							var totalMessage=self.message;
+							totalMessage.age=self.AGECOM;
+							totalMessage.sex=self.SEXCOM;
+							totalMessage.birth=self.BIRTHCOM;
+							totalMessage.id=res.data.datas.id;
+							summer.openWin({
+								id: 'newCreateCustom',
+								url: 'html/fastReport/newCreateCustom.html',
+								create: false,
+								type: 'actionBar',
+								actionBar: {
+									title: "客户信息",
+									titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
+									backgroundColor: "#039be5",
+									leftItem: {
+										image: "img/back.png",
+										method: "", //返回按钮自定义事件
+										text: "返回",
+										textColor: "#ffffff" //返回文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
+									},
+									rightItems: [{
+										type: "text",
+										text: "保存",
+										textColor: "#ffffff", //文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
+										method: "savePerson()" //在打开的window中自定义事件
+									}]
+								},
+								pageParam: {
+									personBaseMessage: totalMessage,
+									sourceFrom:"newCreateCustom_verify"
+								}
+							}); 
+						}
+					}, function (err) {
+						alert(err);
+						console.log(err);
+						summer.hideProgress();
+					});
+				},
+				messageTest: function () {
+					var regCard = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/; //身份证校验
+					var phoneCard = /^[1][3,4,5,7,8,9][0-9]{9}$/;
+					if (this.message.NAME == "") {
+						summer.toast({
+							msg: "姓名不能为空"
+						});
+						return false;
+					} else if (this.message.certNo == "" || regCard.test(this.message.certNo) === false) {
+						summer.toast({
+							msg: "请输入正确的身份证号"
+						});
+						return false;
+					} 
+					return true;
+				},
+				verifyMessage: function () {
+					var self = this;
+					if (!this.messageTest()) {
+						return;
+					};
+					summer.showProgress();
+					ajaxRequest({
+						type: 'post',
+						url: 'appservice/customer/cstbscinfo/getExistNp.do',
+						param: {
+							cstNm:self.message.cstNm,
+							certNo:self.message.certNo,
+							cstTypCd:'1'
+						}
+					}, function (res) {
+						summer.hideProgress();
+						if (res.data.flag == 1) {
+							summer.openWin({
+								id: 'newCreateCustom2',
+								url: 'html/fastReport/newCreateCustom2.html',
+								create: false,
+								type: 'actionBar',
+								actionBar: {
+									title: "客户配偶信息",
+									titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
+									backgroundColor: "#039be5",
+									leftItem: {
+										image: "img/back.png",
+										method: "", //返回按钮自定义事件
+										text: "返回",
+										textColor: "#ffffff" //返回文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
+									},
+									rightItems: [{
+										type: "text",
+										text: "保存",
+										textColor: "#ffffff", //文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
+										method: "savePerson()" //在打开的window中自定义事件
+									}]
+								},
+								pageParam: {
+									personBaseMessage: totalMessage,
+									sourceFrom:"newCreateCustom_verify2"
+								}
+							}); 
+						}else if(res.data.flag == 2){
+							summer.toast({
+								msg:"证件号重复"
+							});
+						}else{
+							summer.toast({
+								msg:"证件验证失败"
+							});
+						}
+					}, function (err) {
+						alert(err);
+						console.log(err);
+						summer.hideProgress();
+					});
+				},
+				openPicker: function () {
+					this.$refs.picker.open();
+				}
+			}
+		})
+
+		function verifyMessage() {
+			newCreateCustom.verifyMessage();
+		}
+		summerready = function () {
+		 
+			//newCreateCustom.getDatanewCreateCustom.getData(projectId, clintId);
+			var params = ["android.permission.ACCESS_FINE_LOCATION", "android.permission.ACCESS_COARSE_LOCATION",
+				"android.permission.CAMERA", "android.permission.FLASHLIGHT", "android.permission.READ_EXTERNAL_STORAGE",
+				"android.permission.READ_PHONE_STATE",
+				"android.permission.WRITE_EXTERNAL_STORAGE", "android.permission.ACCESS_FINE_LOCATION",
+				"android.permission.ACCESS_COARSE_LOCATION"
+			];
+			summer.getPermission(params, function (args) {
+				//alert(args); //成功返回OK
+			}, function (args) {
+				//alert(args); //失败返回illegal access
+			})
+		}
+	</script>
+</body>
+
+</html>

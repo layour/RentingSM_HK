@@ -243,8 +243,8 @@
 		});
 		function newCreateCustom(){
 			summer.openWin({
-					id:'newCreateCustom',
-					url:'html/fastReport/newCreateCustom.html',
+					id:'newCreateCustom_verify',
+					url:'html/fastReport/newCreateCustom_verify.html',
 					create:false,
 					type:'actionBar',
 					actionBar: {
@@ -259,9 +259,9 @@
 						},
 						 rightItems:[{
 					          type:"text",
-					          text:"下一步",
+					          text:"验证",
 					          textColor:"#ffffff", //文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
-					          method:"nextStopAction()" //在打开的window中自定义事件
+					          method:"verifyMessage()" //在打开的window中自定义事件
 					      }]
 					},
 					pageParam:{

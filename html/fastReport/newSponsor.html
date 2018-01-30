@@ -121,13 +121,13 @@
 			<div @click="surePickerCusRelation" class="item">
 				<p class="pl10 pr10 tr">
 					<span class="fl">与客户关系</span>
-					<span class=""><span v-if='message.cusRelation' class="first">{{message.cusRelation}}</span><span v-else class="second">请选择</span> <i class="icon iconfont icon-enter"></i></span>
+					<span class=""><span v-if='message.gxNm' class="first">{{message.gxNm}}</span><span v-else class="second">请选择</span> <i class="icon iconfont icon-enter"></i></span>
 				</p>
 			</div>
 			<div @click="surePickerCardType" class="item">
 				<p class="pl10 pr10 tr">
 					<span class="fl">证件类型</span>
-					<span class=""><span v-if='message.cardType' class="first">{{message.cardType}}</span><span v-else class="second">请选择</span> <i class="icon iconfont icon-enter"></i></span>
+					<span class=""><span v-if='message.certTypNm' class="first">{{message.certTypNm}}</span><span v-else class="second">请选择</span> <i class="icon iconfont icon-enter"></i></span>
 				</p>
 			</div>
 			<mt-field label="证件号码" placeholder="请输入您的证件号码" v-model="message.ID_CARD_NO"></mt-field>
@@ -148,7 +148,7 @@
 			<mt-field label="手机号" placeholder="请输入您的手机号码" v-model="message.TEL_PHONE"></mt-field>
 			<div @click="surePickerMarrige" class="item">
 				<p class="pl10 pr10  um-box">
-					<span class="um-bf1">婚姻状况</span> <span class="um-bf1 tr"><span v-if='message.IS_MARRY_NM' class="first">{{message.IS_MARRY_NM}}</span><span v-else class="second">请选择</span> <i class="icon iconfont icon-enter"></i></span>
+					<span class="um-bf1">婚姻状况</span> <span class="um-bf1 tr"><span v-if='message.marStsNm' class="first">{{message.marStsNm}}</span><span v-else class="second">请选择</span> <i class="icon iconfont icon-enter"></i></span>
 				</p>
 			</div>
 		</div>
@@ -171,8 +171,6 @@
 					<span class="" @click="surePickerMarrige">取消</span><span class="" @click="surePickerMarrige('confirm')">确定</span>
 				</p>
 			</mt-popup>
-			<mt-datetime-picker ref="picker" v-model="pickerValue" type="date" cancel-text='取消' confirm-text='确定' :start-date='new Date("1950-01-01")' :end-date="noweDate" @confirm="handleConfirm">
-			</mt-datetime-picker>
 
 		</div>
 	</div>
@@ -219,16 +217,17 @@
 					}],
 					isSelect:false,
 					totalData:'',
+					id:'',//担保人id,保存时需要
 					message: {
 						NAME: '',//姓名
 						ID_CARD_NO: '',//身份证号
 						WORK_NAME:'',
 						HOUSE_ADDRESS: '',
 						TEL_PHONE: '',
-						IS_MARRY: '',
-						IS_MARRY_NM:'',
-						cusRelation:'',
-						cardType:'',
+						marStsCd: '',
+						marStsNm:'',
+						gxNm:'',
+						certTypNm:'',
 						BIRTHDAY: '',
 						projectId:'',
 						GID:"",
@@ -261,27 +260,31 @@
 				getType(projectId){
 					var self = this;
 					ajaxRequest({
-						type: 'get',
+						type: 'post',
 						url: 'appservice/project/prjcstbscinfo/initList.do',
 						param: {
 							"id": projectId,
 						}
 					}, function(res) {
 						summer.hideProgress();
+						var totalData;
 						if (res.data.flag == 1) {
 							console.log(res.data.datas);
-							var totalData=res.data.datas;
-							self.totalData=totalData;
-							totalData.carTypArray.map((e,i) =>{
-								self.slots1[0].values.push(e.label);
-							})
-							totalData.gxArray.map((e,i) =>{
-								self.slots2[0].values.push(e.label);
-							})
-							totalData.marStsArray.map((e,i) =>{
-								self.slots3[0].values.push(e.label);
-							})
+							totalData=res.data.datas
+						}else  {
+							totalData=res.data;
 						}
+						self.totalData=totalData;
+						totalData.carTypArray.map((e,i) =>{
+							self.slots1[0].values.push(e.label);
+						})
+						totalData.gxArray.map((e,i) =>{
+							self.slots2[0].values.push(e.label);
+						})
+						totalData.marStsArray.map((e,i) =>{
+							self.slots3[0].values.push(e.label);
+						})
+						
 					}, function(err) {
 						alert(err);
 						console.log(err);
@@ -326,7 +329,7 @@
 				surePickerCardType: function(param) {
 					this.pickerCardTypeStatus = !this.pickerCardTypeStatus;
 					if (param == 'confirm') {
-						this.message.cardType = this.pickerCardType;
+						this.message.certTypNm = this.pickerCardType;
 					}
 				},
 				onValuesChange2: function(picker, values) {
@@ -335,7 +338,7 @@
 				surePickerCusRelation: function(param) {
 					this.pickerCusRelationStatus = !this.pickerCusRelationStatus;
 					if (param == 'confirm') {
-						this.message.cusRelation = this.pickerCusRelation;
+						this.message.gxNm = this.pickerCusRelation;
 					}
 				},
 				onValuesChange3: function(picker, values) {
@@ -344,7 +347,7 @@
 				surePickerMarrige: function(param) {
 					this.pickerMarrigeStatus = !this.pickerMarrigeStatus;
 					if (param == 'confirm') {
-						this.message.IS_MARRY_NM=this.pickerMarrige
+						this.message.marStsNm=this.pickerMarrige
 					}
 				},
 				messageTest: function() {
@@ -360,12 +363,12 @@
 							msg: "请输入正确的身份证号"
 						});
 						return false; 
-					} else if (this.message.cardType == "") {
+					} else if (this.message.certTypNm == "") {
 						summer.toast({
 							msg: "请选择证件类型"
 						});
 						return false;
-					} else if (this.message.cusRelation == "") {
+					} else if (this.message.gxNm == "") {
 						summer.toast({
 							msg: "与客户关系不能为空"
 						});
@@ -390,7 +393,7 @@
 							msg: "手机号格式不正确"
 						});
 						return false;
-					} else if (this.message.IS_MARRY_NM == "") {
+					} else if (this.message.marStsNm == "") {
 						summer.toast({
 							msg: "请选择婚姻状况"
 						});
@@ -411,10 +414,10 @@
 							mp1: self.message.TEL_PHONE,
 							homeAddr: self.message.HOUSE_ADDRESS,
 							workAddr: self.message.WORK_NAME,
-							genderCd:  self.SEXCOM=="男"?"0":"1",
+							genderCd:  self.SEXCOM=="男"?"1":"2",
 							age: self.AGECOM,
 							prjId: self.message.projectId,
-							id:self.message.CLIENT_ID
+							id:self.id
 						}
 					}else{
 						paramData={
@@ -428,9 +431,9 @@
 							prjId: self.message.projectId,
 						}
 					}
-					var _cardType=self.message.cardType;
-					var _cusRelation=self.message.cusRelation;
-					var _IS_MARRY_NM=self.message.IS_MARRY_NM;
+					var _cardType=self.message.certTypNm;
+					var _cusRelation=self.message.gxNm;
+					var _IS_MARRY_NM=self.message.marStsNm;
 					self.totalData.carTypArray.map((e,i)=>{
 						if(e.label==_cardType){
 							paramData.certTypCd=self.totalData.carTypArray[i].value;
@@ -459,8 +462,6 @@
 									script: "addRight('sponsor')"
 								});
 								summer.closeWin()
-							//self.baseMessageData=res.data.datas;
-							//console.log(self.baseMessageData);
 						}
 					}, function(err) {
 						alert(err);
@@ -485,24 +486,21 @@
 			newCreateCustom.message.CLIENT_ID=clintId;
 			var item= summer.pageParam.item;
 			if(item){
-				newCreateCustom.message.NAME=item.NAME;
-				newCreateCustom.message.ID_CARD_NO=item.ID_CARD_NO;
-				newCreateCustom.message.SEX=item.SEX;
-				newCreateCustom.message.SEX_NM=item.SEX_NM;
-				newCreateCustom.message.HOUSE_ADDRESS=item.HOUSE_ADDRESS;
-				newCreateCustom.message.TEL_PHONE=item.TEL_PHONE;
-				newCreateCustom.message.IS_MARRY=item.IS_MARRY;
-				newCreateCustom.message.IS_MARRY_NM=item.IS_MARRY_NM;
-				newCreateCustom.message.BIRTHDAY=item.BIRTHDAY;
-				newCreateCustom.message.HOUSE_ADDRESS_CITY=item.HOUSE_ADDRESS_CITY;
-				newCreateCustom.message.HOUSE_ADDRESS_CITY_NM=item.HOUSE_ADDRESS_CITY_NM;
-				newCreateCustom.message.HOUSE_ADDRESS_PROVINCE=item.HOUSE_ADDRESS_PROVINCE;
-				newCreateCustom.message.HOUSE_ADDRESS_PROVINCE_NM=item.HOUSE_ADDRESS_PROVINCE_NM;
-				newCreateCustom.message.PROJECT_ID=item.PROJECT_ID;
-				newCreateCustom.message.GID=item.GID;
-				newCreateCustom.message.CLIENT_ID=item.CLIENT_ID;
-				newCreateCustom.message.TYPE=item.TYPE;
+				newCreateCustom.message.NAME=item.wrtNm;
+				newCreateCustom.message.ID_CARD_NO=item.certNo;
+				newCreateCustom.message.WORK_NAME=item.workAddr;
+				newCreateCustom.message.SEXCOM=(item.genderCd=="1")?"男":"女";
+				newCreateCustom.message.HOUSE_ADDRESS=item.homeAddr;
+				newCreateCustom.message.TEL_PHONE=item.mp1;
+				newCreateCustom.AGECOM=item.age;
+				newCreateCustom.id=item.id;
 				newCreateCustom.isSelect=true;
+				newCreateCustom.message.marStsNm=item.marStsNm;
+				newCreateCustom.message.marStsCd=item.marStsCd;
+				newCreateCustom.message.certTypCd=item.certTypCd;
+				newCreateCustom.message.certTypNm=item.certTypNm;
+				newCreateCustom.message.gxCd=item.gxCd;
+				newCreateCustom.message.gxNm=item.gxNm;
 			}
 			// var params = ["android.permission.ACCESS_FINE_LOCATION", "android.permission.ACCESS_COARSE_LOCATION", "android.permission.CAMERA", "android.permission.FLASHLIGHT", "android.permission.READ_EXTERNAL_STORAGE", "android.permission.READ_PHONE_STATE",
 			// 	"android.permission.WRITE_EXTERNAL_STORAGE", "android.permission.ACCESS_FINE_LOCATION", "android.permission.ACCESS_COARSE_LOCATION"
@@ -513,6 +511,9 @@
 			// 	//alert(args); //失败返回illegal access
 			// })
 		}
+		$(function(){
+			$('body').height($('body')[0].clientHeight);
+		});
 	</script>
 </body>
 

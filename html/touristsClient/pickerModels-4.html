@@ -47,11 +47,11 @@
 							var _this=this;
 							console.log(this.id);
 							ajaxRequest({
-								type:'GET',
+								type:'POST',
 								url:'appservice/project/prjprdbscinfo/queryByBra.do',
 								param:{
-									braId:_this.id,
-                  equSet:_this.equSet,
+									braBscInfo:{id:_this.id},
+									equSet:_this.equSet,
                   equMdl:_this.equMdl
 								}
 							},function(res){
@@ -67,13 +67,30 @@
 						},
 						pickerModels(it){
               summer.setStorage('pickerModels4',it.equNm);
-              summer.setStorage('realityPrice',it.guidePc);
-							summer.execScript({
-							    winId: 'addCarList',
-							    script: 'getModels()'
-							});
-							summer.closeToWin({
-								id:'addCarList'
+							summer.showProgress();
+							var _this=this
+							ajaxRequest({
+								type:'POST',
+								url:'appservice/project/prjprdbscinfo/queryByBra.do',
+								param:{
+									braBscInfo:{id:_this.id},
+									equSet:_this.equSet,
+                  equMdl:_this.equMdl,
+									equNm:it.equNm
+								}
+							},function(res){
+								console.log("res",res);
+									summer.setStorage('realityPrice',res.data.datas.braList[0].guidePc);
+									summer.hideProgress()
+									summer.execScript({
+									    winId: 'addCarList',
+									    script: 'getModels()'
+									});
+									summer.closeToWin({
+										id:'addCarList'
+									})
+							},function(err){
+								console.log("err",err);
 							})
 						}
 					}
