@@ -192,7 +192,7 @@
 				</p>
 			</div>
 			<div class="item um-box pl10 pr10"  >
-					<span class="um-red mr5">*</span>	<span class="um-bf1">现居详细地址</span><input placeholder="请输入现居详细地址"  v-model="message.postAddr" type="text">   
+					<span class="um-red mr5">*</span>	<span class="um-bf1">现居详细地址</span><input placeholder="请输入现居详细地址"  v-model="message.homeAddr" type="text">   
 			</div>
 			<div @click="surePickerIsHasLicense" class="item" >
 				<p class="pl10 pr10  um-box">
@@ -419,7 +419,7 @@
 						certNo: '',
 						marStsCd: '',
 						idAddr: '',
-						postAddr: '',
+						homeAddr: '',
 						genderCd:'',
 						genderNm:'',
 						age:'',
@@ -468,6 +468,7 @@
 					isNativeData_total: "",
 					transportData_total: '',
 					clintId: '',
+					isAdd:'',//根据这个判断是否打开配偶验证页
 					hasCheckFinish:false   //根据这个判断是否可以输入
 
 				}
@@ -630,7 +631,7 @@
 								self.message.cstHomeDistrict = holeDataDetail.cstHomeDistrict;
 								self.CurrentCity=self.message.cstHomeRegion.name+"-"+self.message.cstHomeProvince.name+"-"+self.message.cstHomeCity.name+"-"+self.message.cstHomeDistrict.name;
 								self.message.idAddr = holeDataDetail.idAddr;
-								self.message.postAddr = holeDataDetail.postAddr;
+								self.message.homeAddr = holeDataDetail.homeAddr;
 								self.message.isHasLicenseNm = holeDataDetail.isHasLicenseNm;
 								self.message.isHasLicense = holeDataDetail.isHasLicense;
 								self.message.driverLicenseNm = holeDataDetail.driverLicenseNm;
@@ -986,34 +987,6 @@
 						console.log(err);
 						summer.hideProgress();
 					});
-					//此处ajax请求
-					/*	summer.openWin({
-							id: 'setProject',
-							url: 'html/fastReport/setProject.html',
-							create: false,
-							type: 'actionBar',
-							isKeep: false,
-							pageParam: {
-								source: "customer"
-							},
-							actionBar: {
-								title: "快捷报单",
-								titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
-								backgroundColor: "#039be5",
-								leftItem: {
-									image: "img/back.png",
-									method: "", //返回按钮自定义事件
-									text: "返回",
-									textColor: "#ffffff" //返回文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
-								},
-								rightItems: [{
-									type: "text",
-									text: "下一步",
-									textColor: "#ffffff", //文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
-									method: "nextStopInput()" //在打开的window中自定义事件
-								}]
-							}
-						});*/
 				},
 				nextStopAction: function () {
 					if (!this.messageTest()) {
@@ -1024,34 +997,65 @@
 					if (self.clintId) {
 						self.message.id = self.clintId;
 					}
-					//此处ajax请求
-					summer.openWin({
-						id: 'newCreateCustom2',
-						url: 'html/fastReport/newCreateCustom2.html',
-						create: false,
-						type: 'actionBar',
-						actionBar: {
-							title: "配偶信息",
-							titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
-							backgroundColor: "#039be5",
-							leftItem: {
-								image: "img/back.png",
-								method: "", //返回按钮自定义事件
-								text: "返回",
-								textColor: "#ffffff" //返回文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
+					if(self.isAdd){
+						summer.openWin({
+							id: 'newCreateCustom_verify2',
+							url: 'html/fastReport/newCreateCustom_verify2.html',
+							create: false,
+							type: 'actionBar',
+							actionBar: {
+								title: "配偶信息验证",
+								titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
+								backgroundColor: "#039be5",
+								leftItem: {
+									image: "img/back.png",
+									method: "", //返回按钮自定义事件
+									text: "返回",
+									textColor: "#ffffff" //返回文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
+								},
+								rightItems: [{
+									type: "text",
+									text: "保存",
+									textColor: "#ffffff", //文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
+									method: "verifyMessage()" //在打开的window中自定义事件
+								}]
 							},
-							rightItems: [{
-								type: "text",
-								text: "保存",
-								textColor: "#ffffff", //文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
-								method: "saveAllPerMessage()" //在打开的window中自定义事件
-							}]
-						},
-						pageParam: {
-							personMessage: self.message,
-							sourceFrom: self.sourceFrom
-						}
-					});
+							pageParam: {
+								personMessage: self.message,
+								sourceFrom: self.sourceFrom
+							}
+						});
+					}else{
+						summer.openWin({
+							id: 'newCreateCustom2',
+							url: 'html/fastReport/newCreateCustom2.html',
+							create: false,
+							type: 'actionBar',
+							actionBar: {
+								title: "配偶信息",
+								titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
+								backgroundColor: "#039be5",
+								leftItem: {
+									image: "img/back.png",
+									method: "", //返回按钮自定义事件
+									text: "返回",
+									textColor: "#ffffff" //返回文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
+								},
+								rightItems: [{
+									type: "text",
+									text: "保存",
+									textColor: "#ffffff", //文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
+									method: "saveAllPerMessage()" //在打开的window中自定义事件
+								}]
+							},
+							pageParam: {
+								personMessage: self.message,
+								sourceFrom: self.sourceFrom
+							}
+						});
+					}
+					//此处ajax请求
+					
 				},
 				openPicker: function () {
 					this.$refs.picker.open();
@@ -1090,6 +1094,8 @@
 		summerready = function () {
 			var projectId = summer.pageParam.projectId;
 			var clintId = summer.pageParam.clintId;
+			var isAdd=summer.pageParam.isAdd;
+			newCreateCustom.isAdd = isAdd;
 			var sourceFrom = summer.pageParam.sourceFrom;
 			newCreateCustom.sourceFrom = sourceFrom;
 			newCreateCustom.clintId = clintId;
