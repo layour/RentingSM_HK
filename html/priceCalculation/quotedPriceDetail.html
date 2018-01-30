@@ -374,7 +374,7 @@
 
 							pickerCntWayList:[
 								{label:'融资额',value:2},
-								{label:'首期款',value:1}
+								{label:'首付款',value:1}
 							],
 							allPrice:'',
 							everyPrice:'',
@@ -417,6 +417,10 @@
 									console.log("res",JSON.stringify(res));
 									summer.hideProgress()
 									_this.pickerSchemeList[0].values=res.data.quatList
+									if(res.data.quatList.length==1){
+										_this.SCHEME_NAME_ID=res.data.quatList[0].schemeCode
+										_this.SCHEME_NAME=res.data.quatList[0].schemeName
+									}
 									if(_this.prjId){
 										var dataObj=res.data.prjQuatPrps
 										_this.allPrice=res.data.carZe
@@ -434,10 +438,12 @@
 											_this.hirePctMoney=parseFloat(_this.hirePct*_this.allPrice).toFixed(2)
 											_this.bailPct=dataObj.bailPct
 											_this.bailPctMoney=parseFloat(_this.bailPct*_this.allPrice).toFixed(2)
+											_this.txJe=dataObj.txJe
 											_this.gpsIns=dataObj.gpsIns
 											_this.gpsInsName=dataObj.gpsInsNm
 											_this.gpsTyp=dataObj.gpsTyp
 											_this.GPSTypArray=_this.gpsTyp.split(",")
+											_this.everyPrice=dataObj.rntAmt
 											_this.gpsTypList=res.data.GPSTypArray
 											for(var k=0;k<_this.GPSTypArray.length;k++){
 												for(var m=0;m<_this.gpsTypList.length;m++){
@@ -448,20 +454,24 @@
 											}
 											_this.everyPrice=dataObj.prjQuatPrpsPaySchList.rntAmt
 											for(var j=0;j<dataObj.prjQuatPrpsFeeList.length;j++){
-												if(dataObj.prjQuatPrpsFeeList[j]=='04'){
+												if(dataObj.prjQuatPrpsFeeList[j].feeTypCd=='04'){
 													_this.groessPrice=dataObj.prjQuatPrpsFeeList[j].feeAmt
-												}else if(dataObj.prjQuatPrpsFeeList[j]=='10'){
+												}else if(dataObj.prjQuatPrpsFeeList[j].feeTypCd=='10'){
 													_this.gpsPrice=dataObj.prjQuatPrpsFeeList[j].feeAmt
 													_this.gpsPriceId=dataObj.prjQuatPrpsFeeList[j].cntWayCd
-												}else if(dataObj.prjQuatPrpsFeeList[j]=='30'){
+													if(_this.gpsPriceId=='1'){_this.gpsPriceName='首付款'}else{_this.gpsPriceName='融资额'}
+												}else if(dataObj.prjQuatPrpsFeeList[j].feeTypCd=='30'){
 													_this.gouZhiPrice=dataObj.prjQuatPrpsFeeList[j].feeAmt
 													_this.gouZhiPriceId=dataObj.prjQuatPrpsFeeList[j].cntWayCd
-												}else if(dataObj.prjQuatPrpsFeeList[j]=='32'){
+													if(_this.gouZhiPriceId=='1'){_this.gouZhiPriceName='首付款'}else{_this.gouZhiPriceName='融资额'}
+												}else if(dataObj.prjQuatPrpsFeeList[j].feeTypCd=='32'){
 													_this.safePrice=dataObj.prjQuatPrpsFeeList[j].feeAmt
 													_this.safePriceId=dataObj.prjQuatPrpsFeeList[j].cntWayCd
-												}else if(dataObj.prjQuatPrpsFeeList[j]=='51'){
+													if(_this.safePriceId=='1'){_this.safePriceName='首付款'}else{_this.safePriceName='融资额'}
+												}else if(dataObj.prjQuatPrpsFeeList[j].feeTypCd=='51'){
 													_this.zhuangXiuPrice=dataObj.prjQuatPrpsFeeList[j].feeAmt
 													_this.zhuangXiuPriceId=dataObj.prjQuatPrpsFeeList[j].cntWayCd
+													if(_this.zhuangXiuPriceId=='1'){_this.zhuangXiuPriceName='首付款'}else{_this.zhuangXiuPriceName='融资额'}
 												}
 											}
 											_this.checkDate()
@@ -481,6 +491,10 @@
 									console.log("res",JSON.stringify(res));
 									summer.hideProgress()
 									_this.pickerSchemeList[0].values=res.data.datas.quatList
+									if(res.data.datas.quatList.length==1){
+										_this.SCHEME_NAME_ID=res.data.datas.quatList[0].schemeCode
+										_this.SCHEME_NAME=res.data.datas.quatList[0].schemeName
+									}
 								},function(err){
 									console.log("err",err);
 									summer.hideProgress()
@@ -541,7 +555,12 @@
 									_this.lsPdUntCdName=resultData.lsPdUntArray[0].label
 								}
 								_this.listYearRate=resultData.listYearRate
-								_this.pickerPayWayList=resultData.payWayArray
+								if(resultData.payWayArray.length>1){
+									_this.pickerPayWayList=resultData.payWayArray
+								}else{
+									_this.payWayCd=resultData.payWayArray[0].value
+									_this.payWay=resultData.payWayArray[0].label
+								}
 								_this.pickerGpsInsList=resultData.GPSInsArray
 								if(_this.pickerGpsInsList.length==1){
 									_this.gpsInsStatus=true
@@ -896,7 +915,7 @@
 							}
 							summer.showProgress();
 							var _this=this
-							var params={
+							var param={
 								prjId:this.prjId,
 								lsPd:this.lsPd,
 								lsPdUntCd:this.lsPdUntCd,

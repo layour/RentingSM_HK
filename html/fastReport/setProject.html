@@ -572,6 +572,12 @@
 		}
 
 		function addContact() {
+			if(!$(".price").hasClass('active')){
+				summer.toast({
+					msg: '请先选择报价方案'
+				});
+				return
+			}
 			summer.openWin({
 				id: 'emergencyContract',
 				url: "html/fastReport/addEmergencyContact.html",
