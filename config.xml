@@ -2,7 +2,7 @@
 
 <application> 
   <app_start>html/guide/index.html</app_start>  
-  <app_name>华科租赁</app_name>  
+  <app_name>华科金融</app_name>  
   <project_name>RentingSM_HK</project_name>  
   <package_name>com.skywish.rentingsm.hk</package_name>  
   <frame_name>summer-um</frame_name>  
