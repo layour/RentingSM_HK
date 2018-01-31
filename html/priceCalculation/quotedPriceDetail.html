@@ -442,16 +442,21 @@
 											_this.gpsIns=dataObj.gpsIns
 											_this.gpsInsName=dataObj.gpsInsNm
 											_this.gpsTyp=dataObj.gpsTyp
-											_this.GPSTypArray=_this.gpsTyp.split(",")
-											_this.everyPrice=dataObj.eachEstRntAmt
 											_this.gpsTypList=res.data.GPSTypArray
-											for(var k=0;k<_this.GPSTypArray.length;k++){
-												for(var m=0;m<_this.gpsTypList.length;m++){
-													if(_this.GPSTypArray[k]==_this.gpsTypList[m].value){
-														_this.gpsTypName+=_this.gpsTypList[m].label
+
+											if(_this.gpsTyp){
+												_this.GPSTypArray=_this.gpsTyp.split(",")
+												for(var k=0;k<_this.GPSTypArray.length;k++){
+													for(var m=0;m<_this.gpsTypList.length;m++){
+														if(_this.GPSTypArray[k]==_this.gpsTypList[m].value){
+															_this.gpsTypName+=_this.gpsTypList[m].label
+														}
 													}
 												}
 											}
+											_this.everyPrice=dataObj.eachEstRntAmt
+
+
 											for(var j=0;j<dataObj.prjQuatPrpsFeeList.length;j++){
 												if(dataObj.prjQuatPrpsFeeList[j].feeTypCd=='04'){
 													_this.groessPrice=dataObj.prjQuatPrpsFeeList[j].feeAmt
@@ -504,7 +509,7 @@
 							this.pickingObj=values[0]
 						},
 						checkSelected(value){
-							if(this.gpsTyp.indexOf(value)>-1){
+							if(String(this.gpsTyp).indexOf(value)>-1){
 								return true
 							}else{
 								return false
