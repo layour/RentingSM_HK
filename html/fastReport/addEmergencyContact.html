@@ -265,7 +265,25 @@
 							})
 						},
 						deleteItem(i){
-							this.addContactList.splice(i,1)
+							if(this.addContactList[i].id==""){
+								this.addContactList.splice(i,1)
+							}else {
+								var _this=this
+								ajaxRequest({
+									type:'POST',
+									url:'appservice/customer/cstnpsocialrl/deleteById.do',
+									param:{
+										id:_this.addContactList[i].id
+									}
+								},function(res){
+									console.log(res,JSON.stringify(res));
+									_this.addContactList.splice(i,1)
+
+								},function(err){
+									summer.hideProgress()
+									alert(err);
+								})
+							}
 						},
 						addItem(){
 							this.addStatus=!this.addStatus
@@ -304,6 +322,10 @@
 						save(){
 							//发请求
 							var _this=this
+							if(_this.addContactList.length==0){
+								summer.toast({msg:'请先添加新的联系人'})
+								return
+							}
 							summer.showProgress()
 							for(var i=0;i<_this.addContactList.length;i++){
 								delete _this.addContactList[i].rlTypNm

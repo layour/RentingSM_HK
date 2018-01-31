@@ -214,11 +214,11 @@
 						}
 					}, function (res) {
 						console.log(JSON.stringify(res));
-						if (res.data.length > 0) {
+						if (res.data.fileList.length > 0) {
 							_this.oldImgList = res.data.fileList
 							for (var i = 0; i < _this.oldImgList.length; i++) {
-								_this.oldImgList[i].filePath = window.G_COMMON_URL + "project/sysuploadfile/appDownload.do?PATH=" + _this.oldImgList[
-									i].filePath
+								_this.oldImgList[i].filePath = window.G_COMMON_URL + "appservice/project/sysuploadfile/appDownload.do?PATH=" + _this.oldImgList[
+									i].filePath+ "&TOKEN="+ getToken()
 
 							}
 						}
