@@ -96,7 +96,15 @@ function ajaxRequest(paramObj, successCallback, errorCallback) {
 	};
 	if (getToken()) {
 		 var token = getToken();
-		testPath=testPath+"?TOKEN="+token;
+		 if ($summer.os == "ios") {
+			 if (paramObj.type == "post") {
+				testPath=testPath+"?TOKEN="+token;
+			 } else {
+				 paramObj.param.TOKEN = token;
+			 }
+		 } else {
+			 testPath=testPath+"?TOKEN="+token;
+		 }
 	}  
 	summer.ajax({
 		type : paramObj.type,
