@@ -17,7 +17,11 @@
           <input type="text" name="search" class="form-control"  placeholder="搜索">
 					<span onclick="satartSearch('all')">取消</span>
         </div> -->
-				<ul class="dealerList companyList">
+				<div id="noData" class="alignCenter" v-if="modelsList.length==0">
+					<img src="../../img/empty.png" alt="">
+					<p>暂无数据</p>
+	      </div>
+				<ul class="dealerList companyList" v-else>
           <li @click="pickerCarModels(item)" v-for="(item,index) in modelsList" :key="index">{{item.mfrNm}}</li>
         </ul>
       </div>
@@ -34,6 +38,9 @@
 					bindEvents();
 					console.log(summer.pageParam.list);
 					pickerModelsVue.modelsList=JSON.parse(summer.pageParam.list);
+					if(pickerModelsVue.modelsList.length==0){
+
+					}
 				}
 				function bindEvents(){
 						$('.form-control').on('input propertychange',satartSearch);
