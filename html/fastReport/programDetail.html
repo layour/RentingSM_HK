@@ -173,8 +173,8 @@
 						<p class="pl10 pr10">车辆识别代号<span class="fr">{{dataList?dataList.prjBscInfo.prjEqiDtlCar.vinNo:""}}</span></p>
 						<p class="pl10 pr10">发动机号<span class="fr">{{dataList?dataList.prjBscInfo.prjEqiDtlCar.engNo:""}}</span></p>
 						<p class="pl10 pr10">是否二手车<span class="fr">{{dataList&&(dataList.prjBscInfo.prjEquBscInfo.isNew=="1")?"是":"否"}}</span></p>
-						<p class="pl10 pr10">二手车里程数(公里)<span class="fr">{{dataList?dataList.prjBscInfo.prjEqiDtlCar.usedCarMil:""}}</span></p>
-						<p class="pl10 pr10">二手车首次登记日期<span class="fr">{{dataList?new Date(dataList.prjBscInfo.prjEqiDtlCar.usedCarReg).format("yyyy-MM-dd"):""}}</span></p>
+						<!-- <p class="pl10 pr10">二手车里程数(公里)<span class="fr">{{dataList?dataList.prjBscInfo.prjEqiDtlCar.usedCarMil:""}}</span></p> -->
+						<!-- <p class="pl10 pr10">二手车首次登记日期<span class="fr">{{dataList?new Date(dataList.prjBscInfo.prjEqiDtlCar.usedCarReg).format("yyyy-MM-dd"):""}}</span></p> -->
 						<p class="pl10 pr10">交易城市<span class="fr">{{dataList?dataList.prjBscInfo.rgnReCd.name:""}}-{{dataList?dataList.prjBscInfo.rgnPrCd.name:""}}-{{dataList?dataList.prjBscInfo.rgnCyCd.name:""}}-{{dataList?dataList.prjBscInfo.rgnToCd.name:""}}</span></p>
 						<p class="pl10 pr10">卖家姓名<span class="fr">{{dataList?dataList.prjBscInfo.prjEqiDtlCar.sellerNm:""}}</span></p>
 						<p class="pl10 pr10">卖家证件号<span class="fr">{{dataList?dataList.prjBscInfo.prjEqiDtlCar.idCardNo:""}}</span></p>
@@ -193,9 +193,17 @@
 						<p class="pl10 pr10">首付款<span class="fr">{{dataList?dataList.prjBscInfo.prjQuatPrps.hirePct*(dataList.prjBscInfo.prjQuatPrps.totLsItmAmt)/100:""}}</span></p>
 						<p class="pl10 pr10">保证金比例(%)<span class="fr">{{dataList?dataList.prjBscInfo.prjQuatPrps.bailPct:""}}</span></p>
 						<p class="pl10 pr10">保证金<span class="fr">{{dataList?dataList.prjBscInfo.prjQuatPrps.bailPct*(dataList.prjBscInfo.prjQuatPrps.totLsItmAmt)/100:""}}</span></p>
-						<p class="pl10 pr10">咨询服务费<span class="fr">{{dataList?dataList.prjBscInfo.prjQuatPrps.lsPdUntNm:""}}-没找到</span></p>
 						<p class="pl10 pr10">贴息金额<span class="fr">{{dataList?dataList.prjBscInfo.prjQuatPrps.txJe:""}}</span></p>
 						<p class="pl10 pr10">GPS是否安装<span class="fr">{{dataList?dataList.prjBscInfo.prjQuatPrps.gpsInsNm:""}}</span></p>
+						<div v-for="item in dataDetail">
+								<p class="pl10 pr10" v-if="item.feeTypCd=='04'">咨询服务费<span class="fr">{{item.feeAmt}} </span></p>
+								<p class="pl10 pr10"  v-else-if="item.feeTypCd=='10'">GPS费<span class="fr">{{item.feeAmt}}</span></p>
+						<p class="pl10 pr10"   v-else-if="item.feeTypCd=='30'">购置税<span class="fr">{{item.feeAmt}}</span></p>
+						<p class="pl10 pr10"   v-else-if="item.feeTypCd=='32'">保险费<span class="fr">{{item.feeAmt}}</span></p>
+						<p class="pl10 pr10"   v-else-if="item.feeTypCd=='51'">精品装潢<span class="fr">{{item.feeAmt}}</span></p>
+						<p class="pl10 pr10"   v-else > </p>
+						<!-- <p class="pl10 pr10">每期租金<span class="fr">{{dataList?dataList.prjQuatProps.prjQuatPrpsPaySchList[0].rntAmt:""}}</span></p> -->	 
+						</div>
 						<!-- <p class="pl10 pr10">GPS类型<span class="fr">{{dataList?dataList.prjBscInfo.prjQuatPrps.lsPdUntNm:""}}--只有2，3</span></p>
 						
 						<p class="pl10 pr10">GPS费<span class="fr">{{dataList?dataList.prjBscInfo.prjQuatPrps.lsPdUntNm:""}}--未找到</span></p>
@@ -251,7 +259,8 @@
 				dataSchemeList:"",
 				project_id:"",
 				JBPM_ID_NM:"",
-				JBPM_ID:""
+				JBPM_ID:"",
+				dataDetail:[]
 			}
 		},
 		created() {
@@ -271,6 +280,7 @@
 					summer.hideProgress();
 					if (res.data.flag == 1) {
 						self.dataList = res.data.datas;
+					self.dataDetail=res.data.datas.prjBscInfo.prjQuatPrps.prjQuatPrpsFeeList
 						//self.getSchemeData(self.project_id);
 						console.log(self.dataList);
 					}
