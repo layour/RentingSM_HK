@@ -36,10 +36,9 @@
 		</div>
 	</div>
 	<script type="text/javascript">
-		summerready = function () {
-			var bot = $('#bot').height() + $('.um-header').height();
-		}
-
+		$(function (){
+			$('body').height($('body')[0].clientHeight);
+		});
 		function toLogin() {
 			var workNum = $('.workNum').val();
 			var psw = $('.psw').val();
