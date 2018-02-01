@@ -394,7 +394,9 @@
 										}]
 									}
 								});
-							} else {
+							} else if(self.sourceFrom=="newCustom"){
+								summer.closeToWin({id:"newCustom"});
+							} else if(self.sourceFrom=="setProject") {  
 									summer.closeToWin({id:"setProject"});
 							}
 						}else if(res.data.flag==0){
