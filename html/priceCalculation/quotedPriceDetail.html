@@ -490,8 +490,10 @@
 												}
 											}
 										}
-										_this.checkDate()
-										
+										if(_this.SCHEME_NAME_ID!=''){
+											_this.checkDate()
+
+										}
 									}
 								},function(err){
 									console.log("err",err);
