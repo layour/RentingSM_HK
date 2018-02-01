@@ -7,6 +7,7 @@
  */
 // 华科测试地址
 window.G_COMMON_URL = "http://122.49.7.88:8080/honor/";
+
 function getToken() {
 	var userinfo = summer.getStorage("userinfo");
 	var token = userinfo ? userinfo.token : "";
@@ -15,62 +16,63 @@ function getToken() {
 
 var CommonUtil = {
 	//图片加水印
-	watermark : function(params) {
+	watermark: function (params) {
 		//调用定位
 		var self = this;
-		this.getLocation(function(args) {
+		this.getLocation(function (args) {
 			var textgroup = [{
-				text : params.name,
-				style : {
-					"left" : "20",
-					"top" : "0",
-					"right" : "0",
-					"bottom" : "80",
-					"font-size" : "20"
+				text: params.name,
+				style: {
+					"left": "20",
+					"top": "0",
+					"right": "0",
+					"bottom": "80",
+					"font-size": "20"
 				}
 			}, {
-				text : (new Date()).format("yyyy-MM-dd hh:mm:ss"),
-				style : {
-					"left" : "20",
-					"top" : "0",
-					"right" : "0",
-					"bottom" : "50",
-					"font-size" : "20"
+				text: (new Date()).format("yyyy-MM-dd hh:mm:ss"),
+				style: {
+					"left": "20",
+					"top": "0",
+					"right": "0",
+					"bottom": "50",
+					"font-size": "20"
 				}
 			}, {
-				text : args.address,
-				style : {
-					"left" : "20",
-					"top" : "0",
-					"right" : "0",
-					"bottom" : "20",
-					"font-size" : "20"
+				text: args.address,
+				style: {
+					"left": "20",
+					"top": "0",
+					"right": "0",
+					"bottom": "20",
+					"font-size": "20"
 				}
 			}];
 			var data = {
-				"src" : params.srcImage, //源图片路径
-				"target" : params.targetImage, //目标图片路径
-				"textGroup" : textgroup,
-				"callback" : params.callback
+				"src": params.srcImage, //源图片路径
+				"target": params.targetImage, //目标图片路径
+				"textGroup": textgroup,
+				"callback": params.callback
 			};
 			summer.callService("UMGraphics.watermark", data, false);
 		});
 	},
 	//获取当前位置
-	getLocation : function(successFn) {
+	getLocation: function (successFn) {
 		summer.getNativeLocation({
-			"single" : "true"
-		}, function(args) {
+			"single": "true"
+		}, function (args) {
 			successFn(args);
-		}, function(args) {
+		}, function (args) {
 			summer.toast({
-				"msg" : "获取位置信息错误：" + JSON.stringify(args)
+				"msg": "获取位置信息错误：" + JSON.stringify(args)
 			});
 		});
 	},
 };
+
 function ajaxRequest(paramObj, successCallback, errorCallback) {
-	console.log('用户的token'+getToken());
+	console.log('用户的token' + getToken());
 	var testPath = '';
 	var paramData = {};
 	if (paramObj.fullUrl) {
@@ -86,68 +88,78 @@ function ajaxRequest(paramObj, successCallback, errorCallback) {
 	if (!summer.netAvailable()) {
 		summer.hideProgress();
 		summer.toast({
-			msg : "网络异常，请检查网络"
+			msg: "网络异常，请检查网络"
 		});
 		return false;
 	}
 	//设置超时
 	window.cordovaHTTP.settings = {
-		timeout : 5000
+		timeout: 5000
 	};
 	if (getToken()) {
-		 var token = getToken();
-		 if ($summer.os == "ios") {
-			 if (paramObj.type == "post") {
-				testPath=testPath+"?TOKEN="+token;
-			 } else {
-				 paramObj.param.TOKEN = token;
-			 }
-		 } else {
-			 testPath=testPath+"?TOKEN="+token;
-		 }
+		var token = getToken();
+		if ($summer.os == "ios") {
+			if (paramObj.type == "post") {
+				testPath = testPath + "?TOKEN=" + token;
+			} else {
+				paramObj.param.TOKEN = token;
+			}
+		} else {
+			testPath = testPath + "?TOKEN=" + token;
+		}
 	}
 	summer.ajax({
-		type : paramObj.type,
-		url : testPath,
-		param : paramObj.param,
+		type: paramObj.type,
+		url: testPath,
+		param: paramObj.param,
 		// 考虑接口安全，每个请求都需要将这个公告header带过去
-		header : {
-			"Content-Type" : "application/json"
+		header: {
+			"Content-Type": "application/json"
 		}
-	}, function(response) {
+	}, function (response) {
 		if (Object.prototype.toString.call(response.data) === '[object String]') {
 			response.data = JSON.parse(response.data);
-	     }
-		 if(response.data.code=="R10002"){
-			summer.toast({msg:"登录过期，请重新登录"});
-			if ($summer.os == 'android') {
-				summer.openWin({
-					"id" : 'login',
-					"url" : 'login.html',
-					"isKeep" : false
-				});
-				summer.closeToWin({
-					id : "homePage"
-				});
-			} else {
-				cordova.exec(null, null, "FrameManager", "initializeWin", [{
-					"id" : 'login',
-					"url" : 'login.html'
-				}]);
-			}
+		}
+		if (response.data.code == "R10002") {
+			summer.hideProgress();
+			summer.toast({
+				msg: "登录过期，请重新登录"
+			});
+			summer.openWin({
+				id: 'login',
+				url: 'login.html',
+				isKeep: true,
+				create: false,
+				type: 'actionBar',
+				actionBar: {
+					title: "登录",
+					titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
+					backgroundColor: "#039be5",
+					leftItem: {
+						image: "img/opacity0.png",
+						method: "none()", //返回按钮自定义事件
+						text: "",
+						textColor: "#ffffff" //返回文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
+					}
+				}
+			});
 			return;
-		 }
-		 if (Object.prototype.toString.call(response.data) === '[object String]') {
-				response.data = JSON.parse(response.data);
-		 }
-		 if(response.data.flag=='0'){
-			 summer.toast({msg:response.data.msg})
-			 return
-		 }
+		}
+		if (Object.prototype.toString.call(response.data) === '[object String]') {
+			response.data = JSON.parse(response.data);
+		}
+		if (response.data.flag == '0') {
+			summer.toast({
+				msg: response.data.msg
+			})
+			return
+		}
 		successCallback(response);
-	}, function(response) {
+	}, function (response) {
 		summer.hideProgress();
-		summer.toast({msg:"数据请求失败"+ JSON.stringify(response)});
+		summer.toast({
+			msg: "数据请求失败" + JSON.stringify(response)
+		});
 		return;
 		//此处还需要和后端沟通，统一失败状态码，统一处理
 		// 执行自己的其它逻辑
