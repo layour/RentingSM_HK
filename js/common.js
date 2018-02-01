@@ -149,6 +149,7 @@ function ajaxRequest(paramObj, successCallback, errorCallback) {
 			response.data = JSON.parse(response.data);
 		}
 		if (response.data.flag == '0') {
+			summer.hideProgress();
 			summer.toast({
 				msg: response.data.msg
 			})
