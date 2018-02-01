@@ -230,6 +230,34 @@
 								}]
 							}
 						});
+					}else if(self.pageSource=='index'){
+						summer.openWin({
+							id: 'newCreateCustom',
+							url: 'html/fastReport/newCreateCustom.html',
+							create: false,
+							type: 'actionBar',
+							actionBar: {
+								title: "客户信息",
+								titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
+								backgroundColor: "#039be5",
+								leftItem: {
+									image: "img/back.png",
+									method: "", //返回按钮自定义事件
+									text: "返回",
+									textColor: "#ffffff" //返回文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
+								},
+								rightItems: [{
+									type: "text",
+									text: "下一步",
+									textColor: "#ffffff", //文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
+									method: "nextStopAction()" //在打开的window中自定义事件
+								}]
+							},
+							pageParam: {
+								clintId: id,
+								pageSource:"newCustom"
+							}
+						});
 					} else {
 						summer.execScript({
 								winId: self.pageSource,
@@ -275,10 +303,6 @@
 			summer.openWin({
 				id: 'search',
 				url: 'html/fastReport/search.html',
-				/*create: false,
-				pageParam: {
-					fromSurce:"newCustom"
-				}*/
 			});
 		}
 	</script>

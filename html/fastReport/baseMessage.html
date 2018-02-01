@@ -227,7 +227,6 @@
 						 type: 'get',
 						 url: 'appservice/project/prjbscinfo/toAddPrj.do',
 						 param: {
-							  "cstId.id":self.customId,
 							  "id":id
 						 }
 					 }, function(res) {
@@ -330,12 +329,12 @@
 
 					baseMessage.totalData.prjTypCdArray.map((e,i)=>{
 						if(e.label==_programStyle){
-							bizTyp=baseMessage.totalData.prjTypCdArray[i].value;
+							prjTypCd=baseMessage.totalData.prjTypCdArray[i].value;
 						}
 					});
 					baseMessage.totalData.bizTypeArray.map((e,i)=>{
 						if(e.label==_taskStyle){
-							prjTypCd=baseMessage.totalData.bizTypeArray[i].value;
+							bizTyp=baseMessage.totalData.bizTypeArray[i].value;
 						}
 					});
 					baseMessage.totalData.fkgzCd.map((e,i)=>{
