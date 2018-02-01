@@ -1,22 +1,6 @@
 body,.um-frame,.um-win,html{
    background-color: #fff;
 }
-#bot{
-   height: 0.9rem;
-   background-color: #fff;
-   width: 100%;
-}
-#bot span{
-   float: left;
-   width: 50%;
-   height: 0.9rem;
-   box-sizing: border-box;
-   line-height: 0.9rem;
-   text-align: center;
-   font-size: 0.32rem;
-   color: #333;
-   border-bottom: 0.04rem solid #d4d4d4;
-}
 form{
    width: 6.4rem;
    position: absolute;
@@ -46,15 +30,15 @@ dl dd{
    height: 0.8rem;
 }
 dl dd input{
-   border: 0;
-   outline: none;
-   height: 0.28rem;
-   width: 4.6rem;
-   background: none;
-   color: #424242;
-   font-size: 0.28rem;
-   line-height: 0.28rem;
-   margin-top: 0.25rem;
+    border: 0;
+    outline: none;
+    height: 0.34rem;
+    width: 4.6rem;
+    background: none;
+    color: #424242;
+    font-size: 0.28rem;
+    line-height: 0.34rem;
+    margin-top: 0.2rem;
 }
 *::-webkit-input-placeholder {
     color: #e0e0e0;

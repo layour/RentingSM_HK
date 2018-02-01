@@ -12,99 +12,122 @@
 	<script src="./js/jquery.min.js"></script>
 	<script src="./js/Frameworks/iuapmobile.frameworks.ui.js"></script>
 	<script src="js/font.js" charset="utf-8"></script>
+	<script src="js/base64.js" charset="utf-8"></script>
 </head>
 
 <body>
 	<div class="um-win" id="index">
 		<div class="um-content">
-			<div id="bot">
-				<span class = "taste">销售登录</span>
-				<span class = "changeLog">客户登录</span>
-			</div>
+			<form action="">
+				<dl>
+					<dt class="iconfont icon-login"></dt>
+					<dd>
+						<input class="workNum" type="text" value="" placeholder="工号">
+					</dd>
+				</dl>
+				<dl>
+					<dt class="iconfont icon-key"></dt>
+					<dd>
+						<input class="psw" type="password" value="" placeholder="密码">
+					</dd>
+				</dl>
+				<button type="button" class="loginBtn" onclick="toLogin()">登录</button>
+			</form>
 		</div>
 	</div>
 	<script type="text/javascript">
-		summerready = function() {
-			// 判断是否加载引导页
-			var bool = summer.getStorage("welcome") ? summer.getStorage("welcome") : false;
-			if (!bool) {
-				summer.openWin({
-					"id" : 'guide',
-					"url" : 'html/guide/index.html',
-					"isKeep" : false
+		summerready = function () {
+			var bot = $('#bot').height() + $('.um-header').height();
+		}
+
+		function toLogin() {
+			var workNum = $('.workNum').val();
+			var psw = $('.psw').val();
+			var base = new Base64();
+			psw = base.encode(psw);
+			if (workNum == '') {
+				summer.toast({
+					msg: "工号不得为空"
 				});
 				return;
 			}
-			// 关闭启动图
-			setTimeout(function() {
-                summer.hideLaunch();
-            }, 500);
-			var bot = $('#bot').height() + $('.um-header').height();
-			summer.openFrameGroup({
-				id: 'login',
-				background: '#ffffff',
-				scrollEnabled: false,
-				position: {
-					top: bot,
-					bottom: 0,
-					left: 0,
-					right: 0
+			if (psw == '') {
+				summer.toast({
+					msg: "密码不得为空"
+				});
+				return;
+			}
+			summer.showProgress();
+			if (!summer.netAvailable()) {
+				summer.hideProgress();
+				summer.toast({
+					msg: "网络异常，请检查网络"
+				});
+				return false;
+			}
+			window.cordovaHTTP.settings = {
+				timeout: 5000
+			}; //设置5秒超时
+			summer.ajax({
+				type: "get",
+				url: "http://122.49.7.88:8080/honor/appservice/login/carLogin",
+				param: {
+					"loginName": workNum,
+					"password": "HKSD" + psw + "EFASD"
 				},
-				index: 0,
-				frames: [{
-					id: 'salerLogin',
-					url: 'html/login/salerLogin.html',
-					bgColor: '#ffffff',
-					hidden: true
-				}, {
-					id: 'customerLogin',
-					url: 'html/login/customerLogin.html',
-					bgColor: '#ffffff',
-					hidden: true
-				}],
-			}, function(ret, err) {
-				var index = ret.index;
-			});
-		}
-		$(function() {
-			$('body').height($('body')[0].clientHeight);
-			$('.taste').css({
-				'color':'#1287de',
-				'border-color':'#1287de'
-			});
-			$('.changeLog').css({
-				'color':'#333',
-				'border-color':'#d4d4d4'
-			});
-			$('.taste').on('click', function() {
-				$(this).css({
-					'color':'#1287de',
-					'border-color':'#1287de'
-				});
-				$('.changeLog').css({
-					'color':'#333',
-					'border-color':'#d4d4d4'
-				});
-				summer.setFrameGroupAttr({
-					id: 'login',
-					index: 0
-				});
-			});
-			$('.changeLog').on('click', function() {
-				$(this).css({
-					'color':'#1287de',
-					'border-color':'#1287de'
-				});
-				$('.taste').css({
-					'color':'#333',
-					'border-color':'#d4d4d4'
-				});
-				summer.setFrameGroupAttr({
-					id: 'login',
-					index: 1
+				header: {
+					"Content-Type": "application/json"
+				}
+			}, function (response) {
+				console.log(response);
+				summer.hideProgress();
+				var Data;
+				if (Object.prototype.toString.call(response.data) === '[object String]') {
+					Data = JSON.parse(response.data);
+				} else {
+					Data = response.data;
+				}
+				switch (Data.flag) {
+					case "1":
+						summer.toast({
+							msg: "登录成功"
+						});
+						var token = Data.datas.token;
+						var loginName = Data.datas.loginName;
+						var userName = Data.datas.name;
+						var userinfo = {
+							token: token,
+							loginName: loginName,
+							userName: userName
+						};
+						summer.setStorage("userinfo", userinfo);
+						// 调用首页获取代办任务数量
+						/* summer.execScript({
+							winId: 'homePage',
+							script: "getMissionData()"
+						}); */
+						summer.closeToWin({
+							id: "homePage"
+						});
+						break;
+					case "0":
+						summer.toast({
+							msg: "用户名或密码错误"
+						});
+						break;
+					default:
+						summer.toast({
+							msg: "登录失败"
+						});
+				}
+			}, function (error) {
+				console.log(error);
+				summer.hideProgress();
+				summer.toast({
+					msg: "系统内部异常"
 				});
 			});
-		});
+		};
 	</script>
 </body>
 
