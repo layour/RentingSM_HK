@@ -39,11 +39,11 @@
 				</div>
 			</div>
 			<h2 class="xmgl">
-					<div>
-						<span></span>
-						<i>项目管理</i>
-					</div>
-				</h2>
+				<div>
+					<span></span>
+					<i>项目管理</i>
+				</div>
+			</h2>
 			<div class="xmgl_con">
 				<ul class="xmgl_list clearfix">
 					<!-- <li onclick="mission()" class="">
@@ -92,17 +92,17 @@
 				</ul>
 			</div>
 			<h2 class="crm">
-					<div>
-						<span></span>
-						<i>CRM</i>
-					</div>
-				</h2>
+				<div>
+					<span></span>
+					<i>CRM</i>
+				</div>
+			</h2>
 			<div class="crm_con">
 				<ul class="crm_list clearfix">
-					<li onclick="unfinished()">
+					<li onclick="openNewCustom()">
 						<dl>
-							<dt class="iconfont icon-friends" style="color:#88d27c"></dt>
-							<dd>销售线索</dd>
+							<dt class="iconfont icon-people-l" style="color:#88d27c"></dt>
+							<dd>客户</dd>
 						</dl>
 					</li>
 					<li onclick="unfinished()">
@@ -119,8 +119,8 @@
 					</li>
 					<li onclick="unfinished()">
 						<dl>
-							<dt class="iconfont icon-people-l" style="color:#88d27c"></dt>
-							<dd>客户</dd>
+							<dt class="iconfont icon-friends" style="color:#88d27c"></dt>
+							<dd>销售线索</dd>
 						</dl>
 					</li>
 					<li onclick="unfinished()">
@@ -162,7 +162,7 @@
 		</div>
 	</div>
 	<script>
-		summerready = function() {
+		summerready = function () {
 			/* if (isLogin()) {
 				getMissionData(); //获取代办任务个数
 			}
@@ -179,7 +179,7 @@
 				getMissionData();
 			}); */
 			// 关闭启动图
-			setTimeout(function() {
+			setTimeout(function () {
 				summer.hideLaunch();
 			}, 500);
 			var mySwiper = new Swiper('.swiper-container', {
@@ -203,18 +203,18 @@
 						type: 'post',
 						url: 'appservice/bpmtask/myTaskCount',
 						param: {}
-					}, function(res) {
+					}, function (res) {
 						summer.hideProgress();
 						if (res.data.flag == 1) {
 							self.missionNum = parseInt(res.data.datas.count);
 							console.log(res);
 						}
-					}, function(err) {
+					}, function (err) {
 						alert(err);
 						console.log(err);
 						summer.hideProgress();
 					});
-					this.$nextTick(function() {
+					this.$nextTick(function () {
 						summer.refreshHeaderLoadDone() //加载完成后调用方法恢复组件到默认状态
 						summer.refreshFooterLoadDone(); //加载完成后调用方法恢复组件到默认状态
 					})
@@ -238,8 +238,8 @@
 		function none() {
 			console.log(1);
 		};
-        // 跳回登录页
-		function toLog(){
+		// 跳回登录页
+		function toLog() {
 			summer.setStorage("userinfo", {});
 			summer.toast({
 				"msg": "请先登录"
@@ -546,7 +546,7 @@
 			}
 		}
 		// 商机
-		function openOpportunity(){
+		function openOpportunity() {
 			if (isLogin()) {
 				summer.openWin({
 					id: 'opportunity',
@@ -595,9 +595,42 @@
 				}
 			});
 		}
+		// 打开客户页面
+		function openNewCustom() {
+			if (isLogin()) {
+				summer.openWin({
+					id: 'newCustom',
+					url: 'html/fastReport/newCustom.html',
+					create: false,
+					type: 'actionBar',
+					actionBar: {
+						title: "客户列表",
+						titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
+						backgroundColor: "#039be5",
+						leftItem: {
+							image: "img/back.png",
+							method: "", //返回按钮自定义事件
+							text: "返回",
+							textColor: "#ffffff" //返回文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
+						},
+						rightItems: [{
+							type: "text",
+							text: "添加",
+							textColor: "#ffffff",
+							method: "newCreateCustom()"
+						}]
+					},
+					pageParam: {
+						pageSource: "index"
+					}
+				});
+			} else {
+				toLog();
+			}
+		};
 
 		// 敬请期待
-		function unfinished(){
+		function unfinished() {
 			summer.toast({
 				"msg": "敬请期待"
 			});
@@ -616,7 +649,7 @@
 					"msg": "再按一次退出"
 				});
 			}
-			var intervalID = setInterval(function() {
+			var intervalID = setInterval(function () {
 				clearInterval(intervalID);
 				turn = 0;
 			}, 2000);
