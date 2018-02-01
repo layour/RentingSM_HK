@@ -105,7 +105,7 @@ function ajaxRequest(paramObj, successCallback, errorCallback) {
 		 } else {
 			 testPath=testPath+"?TOKEN="+token;
 		 }
-	}  
+	}
 	summer.ajax({
 		type : paramObj.type,
 		url : testPath,
@@ -139,6 +139,10 @@ function ajaxRequest(paramObj, successCallback, errorCallback) {
 		 }
 		 if (Object.prototype.toString.call(response.data) === '[object String]') {
 				response.data = JSON.parse(response.data);
+		 }
+		 if(response.data.flag=='0'){
+			 summer.toast({msg:response.data.msg})
+			 return
 		 }
 		successCallback(response);
 	}, function(response) {

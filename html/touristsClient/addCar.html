@@ -141,6 +141,8 @@
 			console.log("PROJECT_ID",addCar.PROJECT_ID);
 			addCar.getData()
 		}
+		$(function(){$('body').height($('body')[0].clientHeight);});
+		
 		var addCar = new Vue({
 			el: '#addCar',
 			data() {

@@ -26,12 +26,18 @@
 							<input type="text" v-model="allPrice" @input="checkVal('allPrice')" placeholder="请输入车辆单价" name="allPrice">&nbsp;元
 						</span>
 					</li>
-					<li @click="pickerScheme">
+					<li @click="pickerScheme" v-if="pickerSchemeList[0].values.length>1">
 						<b>产品方案</b>
 						<span>
 							<b v-if="SCHEME_NAME">{{SCHEME_NAME}}</b>
 							<b v-else class="default">请选择</b>
 							<i class="icon iconfont icon-enter"></i>
+						</span>
+					</li>
+					<li v-else>
+						<b>产品方案</b>
+						<span>
+							<b>{{SCHEME_NAME}}</b>
 						</span>
 					</li>
 					<li class="input" v-if="lsPdStatus">
@@ -43,7 +49,7 @@
 					<li class="input" v-else>
 						<b>还款期限</b>
 						<span>
-							<input type="text" v-model="lsPd" @input="checkVal('lsPd')" placeholder="请输入还款期限" name="lsPd">&nbsp;元
+							<input type="text" v-model="lsPd" @input="checkVal('lsPd')" placeholder="请输入还款期限" name="lsPd">&nbsp;
 						</span>
 					</li>
 					<li @click="pickLspd('lspd')"  class="spec" v-if="LspdList.length>1">
@@ -286,6 +292,7 @@
 				quotedVue.prjId=summer.pageParam.id;
 				quotedVue.getData();
 			}
+			$(function(){$('body').height($('body')[0].clientHeight);});
       var quotedVue=new Vue({
           el:'#quotedPriceDetail',
           data(){
@@ -417,6 +424,10 @@
 									console.log("res",JSON.stringify(res));
 									summer.hideProgress()
 									_this.pickerSchemeList[0].values=res.data.quatList
+									if(!res.data.quatList){
+										summer.toast({msg:"无可用方案，请联系管理员维护"})
+										return
+									}
 									if(res.data.quatList.length==1){
 										_this.SCHEME_NAME_ID=res.data.quatList[0].schemeCode
 										_this.SCHEME_NAME=res.data.quatList[0].schemeName
@@ -478,8 +489,9 @@
 													if(_this.zhuangXiuPriceId=='1'){_this.zhuangXiuPriceName='首付款'}else{_this.zhuangXiuPriceName='融资额'}
 												}
 											}
-											_this.checkDate()
 										}
+										_this.checkDate()
+										
 									}
 								},function(err){
 									console.log("err",err);
@@ -543,6 +555,7 @@
 						},
 						checkDate(){
 							var _this=this;
+							console.log('checkDate');
 							summer.showProgress();
 							console.log("schemeCode"+JSON.stringify({schemeCode:_this.SCHEME_NAME_ID}));
 							ajaxRequest({
