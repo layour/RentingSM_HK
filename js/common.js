@@ -115,6 +115,28 @@ function ajaxRequest(paramObj, successCallback, errorCallback) {
 			"Content-Type" : "application/json"
 		}
 	}, function(response) {
+		if (Object.prototype.toString.call(response.data) === '[object String]') {
+			response.data = JSON.parse(response.data);
+	     }
+		 if(response.data.code=="R10002"){
+			summer.toast({msg:"登录过期，请重新登录"});
+			if ($summer.os == 'android') {
+				summer.openWin({
+					"id" : 'login',
+					"url" : 'login.html',
+					"isKeep" : false
+				});
+				summer.closeToWin({
+					id : "homePage"
+				});
+			} else {
+				cordova.exec(null, null, "FrameManager", "initializeWin", [{
+					"id" : 'login',
+					"url" : 'login.html'
+				}]);
+			}
+			return;
+		 }
 		 if (Object.prototype.toString.call(response.data) === '[object String]') {
 				response.data = JSON.parse(response.data);
 		 }
