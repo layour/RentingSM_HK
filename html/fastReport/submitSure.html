@@ -101,7 +101,7 @@
 			data() {
 				return {
 					data: {
-						userName: "徐毅",
+						userName: "",
 					},
 					dataList:"",
 					dataSchemeList: "",
@@ -156,13 +156,14 @@
 					summer.showProgress()
 					ajaxRequest({
 						type: 'post',
-						url: 'appservice/business/startRevJbpm',
+						url: 'appservice/project/prjbscinfo/addFlowStart.do',
 						param: {
-							"PROJECT_ID": _this.project_id,
+							"id": _this.project_id,
 						}
 					},function(res){
 						console.log("res",JSON.stringify(res));
 						if(res.data.flag==1){
+							var resultData=res.data.datas
 							summer.hideProgress()
 							summer.openWin({
 								id: 'finanlSubmit',
@@ -171,13 +172,14 @@
 								type: 'actionBar',
 								addBackListener:true,
 								pageParam:{
-									name:_this.dataList.ProjectObj.CLIENT_NAME,
-									type:_this.dataList.ProjectObj.PLATFORM,
-									carList:_this.dataList.EquipObj,
+									prjPrdInfo_id:resultData.prjPrdInfo.id,
 									project_Id:_this.project_id,
-									PROJECT_TRADE:_this.dataList.PROJECT_TRADE,
-
-									JBPM_ID:res.data.datas.JBPM_ID
+									cstNm:resultData.cstNm,
+									bizTypCdNm:resultData.PLATFORM,
+									procNm:resultData.procNm,
+									equQty:resultData.prjPrdInfo.equQty,
+									equNm:resultData.prjPrdInfo.equNm,
+									guidePc:resultData.prjPrdInfo.guidePc
 								},
 								actionBar: {
 									title: "提交评审",
