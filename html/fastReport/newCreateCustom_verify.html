@@ -7,7 +7,6 @@
 	<title></title>
 	<link rel="stylesheet" href="../../css/iuapmobile.um.css">
 	<link rel="stylesheet" href="../../css/fonts/iconfont.css">
-	<link rel="stylesheet" href="../../css/mint.css">
 	<script src="../../js/font.js"></script>
 	<style>
 		input::-webkit-input-placeholder {
@@ -108,12 +107,12 @@
 		}
 		.item input{
 			border: none;
-			height: .7rem;
+			height: .5rem;
 			width: 2.92rem;
 			text-align: right;
-			line-height: .7rem;
+			line-height: .5rem;
 			outline: none;
-			margin-top: .09rem;
+			margin-top: .2rem;
 			font-size: 0.28rem;
 		}
 	</style>
@@ -320,6 +319,8 @@
 									isAdd:true
 								}
 							}); 
+						}else{
+							summer.toast({msg:"客户已存在"});
 						}
 					}, function (err) {
 						alert(err);

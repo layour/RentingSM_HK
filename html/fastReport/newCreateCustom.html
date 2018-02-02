@@ -110,12 +110,12 @@
 		}
 		.item input{
 			border: none;
-			height: .7rem;
+			height: .5rem;
 			width: 2.92rem;
 			text-align: right;
-			line-height: .7rem;
+			line-height: .5rem;
 			outline: none;
-			margin-top: .09rem;
+			margin-top: .2rem;
 			font-size: 0.28rem;
 		}
 	</style>
@@ -979,8 +979,9 @@
 								msg: "保存成功"
 							});
 							if (self.sourceFrom == "newCreateCustom_verify") {
-								var clint_Id =self.message.cstBscInfo.id;
-								self.message.id=res.data.datas.id;//保存详情id
+								var clint_Id = res.data.datas.cstId;
+								self.clintId=clint_Id;
+								self.message.id=res.data.datas.npId;//保存详情id
 								summer.openWin({
 									id: 'setProject',
 									url: 'html/fastReport/setProject.html',
