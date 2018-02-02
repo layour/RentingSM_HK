@@ -130,7 +130,7 @@
 			</div>
 			 
 			<div class="item um-box pl10 pr10" >
-					<span class="um-bf1">手机号</span><input  placeholder="请输入您的手机号码" type="text"    v-model="message.mp1" class="um-bf3">
+					<span class="um-bf1">手机号</span><input  placeholder="请输入您的手机号码" type="text"    v-model="message.cstPhoneNumber" class="um-bf3">
 			</div>
 			 
 			<div class="item um-box pl10 pr10" >
@@ -180,7 +180,7 @@
 					message: {
 						cstNm: '',
 						certNo: '',
-						mp1:'',
+						cstPhoneNumber:'',
 						cstBscInfo:{
 							id:''
 						}
@@ -218,9 +218,9 @@
 			methods: {
 				checkPhone(){
 					var phoneCard = /^[1][3,4,5,7,8,9][0-9]{9}$/;
-				    if (!phoneCard.test(this.message.mp1)) {
+				    if (!phoneCard.test(this.message.cstPhoneNumber)) {
 						//alert(1);
-						//this.message.mp1="";
+						//this.message.cstPhoneNumber="";
 						summer.toast({
 							msg: "手机号格式不正确"
 						});
@@ -228,7 +228,7 @@
 					}
 				},
 				checkName(){
-					if( this.message.cstNm==""||this.message.mp1==""){
+					if( this.message.cstNm==""||this.message.cstPhoneNumber==""){
 							console.log(1);
 							 summer.toast({msg:"请输入姓名和手机号"});
 							 return;
@@ -243,25 +243,55 @@
 					 verifyCard();
 
 				},
-				saveCustomBaseM(){
+				messageTest: function () {
+					var regCard = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/; //身份证校验
+					var phoneCard = /^[1][3,4,5,7,8,9][0-9]{9}$/;
+					if (this.message.NAME == "") {
+						summer.toast({
+							msg: "姓名不能为空"
+						});
+						return false;
+					} else if (this.message.certNo == "" || regCard.test(this.message.certNo) === false) {
+						summer.toast({
+							msg: "请输入正确的身份证号"
+						});
+						return false;
+					}else if (this.message.cstPhoneNumber == "") {
+						summer.toast({
+							msg: "手机号不能为空"
+						});
+						return false;
+					} else if (!phoneCard.test(this.message.cstPhoneNumber)) {
+						summer.toast({
+							msg: "手机号格式不正确"
+						});
+						return false;
+					} 
+					return true;
+				},
+				verifyMessage: function () {
 					var self = this;
+					if (!this.messageTest()) {
+						return;
+					};
+					summer.showProgress();
 					ajaxRequest({
 						type: 'post',
-						url: 'appservice/customer/cstbscinfo/saveCst.do',
+						url: 'appservice/customer/cstbscinfo/getExistNp.do',
 						param: {
 							cstNm:self.message.cstNm,
 							certNo:self.message.certNo,
-							cstPhoneNumber:self.message.mp1,
 							cstTypCd:'1'
 						}
 					}, function (res) {
 						summer.hideProgress();
 						if (res.data.flag == 1) {
+							//self.saveCustomBaseM();
 							var totalMessage=self.message;
 							totalMessage.age=self.AGECOM;
 							totalMessage.sex=self.SEXCOM;
 							totalMessage.birth=self.BIRTHCOM;
-							totalMessage.cstBscInfo.id=res.data.datas.id;
+						//	totalMessage.cstBscInfo.id=res.data.datas.id;
 							summer.openWin({
 								id: 'newCreateCustom',
 								url: 'html/fastReport/newCreateCustom.html',
@@ -290,57 +320,6 @@
 									isAdd:true
 								}
 							}); 
-						}
-					}, function (err) {
-						alert(err);
-						console.log(err);
-						summer.hideProgress();
-					});
-				},
-				messageTest: function () {
-					var regCard = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/; //身份证校验
-					var phoneCard = /^[1][3,4,5,7,8,9][0-9]{9}$/;
-					if (this.message.NAME == "") {
-						summer.toast({
-							msg: "姓名不能为空"
-						});
-						return false;
-					} else if (this.message.certNo == "" || regCard.test(this.message.certNo) === false) {
-						summer.toast({
-							msg: "请输入正确的身份证号"
-						});
-						return false;
-					}else if (this.message.mp1 == "") {
-						summer.toast({
-							msg: "手机号不能为空"
-						});
-						return false;
-					} else if (!phoneCard.test(this.message.mp1)) {
-						summer.toast({
-							msg: "手机号格式不正确"
-						});
-						return false;
-					} 
-					return true;
-				},
-				verifyMessage: function () {
-					var self = this;
-					if (!this.messageTest()) {
-						return;
-					};
-					summer.showProgress();
-					ajaxRequest({
-						type: 'post',
-						url: 'appservice/customer/cstbscinfo/getExistNp.do',
-						param: {
-							cstNm:self.message.cstNm,
-							certNo:self.message.certNo,
-							cstTypCd:'1'
-						}
-					}, function (res) {
-						summer.hideProgress();
-						if (res.data.flag == 1) {
-							self.saveCustomBaseM();
 						}
 					}, function (err) {
 						alert(err);

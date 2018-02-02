@@ -128,13 +128,13 @@
 				<img v-bind:src="cardUrl" v-show="cardShow" alt="" />
 			</div> -->
 			<div class="item um-box pl10 pr10"  >
-			<span class="um-red mr5">*</span>	<span class="um-bf1">姓名</span>  <span class="um-bf3 tr">{{message.cstNm}}</span>  
+			<span class="um-red mr5">*</span>	<span class="um-bf1">姓名</span>  <span class="um-bf3 tr">{{message.cstBscInfo.cstNm}}</span>  
 			</div>
 			<div class="item um-box pl10 pr10" >
-					<span class="um-red mr5">*</span>	<span class="um-bf1">手机号</span>  <span class="um-bf3 tr">{{message.mp1}}</span>  
+					<span class="um-red mr5">*</span>	<span class="um-bf1">手机号</span>  <span class="um-bf3 tr">{{message.cstBscInfo.cstPhoneNumber}}</span>  
 			</div>
 			<div class="item um-box pl10 pr10"  >
-					<span class="um-red mr5">*</span>	<span class="um-bf1">身份证号</span>  <span class="um-bf3 tr">{{message.certNo}}</span>  
+					<span class="um-red mr5">*</span>	<span class="um-bf1">身份证号</span>  <span class="um-bf3 tr">{{message.cstBscInfo.certNo}}</span>  
 			</div>
 			<div class="item">
 				<p class="pl10 pr10 tr">
@@ -414,9 +414,9 @@
 					}],
 					regionArray:'',//大区列表
 					message: {
-						cstNm: '',
-						mp1:'',
-						certNo: '',
+						//cstNm: '',
+						//cstPhoneNumber:'',
+					//	certNo: '',
 						marStsCd: '',
 						idAddr: '',
 						homeAddr: '',
@@ -458,7 +458,11 @@
 						cstWorkDistrict:'',//工作地址县
 						cstNpSocialRl:'',//配偶信息
 						cstBscInfo:{
-							id:''//客户基本信息id
+							id:'',//客户基本信息id
+							cstNm:'',
+							certNo:'',
+							cstPhoneNumber:'',
+							cstTypCd:'1'
 						},
 						id:'',//客户详情id,如果编辑后保存，必须带上
 					},
@@ -610,9 +614,9 @@
 							self.slots7[0].values = positionData;
 							if (holeDataBase&&holeDataDetail) {
 								self.message.cstNpSocialRl=holeDataDetail.cstNpSocialRl;//先存配偶信息
-								self.message.cstNm = holeDataBase.cstNm;
-								self.message.certNo = holeDataBase.certNo;
-								self.message.mp1 = holeDataBase.cstPhoneNumber;
+								self.message.cstBscInfo.cstNm = holeDataBase.cstNm;
+								self.message.cstBscInfo.certNo = holeDataBase.certNo;
+								self.message.cstBscInfo.cstPhoneNumber = holeDataBase.cstPhoneNumber;
 								self.message.cstBscInfo.id = holeDataBase.id;//保存客户基本信息
 								self.message.id = holeDataDetail.id;//存的是客户详情id,编辑保存必须带上
 								self.message.genderCd = holeDataDetail.genderCd;
@@ -719,7 +723,7 @@
 					PersonScan.scan({}, function (args) {
 						console.log(args);
 						_self.message.NAME = args.name;
-						_self.message.certNo = args.id;
+						_self.message.cstBscInfo.certNo = args.id;
 						_self.message.SEX_NM = args.sex;
 						args.sex == "男" ? _self.message.SEX = "0" : _self.message.SEX = "1";
 						_self.message.BIRTHDAY = args.birth_date;
@@ -961,8 +965,8 @@
 					};
 					summer.showProgress();
 					var paramData =$.extend({}, self.message);
-					delete paramData.cstNm;
-					delete paramData.certNo;
+				//	delete paramData.cstNm;
+				//	delete paramData.certNo;
 					console.log(self.message);
 					ajaxRequest({
 						type: 'post',
@@ -1137,11 +1141,11 @@
 				newCreateCustom.message.genderCd=customBaseMessage.sex=="男"?"1":"2";
 				newCreateCustom.message.age=customBaseMessage.age;
 				newCreateCustom.message.birthday=customBaseMessage.birth;
-				newCreateCustom.message.cstNm=customBaseMessage.cstNm;
-				newCreateCustom.message.certNo=customBaseMessage.certNo;
-				newCreateCustom.message.mp1=customBaseMessage.mp1;
-				newCreateCustom.clintId = customBaseMessage.cstBscInfo.id;
-				newCreateCustom.message.cstBscInfo.id = customBaseMessage.cstBscInfo.id;//保存客户基本信息id
+				newCreateCustom.message.cstBscInfo.cstNm=customBaseMessage.cstNm;
+				newCreateCustom.message.cstBscInfo.certNo=customBaseMessage.certNo;
+				newCreateCustom.message.cstBscInfo.cstPhoneNumber=customBaseMessage.cstPhoneNumber;
+				//newCreateCustom.clintId = customBaseMessage.cstBscInfo.id;
+				//newCreateCustom.message.cstBscInfo.id = customBaseMessage.cstBscInfo.id;//保存客户基本信息id
 			}
 			newCreateCustom.getData(projectId, newCreateCustom.clintId);
 			var params = ["android.permission.ACCESS_FINE_LOCATION", "android.permission.ACCESS_COARSE_LOCATION",
