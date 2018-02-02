@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1">
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="../../css/iuapmobile.um.css">
+    <link rel="stylesheet" href="../../css/fonts/iconfont.css">
+    <style>
+        html,
+        body {
+            background: #f6f6f6;
+        }
+
+        .customList {
+            width: 100%;
+        }
+
+        .customList li {
+            padding: 0 0.56rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 0.88rem;
+            box-sizing: content-box;
+            border-bottom: 0.5px solid rgba(239, 239, 239, 1);
+            background: #fff;
+        }
+
+        .customList li span {
+            display: flex;
+            align-items: center;
+            font-size: 0.28rem;
+            color: #333;
+        }
+
+        .customList li i {
+            font-size: 0.28rem;
+            color: #333;
+            width: 4.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            font-style: normal;
+        }
+
+        .customList li input {
+            font-size: 0.28rem;
+            color: #333;
+            width: 4.2rem;
+            border: 0;
+            outline: none;
+            text-align: right;
+            height: 0.34rem;
+            line-height: 0.34rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="um-win" id="app" v-cloak>
+        <div class="um-content">
+            <ul class="customList">
+                <li>
+                    <span>姓名</span>
+                    <i>{{message.cstNpSocialRl.rlNm}}</i>
+                </li>
+                <li>
+                    <span>身份证</span>
+                    <i>{{message.cstNpSocialRl.certNo}}</i>
+                </li>
+                <li>
+                    <span>性别</span>
+                    <i>{{SEXCOM}}</i>
+                </li>
+                <li>
+                    <span>手机号</span>
+                    <input type="text" placeholder="请输入您的手机号码">
+                </li>
+                <li>
+                    <span>户口所在地</span>
+                    <input type="text" placeholder="请输入您的户口所在地">
+                </li>
+                <li>
+                    <span>工作单位</span>
+                    <input type="text" placeholder="请输入您的工作单位">
+                </li>
+            </ul>
+        </div>
+    </div>
+    <script src="../../js/summer.js"></script>
+    <script src="../../js/jquery.min.js"></script>
+    <script src="../../js/font.js"></script>
+    <script src="../../js/vue.js"></script>
+    <script src="../../js/common.js"></script>
+    <script src="../../js/Frameworks/iuapmobile.frameworks.ui.js"></script>
+    <script>
+        var newCreateCustom = new Vue({
+            el: '#app',
+            data() {
+                return {
+                    cardShow: false,
+                    cardUrl: "",
+                    pickerVisible: "",
+                    personMes: '',
+                    message: {
+                        cstNpSocialRl: {
+                            rlNm: '',
+                            certNo: '',
+                            certTypCd: '1',
+                            genderCd: '',
+                            idAddr: '',
+                            workPlc: '',
+                            mp: '',
+                            id: '' //配偶id，修改需要带上
+                        }
+                    },
+                    sourceFrom: '',
+                }
+            },
+            computed: {
+                SEXCOM: function () {
+                    if (this.message.cstNpSocialRl && this.message.cstNpSocialRl.certNo.length == "18") {
+                        var psidno = this.message.cstNpSocialRl.certNo;
+                        if (parseInt(psidno.substring(16, 17)) % 2 == 0) {
+                            return "女"
+                        } else {
+                            return "男"
+                        };
+                    }
+                }
+            },
+            methods: {
+                messageTest: function () {
+                    var phoneCard = /^[1][3,4,5,7,8,9][0-9]{9}$/;
+                    if (this.message.cstNpSocialRl.idAddr == "") {
+                        summer.toast({
+                            msg: "户口所在地不能为空"
+                        });
+                        return false;
+                    } else if (this.message.cstNpSocialRl.workPlc == "") {
+                        summer.toast({
+                            msg: "工作单位不能为空"
+                        });
+                        return false;
+                    } else if (this.message.cstNpSocialRl.mp == "") {
+                        summer.toast({
+                            msg: "手机号不能为空"
+                        });
+                        return false;
+                    } else if (!phoneCard.test(this.message.cstNpSocialRl.mp)) {
+                        summer.toast({
+                            msg: "手机号格式不正确"
+                        });
+                        return false;
+                    }
+                    return true;
+                },
+                savePerson: function () {
+                    var self = this;
+                    if (!this.messageTest()) {
+                        return;
+                    };
+                    self.personMes.cstNpSocialRl = self.message.cstNpSocialRl;
+
+                    var finanlInput = JSON.parse(JSON.stringify(self.personMes));
+                    ajaxRequest({
+                        type: 'post',
+                        url: 'appservice/customer/cstNpBscInfo/save.do',
+                        param: finanlInput
+                    }, function (res) {
+                        summer.hideProgress();
+                        if (res.data.flag == 1) {
+                            summer.toast({
+                                msg: "保存成功"
+                            });
+                            var clint_Id = res.data.datas.cstId;
+                            if (self.sourceFrom == "newCreateCustom_verify2") {
+                                summer.openWin({
+                                    id: 'setProject',
+                                    url: 'html/fastReport/setProject.html',
+                                    create: false,
+                                    type: 'actionBar',
+                                    pageParam: {
+                                        source: "customer",
+                                        customId: clint_Id
+                                    },
+                                    actionBar: {
+                                        title: "快捷报单",
+                                        titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
+                                        backgroundColor: "#039be5",
+                                        leftItem: {
+                                            image: "img/back.png",
+                                            method: "", //返回按钮自定义事件
+                                            text: "返回",
+                                            textColor: "#ffffff" //返回文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
+                                        },
+                                        rightItems: [{
+                                            type: "text",
+                                            text: "下一步",
+                                            textColor: "#ffffff", //文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
+                                            method: "nextStopInput()" //在打开的window中自定义事件
+                                        }]
+                                    }
+                                });
+                            } else if (self.sourceFrom == "newCustom") {
+                                summer.closeToWin({
+                                    id: "newCustom"
+                                });
+                            } else if (self.sourceFrom == "setProject") {
+                                summer.closeToWin({
+                                    id: "setProject"
+                                });
+                            }
+                        } else if (res.data.flag == 0) {
+                            if (res.data.code == "E02003") {
+                                summer.toast({
+                                    msg: "客户证件号重复,请重新录入"
+                                });
+                                return
+                            }
+                        }
+                    }, function (err) {
+                        alert(err);
+                        console.log(err);
+                        summer.hideProgress();
+                    });
+                }
+            }
+        })
+
+        function saveAllPerMessage() {
+            newCreateCustom.savePerson();
+        }
+        summerready = function () {
+            var personMessage = summer.pageParam.personMessage;
+            var sponseBase = summer.pageParam.sponseBase;
+            var sourceFrom = summer.pageParam.sourceFrom;
+            if (sourceFrom == "newCreateCustom_verify2") {
+                if (sponseBase) {
+                    newCreateCustom.message.cstNpSocialRl.rlNm = sponseBase.cstNm;
+                    newCreateCustom.message.cstNpSocialRl.certNo = sponseBase.certNo;
+                    newCreateCustom.message.cstNpSocialRl.genderCd = sponseBase.genderNm == "男" ? "1" : "2";
+                }
+            } else {
+                if (personMessage && personMessage.cstNpSocialRl) {
+                    newCreateCustom.message.cstNpSocialRl.rlNm = personMessage.cstNpSocialRl.rlNm
+                    newCreateCustom.message.cstNpSocialRl.certNo = personMessage.cstNpSocialRl.certNo
+                    newCreateCustom.message.cstNpSocialRl.genderCd = personMessage.cstNpSocialRl.genderCd
+                    newCreateCustom.message.cstNpSocialRl.idAddr = personMessage.cstNpSocialRl.idAddr
+                    newCreateCustom.message.cstNpSocialRl.workPlc = personMessage.cstNpSocialRl.workPlc
+                    newCreateCustom.message.cstNpSocialRl.mp = personMessage.cstNpSocialRl.mp;
+                    newCreateCustom.message.cstNpSocialRl.id = personMessage.cstNpSocialRl.id
+                }
+            }
+            newCreateCustom.sourceFrom = sourceFrom;
+            newCreateCustom.personMes = personMessage;
+        }
+    </script>
+</body>
+
+</html>
