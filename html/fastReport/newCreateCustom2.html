@@ -28,22 +28,7 @@
 			height: 1.8rem;
 		}
 
-		.mint-field-core {
-			text-align: right;
-		}
-
-		.mint-cell-wrapper {
-			color: #333;
-			font-size: 0.28rem;
-		}
-
-		.mint-cell {
-			min-height: 40px;
-			height: 44px;;
-			color: #333;
-			font-size: 0.28rem;
-		}
-
+	 
 		div.item {
 			line-height: 44px;
 			background: #ffffff;
@@ -61,35 +46,7 @@
 			color: #dbdbdb;
 		}
 
-		.pickerColor {
-			width: 100%;
-			z-index: 10;
-			background: #ffffff;
-		}
-
-		.pickerColor>p {
-			line-height: .88rem;
-			padding: 0 .56rem;
-			color: #039BE5;
-			border-top: 1px solid #E0E0E0;
-			overflow: hidden;
-		}
-
-		.pickerColor>p span {
-			color: #34aadc;
-		}
-
-		.mint-cell-wrapper {
-			background-size: 100% 0px;
-			border-bottom: 1px solid #f7f7f7;
-		}
-
-		.pickerColor>p span:last-child {
-			float: right;
-		}
-		.pickerColor>p span:first-child {
-			float: left;
-		}
+		 
 
 		.item .first {
 
@@ -147,13 +104,13 @@
 			</div>
 		<form action="">
 			<div class="item um-box pl10 pr10"  >
-					 	<span class="um-bf1">手机号</span><input placeholder="请输入您的手机号码" v-model="message.cstNpSocialRl.mp" type="text" />   
+					 	<span class="um-bf1">手机号</span><input class="um-bf3"  placeholder="请输入您的手机号码"  type="text" />   
 			</div>
 			<div class="item um-box pl10 pr10"  >
-					 	<span class="um-bf1">户口所在地</span><input placeholder="请输入您的户口所在地" v-model="message.cstNpSocialRl.idAddr" type="text" />   
+					 	<span class="um-bf1">户口所在地</span><input class="um-bf3" placeholder="请输入您的户口所在地"   type="text" />   
 			</div>
 			<div class="item um-box pl10 pr10"  >
-					 	<span class="um-bf1">工作单位</span><input placeholder="请输入您的工作单位" v-model="message.cstNpSocialRl.workPlc" type="text" />   
+					 	<span class="um-bf1">工作单位</span><input class="um-bf3" placeholder="请输入您的工作单位"   type="text" />   
 			</div>
 		</form>
 		</div>
@@ -401,7 +358,7 @@
 					newCreateCustom.message.cstNpSocialRl.genderCd=sponseBase.genderNm=="男"?"1":"2";
 				}
 			}else{
-				if(personMessage||personMessage.cstNpSocialRl){
+				if(personMessage&&personMessage.cstNpSocialRl){
 					newCreateCustom.message.cstNpSocialRl.rlNm=personMessage.cstNpSocialRl.rlNm
 					newCreateCustom.message.cstNpSocialRl.certNo=personMessage.cstNpSocialRl.certNo
 					newCreateCustom.message.cstNpSocialRl.genderCd=personMessage.cstNpSocialRl.genderCd
@@ -412,7 +369,6 @@
 				}
 			}
 			newCreateCustom.sourceFrom=sourceFrom;
-			
 			newCreateCustom.personMes=personMessage;
 		}
 	</script>
