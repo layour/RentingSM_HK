@@ -270,7 +270,7 @@
 							}else {
 								var _this=this
 								ajaxRequest({
-									type:'POST',
+									type:'post',
 									url:'appservice/customer/cstnpsocialrl/deleteById.do',
 									param:{
 										id:_this.addContactList[i].id
@@ -335,7 +335,7 @@
 								cstNpSocialRlList:_this.addContactList
 							}))
 							ajaxRequest({
-								type:'POST',
+								type:'post',
 								url:'appservice/customer/cstNpBscInfo/saveJJL.do',
 								param:{
 									cstBscInfo:{id:_this.id},

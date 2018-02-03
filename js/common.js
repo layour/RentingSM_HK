@@ -102,6 +102,7 @@ function ajaxRequest(paramObj, successCallback, errorCallback) {
 			if (paramObj.type == "post") {
 				testPath = testPath + "?TOKEN=" + token;
 			} else {
+				testPath = testPath + "?TOKEN=" + token;
 				paramObj.param.TOKEN = token;
 			}
 		} else {
@@ -123,7 +124,7 @@ function ajaxRequest(paramObj, successCallback, errorCallback) {
 		if (response.data.code == "R10002") {
 			summer.hideProgress();
 			summer.toast({
-				msg: "登录过期，请重新登录"
+				msg: "2"
 			});
 			summer.openWin({
 				id: 'login',

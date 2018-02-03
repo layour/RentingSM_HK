@@ -205,7 +205,7 @@
 				getData() {
 					var _this = this;
 					ajaxRequest({
-						type: 'POST',
+						type: 'post',
 						url: 'appservice/project/sysuploadfile/prjFileList.do',
 						param: {
 							tableId: _this.param.projectId,
@@ -236,7 +236,7 @@
 					var _this = this;
 					summer.showProgress();
 					ajaxRequest({
-						type: 'POST',
+						type: 'post',
 						url: 'appservice/project/sysuploadfile/delByFilePath.do',
 						param: {
 							id: id

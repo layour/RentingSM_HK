@@ -283,7 +283,7 @@
 							console.log("PROJECT_ID",this.PROJECT_ID);
 							var _this=this
 							ajaxRequest({
-								type:'POST',
+								type:'post',
 								url:'appservice/foundproject/toProjectSchemePrice',
 								param:{CODE:''}
 							},function(res){
@@ -450,7 +450,7 @@
 							};
 							console.log(JSON.stringify(params));
 							ajaxRequest({
-								type:'POST',
+								type:'post',
 								url:'appservice/foundproject/projectQuotationPMTTest',
 								param:params
 							},function(res){
@@ -496,7 +496,7 @@
 							};
 							console.log(JSON.stringify(param));
 							ajaxRequest({
-								type:'POST',
+								type:'post',
 								url:'appservice/foundproject/saveProjectScheme',
 								param:param
 							},function(res){

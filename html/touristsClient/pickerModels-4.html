@@ -47,7 +47,7 @@
 							var _this=this;
 							console.log(this.id);
 							ajaxRequest({
-								type:'POST',
+								type:'post',
 								url:'appservice/project/prjprdbscinfo/queryByBra.do',
 								param:{
 									braBscInfo:{id:_this.id},
@@ -70,7 +70,7 @@
 							summer.showProgress();
 							var _this=this
 							ajaxRequest({
-								type:'POST',
+								type:'post',
 								url:'appservice/project/prjprdbscinfo/queryByBra.do',
 								param:{
 									braBscInfo:{id:_this.id},
