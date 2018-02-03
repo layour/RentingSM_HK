@@ -99,10 +99,9 @@ function ajaxRequest(paramObj, successCallback, errorCallback) {
 	if (getToken()) {
 		var token = getToken();
 		if ($summer.os == "ios") {
-			if (paramObj.type == "post") {
+			if (paramObj.type == "post" || paramObj.type == "POST") {
 				testPath = testPath + "?TOKEN=" + token;
 			} else {
-				testPath = testPath + "?TOKEN=" + token;
 				paramObj.param.TOKEN = token;
 			}
 		} else {
