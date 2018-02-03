@@ -446,9 +446,9 @@
 											_this.payWay=dataObj.payWay
 											// _this.annIntRatePct=dataObj.annIntRatePct
 											_this.hirePct=dataObj.hirePct
-											_this.hirePctMoney=parseFloat(_this.hirePct*_this.allPrice).toFixed(2)
+											_this.hirePctMoney=parseFloat(_this.hirePct*_this.allPrice*0.01).toFixed(2)
 											_this.bailPct=dataObj.bailPct
-											_this.bailPctMoney=parseFloat(_this.bailPct*_this.allPrice).toFixed(2)
+											_this.bailPctMoney=parseFloat(_this.bailPct*_this.allPrice*0.01).toFixed(2)
 											_this.txJe=dataObj.txJe
 											_this.gpsIns=dataObj.gpsIns
 											_this.gpsInsName=dataObj.gpsInsNm
@@ -599,13 +599,13 @@
 									}else if(resultData.schList[i].keyNameEn=='START_PERCENT'){
 										if(resultData.schList[i].valueStatus=='1'){
 											_this.hirePct=resultData.schList[i].valueStr
-											_this.hirePctMoney=parseFloat(resultData.schList[i].valueStr*_this.allPrice).toFixed(2)
+											_this.hirePctMoney=parseFloat(resultData.schList[i].valueStr*_this.allPrice*0.01).toFixed(2)
 											_this.hirePctStatue=true
 										}else{_this.hirePctStatue=false}
 									}else if(resultData.schList[i].keyNameEn=='BZJBL_PERCENT'){
 										if(resultData.schList[i].valueStatus=='1'){
 											_this.bailPct=resultData.schList[i].valueStr
-											_this.bailPctMoney=parseFloat(resultData.schList[i].valueStr*_this.allPrice).toFixed(2)
+											_this.bailPctMoney=parseFloat(resultData.schList[i].valueStr*_this.allPrice*0.01).toFixed(2)
 											_this.bailPctStatue=true
 										}else{_this.bailPctStatue=false}
 									}else if(resultData.schList[i].keyNameEn=='BUY_TAX_PRICE'){
