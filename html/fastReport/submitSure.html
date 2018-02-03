@@ -272,7 +272,7 @@
 							<!-- <p class="pl10 pr10">每期租金<span class="fr">{{dataList?dataList.prjQuatProps.prjQuatPrpsPaySchList[0].rntAmt:""}}</span></p> -->
 						</div>
 						<!-- <p class="pl10 pr10">GPS类型<span class="fr">{{dataList?dataList.prjBscInfo.prjQuatPrps.lsPdUntNm:""}}--只有2，3</span></p>
-								
+
 								<p class="pl10 pr10">GPS费<span class="fr">{{dataList?dataList.prjBscInfo.prjQuatPrps.lsPdUntNm:""}}--未找到</span></p>
 								<p class="pl10 pr10">购置税<span class="fr">{{dataList?dataList.prjBscInfo.prjQuatPrps.lsPdUntNm:""}}--未找到</span></p>
 								<p class="pl10 pr10">保险费<span class="fr">{{dataList?dataList.prjBscInfo.prjQuatPrps.lsPdUntNm:""}}--未找到</span></p>
@@ -347,7 +347,7 @@
 						console.log(err);
 						summer.hideProgress();
 					});
-	
+
 				},
 				getJBPMData(id){
 					var self = this;
@@ -368,7 +368,7 @@
 							console.log(err);
 							summer.hideProgress();
 						});
-	
+
 				},
 				opensubmitFinanl() {
 					var _this = this;
@@ -398,7 +398,7 @@
 									procNm: resultData.procNm,
 									equQty: resultData.prjPrdInfo.equQty,
 									equNm: resultData.prjPrdInfo.equNm,
-									guidePc: resultData.prjPrdInfo.guidePc
+									guidePc: resultData.prjPrdInfo.equAmt
 								},
 								actionBar: {
 									title: "提交评审",
