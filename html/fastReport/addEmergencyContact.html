@@ -154,7 +154,7 @@
 	      </div>
 				<ul>
 					<li v-for="(item,index) in addContactList" :key='index'>
-						<mt-cell-swipe :title="item.rlNm" :label="item.mp" :right="[{content: '&nbsp;&nbsp;&nbsp;删除&nbsp;&nbsp;&nbsp;',style: {lineHeight:'1.76rem', background: '#f44336', color: '#fff' },handler: () =>deleteItem(index)}]">
+						<mt-cell-swipe :title="item.rlNm" :label="item.mp" :right="[{content: '&nbsp;&nbsp;&nbsp;删除&nbsp;&nbsp;&nbsp;',style: {lineHeight:'1.76rem', background: '#f44336', color: '#fff' },handler: function(){deleteItem(index)}}]">
 							<div  class="fr one inDiv">
 								<!-- <a href=""><i class="icon iconfont icon-call"></i></a> -->
 								{{item.rlTypNm}}
@@ -208,7 +208,8 @@
 				}
         var vueTemplate=new Vue({
           el:'#addContact',
-          data(){
+          data:function () {
+			  var This = this;
             return {
 							addStatus:false,
 							pickerStatus:false,
@@ -231,7 +232,9 @@
 						    {
 						      content: '删除',
 						      style: { background: 'red', color: '#fff' },
-						      handler: () => this.$messagebox('delete')
+						      handler: function(){
+								This.$messagebox('delete')
+							  }
 						    }
 						  ]
             }

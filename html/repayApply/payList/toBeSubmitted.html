@@ -80,7 +80,7 @@
 			resetData: false
 		},
 		methods: {
-			payDetail(userId) {
+			payDetail:function (userId) {
 				summer.openWin({
 					id: 'checkPay',
 					url: 'html/repayApply/checkPay/index.html',
@@ -104,7 +104,7 @@
 					}
 				});
 			},
-			advance(userId, PROJECT_ID, PAY_ID, PAYMENT_ID) {
+			advance:function (userId, PROJECT_ID, PAY_ID, PAYMENT_ID) {
 				summer.openWin({
 					id: 'payApply',
 					url: 'html/repayApply/payApply/index.html',
@@ -136,7 +136,7 @@
 					}
 				});
 			},
-			normal(userId, PROJECT_ID, PAY_ID, PAYMENT_ID) {
+			normal:function (userId, PROJECT_ID, PAY_ID, PAYMENT_ID) {
 				summer.openWin({
 					id: 'payApply',
 					url: 'html/repayApply/payApply/index.html',
@@ -196,7 +196,7 @@
 						$('#content').css('display', 'block');
 					} else {
 						$('#content').css('display', 'none');
-						Data.datas.list.forEach((e) => {
+						Data.datas.list.forEach(function (e) {
 							if (e.payStsCd == "1") {
 								e.payStsCd = "未申请"
 							} else if (e.payStsCd == "2") {

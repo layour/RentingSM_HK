@@ -208,7 +208,7 @@
 		}
 		var setProgect = new Vue({
 			el: '#app',
-			data() {
+			data:function () {
 				return {
 					message: {
 						username: '',
@@ -238,10 +238,10 @@
 				handleClick: function() {
 					this.$toast('Hello world!')
 				},
-				openPicker() {
+				openPicker: function() {
 					this.$refs.picker.open();
 				},
-				surePickerSponsorType(param) {
+				surePickerSponsorType: function(param) {
 					this.pickerSponsorTypeStatus = !this.pickerSponsorTypeStatus;
 					if (param == 'confirm') {
 						var sponsorType = this.pickerSponsorType;
@@ -253,7 +253,7 @@
 
 					}
 				},
-				sureSponsorType() {
+				sureSponsorType: function() {
 					var self = this;
 					ajaxRequest({
 						type: 'post',
@@ -280,7 +280,7 @@
 				onValuesChange1: function(picker, values) {
 					this.pickerSponsorType = values[0];
 				},
-				getData(id) {
+				getData: function(id) {
 					var self = this;
 					ajaxRequest({
 						type: 'get',
@@ -300,7 +300,7 @@
 						summer.hideProgress();
 					});
 				},
-				getProjectId(__projectid) {
+				getProjectId: function(__projectid) {
 					var self = this;
 					ajaxRequest({
 						type: 'post',
@@ -324,7 +324,7 @@
 						summer.hideProgress();
 					});
 				},
-				getCompleteStatus(clintId,projectId){
+				getCompleteStatus: function(clintId,projectId){
 					var self = this;
 					ajaxRequest({
 						type: 'post',
@@ -359,7 +359,7 @@
 						summer.hideProgress();
 					});
 				},
-				openBaseMessage(data) {
+				openBaseMessage: function(data) {
 					console.log(data);
 					var self = this;
 					var baseData = JSON.parse(JSON.stringify(self.baseMessageData));

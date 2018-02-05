@@ -75,7 +75,7 @@
 				surplus:"2"
 			}
 		];
-		stockData.forEach((e) => {
+		stockData.forEach(function (e) {
 			e.checked = false;
 		});
         var stock = new Vue({
@@ -88,7 +88,7 @@
 			methods:{
 				checkIt:function (index){
 					this.items[index].checked = !this.items[index].checked;
-					this.submit = this.items.some((e) => {
+					this.submit = this.items.some(function (e) {
 						return e.checked == true;
 					});
 					if (this.items[index].checked) {
@@ -126,9 +126,6 @@
 				}
 			}
         });
-		function showUserInfo(){
-			
-		};
 	</script>
 </body>
 
