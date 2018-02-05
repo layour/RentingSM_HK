@@ -195,7 +195,7 @@
 		}
 		var mySponsor = new Vue({
 			el: '#mySponsor1',
-			data() {
+			data:function() {
 				return {
 					pickerSponsorTypeStatus: false,
 					pickerSponsorType: "",
@@ -220,7 +220,7 @@
 				}
 			},
 			methods: {
-				getSponsorList() {
+				getSponsorList:function() {
 					var self = this;
 					summer.showProgress();
 					ajaxRequest({
@@ -248,7 +248,7 @@
 						summer.hideProgress();
 					});
 				},
-				surePickerSponsorType(param) {
+				surePickerSponsorType:function(param) {
 					this.pickerSponsorTypeStatus = !this.pickerSponsorTypeStatus;
 					if (param == 'confirm') {
 						var sponsorType = this.pickerSponsorType;
@@ -263,7 +263,7 @@
 				onValuesChange1: function(picker, values) {
 					this.pickerSponsorType = values[0];
 				},
-				deleteItem(id){
+				deleteItem:function(id){
 					//此处需要调后端接口
 					var This=this;
 					ajaxRequest({
@@ -286,7 +286,7 @@
 				  //this.sponsorListData.splice(i,1)
 
 				},
-				openSponsorDetail(TYPE, item) {
+				openSponsorDetail:function(TYPE, item) {
 					var id;
 					if (TYPE == "LP") {
 						id = "newSponsor_company"
@@ -321,7 +321,7 @@
 						}
 					});
 				},
-				opensubmitFinanl() {
+				opensubmitFinanl:function() {
 					summer.openWin({
 						id: 'finanlSubmit',
 						url: 'html/fastReport/finanlSubmit.html',
@@ -340,7 +340,7 @@
 						}
 					});
 				},
-				saveMessage() {
+				saveMessage:function() {
 					summer.execScript({
 						winId: "setProject",
 						script: "addRight('sponsor')"

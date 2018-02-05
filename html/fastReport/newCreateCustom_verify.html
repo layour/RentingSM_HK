@@ -171,7 +171,7 @@
 	<script>
 		var newCreateCustom = new Vue({
 			el: '#app',
-			data() {
+			data:function() {
 				return {
 					cardShow: false,
 					cardUrl: "",
@@ -215,7 +215,7 @@
 				},
 			},
 			methods: {
-				checkPhone(){
+				checkPhone:function(){
 					var phoneCard = /^[1][3,4,5,7,8,9][0-9]{9}$/;
 				    if (!phoneCard.test(this.message.cstPhoneNumber)) {
 						//alert(1);
@@ -226,7 +226,7 @@
 						return false;
 					}
 				},
-				checkName(){
+				checkName:function(){
 					if( this.message.cstNm==""||this.message.cstPhoneNumber==""){
 							console.log(1);
 							 summer.toast({msg:"请输入姓名和手机号"});

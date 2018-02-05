@@ -146,13 +146,13 @@
 			  }
 			  baseMessage.totalData=baseData;
 			  baseMessage.project_Id=_project_Id;
-			  baseData.prjTypCdArray.map((e,i) =>{
+			  baseData.prjTypCdArray.map(function(e,i){
 					baseMessage.slots1[0].values.push(e.label);
 			  })
-			  baseData.bizTypeArray.map((e,i) =>{
+			  baseData.bizTypeArray.map(function(e,i){
 					baseMessage.slots2[0].values.push(e.label);
 			  })
-			  baseData.fkgzCd.map((e,i) =>{
+			  baseData.fkgzCd.map(function(e,i){
 					baseMessage.slots3[0].values.push(e.label);
 			  })
 		  }
@@ -167,7 +167,7 @@
 			}
 			var baseMessage=new Vue({
 			el:'#baseMessageElement',
-			data() {
+			data:function() {
 				return {
 					contractStatus : 'electron',
 					GroupStatus : 'no',
@@ -217,11 +217,8 @@
 					areaTotal:''
 				}
 			},
-			created() {
-
-			},
 			 methods: {
-				 getData(id){
+				 getData:function(id){
 					 var self=this;
 					 ajaxRequest({
 						 type: 'get',
@@ -243,7 +240,7 @@
 						 summer.hideProgress();
 					 });
 				 },
-				 selectAddr(){
+				 selectAddr:function(){
  					summer.setStorage("selectFrom","baseMessage");
  					summer.openWin({
  						id:'selectProvince',
@@ -263,45 +260,45 @@
  						}
  					})
  				},
-				goBack() {
+				goBack:function() {
 					summer.closeWin();
 				},
-				changContractStatus(e, status) {
+				changContractStatus:function(e, status) {
 					$(e.currentTarget).addClass('active').siblings('.active').removeClass('active');
 					this.contractStatus = status;
 				},
-				changGroupStatus(e, status) {
+				changGroupStatus:function(e, status) {
 					$(e.currentTarget).addClass('active').siblings('.active').removeClass('active');
 					this.GroupStatus = status;
 				},
-				onValuesChange1(picker, values) {
+				onValuesChange1:function(picker, values) {
 					this.pickerProgram = values[0];
 				},
-				surePickerProgram(param) {
+				surePickerProgram:function(param) {
 					this.pickerProgramStatus = !this.pickerProgramStatus;
 					if (param == 'confirm') {
 						this.programStyle = this.pickerProgram;
 					}
 				},
-				onValuesChange2(picker, values) {
+				onValuesChange2:function(picker, values) {
 					this.pickerTask = values[0];
 				},
-				surePickerTask(param) {
+				surePickerTask:function(param) {
 					this.pickerTaskStatus = !this.pickerTaskStatus;
 					if (param == 'confirm') {
 						this.taskStyle = this.pickerTask;
 					}
 				},
-				onValuesChange3(picker, values) {
+				onValuesChange3:function(picker, values) {
 					this.pickerLendRule = values[0];
 				},
-				surePickerLendRule(param) {
+				surePickerLendRule:function(param) {
 					this.pickerLendRuleStatus = !this.pickerLendRuleStatus;
 					if (param == 'confirm') {
 						this.lendRuleStyle = this.pickerLendRule;
 					}
 				},
-				save() {
+				save:function() {
 					var self=this;
 					if(this.programStyle==""){
 						summer.toast({msg:"请选择项目类型"});
@@ -327,17 +324,17 @@
 					var _lendRuleStyle=this.lendRuleStyle;
 			  		var prjTypCd,bizTyp,fkgzCd;
 
-					baseMessage.totalData.prjTypCdArray.map((e,i)=>{
+					baseMessage.totalData.prjTypCdArray.map(function(e,i){
 						if(e.label==_programStyle){
 							prjTypCd=baseMessage.totalData.prjTypCdArray[i].value;
 						}
 					});
-					baseMessage.totalData.bizTypeArray.map((e,i)=>{
+					baseMessage.totalData.bizTypeArray.map(function(e,i){
 						if(e.label==_taskStyle){
 							bizTyp=baseMessage.totalData.bizTypeArray[i].value;
 						}
 					});
-					baseMessage.totalData.fkgzCd.map((e,i)=>{
+					baseMessage.totalData.fkgzCd.map(function(e,i){
 						if(e.label==_lendRuleStyle){
 							fkgzCd=baseMessage.totalData.fkgzCd[i].value;
 						}
