@@ -17,14 +17,14 @@
 </head>
 
 <body>
-    <div class="null">
-        <div class="nullCon">
-            <div class="nullBox">
-                <img src="../../../img/empty.png" alt="">
-                <p>暂无数据</p>
-            </div>
-        </div>
-    </div>
+	<div class="null">
+		<div class="nullCon">
+			<div class="nullBox">
+				<img src="../../../img/empty.png" alt="">
+				<p>暂无数据</p>
+			</div>
+		</div>
+	</div>
 	<div class="um-frame" id="index" v-cloak>
 		<div class="um-content">
 			<ul class="userList">
@@ -75,10 +75,10 @@
 			totalPage: null,
 			num: 1,
 			resetData: false,
-            searchValue:""
+			searchValue: ""
 		},
 		methods: {
-			payDetail:function (userId,PROJECT_ID,JBPM_ID,PAYMENT_ID) {
+			payDetail: function (userId, PROJECT_ID, JBPM_ID, PAYMENT_ID) {
 				summer.openWin({
 					id: 'checkPay',
 					url: 'html/repayApply/checkPay/index.html',
@@ -96,7 +96,7 @@
 						}
 					},
 					pageParam: {
-						info:{
+						info: {
 							userId: userId,
 							PROJECT_ID: PROJECT_ID,
 							JBPM_ID: JBPM_ID,
@@ -105,7 +105,7 @@
 					}
 				});
 			},
-			advance:function (userId,PROJECT_ID,PAY_ID,PAYMENT_ID) {
+			advance: function (userId, PROJECT_ID, PAY_ID, PAYMENT_ID) {
 				summer.openWin({
 					id: 'payApply',
 					url: 'html/repayApply/payApply/index.html',
@@ -137,7 +137,7 @@
 					}
 				});
 			},
-			normal:function (userId,PROJECT_ID,PAY_ID,PAYMENT_ID) {
+			normal: function (userId, PROJECT_ID, PAY_ID, PAYMENT_ID) {
 				summer.openWin({
 					id: 'payApply',
 					url: 'html/repayApply/payApply/index.html',
@@ -171,53 +171,56 @@
 			}
 		}
 	});
-    function getData(pageNum,searchValue,bool) {
-        if (bool) {
-            all.resetData = true;
-        }
-        all.searchValue = searchValue;
-        if (searchValue) {
-            // summer.showProgress();
-            ajaxRequest({
-                type: 'post',
-                url: 'appservice/paytable/paylist',
-                param: {
-                    "pageNo": pageNum,
-                    "pageSize": 10,
-                    "PSTATUS":"",
-                    "CR_BECR_NAME":searchValue ? searchValue : ""
-                }
-            }, function(res) {
-                summer.hideProgress();
-                var Data;
-                if (Object.prototype.toString.call(res.data) === '[object String]') {
-                    Data = JSON.parse(res.data);
-                } else {
-                    Data = res.data;
-                }
-                if (Data.flag == 1) {
-                    all.totalPage = Data.datas.totalPage;
-                    if (Data.datas.list.length < 1) {
-                        $('.null').css('display','block');
-                    } else {
-                        $('.null').css('display','none');
-                        if (all.resetData) {
-                            all.items = Data.datas.list;
-                        } else {
-                            all.items.push(...Data.datas.list);
-                        }
-                    }
-                }
-            }, function(err) {
-                summer.hideProgress();
-                summer.toast({
-                    msg: "暂无数据"
-                });
-                console.log(err);
-            });
-        }
-    };
-	summerready = function() {
+
+	function getData(pageNum, searchValue, bool) {
+		if (bool) {
+			all.resetData = true;
+		}
+		all.searchValue = searchValue;
+		if (searchValue) {
+			// summer.showProgress();
+			ajaxRequest({
+				type: 'post',
+				url: 'appservice/paytable/paylist',
+				param: {
+					"pageNo": pageNum,
+					"pageSize": 10,
+					"PSTATUS": "",
+					"CR_BECR_NAME": searchValue ? searchValue : ""
+				}
+			}, function (res) {
+				summer.hideProgress();
+				var Data;
+				if (Object.prototype.toString.call(res.data) === '[object String]') {
+					Data = JSON.parse(res.data);
+				} else {
+					Data = res.data;
+				}
+				if (Data.flag == 1) {
+					all.totalPage = Data.datas.totalPage;
+					if (Data.datas.list.length < 1) {
+						$('.null').css('display', 'block');
+					} else {
+						$('.null').css('display', 'none');
+						if (all.resetData) {
+							all.items = Data.datas.list;
+						} else {
+							Data.datas.list.forEach(function (e) {
+								all.items.push(e);
+							});
+						}
+					}
+				}
+			}, function (err) {
+				summer.hideProgress();
+				summer.toast({
+					msg: "暂无数据"
+				});
+				console.log(err);
+			});
+		}
+	};
+	summerready = function () {
 		summer.setRefreshHeaderInfo({
 			visible: true,
 			loadingImg: 'img/refresh.png',
@@ -226,10 +229,10 @@
 			textDown: '下拉刷新...',
 			textUp: '松开刷新...',
 			showTime: true
-		}, function(ret, err) {
+		}, function (ret, err) {
 			//通常在这里从服务器加载数据
 			all.resetData = true;
-			getData(1,all.searchValue);
+			getData(1, all.searchValue);
 			summer.refreshHeaderLoadDone(); //加载完成后调用方法恢复组件到默认状态
 		});
 		summer.setRefreshFooterInfo({
@@ -240,7 +243,7 @@
 			textDown: '上拉刷新...',
 			textUp: '松开刷新...',
 			showTime: true
-		}, function(ret, err) {
+		}, function (ret, err) {
 			//通常在这里从服务器加载数据，
 			var num = all.num++;
 			if (num > all.totalPage) {
@@ -249,7 +252,7 @@
 				});
 			} else {
 				all.resetData = false;
-				getData(num,all.searchValue);
+				getData(num, all.searchValue);
 			}
 			summer.refreshFooterLoadDone(); //加载完成后调用方法恢复组件到默认状态
 		});

@@ -80,7 +80,7 @@
 			resetData: false
 		},
 		methods: {
-			payDetail:function (userId) {
+			payDetail: function (userId) {
 				summer.openWin({
 					id: 'checkPay',
 					url: 'html/repayApply/checkPay/index.html',
@@ -104,7 +104,7 @@
 					}
 				});
 			},
-			advance:function (userId, PROJECT_ID, PAY_ID, PAYMENT_ID) {
+			advance: function (userId, PROJECT_ID, PAY_ID, PAYMENT_ID) {
 				summer.openWin({
 					id: 'payApply',
 					url: 'html/repayApply/payApply/index.html',
@@ -136,7 +136,7 @@
 					}
 				});
 			},
-			normal:function (userId, PROJECT_ID, PAY_ID, PAYMENT_ID) {
+			normal: function (userId, PROJECT_ID, PAY_ID, PAYMENT_ID) {
 				summer.openWin({
 					id: 'payApply',
 					url: 'html/repayApply/payApply/index.html',
@@ -208,7 +208,9 @@
 						if (toBeSubmitted.resetData) {
 							toBeSubmitted.items = Data.datas.list;
 						} else {
-							toBeSubmitted.items.push(...Data.datas.list);
+							Data.datas.list.forEach(function (e) {
+								toBeSubmitted.items.push(e);
+							});
 						}
 					}
 				}

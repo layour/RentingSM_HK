@@ -127,7 +127,9 @@
 							if (loaning.resetData) {
 								loaning.items = Data.datas.list;
 							} else {
-								loaning.items.push(...Data.datas.list);
+								Data.datas.list.forEach(function (e) {
+									loaning.items.push(e);
+								});
 							}
 						}
 					}
