@@ -315,7 +315,7 @@
 	<script>
 		var submitSure = new Vue({
 			el: '#submit',
-			data() {
+			data:function() {
 				return {
 					dataList: "",
 					dataSchemeList:"",
@@ -326,7 +326,7 @@
 				}
 			},
 			methods: {
-				getData(id) {
+				getData:function(id) {
 					var self = this;
 					ajaxRequest({
 						type: 'post',
@@ -349,7 +349,7 @@
 					});
 
 				},
-				getJBPMData(id){
+				getJBPMData:function(id){
 					var self = this;
 						ajaxRequest({
 							type: 'get',
@@ -370,7 +370,7 @@
 						});
 
 				},
-				opensubmitFinanl() {
+				opensubmitFinanl:function() {
 					var _this = this;
 					summer.showProgress()
 					ajaxRequest({

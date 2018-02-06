@@ -66,15 +66,14 @@
 				}
 				var projectImgList=new Vue({
 					el:'#projectImgList',
-					data(){
+					data:function(){
 						return{
               projectId:'',
 							list:[]
 						}
 					},
-					created(){},
 					methods:{
-						getData(){
+						getData:function(){
 							var _this=this
 							ajaxRequest({
 								type: 'post',
@@ -89,7 +88,7 @@
 								console.log(JSON.stringify(err));
 							})
 						},
-            openContWin(id,name){
+            openContWin:function(id,name){
               var _this=this;
               summer.openWin({
         				id: "uploadFile"+id,

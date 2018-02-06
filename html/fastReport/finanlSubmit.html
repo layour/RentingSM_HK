@@ -58,7 +58,7 @@
 			}
 			var finanlSubmit=new Vue({
 				el:'#finanlSub',
-				data(){
+				data:function(){
 					return {
 						cstNm:'',
 						bizTypCdNm:'',
@@ -71,7 +71,7 @@
 					}
 				},
 				methods:{
-					returnInit(){
+					returnInit:function(){
 						var _this=this;
 						summer.openWin({
 							id: 'programDetail',

@@ -142,10 +142,10 @@
 			addCar.getData()
 		}
 		$(function(){$('body').height($('body')[0].clientHeight);});
-		
+
 		var addCar = new Vue({
 			el: '#addCar',
-			data() {
+			data:function() {
 				return {
 					dealer: '',
 					dealerId:'',
@@ -203,9 +203,8 @@
 					}]
 				}
 			},
-			created() {},
 			methods: {
-				getData() {
+				getData:function() {
 					var _this = this;
 					summer.showProgress()
 					ajaxRequest({
@@ -269,7 +268,7 @@
 						console.log("err", JSON.stringify(err));
 					})
 				},
-				checkNumber(e, param) {
+				checkNumber:function(e, param) {
 					var val = $(e.currentTarget).val()
 					if (!/^([1-9]\d{0,9}|0)([.]?|(\.\d{1,2})?)$/.test(val)) {
 						if (param == 'guidePrice') {
@@ -283,7 +282,7 @@
 						}
 					}
 				},
-				pickerDealCity(){
+				pickerDealCity:function(){
 					var selectParam={
 						id:'addCarList',
 						dataSource:'dealCity'
@@ -311,7 +310,7 @@
 							}
 						})
 				},
-				pickerModels() {
+				pickerModels:function() {
 					var _this=this
 						summer.openWin({
 							id: 'pickerModels',
@@ -334,13 +333,13 @@
 							}
 						})
 				},
-				onValuesChange(picker, values) {
+				onValuesChange:function(picker, values) {
 					this.pickedColor = values[0];
 				},
-				onOldCarChange(picker, values) {
+				onOldCarChange:function(picker, values) {
 					this.pickedOldCar = values[0]
 				},
-				surePickerColor(param) {
+				surePickerColor:function(param) {
 					this.pickerColorStatus = !this.pickerColorStatus;
 					if(param=='color'){
 						this.guanXiOrColor=param
@@ -366,7 +365,7 @@
 
 					}
 				},
-				surePickerOldCar(param) {
+				surePickerOldCar:function(param) {
 					this.pickerOldCarStatus = !this.pickerOldCarStatus;
 					if (param == 'confirm') {
 						this.isOldCar = this.pickedOldCar
@@ -376,7 +375,7 @@
 						}
 					}
 				},
-				save() {
+				save:function() {
 					var _this=this
 					if (!this.dealer  || !this.isOldCar||!this.color || !this.carModels ||!this.carColor|| this.realityPrice == '') {
 						summer.toast({

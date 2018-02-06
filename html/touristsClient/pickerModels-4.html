@@ -32,7 +32,7 @@
 				}
         var pickerModelsVue3=new Vue({
           el:'#pickerModels-4',
-          data(){
+          data:function(){
             return {
 							id:'',
               equSet:'',
@@ -40,10 +40,8 @@
               modelsList:[]
             }
           },
-					mounted(){
-					},
 					methods:{
-						getData(){
+						getData:function(){
 							var _this=this;
 							console.log(this.id);
 							ajaxRequest({
@@ -65,7 +63,7 @@
 								console.log("err",err);
 							})
 						},
-						pickerModels(it){
+						pickerModels:function(it){
               summer.setStorage('pickerModels4',it.equNm);
 							summer.showProgress();
 							var _this=this
