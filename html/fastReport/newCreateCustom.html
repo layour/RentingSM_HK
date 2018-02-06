@@ -338,7 +338,7 @@
 	<script>
 		var newCreateCustom = new Vue({
 			el: '#app',
-			data() {
+			data:function() {
 				return {
 					cardShow: false,
 					cardUrl: "",
@@ -481,7 +481,7 @@
 				}
 			},
 			methods: {
-				selectHukouCity(){
+				selectHukouCity:function(){
 					var selectParam={
 						id:'newCreateCustom',
 						dataSource:'HukouCity'
@@ -509,7 +509,7 @@
 							}
 						})
 				},
-				selectCurrentCity(){
+				selectCurrentCity:function(){
 					var selectParam={
 						id:'newCreateCustom',
 						dataSource:'CurrentCity'
@@ -537,7 +537,7 @@
 							}
 						})
 				},
-				selectWorkCity(){
+				selectWorkCity:function(){
 					var selectParam={
 						id:'newCreateCustom',
 						dataSource:'WorkCity'
@@ -565,7 +565,7 @@
 							}
 						})
 				},
-				getData(projectId, clintId) {
+				getData:function(projectId, clintId) {
 					var self = this;
 					ajaxRequest({
 						type: 'post',
@@ -695,7 +695,7 @@
 						summer.hideProgress();
 					});
 				},
-				selectAddr() {
+				selectAddr:function() {
 					summer.setStorage("selectFrom", "newCreateCustom");
 					summer.openWin({
 						id: 'selectProvince',
@@ -755,7 +755,7 @@
 					this.pickerMarStsCdStatus = !this.pickerMarStsCdStatus;
 					 if (param == 'confirm') {
 						 this.message.marStsNm = this.pickerMarStsCd;
-					this.totalData.marStsCd.map((e,i)=>{
+					this.totalData.marStsCd.map(function(e,i){
 						if(e.label==this.message.marStsNm){
 							this.message.marStsCd=this.totalData.marStsCd[i].value;
 						}
@@ -814,7 +814,7 @@
 					this.pickerDriverLicenseTypeStatus = !this.pickerDriverLicenseTypeStatus;
 					if (param == 'confirm') {
 						this.message.driverLicenseNm = this.pickerDriverLicenseType;
-						this.totalData.driverLicenseType.map((e,i)=>{
+						this.totalData.driverLicenseType.map(function(e,i){
 							if(e.label==this.message.driverLicenseNm){
 								this.message.driverLicenseType=this.totalData.driverLicenseType[i].value;
 							}
@@ -828,7 +828,7 @@
 					this.pickerHousingOwnershipStatus = !this.pickerHousingOwnershipStatus;
 					if (param == 'confirm') {
 						this.message.housingOwnershipNm = this.pickerHousingOwnership;
-						this.totalData.housingOwnership.map((e,i)=>{
+						this.totalData.housingOwnership.map(function(e,i){
 							if(e.label==this.message.housingOwnershipNm){
 								this.message.housingOwnership=this.totalData.housingOwnership[i].value;
 							}
@@ -842,7 +842,7 @@
 					this.pickerIndustryStatus = !this.pickerIndustryStatus;
 					if (param == 'confirm') {
 						this.message. industryNm = this.pickerIndustry;
-						this.totalData.industry.map((e,i)=>{
+						this.totalData.industry.map(function(e,i){
 							if(e.label==this.message.industryNm){
 								this.message.industry=this.totalData.industry[i].value;
 							}
@@ -856,7 +856,7 @@
 					this.pickerWorkTypCdStatus = !this.pickerWorkTypCdStatus;
 					if (param == 'confirm') {
 						this.message. workTypNm = this.pickerWorkTypCd;
-						this.totalData.workTypCd.map((e,i)=>{
+						this.totalData.workTypCd.map(function(e,i){
 							if(e.label==this.message.workTypNm){
 								this.message.workTypCd=this.totalData.workTypCd[i].value;
 							}
@@ -870,7 +870,7 @@
 					this.pickerPositionStatus = !this.pickerPositionStatus;
 					if (param == 'confirm') {
 						this.message. positionNm = this.pickerPosition;
-						this.totalData.positonArray.map((e,i)=>{
+						this.totalData.positonArray.map(function(e,i){
 							if(e.label==this.message.positionNm){
 								this.message.position=this.totalData.positonArray[i].value;
 							}

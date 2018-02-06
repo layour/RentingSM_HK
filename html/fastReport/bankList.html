@@ -143,10 +143,10 @@
             },
             methods: {
                 // 选择开户银行
-                onMethodChange(picker, values) {
+                onMethodChange:function (picker, values) {
 					this.pickedBank = values[0];
 				},
-				sureBank(param) {
+				sureBank:function (param) {
 					this.bankStatus = !this.bankStatus;
                     this.typeStatus = false;
                     this.paperStatus = false;
@@ -155,10 +155,10 @@
 					}
                 },
                 // 选择账号类型
-                onTypeChange(picker, values) {
+                onTypeChange:function (picker, values) {
 					this.pickedType = values[0];
 				},
-				sureType(param) {
+				sureType:function (param) {
 					this.typeStatus = !this.typeStatus;
                     this.bankStatus = false;
                     this.paperStatus = false;
@@ -167,10 +167,10 @@
 					}
                 },
                 // 选择证件类型
-                onPaperChange(picker, values) {
+                onPaperChange:function (picker, values) {
 					this.pickedPaper = values[0];
 				},
-				surePaper(param) {
+				surePaper:function (param) {
 					this.paperStatus = !this.paperStatus;
                     this.bankStatus = false;
                     this.typeStatus = false;
@@ -179,14 +179,14 @@
 					}
                 },
                 // 是否代扣
-                chooseYes() {
+                chooseYes:function () {
                     this.withholding = 1;
                 },
-                chooseNo() {
+                chooseNo:function () {
                     this.withholding = 2;
                 },
                 // 保存
-                saveBank(){
+                saveBank:function (){
                     var This = this;
                     if (this.insurerBank == "请选择") {
                         summer.toast({
@@ -222,25 +222,25 @@
                     // 查询字典
                     var AccountType, IdentificationType, bkCd, BankID;
                     // 账户类型
-                    this.typeArr.forEach((e) => {
+                    this.typeArr.forEach(function (e) {
                         if (e.label == this.insurerType) {
                             AccountType = e.value;
                         }
                     });
                     // 证件类型
-                    this.paperArr.forEach((e) => {
+                    this.paperArr.forEach(function (e) {
                         if (e.label == this.insurerPaper) {
                             IdentificationType = e.value;
                         }
                     });
                     // 银行代码
-                    this.bankArr.forEach((e) => {
+                    this.bankArr.forEach(function (e) {
                         if (e.label == this.insurerBank) {
                             bkCd = e.value;
                         }
                     });
                     // 银行ID
-                    this.bankArr.forEach((e) => {
+                    this.bankArr.forEach(function (e) {
                         if (e.label == this.insurerBank) {
                             BankID = e.id;
                         }
@@ -377,15 +377,15 @@
                         bankInfo.withholding = bankInfo.withholding ? bankInfo.withholding : 1;
                     };
                     bankInfo.bankArr = Data.datas.bankList;
-                    bankInfo.bankSlots[0].values = bankInfo.bankArr.map((e) => {
+                    bankInfo.bankSlots[0].values = bankInfo.bankArr.map(function (e) {
                         return e.label;
                     });
                     bankInfo.typeArr = Data.datas.accTypList;
-                    bankInfo.typeSlots[0].values = bankInfo.typeArr.map((e) => {
+                    bankInfo.typeSlots[0].values = bankInfo.typeArr.map(function (e) {
                         return e.label;
                     });
                     bankInfo.paperArr = Data.datas.certTypList;
-                    bankInfo.paperSlots[0].values = bankInfo.paperArr.map((e) => {
+                    bankInfo.paperSlots[0].values = bankInfo.paperArr.map(function (e) {
                         return e.label;
                     });
                 } else {

@@ -208,7 +208,8 @@
 				}
         var vueTemplate=new Vue({
           el:'#addContact',
-          data(){
+          data:function () {
+			  var This = this;
             return {
 							addStatus:false,
 							pickerStatus:false,

@@ -80,7 +80,7 @@
 			resetData: false
 		},
 		methods: {
-			payDetail(userId) {
+			payDetail: function (userId) {
 				summer.openWin({
 					id: 'checkPay',
 					url: 'html/repayApply/checkPay/index.html',
@@ -98,13 +98,13 @@
 						}
 					},
 					pageParam: {
-						info:{
+						info: {
 							userId: userId
 						}
 					}
 				});
 			},
-			advance(userId,PROJECT_ID,PAY_ID,PAYMENT_ID) {
+			advance: function (userId, PROJECT_ID, PAY_ID, PAYMENT_ID) {
 				summer.openWin({
 					id: 'payApply',
 					url: 'html/repayApply/payApply/index.html',
@@ -136,7 +136,7 @@
 					}
 				});
 			},
-			normal(userId,PROJECT_ID,PAY_ID,PAYMENT_ID) {
+			normal: function (userId, PROJECT_ID, PAY_ID, PAYMENT_ID) {
 				summer.openWin({
 					id: 'payApply',
 					url: 'html/repayApply/payApply/index.html',
@@ -170,7 +170,7 @@
 			}
 		}
 	});
-	summerready = function() {
+	summerready = function () {
 		function getData(pageNum) {
 			summer.showProgress();
 			ajaxRequest({
@@ -179,9 +179,9 @@
 				param: {
 					"pageNo": pageNum,
 					"pageSize": 10,
-					"payStsCd":""
+					"payStsCd": ""
 				}
-			}, function(res) {
+			}, function (res) {
 				summer.hideProgress();
 				var Data;
 				if (Object.prototype.toString.call(res.data) === '[object String]') {
@@ -193,10 +193,10 @@
 					all.totalPage = Data.datas.count;
 					if (Data.datas.list.length < 1) {
 						createNull("content", "../../../img/empty.png");
-						$('#content').css('display','block');
+						$('#content').css('display', 'block');
 					} else {
-						$('#content').css('display','none');
-						Data.datas.list.forEach((e) => {
+						$('#content').css('display', 'none');
+						Data.datas.list.forEach(function (e) {
 							if (e.payStsCd == "1") {
 								e.payStsCd = "未申请"
 							} else if (e.payStsCd == "2") {
@@ -208,11 +208,13 @@
 						if (all.resetData) {
 							all.items = Data.datas.list;
 						} else {
-							all.items.push(...Data.datas.list);
+							Data.datas.list.forEach(function (e) {
+								all.items.push(e);
+							});
 						}
 					}
 				}
-			}, function(err) {
+			}, function (err) {
 				summer.hideProgress();
 				summer.toast({
 					msg: "暂无数据"
@@ -229,7 +231,7 @@
 			textDown: '下拉刷新...',
 			textUp: '松开刷新...',
 			showTime: true
-		}, function(ret, err) {
+		}, function (ret, err) {
 			//通常在这里从服务器加载数据
 			all.resetData = true;
 			getData(1);
@@ -243,7 +245,7 @@
 			textDown: '上拉刷新...',
 			textUp: '松开刷新...',
 			showTime: true
-		}, function(ret, err) {
+		}, function (ret, err) {
 			//通常在这里从服务器加载数据，
 			var num = all.num++;
 			if (num > all.totalPage) {
@@ -259,7 +261,7 @@
 	}
 	// 搜索
 	function opensearch() {
-		summer.setStorage("searchFromSource","payList");
+		summer.setStorage("searchFromSource", "payList");
 		summer.openWin({
 			id: 'search',
 			url: 'html/fastReport/search.html',

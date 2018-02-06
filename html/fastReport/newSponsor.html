@@ -183,7 +183,7 @@
 	<script>
 		var newCreateCustom = new Vue({
 			el: '#app',
-			data() {
+			data:function() {
 				return {
 					cardShow: false,
 					cardUrl: "",
@@ -257,7 +257,7 @@
 				}
 			},
 			methods: {
-				getType(projectId){
+				getType:function(projectId){
 					var self = this;
 					ajaxRequest({
 						type: 'post',
@@ -275,13 +275,13 @@
 							totalData=res.data;
 						}
 						self.totalData=totalData;
-						totalData.carTypArray.map((e,i) =>{
+						totalData.carTypArray.map(function(e,i) {
 							self.slots1[0].values.push(e.label);
 						})
-						totalData.gxArray.map((e,i) =>{
+						totalData.gxArray.map(function(e,i) {
 							self.slots2[0].values.push(e.label);
 						})
-						totalData.marStsArray.map((e,i) =>{
+						totalData.marStsArray.map(function(e,i) {
 							self.slots3[0].values.push(e.label);
 						})
 						
@@ -434,17 +434,17 @@
 					var _cardType=self.message.certTypNm;
 					var _cusRelation=self.message.gxNm;
 					var _IS_MARRY_NM=self.message.marStsNm;
-					self.totalData.carTypArray.map((e,i)=>{
+					self.totalData.carTypArray.map(function(e,i){
 						if(e.label==_cardType){
 							paramData.certTypCd=self.totalData.carTypArray[i].value;
 						}
 					});
-					self.totalData.gxArray.map((e,i)=>{
+					self.totalData.gxArray.map(function(e,i){
 						if(e.label==_cusRelation){
 							paramData.gxCd=self.totalData.gxArray[i].value;
 						}
 					});
-					self.totalData.marStsArray.map((e,i)=>{
+					self.totalData.marStsArray.map(function(e,i){
 						if(e.label==_IS_MARRY_NM){
 							paramData.marStsCd=self.totalData.marStsArray[i].value;
 						}
