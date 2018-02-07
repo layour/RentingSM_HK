@@ -204,16 +204,25 @@
 					</span>
 				</p>
 			</div>
-			<div @click="surePickerDriverLicenseType" class="item" >
+		 
+			<div @click="surePickerDriverLicenseType" class="item" v-if="isChooseCar"  >
 				<p class="pl10 pr10  um-box">
 					<span class="um-bf1">准驾车型</span>
 					<span class="um-bf1 tr">
-						<span v-if='message.driverLicenseNm' class="first">{{message.driverLicenseNm}}</span>
+						<span v-if="message.driverLicenseNm" class="first">{{message.driverLicenseNm}}</span>
 						<span v-else class="second">请选择</span>
 						<i class="icon iconfont icon-enter"></i>
 					</span>
 				</p>
 			</div>
+			<div   class="item" v-else  >
+					<p class="pl10 pr10  um-box">
+						<span class="um-bf1">准驾车型</span>
+						<span class="um-bf1 tr">
+							<span   class="first"> </span>
+						</span>
+					</p>
+				</div>
 			<div @click="surePickerHousingOwnership" class="item " >
 				<p class="pl10 pr10  um-box">
 					<span class="um-red mr5 fl">*</span><span class="um-bf1">住房所有权</span>
@@ -238,7 +247,7 @@
 					<span class="um-red mr5">*</span>	<span class="um-bf1">现工作单位名称</span><input placeholder="请输入现工作单位名称" v-model="message.workPlc" type="text">   
 			</div>
 			<div class="item um-box pl10 pr10"  >
-					<span class="um-red mr5">*</span>	<span class="um-bf1">现工作单位年限(年)</span><input placeholder="请输入现工作单位年限"  v-model="message.workYrs" type="text">   
+					<span class="um-red mr5">*</span>	<span class="um-bf1">现工作单位年限(年)</span><input placeholder="请输入现工作单位年限"  v-model="message.workYrs" type="number">   
 			</div>
 			<div @click="surePickerWorkTypCd" class="item" >
 				<p class="pl10 pr10  um-box">
@@ -357,6 +366,7 @@
 					pickerIndustry: "",
 					pickerWorkTypCd: "",
 					pickerPosition: "",
+					isChooseCar:false,//判断准驾车型是否可选择
 					slots1: [{
 						flex: 1,
 						//values: ['未婚', '已婚', '离婚', '丧偶', '未说明的婚姻状况'],
@@ -426,7 +436,6 @@
 						birthday:'',
 						marStsNm:'',//婚姻状况
 						marStsCd:'',
-						isHasLicenseNm: '',
 						isHasLicense: '', //是否有驾照
 						driverLicenseNm: '',
 						driverLicenseType: '', //准驾类型
@@ -476,9 +485,30 @@
 					transportData_total: '',
 					clintId: '',
 					isAdd:'',//根据这个判断是否打开配偶验证页
-					hasCheckFinish:false   //根据这个判断是否可以输入
+					hasCheckFinish:false,  //根据这个判断是否可以输入
+					isChooseCar:false//根据这个判断是否选择准驾车型
 
 				}
+			},
+			// computed: {
+			// 	 isChooseCar: function () {  //判断准驾车型是否可编辑
+			// 		if (this.message.isHasLicense==2) {
+			// 			 return false;
+			// 		}else{
+			// 			return true;
+			// 		}
+			// 	}
+			// },
+			watch:{
+				"message.isHasLicense":function(val,oldval){
+					console.log(val);
+					if(val==2){
+						this.isChooseCar=false;
+					}else{
+						this.isChooseCar=true;
+					}
+				},
+				deep:true
 			},
 			methods: {
 				selectHukouCity:function(){
@@ -800,9 +830,9 @@
 					if (param == 'confirm') {
 						this.message.isHasLicenseNm = this.pickerIsHasLicense;
 					     if(this.message.isHasLicenseNm=="是"){
-							this.message.isHasLicense=1
+							this.message.isHasLicense=1;
 						 }else{
-							this.message.isHasLicense=2
+							this.message.isHasLicense=2;
 						 }
 					}
 				},
