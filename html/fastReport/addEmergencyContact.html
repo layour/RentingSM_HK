@@ -327,6 +327,10 @@
 								summer.toast({msg:'请先添加新的联系人'})
 								return
 							}
+							if(_this.addContactList.length<2){
+								summer.toast({msg:'至少需要两位紧急联系人'})
+								return
+							}
 							summer.showProgress()
 							for(var i=0;i<_this.addContactList.length;i++){
 								delete _this.addContactList[i].rlTypNm

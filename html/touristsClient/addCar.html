@@ -68,13 +68,16 @@
 					<tr>
 						<td>二手车里程数(公里)</td>
 						<td class='oldCar'>
-							<input type="text" name="mileage" placeholder="二手车里程数(公里)" v-model="mileage">
+							<input type="text" name="mileage"  @input="checkNumber($event,'mileage')" placeholder="二手车里程数(公里)" v-model="mileage">
 						</td>
 					</tr>
-					<tr>
+					<tr @click="openPickerDate">
 						<td>二手车首次登记日期</td>
-						<td class='oldCar'>
-							<input type="text" name="firstDate" placeholder="二手车首次登记日期" v-model="firstDate">
+						<td class='oldCar lastCity'>
+							<span v-if='firstDate'>{{firstDate}}</span>
+							<span class="grayColor" v-else>请选择</span>
+							<i class="icon iconfont icon-enter"></i>
+							<!-- <input type="text" name="firstDate" placeholder="二手车首次登记日期" v-model="firstDate"> -->
 						</td>
 					</tr>
 					<tr @click="pickerDealCity">
@@ -133,6 +136,17 @@
 					<span class="" @click="surePickerOldCar('confirm')">确定</span>
 				</p>
 			</mt-popup>
+			<template>
+		  <mt-datetime-picker
+		    ref="picker"
+		    type="date"
+				cancel-text="取消"
+				confirm-text='确定'
+				@confirm="handleDate"
+				:start-date='new Date("1970-01-01")'
+		    v-model="pickerDateValue">
+		  </mt-datetime-picker>
+		</template>
 		</div>
 	</div>
 	<script>
@@ -147,6 +161,7 @@
 			el: '#addCar',
 			data:function() {
 				return {
+					pickerDateValue:'',
 					dealer: '',
 					dealerId:'',
 					carStatus: 'new',
@@ -167,7 +182,7 @@
 					guanXiOrColor:'',
 					guanXi:'',
 					guanXiId:'',
-					isOldCar: '',
+					isOldCar: '否',
 					carNumber: '',
 					powerNumber: '',
 					mileage: '',
@@ -204,6 +219,13 @@
 				}
 			},
 			methods: {
+				openPickerDate:function(){
+					this.$refs.picker.open()
+				},
+				handleDate(){
+					var dateStr= new Date(this.pickerDateValue)
+					this.firstDate = dateStr.getFullYear()+"-"+(dateStr.getMonth()+1)+'-'+dateStr.getDate()
+				},
 				getData:function() {
 					var _this = this;
 					summer.showProgress()
@@ -279,6 +301,8 @@
 							this.onePrice = ''
 						} else if (param == 'safePrice') {
 							this.safePrice = ''
+						}else if (param == 'mileage') {
+							this.mileage = ''
 						}
 					}
 				},
@@ -381,12 +405,15 @@
 						if(this.isOldCar=="是"){
 							this.color = "二手车";
 							this.colorId = "6";
+						}else{
+							this.color = "";
+							this.colorId = "";
 						}
 					}
 				},
 				save:function() {
 					var _this=this
-					if (!this.dealer  || !this.isOldCar||!this.color || !this.carModels ||!this.carColor|| this.realityPrice == '') {
+					if (!this.dealer  || !this.isOldCar||!this.color || !this.carModels ||!this.carColor|| !this.realityPrice) {
 						summer.toast({
 							msg: '请填写车辆的所有信息'
 						})
@@ -468,7 +495,7 @@
 				addCar.equMdl=summer.getStorage('pickerModels3');
 				addCar.equNm=models;
 				if(summer.getStorage('realityPrice')!="undefined"){
-					addCar.realityPrice = summer.getStorage('realityPrice');
+					// addCar.realityPrice = summer.getStorage('realityPrice');
 					addCar.guidePrice = summer.getStorage('realityPrice');
 				}
 			}
