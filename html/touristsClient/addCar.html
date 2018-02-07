@@ -56,7 +56,7 @@
 					<tr>
 						<td>车辆识别号</td>
 						<td class='oldCar'>
-							<input type="text" name="carNumber" placeholder="请输入车辆识别号" v-model="carNumber">
+							<input type="text" @blur="checkCarNumber" name="carNumber" placeholder="请输入车辆识别号" v-model="carNumber">
 						</td>
 					</tr>
 					<tr>
@@ -280,6 +280,15 @@
 						} else if (param == 'safePrice') {
 							this.safePrice = ''
 						}
+					}
+				},
+				checkCarNumber:function(){
+					this.carNumber=this.carNumber.trim()
+					var vinNo=this.carNumber.toUpperCase()
+					if(vinNo){
+						if(vinNo.length != 17 || vinNo.indexOf("O")>=0 || vinNo.indexOf("Q")>=0 || vinNo.indexOf("I")>=0){
+							summer.toast({msg:"车辆识别代号输入有误！车辆识别代号内不能包O、I、Q且长度必须17位。"})
+					  }
 					}
 				},
 				pickerDealCity:function(){
