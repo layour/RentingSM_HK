@@ -128,13 +128,18 @@
 			<div class="item um-box pl10 pr10"  >
 					<span class="um-bf1">配偶姓名</span><input  placeholder="请输入您配偶姓名" type="text" v-model="message.cstNm" class="um-bf3">
 			</div>
-			 
-			<!-- <div class="item um-box pl10 pr10" >
-					<span class="um-bf1">手机号</span><input  placeholder="请输入您的手机号码" type="text"    v-model="message.mp1" class="um-bf3">
-			</div> -->
-			 
+			<div @click="surePickerIsHasLicense" class="item" >
+					<p class="pl10 pr10  um-box">
+						<span class="um-bf1">配偶证件类型</span>
+						<span class="um-bf1 tr">
+							<span v-if='message.isHasLicenseNm' class="first">{{message.isHasLicenseNm}}</span>
+							<span v-else class="second">请选择</span>
+							<i class="icon iconfont icon-enter"></i>
+						</span>
+					</p>
+			</div>
 			<div class="item um-box pl10 pr10" >
-					<span class="um-bf1">配偶身份证号</span><input  placeholder="请输入您配偶身份证号"   type="text" v-model="message.certNo" class="um-bf3">
+					<span class="um-bf1">配偶证件号</span><input  placeholder="请输入您配偶身份证号"   type="text" v-model="message.certNo" class="um-bf3">
 			</div>
 			 
 			<div class="item">
@@ -145,22 +150,16 @@
 					</span>
 				</p>
 			</div>
-			<!-- <div class="item">
-				<p class="pl10 pr10 tr">
-					<span class="fl">出生年月</span>
-					<span class="">
-						<span class="first">{{BIRTHCOM}} </span>
-					</span>
+		</div>
+		   <mt-popup v-model="pickerIsHasLicenseStatus" position='bottom' class="pickerColor">
+				<mt-picker :slots="slots2" @change="onValuesChange2"></mt-picker>
+				<p>
+					<span class="" @click="surePickerIsHasLicense">取消</span>
+					<span class="" @click="surePickerIsHasLicense('confirm')">确定</span>
 				</p>
-			</div>
-			<div class="item">
-				<p class="pl10 pr10 tr">
-					<span class="fl">年龄</span>
-					<span class="">
-						<span class="first">{{AGECOM}} </span>
-					</span>
-				</p>
-			</div> -->
+			</mt-popup>
+		<div class="um-footer">
+
 		</div>
 	</div>
 	<script src="../../js/summer.js"></script>
@@ -177,6 +176,15 @@
 					cardShow: false,
 					cardUrl: "",
 					pickerVisible: "",
+					pickerIsHasLicenseStatus: false,
+					pickerIsHasLicense: "",
+					slots2: [{
+						flex: 1,
+						values: ['身份证', '军官证'],
+						defaultIndex: 0,
+						className: 'slot1',
+						textAlign: 'center'
+					}],
 					message: {
 						cstNm: '',
 						certNo: '',
@@ -277,6 +285,20 @@
 						console.log(err);
 						summer.hideProgress();
 					});
+				},
+				onValuesChange2: function (picker, values) {
+					this.pickerIsHasLicense = values[0];
+				},
+				surePickerIsHasLicense: function (param) {
+					this.pickerIsHasLicenseStatus = !this.pickerIsHasLicenseStatus;
+					if (param == 'confirm') {
+						this.message.isHasLicenseNm = this.pickerIsHasLicense;
+					     if(this.message.isHasLicenseNm=="是"){
+							this.message.isHasLicense=1;
+						 }else{
+							this.message.isHasLicense=2;
+						 }
+					}
 				},
 				openPicker: function () {
 					this.$refs.picker.open();
