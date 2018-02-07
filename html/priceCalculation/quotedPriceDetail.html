@@ -295,7 +295,7 @@
 			$(function(){$('body').height($('body')[0].clientHeight);});
       var quotedVue=new Vue({
           el:'#quotedPriceDetail',
-          data(){
+          data:function(){
             return {
 							isTest:false,
 							prjId:'',
@@ -397,7 +397,7 @@
             }
           },
 					computed:{
-						slots(){
+						slots:function(){
 							var pickerObj={
 								flex: 1,
 								values: [],
@@ -411,7 +411,7 @@
 						}
 					},
 					methods:{
-						getData(){
+						getData:function(){
 							console.log("prjId"+this.prjId);
 							var _this=this
 							if(this.prjId){
@@ -519,17 +519,17 @@
 								})
 							}
 						},
-						pickerSchemeChange(picker,values){
+						pickerSchemeChange:function(picker,values){
 							this.pickingObj=values[0]
 						},
-						checkSelected(value){
+						checkSelected:function(value){
 							if(String(this.gpsTyp).indexOf(value)>-1){
 								return true
 							}else{
 								return false
 							}
 						},
-						toggleGpsType(e,value,label){
+						toggleGpsType:function(e,value,label){
 							$(e.currentTarget).toggleClass('active')
 							for (var i = 0; i < this.selectdGpsArr.length; i++) {
 								if(this.selectdGpsArr[i].value==value){
@@ -539,7 +539,7 @@
 							}
 							this.selectdGpsArr.push({value:value,label:label})
 						},
-						sureGpsType(values){
+						sureGpsType:function(values){
 							this.gpsTypStatus=!this.gpsTypStatus
 							if(values=='confirm'){
 								this.gpsTypName=''
@@ -555,7 +555,7 @@
 								}
 							}
 						},
-						checkDate(){
+						checkDate:function(){
 							var _this=this;
 							console.log('checkDate');
 							summer.showProgress();
@@ -605,7 +605,7 @@
 									}else if(resultData.schList[i].keyNameEn=='BZJBL_PERCENT'){
 										if(resultData.schList[i].valueStatus=='1'){
 											_this.bailPct=resultData.schList[i].valueStr
-											_this.bailPctMoney=parseFloat(resultData.schList[i].valueStr*_this.allPrice*0.01).toFixed(2)
+											_this.bailPctMoney=parseFloat(resultData.schList[i].valueStr*_this.allPrice*0.).toFixed(2)
 											_this.bailPctStatue=true
 										}else{_this.bailPctStatue=false}
 									}else if(resultData.schList[i].keyNameEn=='BUY_TAX_PRICE'){
@@ -687,7 +687,7 @@
 								summer.hideProgress()
 							})
 						},
-						pickerScheme(values){
+						pickerScheme:function(values){
 							this.pickerSchemeStatue=!this.pickerSchemeStatue
 							if(values=='confirm'){
 								this.SCHEME_NAME=this.pickingObj.schemeName
@@ -718,7 +718,7 @@
 								this.checkDate()
 							}
 						},
-						pickLspd(status,values){
+						pickLspd:function(status,values){
 							if(!this.SCHEME_NAME){
 								summer.toast({msg:'请先选择产品方案'});
 								return;
@@ -784,7 +784,7 @@
 
 							}
 						},
-						changeBail(){
+						changeBail:function(){
 							var val=parseFloat(this.bailRate);
 							if(!/^([1-9]\d{0,9}|0)([.]?|(\.\d{1,6})?)$/.test(val)||!val||val<0||val>100){
 								this.bailRate=''
@@ -794,7 +794,7 @@
 								this.bail=parseFloat(this.bailRate*this.allPrice*0.01).toFixed(2)
 							}
 						},
-						changeFirstPay(){
+						changeFirstPay:function(){
 							var val=this.firstPayRate
 							if(!/^([1-9]\d{0,9}|0)([.]?|(\.\d{1,6})?)$/.test(val)||!val||val<0||val>100){
 								this.firstPayRate=''
@@ -805,7 +805,7 @@
 							}
 
 						},
-						sureBail(value){
+						sureBail:function(value){
 							if(!this.allPrice){
 								summer.toast({msg:'请先填写车辆单价'});
 								return;
@@ -816,7 +816,7 @@
 								this.bailPct=this.bailRate
 							}
 						},
-						sureFristPay(value){
+						sureFristPay:function(value){
 							if(!this.allPrice){
 								summer.toast({msg:'请先填写车辆单价'});
 								return;
@@ -827,7 +827,7 @@
 								this.hirePct=this.firstPayRate
 							}
 						},
-						checkVal(value){
+						checkVal:function(value){
 							if (value=='allPrice') {
 								val=this.allPrice;
 								if(!/^([1-9]\d{0,9}|0)([.]?|(\.\d{1,2})?)$/.test(val)||!val||val<0){
@@ -870,7 +870,7 @@
 								}
 							}
 						},
-						quotedTest(){
+						quotedTest:function(){
 							var params={
 								lsPd:this.lsPd,
 								lsPdUntCd:this.lsPdUntCd,
@@ -926,7 +926,7 @@
 							})
 
 						},
-						save(){
+						save:function(){
 							// http
 							if(!this.isTest){
 								summer.toast({msg:'请先测算报价'})

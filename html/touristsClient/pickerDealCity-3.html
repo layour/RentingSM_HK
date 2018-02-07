@@ -30,17 +30,15 @@
 				}
         var pickerModelsVue3=new Vue({
           el:'#pickerModels-3',
-          data(){
+          data:function(){
             return {
 							id:'',
 							equSet:'',
               modelsList:[]
             }
           },
-					mounted(){
-					},
 					methods:{
-						getData(){
+						getData:function(){
 							var _this=this;
 							console.log(this.id);
 							ajaxRequest({
@@ -60,7 +58,7 @@
 								console.log("err",err);
 							})
 						},
-						pickerModels(it){
+						pickerModels:function(it){
 							var _this=this;
 							summer.setStorage('pickerDealCity3',JSON.stringify(it));
 							summer.openWin({

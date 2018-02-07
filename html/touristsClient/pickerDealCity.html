@@ -55,7 +55,7 @@
 				}
         var pickerModelsVue=new Vue({
           el:'#pickerModels',
-          data(){
+          data:function(){
             return {
               modelsList:[],
 							id:''
@@ -84,7 +84,7 @@
 						// 		console.log("err",err);
 						// 	})
 						// },
-						pickerCarModels(it){
+						pickerCarModels:function(it){
 							summer.setStorage('pickerDealCity1',JSON.stringify(it));
 							summer.openWin({
 								id:'pickerDealCity-2',

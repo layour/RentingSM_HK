@@ -232,15 +232,13 @@
 						    {
 						      content: '删除',
 						      style: { background: 'red', color: '#fff' },
-						      handler: function(){
-								This.$messagebox('delete')
-							  }
+						      handler: function(){this.$messagebox('delete')}
 						    }
 						  ]
             }
           },
 					methods:{
-						getData(){
+						getData:function(){
 							var _this=this
 							summer.showProgress()
 							ajaxRequest({
@@ -267,7 +265,7 @@
 								alert(err);
 							})
 						},
-						deleteItem(i){
+						deleteItem:function(i){
 							if(this.addContactList[i].id==""){
 								this.addContactList.splice(i,1)
 							}else {
@@ -288,13 +286,13 @@
 								})
 							}
 						},
-						addItem(){
+						addItem:function(){
 							this.addStatus=!this.addStatus
 						},
-						onValuesChange(picker, values) {
+						onValuesChange:function(picker, values) {
 							this.pickedValues = values[0];
 						},
-						surePicker(param) {
+						surePicker:function(param) {
 							this.pickerStatus = !this.pickerStatus;
 							this.addStatus=!this.addStatus
 							if (param == 'confirm') {
@@ -302,7 +300,7 @@
 									this.rlTypCd = this.pickedValues.value;
 							}
 						},
-						sureAdd(){
+						sureAdd:function(){
 							if(!this.rlNm){
 								summer.toast({msg:'请输入联系人姓名'})
 								return
@@ -322,7 +320,7 @@
 							this.rlTypCd=''
 							this.addStatus=false
 						},
-						save(){
+						save:function(){
 							//发请求
 							var _this=this
 							if(_this.addContactList.length==0){

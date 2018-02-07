@@ -56,7 +56,7 @@
 					<tr>
 						<td>车辆识别号</td>
 						<td class='oldCar'>
-							<input type="text" name="carNumber" placeholder="请输入车辆识别号" v-model="carNumber">
+							<input type="text" @blur="checkCarNumber" name="carNumber" placeholder="请输入车辆识别号" v-model="carNumber">
 						</td>
 					</tr>
 					<tr>
@@ -142,10 +142,10 @@
 			addCar.getData()
 		}
 		$(function(){$('body').height($('body')[0].clientHeight);});
-		
+
 		var addCar = new Vue({
 			el: '#addCar',
-			data() {
+			data:function() {
 				return {
 					dealer: '',
 					dealerId:'',
@@ -203,9 +203,8 @@
 					}]
 				}
 			},
-			created() {},
 			methods: {
-				getData() {
+				getData:function() {
 					var _this = this;
 					summer.showProgress()
 					ajaxRequest({
@@ -269,7 +268,7 @@
 						console.log("err", JSON.stringify(err));
 					})
 				},
-				checkNumber(e, param) {
+				checkNumber:function(e, param) {
 					var val = $(e.currentTarget).val()
 					if (!/^([1-9]\d{0,9}|0)([.]?|(\.\d{1,2})?)$/.test(val)) {
 						if (param == 'guidePrice') {
@@ -283,7 +282,16 @@
 						}
 					}
 				},
-				pickerDealCity(){
+				checkCarNumber:function(){
+					this.carNumber=this.carNumber.trim()
+					var vinNo=this.carNumber.toUpperCase()
+					if(vinNo){
+						if(vinNo.length != 17 || vinNo.indexOf("O")>=0 || vinNo.indexOf("Q")>=0 || vinNo.indexOf("I")>=0){
+							summer.toast({msg:"车辆识别代号输入有误！车辆识别代号内不能包O、I、Q且长度必须17位。"})
+					  }
+					}
+				},
+				pickerDealCity:function(){
 					var selectParam={
 						id:'addCarList',
 						dataSource:'dealCity'
@@ -311,7 +319,7 @@
 							}
 						})
 				},
-				pickerModels() {
+				pickerModels:function() {
 					var _this=this
 						summer.openWin({
 							id: 'pickerModels',
@@ -334,13 +342,13 @@
 							}
 						})
 				},
-				onValuesChange(picker, values) {
+				onValuesChange:function(picker, values) {
 					this.pickedColor = values[0];
 				},
-				onOldCarChange(picker, values) {
+				onOldCarChange:function(picker, values) {
 					this.pickedOldCar = values[0]
 				},
-				surePickerColor(param) {
+				surePickerColor:function(param) {
 					this.pickerColorStatus = !this.pickerColorStatus;
 					if(param=='color'){
 						this.guanXiOrColor=param
@@ -366,7 +374,7 @@
 
 					}
 				},
-				surePickerOldCar(param) {
+				surePickerOldCar:function(param) {
 					this.pickerOldCarStatus = !this.pickerOldCarStatus;
 					if (param == 'confirm') {
 						this.isOldCar = this.pickedOldCar
@@ -376,7 +384,7 @@
 						}
 					}
 				},
-				save() {
+				save:function() {
 					var _this=this
 					if (!this.dealer  || !this.isOldCar||!this.color || !this.carModels ||!this.carColor|| this.realityPrice == '') {
 						summer.toast({
