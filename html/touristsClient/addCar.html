@@ -316,6 +316,7 @@
 					if(vinNo){
 						if(vinNo.length != 17 || vinNo.indexOf("O")>=0 || vinNo.indexOf("Q")>=0 || vinNo.indexOf("I")>=0){
 							summer.toast({msg:"车辆识别代号输入有误！车辆识别代号内不能包O、I、Q且长度必须17位。"})
+							return false
 					  }
 					}
 				},
@@ -428,6 +429,9 @@
 							summer.toast({
 								msg: '请填写车辆的所有信息'
 							})
+							return
+						}
+						if(!this.checkCarNumber()){
 							return
 						}
 					}

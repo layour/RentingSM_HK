@@ -94,13 +94,13 @@
 							<i class="icon iconfont icon-enter"></i>
 						</span>
 					</li>
-					<!-- <li v-if='hirePctStatue'>
+					<li v-if='hirePctStatue'>
 						<b>首付款</b>
 						<span>
 							<b>{{hirePct}}&nbsp;% &nbsp;&nbsp;&nbsp;{{hirePctMoney}}&nbsp;元</b>
 						</span>
-					</li> -->
-					<li @click="sureFristPay">
+					</li>
+					<li @click="sureFristPay" v-else>
 						<b>首付款</b>
 						<span>
 							<b v-if="hirePct">{{hirePct}}&nbsp;% &nbsp;&nbsp;&nbsp;{{hirePctMoney}}&nbsp;元</b>
@@ -108,13 +108,13 @@
 							<i class="icon iconfont icon-enter"></i>
 						</span>
 					</li>
-					<!-- <li v-if="bailPctStatue">
+					<li v-if="bailPctStatue">
 						<b>保证金</b>
 						<span>
 							<b>{{bailPct}}&nbsp;% &nbsp;&nbsp;&nbsp;{{bailPctMoney}}&nbsp;元</b>
 						</span>
-					</li> -->
-					<li @click="sureBail">
+					</li>
+					<li @click="sureBail" v-else>
 						<b>保证金</b>
 						<span>
 							<b v-if="bailPct">{{bailPct}}&nbsp;% &nbsp;&nbsp;&nbsp;{{bailPctMoney}}&nbsp;元</b>
@@ -661,14 +661,14 @@
 										if(resultData.schList[i].valueStatus=='1'){
 											_this.hirePct=resultData.schList[i].valueStr
 											_this.hirePctMoney=parseFloat(resultData.schList[i].valueStr*_this.allPrice*0.01).toFixed(2)
-											_this.hirePctStatue=true
-										}else{_this.hirePctStatue=false}
+											_this.hirePctStatue=false
+										}else{_this.hirePctStatue=true}
 									}else if(resultData.schList[i].keyNameEn=='BZJBL_PERCENT'){
 										if(resultData.schList[i].valueStatus=='1'){
 											_this.bailPct=resultData.schList[i].valueStr
-											_this.bailPctMoney=parseFloat(resultData.schList[i].valueStr*_this.allPrice*0.).toFixed(2)
-											_this.bailPctStatue=true
-										}else{_this.bailPctStatue=false}
+											_this.bailPctMoney=parseFloat(resultData.schList[i].valueStr*_this.allPrice*0.01).toFixed(2)
+											_this.bailPctStatue=false
+										}else{_this.bailPctStatue=true}
 									}else if(resultData.schList[i].keyNameEn=='BUY_TAX_PRICE'){
 
 										if(resultData.schList[i].valueStatus=='0'){
@@ -972,7 +972,7 @@
 									return
 								}
 							}
-							if(!this.gpsPriceId||!this.gpsPrice||!this.gouZhiPriceId||!this.gouZhiPrice||!this.safePriceId||!this.safePrice||!this.zhuangXiuPriceId||!this.zhuangXiuPrice){
+							if(!this.gpsPrice||!this.gouZhiPrice||!this.safePrice||!this.zhuangXiuPrice){
 								summer.toast({msg:'请先完善报价信息'})
 								return
 							}
