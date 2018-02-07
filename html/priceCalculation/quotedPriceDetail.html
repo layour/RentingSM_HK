@@ -162,7 +162,7 @@
 							<input type="text" @input="checkVal('gpsPrice')" placeholder="请输入GPS费" name="gpsPrice" v-model="gpsPrice">&nbsp;元
 						</span>
 					</li>
-					<li class='input' v-if="gpsPriceStatus">
+					<!-- <li class='input' v-if="gpsPriceStatus">
 						<b>GPS费计入方式</b>
 						<span>
 							{{gpsPriceName}}
@@ -175,14 +175,14 @@
 							<b v-else class="default">请选择</b>
 							<i class="icon iconfont icon-enter"></i>
 						</span>
-					</li>
+					</li> -->
 					<li class='input'>
 						<b>购置税</b>
 						<span>
 							<input type="text" @input="checkVal('gouZhiPrice')" placeholder="请输入购置税" name="gouZhiPrice" v-model="gouZhiPrice">&nbsp;元
 						</span>
 					</li>
-					<li class='input' v-if="gouZhiPriceStatus">
+					<!-- <li class='input' v-if="gouZhiPriceStatus">
 						<b>购置税计入方式</b>
 						<span>
 							{{gouZhiPriceName}}
@@ -195,14 +195,14 @@
 							<b v-else class="default">请选择</b>
 							<i class="icon iconfont icon-enter"></i>
 						</span>
-					</li>
+					</li> -->
 					<li class='input'>
 						<b>保险费</b>
 						<span>
 							<input type="text" @input="checkVal('safePrice')" placeholder="请输入保险费" name="safePrice" v-model="safePrice">&nbsp;元
 						</span>
 					</li>
-					<li class='input' v-if="safePriceStatus">
+					<!-- <li class='input' v-if="safePriceStatus">
 						<b>保险费计入方式</b>
 						<span>
 							{{safePriceName}}
@@ -215,14 +215,14 @@
 							<b v-else class="default">请选择</b>
 							<i class="icon iconfont icon-enter"></i>
 						</span>
-					</li>
+					</li> -->
 					<li class='input'>
 						<b>精品装潢</b>
 						<span>
 							<input type="text" @input="checkVal('zhuangXiuPrice')" placeholder="请输入精品装潢费" name="zhuangXiuPrice" v-model="zhuangXiuPrice">&nbsp;元
 						</span>
 					</li>
-					<li class='input' v-if="zhuangXiuPriceStatus">
+					<!-- <li class='input' v-if="zhuangXiuPriceStatus">
 						<b>精品装潢计入方式</b>
 						<span>
 							{{zhuangXiuPriceName}}
@@ -235,7 +235,7 @@
 							<b v-else class="default">请选择</b>
 							<i class="icon iconfont icon-enter"></i>
 						</span>
-					</li>
+					</li> -->
 					<li><b>每期租金</b><span>{{everyPrice}}&nbsp;元</span></li>
 				</ul>
       </div>
@@ -249,11 +249,12 @@
 					<p><span class="fl" @click="pickLspd()">取消</span><span class="fr" @click="pickLspd('','confirm')">确定</span></p>
 				</mt-popup>
 				<mt-popup v-model="firstPayStatu" class="firstPayCont" position="bottom">
-					<ul>
+					<ul v-if="moneyToRate">
 						<li class="input">
 							<b>首付比例</b>
 							<span><input type="text" maxlength='5' @input="changeFirstPay" placeholder='请输入百分比' name="hirePct" v-model.trim="firstPayRate">&nbsp;%</span>
 						</li>
+						<li class="alertLi">当前为百分比计算，<button @click="moneyToRateStatus">改为金额计算</button></li>
 						<li class="input">
 							<b>首付款</b>
 							<span>
@@ -262,20 +263,45 @@
 							</span>
 						</li>
 					</ul>
+					<ul v-else>
+						<li class="input">
+							<b>首付款</b>
+							<span><input type="text" @input="changeFirstPayRate" placeholder="请输入您的金额" name="firstPay" v-model.trim="firstPay">&nbsp;元</span>
+						</li>
+						<li class="alertLi">当前为金额计算，<button @click="moneyToRateStatus">改为百分比计算</button></li>
+						<li>
+							<b>首付比例</b>
+							<span> <b v-if="firstPayRate">{{firstPayRate}}</b>
+							<b v-else class="default">自动计算</b>&nbsp;%</span>
+						</li>
+					</ul>
 					<p><span class="fl" @click="sureFristPay">取消</span><span class="fr" @click="sureFristPay('confirm')">确定</span></p>
 				</mt-popup>
 				<mt-popup v-model="bailStatue" class="firstPayCont"  position="bottom">
-					<ul>
+					<ul v-if="bailToRate">
 						<li class="input">
 							<b>保证金比例</b>
 							<span><input type="text" maxlength='5' @input="changeBail" placeholder="请输入百分比" name="bailPct" v-model.trim="bailRate">&nbsp;%</span>
 						</li>
+						<li class="alertLi">当前为百分比计算，<button @click="bailToRateStatus">改为金额计算</button></li>
 						<li class="input">
 							<b>保证金</b>
 							<span>
 								<b v-if="bail">{{bail}}</b>
 								<b v-else class="default">自动计算</b>&nbsp;元
 							</span>
+						</li>
+					</ul>
+					<ul v-else>
+						<li class="input">
+							<b>保证金金额</b>
+							<span><input type="text" @input="changBailRate" placeholder="请输入您的金额" name="bail" v-model.trim="bail">&nbsp;元</span>
+						</li>
+						<li class="alertLi">当前为金额计算，<button @click="bailToRateStatus">改为百分比计算</button></li>
+						<li>
+							<b>保证金比例</b>
+							<span> <b v-if="bailRate">{{bailRate}}</b>
+							<b v-else class="default">自动计算</b>&nbsp;%</span>
 						</li>
 					</ul>
 					<p><span class="fl" @click="sureBail">取消</span><span class="fr" @click="sureBail('confirm')">确定</span></p>
@@ -400,6 +426,8 @@
 								className: 'slot1',
 								textAlign: 'center'
 							}],
+							moneyToRate:true,
+							bailToRate:true,
 
             }
           },
@@ -418,6 +446,30 @@
 						}
 					},
 					methods:{
+						changBailRate:function(){
+							var val=this.bail
+							if(!/^([1-9]\d{0,9}|0)([.]?|(\.\d{1,2})?)$/.test(val)||!val||val<0){
+								this.bail=''
+								this.bailRate=''
+							}else {
+								this.bailRate=parseFloat(100*this.bail/number).toFixed(6);
+							}
+						},
+						changeFirstPayRate:function(){
+							var val=this.firstPay
+							if(!/^([1-9]\d{0,9}|0)([.]?|(\.\d{1,2})?)$/.test(val)||!val||val<0){
+								this.firstPay=''
+								this.firstPayRate=''
+							}else {
+								this.firstPayRate=parseFloat(100*this.firstPay/this.allPrice).toFixed(6);
+							}
+						},
+						bailToRateStatus:function(){
+							this.bailToRate=!this.bailToRate
+						},
+						moneyToRateStatus:function(){
+							this.moneyToRate=!this.moneyToRate
+						},
 						getData:function(){
 							console.log("prjId"+this.prjId);
 							var _this=this
@@ -550,6 +602,7 @@
 						sureGpsType:function(values){
 							this.gpsTypStatus=!this.gpsTypStatus
 							if(values=='confirm'){
+								this.isTest=false
 								this.gpsTypName=''
 								this.gpsTyp=''
 								for (var i = 0; i < this.selectdGpsArr.length; i++) {
@@ -698,6 +751,7 @@
 						pickerScheme:function(values){
 							this.pickerSchemeStatue=!this.pickerSchemeStatue
 							if(values=='confirm'){
+								this.isTest=false
 								this.SCHEME_NAME=this.pickingObj.schemeName
 								this.SCHEME_NAME_ID=this.pickingObj.schemeCode
 								this.lsPd=''
@@ -757,6 +811,7 @@
 								return
 							}
 							if(values=='confirm'){
+								this.isTest=false
 								if(this.currentName=='lspd'){
 									this.lsPdUntCd=this.pickingObj.value
 									this.lsPdUntCdName=this.pickingObj.label
@@ -821,6 +876,7 @@
 							}
 							this.bailStatue=!this.bailStatue
 							if(value=='confirm'){
+								this.isTest=false
 								this.bailPctMoney=this.bail
 								this.bailPct=this.bailRate
 							}
@@ -832,11 +888,13 @@
 							}
 							this.firstPayStatu=!this.firstPayStatu
 							if(value=='confirm'){
+								this.isTest=false
 								this.hirePctMoney=this.firstPay
 								this.hirePct=this.firstPayRate
 							}
 						},
 						checkVal:function(value){
+							this.isTest=false
 							if (value=='allPrice') {
 								val=this.allPrice;
 								if(!/^([1-9]\d{0,9}|0)([.]?|(\.\d{1,2})?)$/.test(val)||!val||val<0){
@@ -893,10 +951,14 @@
 								gpsTyp:this.gpsTyp,
 								prjQuatPrpsFeeList:[
 									{feeTypCd:'04',cntWayCd:'1',feeAmt:this.groessPrice},
-									{feeTypCd:'10',cntWayCd:this.gpsPriceId,feeAmt:this.gpsPrice},
-									{feeTypCd:'30',cntWayCd:this.gouZhiPriceId,feeAmt:this.gouZhiPrice},
-									{feeTypCd:'32',cntWayCd:this.safePriceId,feeAmt:this.safePrice},
-									{feeTypCd:'51',cntWayCd:this.zhuangXiuPriceId,feeAmt:this.zhuangXiuPrice},
+									// {feeTypCd:'10',cntWayCd:this.gpsPriceId,feeAmt:this.gpsPrice},
+									{feeTypCd:'10',cntWayCd:'2',feeAmt:this.gpsPrice},
+									// {feeTypCd:'30',cntWayCd:this.gouZhiPriceId,feeAmt:this.gouZhiPrice},
+									{feeTypCd:'30',cntWayCd:'2',feeAmt:this.gouZhiPrice},
+									// {feeTypCd:'32',cntWayCd:this.safePriceId,feeAmt:this.safePrice},
+									{feeTypCd:'32',cntWayCd:'2',feeAmt:this.safePrice},
+									// {feeTypCd:'51',cntWayCd:this.zhuangXiuPriceId,feeAmt:this.zhuangXiuPrice},
+									{feeTypCd:'51',cntWayCd:'2',feeAmt:this.zhuangXiuPrice}
 								]
 							};
 							if(this.prjId){
