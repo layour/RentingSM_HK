@@ -224,7 +224,11 @@
 				},
 				handleDate(){
 					var dateStr= new Date(this.pickerDateValue)
-					this.firstDate = dateStr.getFullYear()+"-"+(dateStr.getMonth()+1)+'-'+dateStr.getDate()
+					var month =String(dateStr.getMonth()+1)
+					month= month.length==1?('0'+month):month
+					var day = String(dateStr.getDate())
+					day= day.length==1?('0'+day):day
+					this.firstDate = dateStr.getFullYear()+"-"+(month)+'-'+day
 				},
 				getData:function() {
 					var _this = this;

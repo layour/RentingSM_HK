@@ -40,13 +40,13 @@
 							<b>{{SCHEME_NAME}}</b>
 						</span>
 					</li>
-					<li class="input" v-if="lsPdStatus">
+					<!-- <li class="input" v-if="lsPdStatus">
 						<b>还款期限</b>
 						<span>
 							{{lsPd}}&nbsp;
 						</span>
-					</li>
-					<li class="input" v-else>
+					</li> -->
+					<li class="input">
 						<b>还款期限</b>
 						<span>
 							<input type="text" v-model="lsPd" @input="checkVal('lsPd')" placeholder="请输入还款期限" name="lsPd">&nbsp;
@@ -80,6 +80,12 @@
 							<b>{{annIntRatePct}}&nbsp;%</b>
 						</span>
 					</li>
+					<li>
+						<b>基础年利率</b>
+						<span>
+							<b>{{defAnnIntRatePct}}&nbsp;%</b>
+						</span>
+					</li>
 					<li @click="pickLspd('payType')">
 						<b>支付方式</b>
 						<span>
@@ -88,13 +94,13 @@
 							<i class="icon iconfont icon-enter"></i>
 						</span>
 					</li>
-					<li v-if='hirePctStatue'>
+					<!-- <li v-if='hirePctStatue'>
 						<b>首付款</b>
 						<span>
 							<b>{{hirePct}}&nbsp;% &nbsp;&nbsp;&nbsp;{{hirePctMoney}}&nbsp;元</b>
 						</span>
-					</li>
-					<li @click="sureFristPay" v-else>
+					</li> -->
+					<li @click="sureFristPay">
 						<b>首付款</b>
 						<span>
 							<b v-if="hirePct">{{hirePct}}&nbsp;% &nbsp;&nbsp;&nbsp;{{hirePctMoney}}&nbsp;元</b>
@@ -102,13 +108,13 @@
 							<i class="icon iconfont icon-enter"></i>
 						</span>
 					</li>
-					<li v-if="bailPctStatue">
+					<!-- <li v-if="bailPctStatue">
 						<b>保证金</b>
 						<span>
 							<b>{{bailPct}}&nbsp;% &nbsp;&nbsp;&nbsp;{{bailPctMoney}}&nbsp;元</b>
 						</span>
-					</li>
-					<li @click="sureBail" v-else>
+					</li> -->
+					<li @click="sureBail">
 						<b>保证金</b>
 						<span>
 							<b v-if="bailPct">{{bailPct}}&nbsp;% &nbsp;&nbsp;&nbsp;{{bailPctMoney}}&nbsp;元</b>
@@ -325,6 +331,7 @@
 								textAlign: 'center'
 							}],
 							annIntRatePct:'',
+							defAnnIntRatePct:'',
 							listYearRate:[],
 							AnnIntRatePctList:[],
 							payWayCd:'',
@@ -444,7 +451,8 @@
 											_this.lsPdUntCdName=dataObj.lsPdUntNm
 											_this.payWayCd=dataObj.payWayCd
 											_this.payWay=dataObj.payWay
-											// _this.annIntRatePct=dataObj.annIntRatePct
+											_this.annIntRatePct=dataObj.annIntRatePct
+											_this.defAnnIntRatePct=dataObj.defAnnIntRatePct
 											_this.hirePct=dataObj.hirePct
 											_this.hirePctMoney=parseFloat(_this.hirePct*_this.allPrice*0.01).toFixed(2)
 											_this.bailPct=dataObj.bailPct
@@ -762,6 +770,7 @@
 									if(this.AnnIntRatePctList.length==1){this.annIntRatePct=this.AnnIntRatePctList[0].value}
 								}else if (this.currentName=='yearRate') {
 									this.annIntRatePct=this.pickingObj.value
+									this.defAnnIntRatePct=this.pickingObj.value
 								}else if (this.currentName=='payType') {
 									this.payWayCd=this.pickingObj.value
 									this.payWay=this.pickingObj.label
@@ -949,10 +958,14 @@
 								proQuatPrpsCfgM3:{id:this.SCHEME_NAME_ID},
 								prjQuatPrpsFeeList:[
 									{feeTypCd:'04',cntWayCd:'1',feeAmt:this.groessPrice},
-									{feeTypCd:'10',cntWayCd:this.gpsPriceId,feeAmt:this.gpsPrice},
-									{feeTypCd:'30',cntWayCd:this.gouZhiPriceId,feeAmt:this.gouZhiPrice},
-									{feeTypCd:'32',cntWayCd:this.safePriceId,feeAmt:this.safePrice},
-									{feeTypCd:'51',cntWayCd:this.zhuangXiuPriceId,feeAmt:this.zhuangXiuPrice},
+									// {feeTypCd:'10',cntWayCd:this.gpsPriceId,feeAmt:this.gpsPrice},
+									{feeTypCd:'10',cntWayCd:'2',feeAmt:this.gpsPrice},
+									// {feeTypCd:'30',cntWayCd:this.gouZhiPriceId,feeAmt:this.gouZhiPrice},
+									{feeTypCd:'30',cntWayCd:'2',feeAmt:this.gouZhiPrice},
+									// {feeTypCd:'32',cntWayCd:this.safePriceId,feeAmt:this.safePrice},
+									{feeTypCd:'32',cntWayCd:'2',feeAmt:this.safePrice},
+									// {feeTypCd:'51',cntWayCd:this.zhuangXiuPriceId,feeAmt:this.zhuangXiuPrice},
+									{feeTypCd:'51',cntWayCd:'2',feeAmt:this.zhuangXiuPrice},
 								]
 							};
 							console.log(JSON.stringify(param));
