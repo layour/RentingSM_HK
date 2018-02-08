@@ -302,9 +302,9 @@
 				</div>
 			</div>
 		</div>
-		<div class="um-footer">
+		<!-- <div class="um-footer">
 			<button class="btn" @click="opensubmitFinanl">提交评审</button>
-		</div>
+		</div> -->
 	</div>
 	<script src="../../js/summer.js"></script>
 	<script src="../../js/jquery.min.js"></script>
@@ -426,6 +426,9 @@
 			submitSure.getData(project_Id);
 			submitSure.getJBPMData(project_Id);
 		};
+		function opensubmitFinanl(){
+			submitSure.opensubmitFinanl();
+		}
 		$(function() {
 		/*导航更换js*/
 		$('ul.um-tabbar-switch  li').click(function() {
