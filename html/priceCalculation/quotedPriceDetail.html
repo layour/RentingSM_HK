@@ -222,6 +222,18 @@
 							<input type="text" @input="checkVal('zhuangXiuPrice')" placeholder="请输入精品装潢费" name="zhuangXiuPrice" v-model="zhuangXiuPrice">&nbsp;元
 						</span>
 					</li>
+					<li class="input">
+						<b>平台费</b>
+						<span>
+							<input type="text" @input="checkVal('pingtai')" placeholder="请输入平台费" name="pingtai" v-model="pingtai">&nbsp;元
+						</span>
+					</li>
+					<li class="input">
+						<b>其他加融项</b>
+						<span>
+							<input type="text" @input="checkVal('jiarong')" placeholder="请输入加融项" name="jiarong" v-model="jiarong">&nbsp;元
+						</span>
+					</li>
 					<!-- <li class='input' v-if="zhuangXiuPriceStatus">
 						<b>精品装潢计入方式</b>
 						<span>
@@ -418,7 +430,8 @@
 							],
 							allPrice:'',
 							everyPrice:'',
-
+							pingtai:'',
+							jiarong:'',
 							cntWaySlots:[{
 								flex: 1,
 								values: [],

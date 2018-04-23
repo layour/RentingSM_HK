@@ -155,8 +155,8 @@ function ajaxRequest(paramObj, successCallback, errorCallback) {
 			summer.hideProgress();
 			summer.toast({
 				msg: response.data.msg
-			})
-			return
+			});
+			return;
 		}
 		successCallback(response);
 	}, function (response) {

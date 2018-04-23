@@ -28,12 +28,13 @@
 						<span>{{dealer}}</span>
 					</td>
 				</tr>
-				<tr @click="surePickerOldCar">
+				<tr>
+				<!-- <tr @click="surePickerOldCar"> -->
 					<td>是否二手车</td>
 					<td>
 						<span v-if='isOldCar'>{{isOldCar}}</span>
-						<span class="grayColor" v-else>请选择</span>
-						<i class="icon iconfont icon-enter"></i>
+						<!-- <span class="grayColor" v-else>请选择</span>
+						<i class="icon iconfont icon-enter"></i> -->
 					</td>
 				</tr>
 				<tr @click="surePickerColor('color')">
@@ -52,19 +53,19 @@
 						<i class="icon iconfont icon-enter"></i>
 					</td>
 				</tr>
-				<template v-if="isOldCar=='是'">
-					<tr>
+				<tr>
 						<td>车辆识别号</td>
 						<td class='oldCar'>
 							<input type="text" @blur="checkCarNumber" name="carNumber" placeholder="请输入车辆识别号" v-model="carNumber">
 						</td>
-					</tr>
-					<tr>
+				</tr>
+				<tr>
 						<td>发动机号</td>
 						<td class='oldCar'>
 							<input type="text" name="powerNumber" placeholder="请输入发动机号" v-model="powerNumber">
 						</td>
-					</tr>
+				</tr>
+				<template v-if="isOldCar=='是'">
 					<tr>
 						<td>二手车里程数(公里)</td>
 						<td class='oldCar'>
@@ -182,7 +183,7 @@
 					guanXiOrColor:'',
 					guanXi:'',
 					guanXiId:'',
-					isOldCar: '否',
+					isOldCar: '',
 					carNumber: '',
 					powerNumber: '',
 					mileage: '',
@@ -222,7 +223,7 @@
 				openPickerDate:function(){
 					this.$refs.picker.open()
 				},
-				handleDate(){
+				handleDate:function(){
 					var dateStr= new Date(this.pickerDateValue)
 					var month =String(dateStr.getMonth()+1)
 					month= month.length==1?('0'+month):month
@@ -241,16 +242,25 @@
 						}
 					}, function (res) {
 						summer.hideProgress()
-						console.log("返回数据",JSON.stringify(res.data.datas.prjBscInfo.prjEquBscInfo),JSON.stringify(res.data.datas.prjBscInfo.prjEqiDtlCar));
+						console.log("返回数据",JSON.stringify(res.data.datas.prjBscInfo.splBscInfo.sellTypCd),JSON.stringify(res.data.datas.prjBscInfo.prjEquBscInfo),JSON.stringify(res.data.datas.prjBscInfo.prjEqiDtlCar));
 						_this.colorArray = res.data.datas.braTypeList
 						_this.transParam=res.data.datas.braList
 						_this.regionArray=res.data.datas.regionArray
 						_this.guanXiArr=res.data.datas.driverRlTypArray
 
 						_this.dealer=res.data.datas.prjBscInfo.splBscInfo.splNm
+						if(res.data.datas.prjBscInfo.splBscInfo.sellTypCd == "2"){
+							_this.isOldCar = "是"
+							this.color = "二手车";
+							this.colorId = "6";
+						}else{
+							_this.isOldCar = "否"
+							this.color = "";
+							this.colorId = "";
+						}
 						var resData=res.data.datas.prjBscInfo.prjEquBscInfo;
 						if(resData){
-							_this.isOldCar=resData.isNew=='1'?"是":"否"
+							_this.isOldCar=resData.isNew=='1'?"是":"否" //1是二手车 2是新车
 							_this.colorId=resData.braTypCd
 							_this.prjEquBscInfo_id=resData.id
 							for(var i=0;i<res.data.datas.braTypeList.length;i++){
@@ -274,11 +284,11 @@
 										_this.guanXi=res.data.datas.driverRlTypArray[j].label
 									}
 								}
+								_this.carNumber=oldCarData.vinNo
+								_this.powerNumber=oldCarData.engNo
 							}
 							_this.carColor=oldCarData.carCl
 							if(resData.isNew=='1'){
-								_this.carNumber=oldCarData.vinNo
-								_this.powerNumber=oldCarData.engNo
 								_this.mileage=oldCarData.usedCarMil
 								_this.firstDate=oldCarData.usedCarReg
 								_this.dealCity=oldCarData.rgnReCd.name+oldCarData.rgnPrCd.name+oldCarData.rgnCyCd.name+oldCarData.rgnToCd.name
@@ -317,7 +327,9 @@
 						if(vinNo.length != 17 || vinNo.indexOf("O")>=0 || vinNo.indexOf("Q")>=0 || vinNo.indexOf("I")>=0){
 							summer.toast({msg:"车辆识别代号输入有误！车辆识别代号内不能包O、I、Q且长度必须17位。"})
 							return false
-					  }
+					  }else{
+							return true
+						}
 					}
 				},
 				pickerDealCity:function(){
@@ -378,7 +390,6 @@
 					this.pickedOldCar = values[0]
 				},
 				surePickerColor:function(param) {
-					this.pickerColorStatus = !this.pickerColorStatus;
 					if(param=='color'){
 						this.guanXiOrColor=param
 						this.slots[0].values=this.colorArray
@@ -389,19 +400,31 @@
 
 					if (param == 'confirm') {
 						if(this.guanXiOrColor=='color'){
-							this.color = this.pickedColor.label;
-							this.colorId = this.pickedColor.value;
-							if(this.color=="二手车"){
-								this.isOldCar="是"
+							if(this.isOldCar=="是"){
+								if(this.pickedColor.label =="二手车"){
+									this.color = this.pickedColor.label;
+									this.colorId = this.pickedColor.value;
+								}else {
+									summer.toast({msg: '只能选择二手车'})
+									return
+								}
 							}else {
-								this.isOldCar="否"
+								if(this.pickedColor.label =="二手车"){
+									summer.toast({msg: '不能选择二手车'})
+									return
+								}else {
+									this.color = this.pickedColor.label;
+									this.colorId = this.pickedColor.value;
+								}
 							}
+
 						}else if (this.guanXiOrColor=='guanXi') {
 							this.guanXi = this.pickedColor.label;
 							this.guanXiId = this.pickedColor.value;
 						}
 
 					}
+					this.pickerColorStatus = !this.pickerColorStatus;
 				},
 				surePickerOldCar:function(param) {
 					this.pickerOldCarStatus = !this.pickerOldCarStatus;
@@ -418,14 +441,14 @@
 				},
 				save:function() {
 					var _this=this
-					if (!this.dealer  || !this.isOldCar||!this.color || !this.carModels ||!this.carColor|| !this.realityPrice) {
+					if (!this.dealer  || !this.isOldCar||!this.color || !this.carModels || !this.realityPrice) {
 						summer.toast({
-							msg: '请填写车辆的所有信息'
+							msg: '请完善车辆的信息'
 						})
 						return
 					}
 					if(this.isOldCar=="是"){
-						if (!this.carNumber  || !this.powerNumber||!this.mileage || !this.firstDate ||!this.customerName|| !this.carId||!this.dealCity) {
+						if (!this.carNumber  || !this.powerNumber||!this.mileage || !this.firstDate ||!this.customerName|| !this.carId||!this.dealCity || !this.carColor) {
 							summer.toast({
 								msg: '请填写车辆的所有信息'
 							})
