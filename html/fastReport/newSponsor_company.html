@@ -14,6 +14,36 @@
 			color: #DEDEDE;
 			font-size: 0.28rem;
 		}
+		.pickerColor {
+			width: 100%;
+			z-index: 10;
+			background: #ffffff;
+		}
+
+		.pickerColor>p {
+			line-height: .88rem;
+			padding: 0 .56rem;
+			color: #039BE5;
+			border-top: 1px solid #E0E0E0;
+			overflow: hidden;
+		}
+
+		.pickerColor>p span {
+			color: #34aadc;
+		}
+
+		.mint-cell-wrapper {
+			background-size: 100% 0px;
+			border-bottom: 1px solid #f7f7f7;
+		}
+
+		.pickerColor>p span:last-child {
+			float: right;
+		}
+
+		.pickerColor>p span:first-child {
+			float: left;
+		}
 
 		.topheader {
 			position: relative;
@@ -109,11 +139,39 @@
 			<mt-field label="社会统一信用代码" placeholder="请输入社会统一信用代码" v-model="message.succ"> </mt-field>
 			<mt-field label="法人姓名" placeholder="请输入法人姓名" v-model="message.corpRepName"></mt-field>
 			<mt-field label="法人手机号" placeholder="请输入法人手机号" v-model="message.corpRepTel"></mt-field>
+			<div @click="surePickerCardtype" class="item">
+					<p class="pl10 pr10  um-box">
+						<span class="um-bf1">法人代表证件类型</span> <span class="um-bf1 tr"><span v-if='message.corpRepCertTypCdNm' class="first">{{message.corpRepCertTypCdNm}}</span><span v-else class="second">请选择</span> <i class="icon iconfont icon-enter"></i></span>
+					</p>
+			</div>
+			<mt-field label="法人代表身份证号码" placeholder="请输入法人代表身份证号码" v-model="message.corpRepCertNo"></mt-field>
+			<div @click="surePickerCompanytype" class="item">
+					<p class="pl10 pr10  um-box">
+						<span class="um-bf1">企业性质</span> <span class="um-bf1 tr"><span v-if='message.corpTypCdNm' class="first">{{message.corpTypCdNm}}</span><span v-else class="second">请选择</span> <i class="icon iconfont icon-enter"></i></span>
+					</p>
+				</div>
+				<mt-field label="企业成立日期" placeholder="请输入企业成立日期" v-model="message.regDt"></mt-field>
+				<mt-field label="企业有效日期" placeholder="请输入企业有效日期" v-model="message.expDt"></mt-field>
+				<mt-field label="通讯地址" placeholder="请输入通讯地址" v-model="message.postAddr"></mt-field>
 			<!-- <div class="text">
 				 <textarea class = "text" placeholder="担保能力说明" maxlength="300" v-model="message.GUARANTEE_CAPACITY"></textarea>
 			</div> -->
 		</div>
 		<div class="um-footer">
+				<mt-popup v-model="pickerCardtypeStatus" position='bottom' class="pickerColor">
+						<mt-picker :slots="slots1" @change="onValuesChange1"></mt-picker>
+						<p>
+							<span class="" @click="surePickerCardtype">取消</span>
+							<span class="" @click="surePickerCardtype('confirm')">确定</span>
+						</p>
+					</mt-popup>
+					<mt-popup v-model="pickerCompanytypeStatus" position='bottom' class="pickerColor">
+						<mt-picker :slots="slots2" @change="onValuesChange2"></mt-picker>
+						<p>
+							<span class="" @click="surePickerCompanytype">取消</span>
+							<span class="" @click="surePickerCompanytype('confirm')">确定</span>
+						</p>
+					</mt-popup>
 			<!--<mt-datetime-picker ref="picker" v-model="pickerValue" type="date" cancel-text='取消' confirm-text='确定' :start-date='new Date("1950-01-01")' :end-date="noweDate" @confirm="handleConfirm">
 			</mt-datetime-picker>-->
 		</div>
@@ -132,6 +190,10 @@
 					cardShow: false,
 					cardUrl: "",
 					pickerVisible: "",
+					pickerCardtypeStatus:false,
+					pickerCompanytypeStatus:false,
+					pickerCardtype:'',
+					pickerCompanytype:'',
 					pickerDate: "",
 					pickerValue: new Date(),
 					surePicekerDateVal: '',
@@ -141,14 +203,36 @@
 					CLIENT_ID:'',
 					GID:'',
 					id:'',//担保人id，修改时需要
+					slots1: [{
+						flex: 1,
+						values: ['身份证', '已婚', '离婚', '丧偶', '未说明的婚姻状况'],
+						//values: [],
+						defaultIndex: 0,
+						className: 'slot1',
+						textAlign: 'center'
+					}],
+					slots2: [{
+						flex: 1,
+						values: ['国企', '私企'],
+						defaultIndex: 0,
+						className: 'slot1',
+						textAlign: 'center'
+					}],
 					message: {
 						warNm:'',
 						succ:'',
 						corpRepName:'',
 						corpRepTel:'',
 						prjId:'',
-						id:''
-
+						id:'',
+						corpRepCertTypCd:'',//法人代表证件类型
+						corpRepCertTypCdNm:'',
+						corpTypCdNm:'',//企业性质
+						corpTypCd:'',
+						corpRepCertNo:'',//身份证号码
+						regDt:'',//企业成立日期
+						expDt:'',//有效日期
+						postAddr:''//通讯地址
 					}
 
 				}
@@ -185,6 +269,36 @@
 						console.log(err);
 						summer.hideProgress();
 					});
+				},
+				onValuesChange1: function (picker, values) {
+					this.pickerCardtype = values[0];
+				},
+				surePickerCardtype: function (param) {
+					this.pickerCardtypeStatus = !this.pickerCardtypeStatus;
+					if (param == 'confirm') {
+						this.message.corpRepCertTypCdNm = this.pickerCardtype;
+					    //  if(this.message.isHasLicenseNm=="是"){
+						// 	this.message.isHasLicense=1;
+						//  }else{
+
+						// 	this.message.isHasLicense=2;
+						//  }
+					}
+				},
+
+				onValuesChange2: function (picker, values) {
+					this.pickerCompanytype= values[0];
+				},
+				surePickerCompanytype: function (param) {
+					this.pickerCompanytypeStatus = !this.pickerCompanytypeStatus;
+					if (param == 'confirm') {
+						this.message.corpTypCdNm = this.pickerCompanytype;
+						// this.totalData.driverLicenseType.map(function(e,i){
+						// 	if(e.label==this.message.driverLicenseNm){
+						// 		this.message.driverLicenseType=this.totalData.driverLicenseType[i].value;
+						// 	}
+						// });
+					}
 				},
 				selectAddr:function() {
 					summer.setStorage("selectFrom", "newSponsor_company");
@@ -289,7 +403,23 @@
 							msg: "法人手机号格式不正确"
 						});
 						return false;
-					}  
+					}else if(this.message.corpRepCertTypCd == "") {
+						summer.toast({
+							msg: "证件类型不能为空"
+						});
+						return false;
+					}else if(this.message.corpRepCertNo == "") {
+						summer.toast({
+							msg: "证件号码不能为空"
+						});
+						return false;
+					} 
+					else if(this.message.postAddr == "") {
+						summer.toast({
+							msg: "通讯地址不能为空"
+						});
+						return false;
+					}    
 					return true;
 				},
 				complete: function() {
