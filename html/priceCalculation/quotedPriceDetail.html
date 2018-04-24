@@ -49,7 +49,7 @@
 					<li class="input">
 						<b>还款期限</b>
 						<span>
-							<input type="text" v-model="lsPd" @input="checkVal('lsPd')" placeholder="请输入还款期限" name="lsPd">&nbsp;
+							<input @blur="computedYearRate" type="text" v-model="lsPd" @input="checkVal('lsPd')" placeholder="请输入还款期限" name="lsPd">&nbsp;
 						</span>
 					</li>
 					<li @click="pickLspd('lspd')"  class="spec" v-if="LspdList.length>1">
@@ -108,6 +108,14 @@
 							<i class="icon iconfont icon-enter"></i>
 						</span>
 					</li>
+					<li class="input">
+						<b>车辆融资金额</b>
+						<span>
+							<input v-if="rongZiEdit" type="text" @input="checkVal('rongZiPrice')" @blur="computedHirePct" placeholder="请输入融资金额" name="rongZiPrice" v-model="rongZiPrice">
+							<b v-else>{{rongZiPrice}}</b>
+							&nbsp;元
+						</span>
+					</li>
 					<li v-if="bailPctStatue">
 						<b>保证金</b>
 						<span>
@@ -122,13 +130,35 @@
 							<i class="icon iconfont icon-enter"></i>
 						</span>
 					</li>
-					<li class='input'>
+					<li @click="pickLspd('fuwu')">
+						<b>是否有咨询服务费</b>
+						<span>
+							<b v-if="fuwuName">{{fuwuName}}</b>
+							<b v-else class="default">请选择</b>
+							<i class="icon iconfont icon-enter"></i>
+						</span>
+					</li>
+					<li class='input' v-if="fuwuName=='是'">
+						<b>咨询服务费</b>
+						<span>
+							<b>{{groessPrice}} &nbsp;元</b>
+						</span>
+					</li>
+					<!-- <li class='input'>
 						<b>咨询服务费</b>
 						<span>
 							<input type="text" @input="checkVal('groessPrice')" placeholder="请输入手续费" name="groessPrice" v-model="groessPrice">&nbsp;元
 						</span>
+					</li> -->
+					<li @click="pickLspd('txJe')">
+						<b>贴息</b>
+						<span>
+							<b v-if="txJeName">{{txJeName}}</b>
+							<b v-else class="default">请选择</b>
+							<i class="icon iconfont icon-enter"></i>
+						</span>
 					</li>
-					<li class='input spec'>
+					<li class='input spec' v-if="txJeName!='无'">
 						<b>贴息金额</b>
 						<span>
 							<input type="text" @input="checkVal('txJe')" placeholder="请输入贴息金额" name="txJe" v-model="txJe">&nbsp;元
@@ -156,72 +186,37 @@
 							<i class="icon iconfont icon-enter"></i>
 						</span>
 					</li>
-					<li class='input'>
+					<li class='input' v-if="gpsPriceStatus">
 						<b>GPS费</b>
 						<span>
-							<input type="text" @input="checkVal('gpsPrice')" placeholder="请输入GPS费" name="gpsPrice" v-model="gpsPrice">&nbsp;元
+							<input v-if="gpsEdit" type="text" @input="checkVal('gpsPrice')" placeholder="请输入GPS费" name="gpsPrice" v-model="gpsPrice">
+							<b v-else>{{gpsPrice}}</b>
+							&nbsp;元
 						</span>
 					</li>
-					<!-- <li class='input' v-if="gpsPriceStatus">
-						<b>GPS费计入方式</b>
+					<li class='input' v-if="safePriceStatus">
+						<b>保险费</b>
 						<span>
-							{{gpsPriceName}}
+							<input v-if="safePriceEdit" type="text" @input="checkVal('safePrice')" placeholder="请输入保险费" name="safePrice" v-model="safePrice">
+							<b v-else>{{safePrice}}</b>
+							&nbsp;元
 						</span>
 					</li>
-					<li class='input' @click="pickLspd('gpsPrice')" v-else>
-						<b>GPS费计入方式</b>
-						<span>
-							<b v-if="gpsPriceName">{{gpsPriceName}}</b>
-							<b v-else class="default">请选择</b>
-							<i class="icon iconfont icon-enter"></i>
-						</span>
-					</li> -->
 					<li class='input'>
 						<b>购置税</b>
 						<span>
 							<input type="text" @input="checkVal('gouZhiPrice')" placeholder="请输入购置税" name="gouZhiPrice" v-model="gouZhiPrice">&nbsp;元
 						</span>
 					</li>
-					<!-- <li class='input' v-if="gouZhiPriceStatus">
-						<b>购置税计入方式</b>
-						<span>
-							{{gouZhiPriceName}}
-						</span>
-					</li>
-					<li class='input' @click="pickLspd('gouZhiPrice')"  v-else>
-						<b>购置税计入方式</b>
-						<span>
-							<b v-if="gouZhiPriceName">{{gouZhiPriceName}}</b>
-							<b v-else class="default">请选择</b>
-							<i class="icon iconfont icon-enter"></i>
-						</span>
-					</li> -->
-					<li class='input'>
-						<b>保险费</b>
-						<span>
-							<input type="text" @input="checkVal('safePrice')" placeholder="请输入保险费" name="safePrice" v-model="safePrice">&nbsp;元
-						</span>
-					</li>
-					<!-- <li class='input' v-if="safePriceStatus">
-						<b>保险费计入方式</b>
-						<span>
-							{{safePriceName}}
-						</span>
-					</li>
-					<li class='input' @click="pickLspd('safePrice')"   v-else>
-						<b>保险费计入方式</b>
-						<span>
-							<b v-if="safePriceName">{{safePriceName}}</b>
-							<b v-else class="default">请选择</b>
-							<i class="icon iconfont icon-enter"></i>
-						</span>
-					</li> -->
-					<li class='input'>
+					<li class='input' v-if="zhuangXiuPriceStatus">
 						<b>精品装潢</b>
 						<span>
-							<input type="text" @input="checkVal('zhuangXiuPrice')" placeholder="请输入精品装潢费" name="zhuangXiuPrice" v-model="zhuangXiuPrice">&nbsp;元
+							<input v-if="zhuangXiuEdit" type="text" @input="checkVal('zhuangXiuPrice')" placeholder="请输入精品装潢费" name="zhuangXiuPrice" v-model="zhuangXiuPrice">
+							<b v-else>{{zhuangXiuPrice}}</b>
+							&nbsp;元
 						</span>
 					</li>
+
 					<li class="input">
 						<b>平台费</b>
 						<span>
@@ -234,32 +229,22 @@
 							<input type="text" @input="checkVal('jiarong')" placeholder="请输入加融项" name="jiarong" v-model="jiarong">&nbsp;元
 						</span>
 					</li>
-					<!-- <li class='input' v-if="zhuangXiuPriceStatus">
-						<b>精品装潢计入方式</b>
-						<span>
-							{{zhuangXiuPriceName}}
-						</span>
-					</li>
-					<li class='input spec'  @click="pickLspd('zhuangXiuPrice')" v-else>
-						<b>精品装潢计入方式</b>
-						<span>
-							<b v-if="zhuangXiuPriceName">{{zhuangXiuPriceName}}</b>
-							<b v-else class="default">请选择</b>
-							<i class="icon iconfont icon-enter"></i>
-						</span>
-					</li> -->
+
 					<li><b>每期租金</b><span>{{everyPrice}}&nbsp;元</span></li>
 				</ul>
       </div>
 			<div class="um-footer" id="footer">
+				<!-- 选择报价方案 -->
 				<mt-popup v-model="pickerSchemeStatue" class="pickerPrice"  position='bottom' >
 					<mt-picker value-key="schemeName" :slots="pickerSchemeList" @change="pickerSchemeChange"></mt-picker>
 					<p><span class="fl" @click="pickerScheme">取消</span><span class="fr" @click="pickerScheme('confirm')">确定</span></p>
 				</mt-popup>
+				<!-- 所有label共用的选择picker 报价方案 支付方式 贴息 gps-->
 				<mt-popup v-model="pickLspdStatus" class="pickerPrice"  position='bottom' >
 					<mt-picker value-key="label" :slots="pickerLspdList" @change="pickerSchemeChange"></mt-picker>
 					<p><span class="fl" @click="pickLspd()">取消</span><span class="fr" @click="pickLspd('','confirm')">确定</span></p>
 				</mt-popup>
+				<!-- 首付款 -->
 				<mt-popup v-model="firstPayStatu" class="firstPayCont" position="bottom">
 					<ul v-if="moneyToRate">
 						<li class="input">
@@ -289,6 +274,7 @@
 					</ul>
 					<p><span class="fl" @click="sureFristPay">取消</span><span class="fr" @click="sureFristPay('confirm')">确定</span></p>
 				</mt-popup>
+				<!-- 保证金 -->
 				<mt-popup v-model="bailStatue" class="firstPayCont"  position="bottom">
 					<ul v-if="bailToRate">
 						<li class="input">
@@ -318,6 +304,7 @@
 					</ul>
 					<p><span class="fl" @click="sureBail">取消</span><span class="fr" @click="sureBail('confirm')">确定</span></p>
 				</mt-popup>
+				<!-- gps类型 -->
 				<mt-popup v-model="gpsTypStatus" class="firstPayCont"  position="bottom">
 					<ul class="gpsTypeList">
 						<li class="input" v-for="(item,index) in gpsTypList" @click="toggleGpsType($event,item.value,item.label)" :key="index+'item'" :class="{active:checkSelected('item.value')}">
@@ -377,18 +364,27 @@
 							pickerPayWayList:[],
 							firstPayStatu:false,
 							bailStatue:false,
-							firstPay:'',
+							firstPay:'', //首付款 选择未确认
 							firstPayRate:'',
 							hirePct:'',
-							hirePctMoney:'',
+							hirePctMoney:'', //确认的首付款
 							hirePctStatue:false,
 							bail:'',
 							bailRate:'',
 							bailPct:'',
 							bailPctStatue:false,
 							bailPctMoney:'',
-							txJe:'',
-							groessPrice:'',
+
+							txJeName:'', //选择的贴息方式
+							txJxId:'',
+							txJeArr:[], //贴息可选数组
+							txJe:'', //贴息金额
+
+							fuwuName: '',//选择的服务费方式
+							fuwuId:'',
+							fuwuArr:[],
+							groessPriceRate:0, //服务费比例
+							groessPrice:'', //服务费
 
 							gpsIns:'',
 							gpsInsStatus:false, //字典一个值为true
@@ -398,29 +394,33 @@
 								{label:'否',value:2}
 							],
 
-							gpsTyp:'',
+							gpsTyp:'', //选中的gps类型id
 							gpsTypStatus:false,
-							gpsTypName:'',
-							selectdGpsArr:[],
+							gpsTypName:'', //选中的类型名字
+							selectdGpsArr:[], //选中的gps类型
 							gpsTypList:[
 								{label:'明',value:1},
 								{label:'暗',value:2}
 							],
 
-							gpsPrice:'',
-							gpsPriceStatus:'',
+							gpsPrice:'', //gps费用
+							gpsPriceStatus:'', //是否显示
+							gpsEdit:'', //是否可编辑
 							gpsPriceId:'',
 							gpsPriceName:'',
 							gouZhiPrice:'',
 							gouZhiPriceStatus:'',
+							gouZhiEdit:'',
 							gouZhiPriceId:'',
 							gouZhiPriceName:'',
 							safePrice:'',
 							safePriceStatus:'',
+							safePriceEdit:'',
 							safePriceId:'',
 							safePriceName:'',
 							zhuangXiuPrice:'',
 							zhuangXiuPriceStatus:'',
+							zhuangXiuEdit:'',
 							zhuangXiuPriceId:'',
 							zhuangXiuPriceName:'',
 
@@ -428,10 +428,16 @@
 								{label:'融资额',value:2},
 								{label:'首付款',value:1}
 							],
-							allPrice:'',
-							everyPrice:'',
-							pingtai:'',
-							jiarong:'',
+							allPrice:'', //车辆价格
+							everyPrice:'', //每期款
+							pingtai:'', //平台费
+							pingtaiStatus:'',
+							pingtaiEdit:'',
+							jiarong:'', //加融项
+							jiarongStatus:'',
+							jiarongEdit:'',
+							rongZiPrice:'', //融资额
+							rongZiEdit:'', //编辑
 							cntWaySlots:[{
 								flex: 1,
 								values: [],
@@ -459,6 +465,11 @@
 						}
 					},
 					methods:{
+						computedHirePct:function(){
+							 this.hirePctMoney = parseInt(this.allPrice - this.rongZiPrice)
+							 this.hirePct = parseFloat(this.hirePctMoney/this.allPrice).toFixed(6)
+							 this.groessPrice =parseInt(this.rongZiPrice * this.groessPriceRate*0.01)
+						},
 						changBailRate:function(){
 							var val=this.bail
 							if(!/^([1-9]\d{0,9}|0)([.]?|(\.\d{1,2})?)$/.test(val)||!val||val<0){
@@ -500,10 +511,10 @@
 										summer.toast({msg:"无可用方案，请联系管理员维护"})
 										return
 									}
-									if(res.data.quatList.length==1){
-										_this.SCHEME_NAME_ID=res.data.quatList[0].schemeCode
-										_this.SCHEME_NAME=res.data.quatList[0].schemeName
-									}
+									// if(res.data.quatList.length==1){
+									// 	_this.SCHEME_NAME_ID=res.data.quatList[0].schemeCode
+									// 	_this.SCHEME_NAME=res.data.quatList[0].schemeName
+									// }
 									if(_this.prjId){
 										var dataObj=res.data.prjQuatPrps
 										_this.allPrice=res.data.carZe
@@ -519,15 +530,18 @@
 											_this.annIntRatePct=dataObj.annIntRatePct
 											_this.defAnnIntRatePct=dataObj.defAnnIntRatePct
 											_this.hirePct=dataObj.hirePct
-											_this.hirePctMoney=parseFloat(_this.hirePct*_this.allPrice*0.01).toFixed(2)
+											_this.hirePctMoney=parseInt(_this.hirePct*_this.allPrice*0.01)
 											_this.bailPct=dataObj.bailPct
-											_this.bailPctMoney=parseFloat(_this.bailPct*_this.allPrice*0.01).toFixed(2)
+											_this.bailPctMoney=parseInt(_this.bailPct*_this.allPrice*0.01)
 											_this.txJe=dataObj.txJe
 											_this.gpsIns=dataObj.gpsIns
 											_this.gpsInsName=dataObj.gpsInsNm
 											_this.gpsTyp=dataObj.gpsTyp
 											_this.gpsTypList=res.data.GPSTypArray
-
+											//贴息 咨询费 融资额
+											_this.rongZiPrice =dataObj.actLsAmt
+											_this.tiJxId = dataObj.tiexiCd
+											_this.fuwuId =dataObj.isHasSxf
 											if(_this.gpsTyp){
 												_this.GPSTypArray=_this.gpsTyp.split(",")
 												for(var k=0;k<_this.GPSTypArray.length;k++){
@@ -539,7 +553,6 @@
 												}
 											}
 											_this.everyPrice=dataObj.eachEstRntAmt
-
 
 											for(var j=0;j<dataObj.prjQuatPrpsFeeList.length;j++){
 												if(dataObj.prjQuatPrpsFeeList[j].feeTypCd=='04'){
@@ -560,13 +573,15 @@
 													_this.zhuangXiuPrice=dataObj.prjQuatPrpsFeeList[j].feeAmt
 													_this.zhuangXiuPriceId=dataObj.prjQuatPrpsFeeList[j].cntWayCd
 													if(_this.zhuangXiuPriceId=='1'){_this.zhuangXiuPriceName='首付款'}else{_this.zhuangXiuPriceName='融资额'}
+												}else if(dataObj.prjQuatPrpsFeeList[j].feeTypCd=='35'){
+													_this.pingtai=dataObj.prjQuatPrpsFeeList[j].feeAmt
+												}else if(dataObj.prjQuatPrpsFeeList[j].feeTypCd=='36'){
+													_this.jiarong=dataObj.prjQuatPrpsFeeList[j].feeAmt
 												}
+
 											}
 										}
-										if(_this.SCHEME_NAME_ID!=''){
-											_this.checkDate()
 
-										}
 									}
 								},function(err){
 									console.log("err",err);
@@ -582,10 +597,10 @@
 									console.log("res",JSON.stringify(res));
 									summer.hideProgress()
 									_this.pickerSchemeList[0].values=res.data.datas.quatList
-									if(res.data.datas.quatList.length==1){
-										_this.SCHEME_NAME_ID=res.data.datas.quatList[0].schemeCode
-										_this.SCHEME_NAME=res.data.datas.quatList[0].schemeName
-									}
+									// if(res.data.datas.quatList.length==1){
+									// 	_this.SCHEME_NAME_ID=res.data.datas.quatList[0].schemeCode
+									// 	_this.SCHEME_NAME=res.data.datas.quatList[0].schemeName
+									// }
 								},function(err){
 									console.log("err",err);
 									summer.hideProgress()
@@ -603,13 +618,14 @@
 							}
 						},
 						toggleGpsType:function(e,value,label){
-							$(e.currentTarget).toggleClass('active')
 							for (var i = 0; i < this.selectdGpsArr.length; i++) {
 								if(this.selectdGpsArr[i].value==value){
 									this.selectdGpsArr.splice(i,1)
+									$(e.currentTarget).removeClass('active')
 									return
 								}
 							}
+							$(e.currentTarget).addClass('active')
 							this.selectdGpsArr.push({value:value,label:label})
 						},
 						sureGpsType:function(values){
@@ -663,88 +679,107 @@
 									_this.gpsInsStatus=false
 								}
 								_this.gpsTypList=resultData.GPSTypArray
-
+								_this.txJeArr = resultData.tiexiCdArray
+								_this.fuwuArr =	resultData.isHasSxfArray
 								for (var i = 0; i < resultData.schList.length; i++) {
 									if(resultData.schList[i].keyNameEn=='ZLQS'){
-										if(resultData.schList[i].valueStatus=='1'){
-											_this.lsPd=resultData.schList[i].valueStr
-											_this.lsPdStatus=true
-										}else{_this.lsPdStatus=false}
+										_this.lsPd=resultData.schList[i].valueStr
 									}else if(resultData.schList[i].keyNameEn=='START_PERCENT'){
-										if(resultData.schList[i].valueStatus=='1'){
-											_this.hirePct=resultData.schList[i].valueStr
-											_this.hirePctMoney=parseFloat(resultData.schList[i].valueStr*_this.allPrice*0.01).toFixed(2)
-											_this.hirePctStatue=false
-										}else{_this.hirePctStatue=true}
+										_this.hirePct=resultData.schList[i].valueStr
+										_this.hirePctMoney=parseInt(resultData.schList[i].valueStr*_this.allPrice*0.01)
+										_this.rongZiPrice =parseInt(_this.allPrice - _this.hirePctMoney)
+										if(resultData.schList[i].valueStatus==0){
+											_this.hirePctStatue=true
+										}else{_this.hirePctStatue=false}
 									}else if(resultData.schList[i].keyNameEn=='BZJBL_PERCENT'){
-										if(resultData.schList[i].valueStatus=='1'){
-											_this.bailPct=resultData.schList[i].valueStr
-											_this.bailPctMoney=parseFloat(resultData.schList[i].valueStr*_this.allPrice*0.01).toFixed(2)
-											_this.bailPctStatue=false
-										}else{_this.bailPctStatue=true}
+										_this.bailPct=resultData.schList[i].valueStr
+										_this.bailPctMoney=parseInt(_this.bailPct*_this.allPrice*0.01)
+										console.log("保证金======》",_this.bailPct,_this.bailPctMoney)
+										if(resultData.schList[i].valueStatus==0){
+											_this.bailPctStatue=true
+										}else{_this.bailPctStatue=false}
+									}else if(resultData.schList[i].keyNameEn=='RZE'){
+										if(resultData.schList[i].valueStatus==0){
+											_this.rongZiEdit=false //不可编辑
+										}else{_this.rongZiEdit=true}
+									}else if(resultData.schList[i].keyNameEn=='FEE_MONEY'){
+										_this.groessPriceRate = resultData.schList[i].valueStr
 									}else if(resultData.schList[i].keyNameEn=='BUY_TAX_PRICE'){
-
+										_this.gouZhiPrice=resultData.schList[i].valueStr
+										if(resultData.schList[i].status==0){
+											_this.gouZhiPriceStatus=true
+										}else{
+											_this.gouZhiPriceStatus=false
+										}
 										if(resultData.schList[i].valueStatus=='0'){
-											if(resultData.schList[i].fygs.length<6){
-												_this.gouZhiPriceStatus=true
-												if(resultData.schList[i].fygs=='JRRZE'){
-													_this.gouZhiPriceId=2
-													_this.gouZhiPriceName='融资额'
-												}else{
-													_this.gouZhiPriceId=1
-													_this.gouZhiPriceName='首付款'
-												}
-											}else{
-												_this.gouZhiPriceStatus=false
-											}
+											_this.gouZhiEdit=false
+										}else{
+											_this.gouZhiEdit=true
 										}
 									}else if(resultData.schList[i].keyNameEn=='GPS_PRICE'){
-										if(resultData.schList[i].valueStatus=='0'){
-											if(resultData.schList[i].fygs.length<6){
-												_this.gpsPriceStatus=true
-												if(resultData.schList[i].fygs=='JRRZE'){
-													_this.gpsPriceId=2
-													_this.gpsPriceName='融资额'
-												}else{
-													_this.gpsPriceId=1
-													_this.gpsPriceName='首付款'
-												}
-											}else{
-												_this.gpsPriceStatus=false
-											}
+										_this.gpsPrice = resultData.schList[i].valueStr
+										if(resultData.schList[i].status==0){
+											_this.gpsPriceStatus=true //显示
+										}else{
+											_this.gpsPriceStatus=false
+										}
+										if(resultData.schList[i].valueStatus==0){
+											_this.gpsEdit = false  //不可编辑
+										}else{
+											_this.gpsEdit = true
 										}
 									}else if(resultData.schList[i].keyNameEn=='BXF_PRICE'){
-										if(resultData.schList[i].valueStatus=='0'){
-											if(resultData.schList[i].fygs.length<6){
-												_this.safePriceStatus=true
-												if(resultData.schList[i].fygs=='JRRZE'){
-													_this.safePriceId=2
-													_this.safePriceName='融资额'
-												}else{
-													_this.safePriceId=1
-													_this.safePriceName='首付款'
-												}
-											}else{
-												_this.safePriceStatus=false
-											}
+										_this.safePrice = resultData.schList[i].valueStr
+										if(resultData.schList[i].status=='0'){
+											_this.safePriceStatus=true
+										}else{
+											_this.safePriceStatus=false
+										}
+										if(resultData.schList[i].valueStatus== 0){
+											_this.safePriceEdit = false
+										}else{
+											_this.safePriceEdit = true
 										}
 									}else if(resultData.schList[i].keyNameEn=='JPZH_PRICE'){
+										_this.zhuangXiuPrice = resultData.schList[i].valueStr
+										if(resultData.schList[i].status == 0){
+											_this.zhuangXiuPriceStatus=true
+										}else{
+											_this.zhuangXiuPriceStatus=false
+										}
 										if(resultData.schList[i].valueStatus=='0'){
-											if(resultData.schList[i].fygs.length<6){
-												_this.zhuangXiuPriceStatus=true
-												if(resultData.schList[i].fygs=='JRRZE'){
-													_this.zhuangXiuPriceId=2
-													_this.zhuangXiuPriceName='融资额'
-												}else{
-													_this.zhuangXiuPriceId=1
-													_this.zhuangXiuPriceName='首付款'
-												}
-											}else{
-												_this.zhuangXiuPriceStatus=false
-											}
+											_this.zhuangXiuEdit=false
+										}else{
+											_this.zhuangXiuEdit=true
+										}
+									}else if(resultData.schList[i].keyNameEn=='PT_PRICE'){
+										_this.pingtai = resultData.schList[i].valueStr
+										if(resultData.schList[i].status == 0){
+											_this.pingtaiStatus=true
+										}else{
+											_this.pingtaiStatus=false
+										}
+										if(resultData.schList[i].valueStatus=='0'){
+											_this.pingtaiEdit=false
+										}else{
+											_this.pingtaiEdit=true
+										}
+									}else if(resultData.schList[i].keyNameEn=='OTHER_PRICE'){
+										_this.jiarong = resultData.schList[i].valueStr
+										if(resultData.schList[i].status == 0){
+											_this.jiarongStatus=true
+										}else{
+											_this.jiarongStatus=false
+										}
+										if(resultData.schList[i].valueStatus=='0'){
+											_this.jiarongEdit=false
+										}else{
+											_this.jiarongEdit=true
 										}
 									}
 								}
+								_this.groessPrice =parseInt(_this.rongZiPrice * _this.groessPriceRate*0.01)
+
 								if(_this.lsPd&&_this.lsPdUntCd){
 									_this.AnnIntRatePctList=[];
 									var num=_this.lsPd*_this.lsPdUntCd
@@ -790,6 +825,8 @@
 								this.safePriceName=''
 								this.zhuangXiuPriceId=''
 								this.zhuangXiuPriceName=''
+								this.rongZiPrice=''
+								$('.gpsTypeList li').removeClass('active')
 								this.checkDate()
 							}
 						},
@@ -818,6 +855,10 @@
 									this.pickerLspdList[0].values=this.pickerPayWayList
 								}else if (status=='hasGps') {
 									this.pickerLspdList[0].values=this.pickerGpsInsList
+								}else if (status=='txJe') {
+									this.pickerLspdList[0].values=this.txJeArr
+								}else if (status=='fuwu') {
+									this.pickerLspdList[0].values=this.fuwuArr
 								}else {
 									this.pickerLspdList[0].values=this.pickerCntWayList
 								}
@@ -828,14 +869,7 @@
 								if(this.currentName=='lspd'){
 									this.lsPdUntCd=this.pickingObj.value
 									this.lsPdUntCdName=this.pickingObj.label
-									this.AnnIntRatePctList=[];
-									var num=this.lsPd*this.lsPdUntCd
-									for (var i = 0; i < this.listYearRate.length; i++) {
-										if(num>=this.listYearRate[i].leaseTermS&&num<=this.listYearRate[i].leaseTermE){
-											this.AnnIntRatePctList.push({label:this.listYearRate[i].yearRate,value:this.listYearRate[i].yearRate})
-										}
-									}
-									if(this.AnnIntRatePctList.length==1){this.annIntRatePct=this.AnnIntRatePctList[0].value}
+									this.computedYearRate()
 								}else if (this.currentName=='yearRate') {
 									this.annIntRatePct=this.pickingObj.value
 									this.defAnnIntRatePct=this.pickingObj.value
@@ -857,9 +891,25 @@
 								}else if (this.currentName=='hasGps') {
 									this.gpsIns=this.pickingObj.value
 									this.gpsInsName=this.pickingObj.label
+								}else if (this.currentName=='txJe') {
+									this.txJxId=this.pickingObj.value
+									this.txJeName=this.pickingObj.label
+								}else if (this.currentName=='fuwu') {
+									this.fuwuId=this.pickingObj.value
+									this.fuwuName=this.pickingObj.label
 								}
 
 							}
+						},
+						computedYearRate:function(){
+							this.AnnIntRatePctList=[];
+							var num=this.lsPd*this.lsPdUntCd
+							for (var i = 0; i < this.listYearRate.length; i++) {
+								if(num>=this.listYearRate[i].leaseTermS&&num<=this.listYearRate[i].leaseTermE){
+									this.AnnIntRatePctList.push({label:this.listYearRate[i].yearRate,value:this.listYearRate[i].yearRate})
+								}
+							}
+							if(this.AnnIntRatePctList.length==1){this.annIntRatePct=this.AnnIntRatePctList[0].value}
 						},
 						changeBail:function(){
 							var val=parseFloat(this.bailRate);
@@ -868,7 +918,7 @@
 								this.bail=''
 							}else {
 								if(!this.bailRate){this.bail='';return}
-								this.bail=parseFloat(this.bailRate*this.allPrice*0.01).toFixed(2)
+								this.bail=parseInt(this.bailRate*this.allPrice*0.01)
 							}
 						},
 						changeFirstPay:function(){
@@ -877,7 +927,7 @@
 								this.firstPayRate=''
 								this.firstPay=''
 							}else {
-								this.firstPay=parseFloat(this.firstPayRate*this.allPrice*0.01).toFixed(2)
+								this.firstPay=parseInt(this.firstPayRate*this.allPrice*0.01)
 								if(!this.firstPayRate){this.firstPay=''}
 							}
 
@@ -892,6 +942,9 @@
 								this.isTest=false
 								this.bailPctMoney=this.bail
 								this.bailPct=this.bailRate
+							}else{
+								this.bail = this.bailPctMoney
+								this.bailRate = this.bailPct
 							}
 						},
 						sureFristPay:function(value){
@@ -904,6 +957,11 @@
 								this.isTest=false
 								this.hirePctMoney=this.firstPay
 								this.hirePct=this.firstPayRate
+								this.rongZiPrice = parseInt(this.allPrice - this.hirePctMoney)
+								this.groessPrice =parseInt(this.rongZiPrice * this.groessPriceRate*0.01)
+							}else{
+								this.firstPay = this.hirePctMoney
+								this.firstPayRate = this.hirePct
 							}
 						},
 						checkVal:function(value){
@@ -948,6 +1006,22 @@
 								if(!/^([1-9]\d{0,9}|0)([.]?|(\.\d{1,2})?)$/.test(val)||!val||val<0){
 									this.zhuangXiuPrice=''
 								}
+							}else if(value ==="rongZiPrice"){
+								val =this.rongZiPrice;
+								if(!/^([1-9]\d{0,9}|0)$/.test(val)){
+									this.rongZiPrice= 0
+									summer.toast({msg:'车辆融资金额必须为整数'})
+								}
+							}else if(value==="pingtai"){
+								val=this.pingtai;
+								if(!/^([1-9]\d{0,9}|0)([.]?|(\.\d{1,2})?)$/.test(val)||!val||val<0){
+									this.pingtai=''
+								}
+							}else if(value==="jiarong"){
+								val=this.jiarong;
+								if(!/^([1-9]\d{0,9}|0)([.]?|(\.\d{1,2})?)$/.test(val)||!val||val<0){
+									this.jiarong=''
+								}
 							}
 						},
 						quotedTest:function(){
@@ -962,16 +1036,22 @@
 								txJe:this.txJe,
 								gpsIns:this.gpsIns,
 								gpsTyp:this.gpsTyp,
+								actLsAmt:this.rongZiPrice,
+								tiexiCd:this.txJxId,
+								isHasSxf:this.fuwuId, //咨询服务是否有
 								prjQuatPrpsFeeList:[
-									{feeTypCd:'04',cntWayCd:'1',feeAmt:this.groessPrice},
+									{feeTypCd:'04',cntWayCd:'2',feeAmt:this.groessPrice},
 									// {feeTypCd:'10',cntWayCd:this.gpsPriceId,feeAmt:this.gpsPrice},
-									{feeTypCd:'10',cntWayCd:'2',feeAmt:this.gpsPrice},
+									{feeTypCd:'10',cntWayCd:'2',feeAmt:this.gpsPrice}, //都默认为融资额了 2
 									// {feeTypCd:'30',cntWayCd:this.gouZhiPriceId,feeAmt:this.gouZhiPrice},
 									{feeTypCd:'30',cntWayCd:'2',feeAmt:this.gouZhiPrice},
 									// {feeTypCd:'32',cntWayCd:this.safePriceId,feeAmt:this.safePrice},
 									{feeTypCd:'32',cntWayCd:'2',feeAmt:this.safePrice},
 									// {feeTypCd:'51',cntWayCd:this.zhuangXiuPriceId,feeAmt:this.zhuangXiuPrice},
-									{feeTypCd:'51',cntWayCd:'2',feeAmt:this.zhuangXiuPrice}
+									{feeTypCd:'51',cntWayCd:'2',feeAmt:this.zhuangXiuPrice},
+									{feeTypCd:'35',cntWayCd:'2',feeAmt:this.pingtai},
+									{feeTypCd:'36',cntWayCd:'2',feeAmt:this.jiarong},
+
 								]
 							};
 							if(this.prjId){
@@ -979,23 +1059,21 @@
 							}else {
 								params.totLsItmAmt=this.allPrice
 							}
-							for (var k in params) {
-								if(k!='gpsTyp'&&!params[k]){
-									summer.toast({msg:'请先完善报价信息'})
-									return
-								}
-							}
-							if(!this.gpsPrice||!this.gouZhiPrice||!this.safePrice||!this.zhuangXiuPrice){
+							// ||!this.bailPct 可能为0
+							console.log(this.lsPd, this.annIntRatePct ,this.payWay,this.hirePct,this.txJe,this.gpsIns,this.gpsPrice,this.gouZhiPrice,this.safePrice,this.zhuangXiuPrice)
+							if(!this.lsPd|| !this.annIntRatePct ||!this.payWay){
 								summer.toast({msg:'请先完善报价信息'})
 								return
 							}
 							var _this=this;
 							console.log(JSON.stringify(params));
+							summer.showProgress();
 							ajaxRequest({
 								type:'POST',
 								url:'appservice/project/prjquatprps/quatPmt.do',
 								param:params
 							},function(res){
+								summer.hideProgress();
 								console.log("res",res);
 								summer.toast({msg:"测算完成"});
 								if(res.data.flag=='1'){
@@ -1006,6 +1084,7 @@
 								}
 
 							},function(err){
+								summer.hideProgress();
 								console.log("err",err);
 							})
 
@@ -1030,9 +1109,12 @@
 								txJe:this.txJe,
 								gpsIns:this.gpsIns,
 								gpsTyp:this.gpsTyp,
+								actLsAmt:this.rongZiPrice,
+								isHasSxf:this.fuwuId, //咨询服务是否有
+								tiexiCd:this.txJxId,
 								proQuatPrpsCfgM3:{id:this.SCHEME_NAME_ID},
 								prjQuatPrpsFeeList:[
-									{feeTypCd:'04',cntWayCd:'1',feeAmt:this.groessPrice},
+									{feeTypCd:'04',cntWayCd:'2',feeAmt:this.groessPrice},
 									// {feeTypCd:'10',cntWayCd:this.gpsPriceId,feeAmt:this.gpsPrice},
 									{feeTypCd:'10',cntWayCd:'2',feeAmt:this.gpsPrice},
 									// {feeTypCd:'30',cntWayCd:this.gouZhiPriceId,feeAmt:this.gouZhiPrice},
@@ -1041,6 +1123,8 @@
 									{feeTypCd:'32',cntWayCd:'2',feeAmt:this.safePrice},
 									// {feeTypCd:'51',cntWayCd:this.zhuangXiuPriceId,feeAmt:this.zhuangXiuPrice},
 									{feeTypCd:'51',cntWayCd:'2',feeAmt:this.zhuangXiuPrice},
+									{feeTypCd:'35',cntWayCd:'2',feeAmt:this.pingtai},
+									{feeTypCd:'36',cntWayCd:'2',feeAmt:this.jiarong},
 								]
 							};
 							console.log(JSON.stringify(param));
