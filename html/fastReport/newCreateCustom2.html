@@ -7,8 +7,62 @@
 	<title></title>
 	<link rel="stylesheet" href="../../css/iuapmobile.um.css">
 	<link rel="stylesheet" href="../../css/fonts/iconfont.css">
+	<link rel="stylesheet" href="../../css/mint.css">
 	<script src="../../js/font.js"></script>
 	<style>
+		.pickerColor {
+			width: 100%;
+			z-index: 10;
+			background: #ffffff;
+		}
+
+		.pickerColor>p {
+			line-height: .88rem;
+			padding: 0 .56rem;
+			color: #039BE5;
+			border-top: 1px solid #E0E0E0;
+			overflow: hidden;
+		}
+
+		.pickerColor>p span {
+			color: #34aadc;
+		}
+
+		.mint-cell-wrapper {
+			background-size: 100% 0px;
+			border-bottom: 1px solid #f7f7f7;
+		}
+
+		.pickerColor>p span:last-child {
+			float: right;
+		}
+
+		.pickerColor>p span:first-child {
+			float: left;
+		}
+
+		.item .first {
+
+			color: #333;
+		}
+
+		.item .second {
+			color: #9e9e9e;
+		}
+
+		.um-footer {
+			min-height: 0px;
+		}
+		.item input{
+			border: none;
+			height: .5rem;
+			width: 2.92rem;
+			text-align: right;
+			line-height: .5rem;
+			outline: none;
+			margin-top: .2rem;
+			font-size: 0.28rem;
+		}
 		input::-webkit-input-placeholder {
 			color: #DEDEDE;
 			font-size: 0.28rem;
@@ -112,16 +166,37 @@
 			<div class="item um-box pl10 pr10"  >
 					 	<span class="um-bf1">工作单位名称</span><input class="um-bf3" placeholder="请输入您的工作单位" v-model="message.cstNpSocialRl.workPlc"   type="text" />   
 			</div>
+			<div @click="surePickerSoureIncome" class="item" >
+					<p class="pl10 pr10  um-box">
+						<span class="um-bf1">主要收入来源</span>
+						<span class="um-bf1 tr">
+							<span v-if='message.cstNpSocialRl.majorInTypCd' class="first">{{message.cstNpSocialRl.majorInTypCd}}</span>
+							<span v-else class="second">请选择</span>
+							<i class="icon iconfont icon-enter"></i>
+						</span>
+					</p>
+			</div>
 			<div class="item um-box pl10 pr10"  >
-					<span class="um-bf1">税后年收入（万元）</span><input class="um-bf3" placeholder="请输入您的税后年收入" v-model="message.cstNpSocialRl.afterTaxYearIn"   type="text" />   
+					<span class="um-bf2">税后年收入（万元）</span><input class="um-bf3" placeholder="请输入您的税后年收入" v-model="message.cstNpSocialRl.afterTaxYearIn"   type="number" />   
 	   </div>
 		</form>
+		</div>	
+		<mt-popup v-model="pickerSourceIncomeStatus" position='bottom' class="pickerColor">
+				<mt-picker :slots="slots8" @change="onValuesChange8"></mt-picker>
+				<p>
+					<span class="" @click="surePickerSoureIncome">取消</span>
+					<span class="" @click="surePickerSoureIncome('confirm')">确定</span>
+				</p>
+		</mt-popup>
+		<div>
+
 		</div>
 	 
 	</div>
 	<script src="../../js/summer.js"></script>
 	<script src="../../js/jquery.min.js"></script>
 	<script src="../../js/vue.js"></script>
+	<script src="../../js/mint.js"></script>
 	<script src="../../js/common.js"></script>
 	<script src="../../js/Frameworks/iuapmobile.frameworks.ui.js"></script>
 	<script>
@@ -129,10 +204,20 @@
 			el: '#app',
 			data:function() {
 				return {
+					pickerSourceIncomeStatus:false,
+					pickerSourceIncome:"",
 					cardShow: false,
 					cardUrl: "",
 					pickerVisible: "",
 					personMes:'',
+					slots8: [{
+						flex: 1,
+						//values: ["员工", "经理"],
+						values: ["工资","股票","投资"],
+						defaultIndex: 0,
+						className: 'slot1',
+						textAlign: 'center'
+					}],
 					message: {
 						cstNpSocialRl:{
 							rlNm:'',
@@ -142,7 +227,9 @@
 							idAddr:'',
 							workPlc:'',
 							mp:'',
-							id:''//配偶id，修改需要带上
+							id:'',//配偶id，修改需要带上
+							majorInTypCd:'',
+							afterTaxYearIn:''
 						}
 					},
 					sourceFrom:'',
@@ -270,8 +357,32 @@
 							msg: "手机号格式不正确"
 						});
 						return false;
+					}else if (this.message.cstNpSocialRl.majorInTypCd == "") {
+						summer.toast({
+							msg: "主要收入来源不能为空"
+						});
+						return false;
+					}else if (this.message.cstNpSocialRl.afterTaxYearIn == "") {
+						summer.toast({
+							msg: "税后年收入不能为空"
+						});
+						return false;
 					}
 					return true;
+				},
+				onValuesChange8: function (picker, values) {
+					this.pickerSourceIncome = values[0];
+				},
+				surePickerSoureIncome: function (param) {
+					this.pickerSourceIncomeStatus = !this.pickerSourceIncomeStatus;
+					if (param == 'confirm') {
+						this.message. majorInTypCd = this.pickerSourceIncome;
+						// this.totalData.positonArray.map(function(e,i){
+						// 	if(e.label==this.message.positionNm){
+						// 		this.message.position=this.totalData.positonArray[i].value;
+						// 	}
+						// });
+					}
 				},
 				savePerson: function() {
 					var self=this;
@@ -375,6 +486,7 @@
 			newCreateCustom.personMes=personMessage;
 		}
 	</script>
+
 </body>
 
 </html>
