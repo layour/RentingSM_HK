@@ -172,7 +172,7 @@
 			</div>
 			<div class="item" >
 				<p class="pl10 pr10 tr" @click="selectHukouCity">
-						<span class="um-red mr5 fl">*</span><span class="fl">户口所在地城市</span>
+						<span class="um-red mr5 fl">*</span><span class="fl">户籍所在地城市</span>
 					<span class="">
 						<span class="first">{{HukouCity}}</span>
 						<i class="icon iconfont icon-enter"></i>
@@ -180,7 +180,7 @@
 				</p>
 			</div>
 			<div class="item um-box pl10 pr10"  >
-					<span class="um-red mr5">*</span>	<span class="um-bf1">户口所在地详细地址</span><input placeholder="请输入户口所在地详细地址" v-model="message.idAddr" type="text">   
+					<span class="um-red mr5">*</span>	<span class="um-bf1">户籍所在地详细地址</span><input placeholder="请输入户口所在地详细地址" v-model="message.idAddr" type="text">   
 			</div>
 			<div class="item" >
 				<p class="pl10 pr10 tr" @click="selectCurrentCity">
@@ -193,6 +193,9 @@
 			</div>
 			<div class="item um-box pl10 pr10"  >
 					<span class="um-red mr5">*</span>	<span class="um-bf1">现居详细地址</span><input placeholder="请输入现居详细地址"  v-model="message.homeAddr" type="text">   
+			</div>
+			<div class="item um-box pl10 pr10"  >
+					<span class="um-red mr5">*</span>	<span class="um-bf1">居住地址邮编</span><input placeholder="请输入居住地址邮编" v-model="message.zipNo" type="text">   
 			</div>
 			<div @click="surePickerIsHasLicense" class="item" >
 				<p class="pl10 pr10  um-box">
@@ -273,6 +276,9 @@
 			</div>
 			<div class="item um-box pl10 pr10"  >
 					<span class="um-red mr5">*</span>	<span class="um-bf1">现工作单位电话</span><input placeholder="请输入现工作单位电话" v-model="message.workTel" type="text">   
+			</div>
+			<div class="item um-box pl10 pr10"  >
+					<span class="um-red mr5">*</span>	<span class="um-bf1">税后年收入（万元）</span><input placeholder="请输入税后年收入" v-model="message.afterTaxYearIn" type="text">   
 			</div>
 			<div @click="surePickerPosition" class="item" >
 					<p class="pl10 pr10  um-box">
@@ -832,6 +838,7 @@
 					     if(this.message.isHasLicenseNm=="是"){
 							this.message.isHasLicense=1;
 						 }else{
+
 							this.message.isHasLicense=2;
 						 }
 					}
@@ -1149,6 +1156,7 @@
 				newCreateCustom.message.cstHomeProvince =JSON.parse(summer.getStorage("pickerDealCity2"));
 				newCreateCustom.message.cstHomeCity =JSON.parse(summer.getStorage("pickerDealCity3"));
 				newCreateCustom.message.cstHomeDistrict =JSON.parse(summer.getStorage("pickerDealCity4"));
+				newCreateCustom.message.zipNo =JSON.parse(summer.getStorage("pickerDealCity4")).code;
 				newCreateCustom.CurrentCity=JSON.parse(summer.getStorage("pickerDealCity1")).name+" "+JSON.parse(summer.getStorage("pickerDealCity2")).name+" "+JSON.parse(summer.getStorage("pickerDealCity3")).name+" "+JSON.parse(summer.getStorage("pickerDealCity4")).name
 			}else if(dataSource=="WorkCity"){
 				newCreateCustom.message.cstWorkRegion =JSON.parse(summer.getStorage("pickerDealCity1"));
