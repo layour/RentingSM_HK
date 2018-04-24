@@ -151,6 +151,17 @@
 					<span class="um-bf1">婚姻状况</span> <span class="um-bf1 tr"><span v-if='message.marStsNm' class="first">{{message.marStsNm}}</span><span v-else class="second">请选择</span> <i class="icon iconfont icon-enter"></i></span>
 				</p>
 			</div>
+			<div @click="surePickerSoureIncome" class="item" >
+					<p class="pl10 pr10  um-box">
+						<span class="um-bf1">主要收入来源</span>
+						<span class="um-bf1 tr">
+							<span v-if='message.majorInTypCdNm' class="first">{{message.majorInTypCdNm}}</span>
+							<span v-else class="second">请选择</span>
+							<i class="icon iconfont icon-enter"></i>
+						</span>
+					</p>
+			</div>
+			<mt-field label="税后年收入(万元)" placeholder="请输入您的税后年收入" v-model="message.afterTaxYearIn"></mt-field>
 		</div>
 		<div class="um-footer">
 			<mt-popup v-model="pickerCardTypeStatus" position='bottom' class="pickerColor">
@@ -171,7 +182,13 @@
 					<span class="" @click="surePickerMarrige">取消</span><span class="" @click="surePickerMarrige('confirm')">确定</span>
 				</p>
 			</mt-popup>
-
+			<mt-popup v-model="pickerSourceIncomeStatus" position='bottom' class="pickerColor">
+					<mt-picker :slots="slots8" @change="onValuesChange8"></mt-picker>
+					<p>
+						<span class="" @click="surePickerSoureIncome">取消</span>
+						<span class="" @click="surePickerSoureIncome('confirm')">确定</span>
+					</p>
+			</mt-popup>
 		</div>
 	</div>
 	<script src="../../js/summer.js"></script>
@@ -191,6 +208,8 @@
 					pickerCardTypeStatus: false,
 					pickerCusRelationStatus: false,
 					pickerMarrigeStatus: false,
+					pickerSourceIncomeStatus:false,
+					pickerSourceIncome:"",
 					pickerCardType: "",
 					pickerCusRelationType: "",
 					pickerMarrige: "",
@@ -215,6 +234,14 @@
 						className: 'slot1',
 						textAlign: 'center'
 					}],
+					slots8: [{
+						flex: 1,
+						values:["工资","股票","投资"],
+						//values: [],
+						defaultIndex: 0,
+						className: 'slot1',
+						textAlign: 'center'
+					}],
 					isSelect:false,
 					totalData:'',
 					id:'',//担保人id,保存时需要
@@ -232,7 +259,10 @@
 						projectId:'',
 						GID:"",
 						CLIENT_ID:"",
-						TYPE:""
+						TYPE:"",
+						afterTaxYearIn:'',//税后年收入 
+						majorInTypCdNm:'',
+						majorInTypCd:''//主要收入来源
 					} 
 				}
 			},
@@ -348,6 +378,20 @@
 					this.pickerMarrigeStatus = !this.pickerMarrigeStatus;
 					if (param == 'confirm') {
 						this.message.marStsNm=this.pickerMarrige
+					}
+				},
+				onValuesChange8: function (picker, values) {
+					this.pickerSourceIncome = values[0];
+				},
+				surePickerSoureIncome: function (param) {
+					this.pickerSourceIncomeStatus = !this.pickerSourceIncomeStatus;
+					if (param == 'confirm') {
+						this.message.majorInTypCdNm = this.pickerSourceIncome;
+						//  this.totalData.majorInArray.map(function(e,i){
+						//  	if(e.label==this.message.majorInTypCdNm){
+						//  		this.message.majorInTypCd=this.totalData.positonArray[i].value;
+						//  	}
+						//  });
 					}
 				},
 				messageTest: function() {
