@@ -282,9 +282,9 @@
 			</div>
 			<div @click="surePickerSoureIncome" class="item" >
 					<p class="pl10 pr10  um-box">
-						<span class="um-bf1">主要收入来源</span>
+							<span class="um-red mr5 fl">*</span><span class="um-bf1">主要收入来源</span>
 						<span class="um-bf1 tr">
-							<span v-if='message.majorInTypCdNm' class="first">{{message.majorInTypCdNm}}</span>
+							<span v-if='message.majorInTypCdName' class="first">{{message.majorInTypCdName}}</span>
 							<span v-else class="second">请选择</span>
 							<i class="icon iconfont icon-enter"></i>
 						</span>
@@ -507,7 +507,7 @@
 							cstTypCd:'1'
 						},
 						id:'',//客户详情id,如果编辑后保存，必须带上
-						majorInTypCdNm:'',//收入类型名字（显示到前端）
+						majorInTypCdName:'',//收入类型名字（显示到前端）
 						majorInTypCd:'',//收入类型value（提交到后端）
 						afterTaxYearIn:''//税后年收入
 					},
@@ -728,6 +728,10 @@
 								self.message.workTel = holeDataDetail.workTel;
 								self.message.positionNm = holeDataDetail.positionNm;
 								self.message.position = holeDataDetail.position;
+								self.message.zipNo = holeDataDetail.zipNo;
+								self.message.afterTaxYearIn = holeDataDetail.afterTaxYearIn;
+								self.message.majorInTypCd = holeDataDetail.majorInTypCd;
+								self.message.majorInTypCdName = holeDataDetail.majorInTypCdName;
 								if (self.message.marStsCd == "3"||self.message.marStsCd == "21"||self.message.marStsCd == "22"||self.message.marStsCd == "23") {
 									summer.setWinAttr({
 										actionBar: {
@@ -823,11 +827,12 @@
 				},
 				surePickerMarStsCd: function (param) {
 					this.pickerMarStsCdStatus = !this.pickerMarStsCdStatus;
+					var self=this;
 					 if (param == 'confirm') {
 						 this.message.marStsNm = this.pickerMarStsCd;
 					this.totalData.marStsCd.map(function(e,i){
-						if(e.label==this.message.marStsNm){
-							this.message.marStsCd=this.totalData.marStsCd[i].value;
+						if(e.label==self.message.marStsNm){
+							self.message.marStsCd=self.totalData.marStsCd[i].value;
 						}
 					});
 					if (this.message.marStsCd == "3"||this.message.marStsCd == "21"||this.message.marStsCd == "22"||this.message.marStsCd == "23") {
@@ -882,12 +887,13 @@
 					this.pickerDriverLicenseType = values[0];
 				},
 				surePickerDriverLicenseType: function (param) {
+					var self=this;
 					this.pickerDriverLicenseTypeStatus = !this.pickerDriverLicenseTypeStatus;
 					if (param == 'confirm') {
 						this.message.driverLicenseNm = this.pickerDriverLicenseType;
 						this.totalData.driverLicenseType.map(function(e,i){
-							if(e.label==this.message.driverLicenseNm){
-								this.message.driverLicenseType=this.totalData.driverLicenseType[i].value;
+							if(e.label==self.message.driverLicenseNm){
+								self.message.driverLicenseType=self.totalData.driverLicenseType[i].value;
 							}
 						});
 					}
@@ -896,12 +902,13 @@
 					this.pickerHousingOwnership = values[0];
 				},
 				surePickerHousingOwnership: function (param) {
+					var self=this;
 					this.pickerHousingOwnershipStatus = !this.pickerHousingOwnershipStatus;
 					if (param == 'confirm') {
 						this.message.housingOwnershipNm = this.pickerHousingOwnership;
 						this.totalData.housingOwnership.map(function(e,i){
-							if(e.label==this.message.housingOwnershipNm){
-								this.message.housingOwnership=this.totalData.housingOwnership[i].value;
+							if(e.label==self.message.housingOwnershipNm){
+								self.message.housingOwnership=self.totalData.housingOwnership[i].value;
 							}
 						});
 					}
@@ -910,12 +917,13 @@
 					this.pickerIndustry = values[0];
 				},
 				surePickerIndustry: function (param) {
+					var self=this;
 					this.pickerIndustryStatus = !this.pickerIndustryStatus;
 					if (param == 'confirm') {
 						this.message. industryNm = this.pickerIndustry;
 						this.totalData.industry.map(function(e,i){
-							if(e.label==this.message.industryNm){
-								this.message.industry=this.totalData.industry[i].value;
+							if(e.label==self.message.industryNm){
+								self.message.industry=self.totalData.industry[i].value;
 							}
 						});
 					}
@@ -924,12 +932,13 @@
 					this.pickerWorkTypCd = values[0];
 				},
 				surePickerWorkTypCd: function (param) {
+					var self=this;
 					this.pickerWorkTypCdStatus = !this.pickerWorkTypCdStatus;
 					if (param == 'confirm') {
 						this.message. workTypNm = this.pickerWorkTypCd;
 						this.totalData.workTypCd.map(function(e,i){
-							if(e.label==this.message.workTypNm){
-								this.message.workTypCd=this.totalData.workTypCd[i].value;
+							if(e.label==self.message.workTypNm){
+								self.message.workTypCd=self.totalData.workTypCd[i].value;
 							}
 						});
 					}
@@ -938,12 +947,13 @@
 					this.pickerPosition = values[0];
 				},
 				surePickerPosition: function (param) {
+					var self=this;
 					this.pickerPositionStatus = !this.pickerPositionStatus;
 					if (param == 'confirm') {
 						this.message. positionNm = this.pickerPosition;
 						this.totalData.positonArray.map(function(e,i){
-							if(e.label==this.message.positionNm){
-								this.message.position=this.totalData.positonArray[i].value;
+							if(e.label==self.message.positionNm){
+								self.message.position=self.totalData.positonArray[i].value;
 							}
 						});
 					}
@@ -952,12 +962,13 @@
 					this.pickerSourceIncome = values[0];
 				},
 				surePickerSoureIncome: function (param) {
+					var self=this;
 					this.pickerSourceIncomeStatus = !this.pickerSourceIncomeStatus;
 					if (param == 'confirm') {
-						this.message.majorInTypCdNm = this.pickerSourceIncome;
+						this.message.majorInTypCdName = this.pickerSourceIncome;
 						 this.totalData.majorInArray.map(function(e,i){
-						 	if(e.label==this.message.majorInTypCdNm){
-						 		this.message.majorInTypCd=this.totalData.positonArray[i].value;
+						 	if(e.label==self.message.majorInTypCdName){
+								self.message.majorInTypCd=self.totalData.majorInArray[i].value;
 						 	}
 						 });
 					}
@@ -1034,10 +1045,20 @@
 						summer.toast({
 							msg: "请选择工作单位详细地址"
 						});
-						return false;
+						return false; 
 					}else if (this.message.workTel == "") {
 						summer.toast({
 							msg: "请输入工作单位电话"
+						});
+						return false;
+					}else if (this.message.afterTaxYearIn == "") {
+						summer.toast({
+							msg: "请输入税后年收入"
+						});
+						return false;
+					} else if (this.message.majorInTypCdName == "") {
+						summer.toast({
+							msg: "请输入主要收入来源"
 						});
 						return false;
 					} 
@@ -1115,9 +1136,9 @@
 					});
 				},
 				nextStopAction: function () {
-					if (!this.messageTest()) {
-						return;
-					};
+					// if (!this.messageTest()) {
+					// 	return;
+					// };
 					var self = this;
 					if(self.isAdd){
 						summer.openWin({
