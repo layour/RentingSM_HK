@@ -186,6 +186,7 @@ function ajaxRequest(paramObj, successCallback, errorCallback) {
 		}
 		if (response.data.flag == '0') {
 			summer.hideProgress();
+			successCallback(response);
 			summer.toast({
 				msg: response.data.msg
 			});

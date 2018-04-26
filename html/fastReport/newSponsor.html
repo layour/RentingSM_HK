@@ -236,8 +236,8 @@
 					}],
 					slots8: [{
 						flex: 1,
-						values:["工资","股票","投资"],
-						//values: [],
+						//values:["工资","股票","投资"],
+						values: [],
 						defaultIndex: 0,
 						className: 'slot1',
 						textAlign: 'center'
@@ -255,7 +255,6 @@
 						marStsNm:'',
 						gxNm:'',
 						certTypNm:'',
-						BIRTHDAY: '',
 						projectId:'',
 						GID:"",
 						CLIENT_ID:"",
@@ -313,6 +312,9 @@
 						})
 						totalData.marStsArray.map(function(e,i) {
 							self.slots3[0].values.push(e.label);
+						})
+						totalData.majorInArray.map(function(e,i) {
+							self.slots8[0].values.push(e.label);
 						})
 						
 					}, function(err) {
@@ -385,13 +387,14 @@
 				},
 				surePickerSoureIncome: function (param) {
 					this.pickerSourceIncomeStatus = !this.pickerSourceIncomeStatus;
+					var self = this;
 					if (param == 'confirm') {
 						this.message.majorInTypCdNm = this.pickerSourceIncome;
-						//  this.totalData.majorInArray.map(function(e,i){
-						//  	if(e.label==this.message.majorInTypCdNm){
-						//  		this.message.majorInTypCd=this.totalData.positonArray[i].value;
-						//  	}
-						//  });
+						 this.totalData.majorInArray.map(function(e,i){
+						 	if(e.label==self.message.majorInTypCdNm){
+						 		self.message.majorInTypCd=self.totalData.majorInArray[i].value;
+						 	}
+						 });
 					}
 				},
 				messageTest: function() {
@@ -442,6 +445,16 @@
 							msg: "请选择婚姻状况"
 						});
 						return false;
+					} else if (this.message.majorInTypCdNm == "") {
+						summer.toast({
+							msg: "主要收入来源不能为空"
+						});
+						return false;
+					} else if (this.message.afterTaxYearIn == "") {
+						summer.toast({
+							msg: "税后年收入不能为空"
+						});
+						return false;
 					}
 					return true;
 				},
@@ -459,6 +472,9 @@
 							homeAddr: self.message.HOUSE_ADDRESS,
 							workAddr: self.message.WORK_NAME,
 							genderCd:  self.SEXCOM=="男"?"1":"2",
+							afterTaxYearIn:self.message.afterTaxYearIn,//税后年收入 
+							majorInTypCdNm:self.message.majorInTypCdNm,
+							majorInTypCd:self.message.majorInTypCd,//主要收入来源
 							age: self.AGECOM,
 							prjId: self.message.projectId,
 							id:self.id
@@ -470,6 +486,9 @@
 							mp1: self.message.TEL_PHONE,
 							homeAddr: self.message.HOUSE_ADDRESS,
 							workAddr: self.message.WORK_NAME,
+							afterTaxYearIn:self.message.afterTaxYearIn,//税后年收入 
+						    majorInTypCdNm:self.message.majorInTypCdNm,
+						    majorInTypCd:self.message.majorInTypCd,//主要收入来源
 							genderCd:  self.SEXCOM=="男"?"1":"2",
 							age: self.AGECOM,
 							prjId: self.message.projectId,
@@ -545,6 +564,9 @@
 				newCreateCustom.message.certTypNm=item.certTypNm;
 				newCreateCustom.message.gxCd=item.gxCd;
 				newCreateCustom.message.gxNm=item.gxNm;
+				newCreateCustom.message.afterTaxYearIn=item.afterTaxYearIn;
+				newCreateCustom.message.majorInTypCd=item.majorInTypCd;
+				newCreateCustom.message.majorInTypCdNm=item.majorInTypCdName;
 			}
 			// var params = ["android.permission.ACCESS_FINE_LOCATION", "android.permission.ACCESS_COARSE_LOCATION", "android.permission.CAMERA", "android.permission.FLASHLIGHT", "android.permission.READ_EXTERNAL_STORAGE", "android.permission.READ_PHONE_STATE",
 			// 	"android.permission.WRITE_EXTERNAL_STORAGE", "android.permission.ACCESS_FINE_LOCATION", "android.permission.ACCESS_COARSE_LOCATION"

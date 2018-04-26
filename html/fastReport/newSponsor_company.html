@@ -141,17 +141,29 @@
 			<mt-field label="法人手机号" placeholder="请输入法人手机号" v-model="message.corpRepTel"></mt-field>
 			<div @click="surePickerCardtype" class="item">
 					<p class="pl10 pr10  um-box">
-						<span class="um-bf1">法人代表证件类型</span> <span class="um-bf1 tr"><span v-if='message.corpRepCertTypCdNm' class="first">{{message.corpRepCertTypCdNm}}</span><span v-else class="second">请选择</span> <i class="icon iconfont icon-enter"></i></span>
+						<span class="um-bf1">法人代表证件类型</span> <span class="um-bf1 tr"><span v-if='message.corpRepCertTypNm' class="first">{{message.corpRepCertTypNm}}</span><span v-else class="second">请选择</span> <i class="icon iconfont icon-enter"></i></span>
 					</p>
 			</div>
-			<mt-field label="法人代表身份证号码" placeholder="请输入法人代表身份证号码" v-model="message.corpRepCertNo"></mt-field>
+			<mt-field label="法人代表证件号码" placeholder="请输入法人代表证件号码" v-model="message.corpRepCertNo"></mt-field>
 			<div @click="surePickerCompanytype" class="item">
 					<p class="pl10 pr10  um-box">
 						<span class="um-bf1">企业性质</span> <span class="um-bf1 tr"><span v-if='message.corpTypCdNm' class="first">{{message.corpTypCdNm}}</span><span v-else class="second">请选择</span> <i class="icon iconfont icon-enter"></i></span>
 					</p>
 				</div>
-				<mt-field label="企业成立日期" placeholder="请输入企业成立日期" v-model="message.regDt"></mt-field>
-				<mt-field label="企业有效日期" placeholder="请输入企业有效日期" v-model="message.expDt"></mt-field>
+				<div @click="sureDateConfirm1" class="item">
+					<p class="pl10 pr10 tr">
+						<span class="fl">企业成立日期</span>
+						<span class=""><span v-if='message.regDt' class="first">{{message.regDt}}</span><span v-else class="second">请选择</span> <i class="icon iconfont icon-enter"></i></span>
+					</p>
+				</div>
+				<div @click="sureDateConfirm2" class="item">
+					<p class="pl10 pr10 tr">
+						<span class="fl">企业有效日期</span>
+						<span class=""><span v-if='message.expDt' class="first">{{message.expDt}}</span><span v-else class="second">请选择</span> <i class="icon iconfont icon-enter"></i></span>
+					</p>
+				</div>
+				<!-- <mt-field label="企业成立日期" placeholder="请输入企业成立日期" v-model="message.regDt"></mt-field>
+				<mt-field label="企业有效日期" placeholder="请输入企业有效日期" v-model="message.expDt"></mt-field> -->
 				<mt-field label="通讯地址" placeholder="请输入通讯地址" v-model="message.postAddr"></mt-field>
 			<!-- <div class="text">
 				 <textarea class = "text" placeholder="担保能力说明" maxlength="300" v-model="message.GUARANTEE_CAPACITY"></textarea>
@@ -172,6 +184,10 @@
 							<span class="" @click="surePickerCompanytype('confirm')">确定</span>
 						</p>
 					</mt-popup>
+					<mt-datetime-picker ref="picker" v-model="pickerValue" type="date" cancel-text='取消' confirm-text='确定' :start-date='new Date("1950-01-01")' :end-date="noweDate" @confirm="handleConfirm1">
+					</mt-datetime-picker>
+					<mt-datetime-picker ref="picker2" v-model="pickerValue2" type="date" cancel-text='取消' confirm-text='确定' :start-date='new Date("1950-01-01")' :end-date="noweDate2" @confirm="handleConfirm2">
+					</mt-datetime-picker>
 			<!--<mt-datetime-picker ref="picker" v-model="pickerValue" type="date" cancel-text='取消' confirm-text='确定' :start-date='new Date("1950-01-01")' :end-date="noweDate" @confirm="handleConfirm">
 			</mt-datetime-picker>-->
 		</div>
@@ -187,6 +203,7 @@
 			el: '#app',
 			data:function() {
 				return {
+					totalData:"",
 					cardShow: false,
 					cardUrl: "",
 					pickerVisible: "",
@@ -199,21 +216,28 @@
 					surePicekerDateVal: '',
 					pickerDateStatus: false,
 					noweDate: new Date(),
+
+					pickerDate2: "",
+					pickerValue2: new Date(),
+					surePicekerDateVal2: '',
+					pickerDateStatus2: false,
+					noweDate2: new Date(),
 					isSelect:false,
 					CLIENT_ID:'',
 					GID:'',
 					id:'',//担保人id，修改时需要
 					slots1: [{
 						flex: 1,
-						values: ['身份证', '已婚', '离婚', '丧偶', '未说明的婚姻状况'],
-						//values: [],
+						//values: ['身份证', '已婚', '离婚', '丧偶', '未说明的婚姻状况'],
+						values: [],
 						defaultIndex: 0,
 						className: 'slot1',
 						textAlign: 'center'
 					}],
 					slots2: [{
 						flex: 1,
-						values: ['国企', '私企'],
+						//values: ['国企', '私企'],
+						values: [],
 						defaultIndex: 0,
 						className: 'slot1',
 						textAlign: 'center'
@@ -226,7 +250,7 @@
 						prjId:'',
 						id:'',
 						corpRepCertTypCd:'',//法人代表证件类型
-						corpRepCertTypCdNm:'',
+						corpRepCertTypNm:'',
 						corpTypCdNm:'',//企业性质
 						corpTypCd:'',
 						corpRepCertNo:'',//身份证号码
@@ -238,51 +262,82 @@
 				}
 			},
 			methods: {
-				getData:function(projectId) {
+				// getData:function(projectId) {
+				// 	var self = this;
+				// 	ajaxRequest({
+				// 		type: 'post',
+				// 		url: 'appservice/customer/guaranteeList',
+				// 		param: {
+				// 			"PROJECT_ID": projectId,
+				// 		}
+				// 	}, function(res) {
+				// 		summer.hideProgress();
+				// 		if (res.data.flag == 1) {
+				// 			console.log(res.data.datas);
+				// 			var sponsor=res.data.datas.guaranteeList[0];
+				// 			if (!isEmpty(sponsor)) {
+				// 				self.isSelect=true;
+				// 				self.message.NAME=sponsor.NAME;
+				// 				self.message.CORP_BUSINESS_LICENSE=sponsor.CORP_BUSINESS_LICENSE;
+				// 				self.message.LEGAL_PERSON=sponsor.LEGAL_PERSON;
+				// 				self.message.LEGAL_PERSON_PHONE=sponsor.LEGAL_PERSON_PHONE;
+				// 				self.message.PROJECT_ID=sponsor.PROJECT_ID;
+				// 				self.message.GUARANTEE_CAPACITY=sponsor.GUARANTEE_CAPACITY;
+				// 				self.GID=sponsor.GID;
+				// 				self.CLIENT_ID=sponsor.CLIENT_ID;
+				// 				self.message.TYPE=sponsor.TYPE;
+				// 			}
+				// 		}
+				// 	}, function(err) {
+				// 		alert(err);
+				// 		console.log(err);
+				// 		summer.hideProgress();
+				// 	});
+				// },
+				getType:function(projectId){
 					var self = this;
 					ajaxRequest({
 						type: 'post',
-						url: 'appservice/customer/guaranteeList',
+						url: 'appservice/project/prjcstbscinfo/initList.do',
 						param: {
-							"PROJECT_ID": projectId,
+							"id": projectId,
 						}
 					}, function(res) {
 						summer.hideProgress();
+						var totalData;
 						if (res.data.flag == 1) {
 							console.log(res.data.datas);
-							var sponsor=res.data.datas.guaranteeList[0];
-							if (!isEmpty(sponsor)) {
-								self.isSelect=true;
-								self.message.NAME=sponsor.NAME;
-								self.message.CORP_BUSINESS_LICENSE=sponsor.CORP_BUSINESS_LICENSE;
-								self.message.LEGAL_PERSON=sponsor.LEGAL_PERSON;
-								self.message.LEGAL_PERSON_PHONE=sponsor.LEGAL_PERSON_PHONE;
-								self.message.PROJECT_ID=sponsor.PROJECT_ID;
-								self.message.GUARANTEE_CAPACITY=sponsor.GUARANTEE_CAPACITY;
-								self.GID=sponsor.GID;
-								self.CLIENT_ID=sponsor.CLIENT_ID;
-								self.message.TYPE=sponsor.TYPE;
-							}
+							totalData=res.data.datas
+						}else  {
+							totalData=res.data;
 						}
+						self.totalData=totalData;
+						totalData.carTypArray.map(function(e,i) {
+							self.slots1[0].values.push(e.label);
+						})
+						totalData.corpTypArray.map(function(e,i) {
+							self.slots2[0].values.push(e.label);
+						})
+						
 					}, function(err) {
-						alert(err);
 						console.log(err);
 						summer.hideProgress();
 					});
 				},
+			 
 				onValuesChange1: function (picker, values) {
 					this.pickerCardtype = values[0];
 				},
 				surePickerCardtype: function (param) {
 					this.pickerCardtypeStatus = !this.pickerCardtypeStatus;
+					var self = this;
 					if (param == 'confirm') {
-						this.message.corpRepCertTypCdNm = this.pickerCardtype;
-					    //  if(this.message.isHasLicenseNm=="是"){
-						// 	this.message.isHasLicense=1;
-						//  }else{
-
-						// 	this.message.isHasLicense=2;
-						//  }
+						this.message.corpRepCertTypNm = this.pickerCardtype;
+					   	self.totalData.carTypArray.map(function(e,i){
+							if(e.label==self.message.corpRepCertTypNm){
+								self.message.corpRepCertTypCd=self.totalData.carTypArray[i].value;
+						    } 
+						});
 					}
 				},
 
@@ -291,13 +346,14 @@
 				},
 				surePickerCompanytype: function (param) {
 					this.pickerCompanytypeStatus = !this.pickerCompanytypeStatus;
+					var self = this;
 					if (param == 'confirm') {
 						this.message.corpTypCdNm = this.pickerCompanytype;
-						// this.totalData.driverLicenseType.map(function(e,i){
-						// 	if(e.label==this.message.driverLicenseNm){
-						// 		this.message.driverLicenseType=this.totalData.driverLicenseType[i].value;
-						// 	}
-						// });
+						self.totalData.corpTypArray.map(function(e,i){
+							if(e.label==self.message.corpTypCdNm){
+								self.message.corpTypCd=self.totalData.corpTypArray[i].value;
+						    } 
+						});
 					}
 				},
 				selectAddr:function() {
@@ -352,13 +408,37 @@
 				successCallBack: function(args) {
 					console.log(args);
 				},
-				sureDateConfirm: function() {
+				sureDateConfirm1: function() {
 					this.pickerDateStatus = !this.pickerDateStatus;
 					this.$refs.picker.open();
 				},
-				handleConfirm: function(pickerValue) {
+				sureDateConfirm2: function() {
+					this.pickerDateStatus2 = !this.pickerDateStatus2;
+					this.$refs.picker2.open();
+				},
+				handleConfirm1: function(pickerValue) {
 					this.pickerValue = pickerValue;
-					this.message.REGISTE_DATE = getFormatDate(pickerValue)
+					this.message.regDt = getFormatDate(pickerValue)
+
+					function getFormatDate(date) {
+						var date = new Date(date),
+							seperator1 = "-";
+						var year = date.getFullYear(),
+							month = date.getMonth() + 1,
+							strDate = date.getDate();
+						if (month >= 1 && month <= 9) {
+							month = "0" + month;
+						}
+						if (strDate >= 0 && strDate <= 9) {
+							strDate = "0" + strDate;
+						}
+						return year +'-'+ month +'-'+ strDate;
+					}
+
+				},
+				handleConfirm2: function(pickerValue) {
+					this.pickerValue2 = pickerValue;
+					this.message.expDt = getFormatDate(pickerValue)
 
 					function getFormatDate(date) {
 						var date = new Date(date),
@@ -402,10 +482,15 @@
 						summer.toast({
 							msg: "法人手机号格式不正确"
 						});
-						return false;
-					}else if(this.message.corpRepCertTypCd == "") {
+						return false; 
+					}else if(this.message.corpRepCertTypNm == "") {
 						summer.toast({
 							msg: "证件类型不能为空"
+						});
+						return false;
+					}else if(this.message.corpTypCdNm == "") {
+						summer.toast({
+							msg: "企业性质不能为空"
 						});
 						return false;
 					}else if(this.message.corpRepCertNo == "") {
@@ -468,6 +553,9 @@
 		summerready = function() {
 			var projectId = summer.pageParam.projectId;
 			newCreateCustom.message.prjId=projectId;
+		 
+			newCreateCustom.getType(projectId);
+
 			var clintId = summer.pageParam.clientId;
 			newCreateCustom.CLIENT_ID=clintId;
 			var item= summer.pageParam.item;

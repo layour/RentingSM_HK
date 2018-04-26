@@ -49,6 +49,30 @@
 							 <span class="right"><span v-if='lendRuleStyle' class="first">{{lendRuleStyle}}</span><span v-else class="second">请选择</span> <i class="icon iconfont icon-enter"></i></span>
 						</p>
 					</li>
+					<li   v-if='hasProjectId'>
+						<p class="pl10 pr10 tr">
+							<span class="fl">车牌类型</span>
+							 <span class="right"><span   class="first">{{carCdTypNm}}</span> </span>
+						</p>
+					</li>
+					<li @click="surePickerCardtype" v-else  >
+						<p class="pl10 pr10 tr">
+							<span class="fl">车牌类型</span>
+							 <span class="right"><span v-if='lendRuleStyle' class="first">{{carCdTypNm}}</span><span v-else class="second">请选择</span> <i class="icon iconfont icon-enter"></i></span>
+						</p>
+					</li>
+					<li   v-if='hasProjectId'>
+						<p class="pl10 pr10 tr">
+							<span class="fl">经销商门店</span>
+							 <span class="right"><span   class="first">{{splStoreNm}}</span> </span>
+						</p>
+					</li>
+					<li @click="surePickerStoretype" v-else  >
+						<p class="pl10 pr10 tr">
+							<span class="fl">经销商门店</span>
+							 <span class="right"><span v-if='lendRuleStyle' class="first">{{splStoreNm}}</span><span v-else class="second">请选择</span> <i class="icon iconfont icon-enter"></i></span>
+						</p>
+					</li>
 					<li  v-if='hasProjectId'>
 						<p class="pl10 pr10 tr" >
 							<span class="fl">区域</span>
@@ -124,6 +148,18 @@
 					<span class="fl" @click="surePickerLendRule">取消</span><span class="fr" @click="surePickerLendRule('confirm')">确定</span>
 				</p>
 		</mt-popup>
+		<mt-popup v-model="pickerCardtypeStatus" position='bottom' class="pickerColor">
+			<mt-picker :slots="slots4" @change="onValuesChange4"></mt-picker>
+			<p>
+				<span class="fl" @click="surePickerCardtype">取消</span><span class="fr" @click="surePickerCardtype('confirm')">确定</span>
+			</p>
+	</mt-popup>
+	<mt-popup v-model="pickerStoretypeStatus" position='bottom' class="pickerColor">
+		<mt-picker :slots="slots5" @change="onValuesChange5"></mt-picker>
+		<p>
+			<span class="fl" @click="surePickerStoretype">取消</span><span class="fr" @click="surePickerStoretype('confirm')">确定</span>
+		</p>
+</mt-popup>
 			</div>
 		</div>
 		<script src="../../js/summer.js" ></script>
@@ -155,6 +191,12 @@
 			  baseData.fkgzCd.map(function(e,i){
 					baseMessage.slots3[0].values.push(e.label);
 			  })
+			  baseData.carCdTypArray.map(function(e,i){
+					baseMessage.slots4[0].values.push(e.label);
+			  })
+			  baseData.storesArray.map(function(e,i){
+					baseMessage.slots5[0].values.push(e.label);
+			  })
 		  }
 		  function getAddr(){
 			  baseMessage.AREA_ID=JSON.parse(summer.getStorage('selectProvince')).AREA_ID
@@ -181,6 +223,10 @@
 					pickerTask:'',
 					pickerLendRuleStatus:false,
 					pickerLendRule:'',
+					pickerCardtypeStatus:false,
+					pickerCardtype:'',
+					pickerStoretypeStatus:false,
+					pickerStoretype:'',
 					slots1 : [{
 						flex : 1,
 						values : [],
@@ -204,6 +250,22 @@
 						className : 'slot1',
 						textAlign : 'center'
 					}],
+					slots4 : [{
+						flex : 1,
+						//values : ["先放款后抵押","先抵押后放款"],
+						values : [],
+						defaultIndex :0,
+						className : 'slot1',
+						textAlign : 'center'
+					}],
+					slots5 : [{
+						flex : 1,
+						//values : ["先放款后抵押","先抵押后放款"],
+						values : [],
+						defaultIndex :0,
+						className : 'slot1',
+						textAlign : 'center'
+					}],
 					totalData:"",
 					project_Id:"",
 					AREA_ID:"",
@@ -214,7 +276,11 @@
 					hasProjectId:false,
 					PROJECT_NAME:'',
 					PROJECT_ID:'',
-					areaTotal:''
+					areaTotal:'',
+					carCdTyp:'',//车牌类型
+					carCdTypNm:'',
+					splStore:'',//经销商门店
+					splStoreNm:''//经销商门店
 				}
 			},
 			 methods: {
@@ -232,6 +298,10 @@
 								self.programStyle =res.data.datas.prjBscInfo.prjTypCdNm;
 								self.taskStyle =res.data.datas.prjBscInfo.bizTypNm;
 								self.lendRuleStyle =res.data.datas.prjBscInfo.fkgzCd=="1"?"先抵押后放款":"先放款后抵押";
+								self.carCdTyp =res.data.datas.prjBscInfo.carCdTyp;
+								self.CarCdTypName =res.data.datas.prjBscInfo.CarCdTypName;
+								self.splStore =res.data.datas.prjBscInfo.splStore?res.data.datas.prjBscInfo.splStore.id:'';
+								self.splStoreNm =res.data.datas.prjBscInfo.splStore?res.data.datas.prjBscInfo.splStore.stoNm:'';
 								var dataT=res.data.datas.prjBscInfo;
 								self.areaTotal =dataT.rgnReCd.name+"-"+dataT.rgnPrCd.name+"-"+dataT.rgnCyCd.name+"-"+dataT.rgnToCd.name;
 						 }
@@ -298,6 +368,24 @@
 						this.lendRuleStyle = this.pickerLendRule;
 					}
 				},
+				onValuesChange4:function(picker, values) {
+					this.pickerCardtype = values[0];
+				},
+				surePickerCardtype:function(param) {
+					this.pickerCardtypeStatus = !this.pickerCardtypeStatus;
+					if (param == 'confirm') {
+						this.carCdTypNm = this.pickerCardtype;
+					}
+				},
+				onValuesChange5:function(picker, values) {
+					this.pickerStoretype = values[0];
+				},
+				surePickerStoretype:function(param) {
+					this.pickerStoretypeStatus = !this.pickerStoretypeStatus;
+					if (param == 'confirm') {
+						this.splStoreNm = this.pickerStoretype;
+					}
+				},
 				save:function() {
 					var self=this;
 					if(this.programStyle==""){
@@ -322,7 +410,9 @@
 			        var _programStyle=this.programStyle;
 					var _taskStyle=this.taskStyle;
 					var _lendRuleStyle=this.lendRuleStyle;
-			  		var prjTypCd,bizTyp,fkgzCd;
+					var _carCdTypNm=this.carCdTypNm;
+					var _splStoreNm=this.splStoreNm;
+			  		var prjTypCd,bizTyp,fkgzCd,carCdTyp,splStore;
 
 					baseMessage.totalData.prjTypCdArray.map(function(e,i){
 						if(e.label==_programStyle){
@@ -339,6 +429,16 @@
 							fkgzCd=baseMessage.totalData.fkgzCd[i].value;
 						}
 					});
+					baseMessage.totalData.carCdTypArray.map(function(e,i){
+						if(e.label==_carCdTypNm){
+							carCdTyp=baseMessage.totalData.carCdTypArray[i].value;
+						}
+					});
+					baseMessage.totalData.storesArray.map(function(e,i){
+						if(e.label==_splStoreNm){
+							splStore=baseMessage.totalData.storesArray[i].value;
+						}
+					});
 
 					summer.showProgress();
 					ajaxRequest({
@@ -351,6 +451,10 @@
 								 "sign":"1",
 								 "cstId":{
 									 "id":customId
+								 },
+								 "carCdTyp":carCdTyp,
+								 "splStore":{
+									 "id":splStore
 								 }
 						  }
 					 }, function (res) {
