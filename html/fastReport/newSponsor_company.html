@@ -141,13 +141,13 @@
 			<mt-field label="法人手机号" placeholder="请输入法人手机号" v-model="message.corpRepTel"></mt-field>
 			<div @click="surePickerCardtype" class="item">
 					<p class="pl10 pr10  um-box">
-						<span class="um-bf1">法人代表证件类型</span> <span class="um-bf1 tr"><span v-if='message.corpRepCertTypNm' class="first">{{message.corpRepCertTypNm}}</span><span v-else class="second">请选择</span> <i class="icon iconfont icon-enter"></i></span>
+						<span class="um-bf1">法人代表证件类型</span> <span class="um-bf1 tr"><span v-if='message.corpRepCertTypCdName' class="first">{{message.corpRepCertTypCdName}}</span><span v-else class="second">请选择</span> <i class="icon iconfont icon-enter"></i></span>
 					</p>
 			</div>
 			<mt-field label="法人代表证件号码" placeholder="请输入法人代表证件号码" v-model="message.corpRepCertNo"></mt-field>
 			<div @click="surePickerCompanytype" class="item">
 					<p class="pl10 pr10  um-box">
-						<span class="um-bf1">企业性质</span> <span class="um-bf1 tr"><span v-if='message.corpTypCdNm' class="first">{{message.corpTypCdNm}}</span><span v-else class="second">请选择</span> <i class="icon iconfont icon-enter"></i></span>
+						<span class="um-bf1">企业性质</span> <span class="um-bf1 tr"><span v-if='message.corpTypCdName' class="first">{{message.corpTypCdName}}</span><span v-else class="second">请选择</span> <i class="icon iconfont icon-enter"></i></span>
 					</p>
 				</div>
 				<div @click="sureDateConfirm1" class="item">
@@ -250,8 +250,8 @@
 						prjId:'',
 						id:'',
 						corpRepCertTypCd:'',//法人代表证件类型
-						corpRepCertTypNm:'',
-						corpTypCdNm:'',//企业性质
+						corpRepCertTypCdName:'',
+						corpTypCdName:'',//企业性质
 						corpTypCd:'',
 						corpRepCertNo:'',//身份证号码
 						regDt:'',//企业成立日期
@@ -332,9 +332,9 @@
 					this.pickerCardtypeStatus = !this.pickerCardtypeStatus;
 					var self = this;
 					if (param == 'confirm') {
-						this.message.corpRepCertTypNm = this.pickerCardtype;
+						this.message.corpRepCertTypCdName = this.pickerCardtype;
 					   	self.totalData.carTypArray.map(function(e,i){
-							if(e.label==self.message.corpRepCertTypNm){
+							if(e.label==self.message.corpRepCertTypCdName){
 								self.message.corpRepCertTypCd=self.totalData.carTypArray[i].value;
 						    } 
 						});
@@ -348,9 +348,9 @@
 					this.pickerCompanytypeStatus = !this.pickerCompanytypeStatus;
 					var self = this;
 					if (param == 'confirm') {
-						this.message.corpTypCdNm = this.pickerCompanytype;
+						this.message.corpTypCdName = this.pickerCompanytype;
 						self.totalData.corpTypArray.map(function(e,i){
-							if(e.label==self.message.corpTypCdNm){
+							if(e.label==self.message.corpTypCdName){
 								self.message.corpTypCd=self.totalData.corpTypArray[i].value;
 						    } 
 						});
@@ -483,12 +483,12 @@
 							msg: "法人手机号格式不正确"
 						});
 						return false; 
-					}else if(this.message.corpRepCertTypNm == "") {
+					}else if(this.message.corpRepCertTypCdName == "") {
 						summer.toast({
 							msg: "证件类型不能为空"
 						});
 						return false;
-					}else if(this.message.corpTypCdNm == "") {
+					}else if(this.message.corpTypCdName == "") {
 						summer.toast({
 							msg: "企业性质不能为空"
 						});
@@ -566,6 +566,16 @@
 				newCreateCustom.message.corpRepTel=item.corpRepTel;
 				newCreateCustom.id=item.id
 				newCreateCustom.isSelect=true;
+
+
+				newCreateCustom.message.corpRepCertNo=item.corpRepCertNo;
+				newCreateCustom.message.corpRepCertTypCd=item.corpRepCertTypCd;
+				newCreateCustom.message.corpRepCertTypCdName=item.corpRepCertTypCdName;
+				newCreateCustom.message.regDt=item.regDt;
+				newCreateCustom.message.expDt=item.expDt;
+				newCreateCustom.message.postAddr=item.postAddr;
+				newCreateCustom.message.corpTypCd=item.corpTypCd;
+				newCreateCustom.message.corpTypCdName=item.corpTypCdName;
 			}
 			var params = ["android.permission.ACCESS_FINE_LOCATION", "android.permission.ACCESS_COARSE_LOCATION", "android.permission.CAMERA", "android.permission.FLASHLIGHT", "android.permission.READ_EXTERNAL_STORAGE", "android.permission.READ_PHONE_STATE",
 				"android.permission.WRITE_EXTERNAL_STORAGE", "android.permission.ACCESS_FINE_LOCATION", "android.permission.ACCESS_COARSE_LOCATION"
@@ -576,6 +586,9 @@
 				//alert(args); //失败返回illegal access
 			})
 		}
+		$(function(){
+			$('body').height($('body')[0].clientHeight);
+		});
 	</script>
 </body>
 
