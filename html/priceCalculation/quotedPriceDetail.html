@@ -111,7 +111,7 @@
 					<li class="input">
 						<b>车辆融资金额</b>
 						<span>
-							<input v-if="rongZiEdit" type="text" @input="checkVal('rongZiPrice')" @blur="computedHirePct" placeholder="请输入融资金额" name="rongZiPrice" v-model="rongZiPrice">
+							<input v-if="rongZiEdit" type="text" @blur="computedHirePct" placeholder="请输入融资金额" name="rongZiPrice" v-model="rongZiPrice">
 							<b v-else>{{rongZiPrice}}</b>
 							&nbsp;元
 						</span>
@@ -466,12 +466,24 @@
 					},
 					methods:{
 						computedHirePct:function(){
+							val =this.rongZiPrice;
+							if(!/^([1-9]\d{0,9}|0)$/.test(val)){
+								this.rongZiPrice= 0
+								summer.toast({msg:'车辆融资金额必须为整数'})
+							}
+							if(val>this.allPrice){
+								this.rongZiPrice= 0
+								summer.toast({msg:'车辆融资金额不能大于车辆单价'})
+							}
 							 this.hirePctMoney = parseInt(this.allPrice - this.rongZiPrice)
 							 this.hirePct = parseFloat(this.hirePctMoney/this.allPrice).toFixed(6)
 							 this.groessPrice =parseInt(this.rongZiPrice * this.groessPriceRate*0.01)
 						},
 						changBailRate:function(){
 							var val=this.bail
+							if(val>this.allPrice){
+								summer.toast({msg:'保证金不能大于车辆单价'})
+							}
 							if(!/^([1-9]\d{0,9}|0)([.]?|(\.\d{1,2})?)$/.test(val)||!val||val<0){
 								this.bail=''
 								this.bailRate=''
@@ -481,6 +493,9 @@
 						},
 						changeFirstPayRate:function(){
 							var val=this.firstPay
+							if(val>this.allPrice){
+								summer.toast({msg:'首付款不能大于车辆单价'})
+							}
 							if(!/^([1-9]\d{0,9}|0)([.]?|(\.\d{1,2})?)$/.test(val)||!val||val<0){
 								this.firstPay=''
 								this.firstPayRate=''
@@ -660,6 +675,7 @@
 								if(resultData.lsPdUntArray.length>1){
 									_this.LspdList=resultData.lsPdUntArray
 								}else {
+									_this.LspdList=resultData.lsPdUntArray
 									_this.lsPdUntCd=resultData.lsPdUntArray[0].value
 									_this.lsPdUntCdName=resultData.lsPdUntArray[0].label
 								}
@@ -667,6 +683,7 @@
 								if(resultData.payWayArray.length>1){
 									_this.pickerPayWayList=resultData.payWayArray
 								}else{
+									_this.pickerPayWayList=resultData.payWayArray
 									_this.payWayCd=resultData.payWayArray[0].value
 									_this.payWay=resultData.payWayArray[0].label
 								}
@@ -1011,6 +1028,10 @@
 								if(!/^([1-9]\d{0,9}|0)$/.test(val)){
 									this.rongZiPrice= 0
 									summer.toast({msg:'车辆融资金额必须为整数'})
+								}
+								if(val>this.allPrice){
+									this.rongZiPrice= 0
+									summer.toast({msg:'车辆融资金额不能大于车辆单价'})
 								}
 							}else if(value==="pingtai"){
 								val=this.pingtai;
