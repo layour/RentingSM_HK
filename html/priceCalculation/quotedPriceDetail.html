@@ -67,7 +67,7 @@
 						</span>
 					</li>
 					<li @click="pickLspd('yearRate')" v-if="AnnIntRatePctList.length>1">
-						<b>贷款年利率</b>
+						<b>基础年利率</b>
 						<span>
 							<b v-if="annIntRatePct">{{annIntRatePct}}&nbsp;%</b>
 							<b v-else class="default">请选择</b>
@@ -75,17 +75,12 @@
 						</span>
 					</li>
 					<li v-else>
-						<b>贷款年利率</b>
+						<b>基础年利率</b>
 						<span>
 							<b>{{annIntRatePct}}&nbsp;%</b>
 						</span>
 					</li>
-					<li>
-						<b>基础年利率</b>
-						<span>
-							<b>{{defAnnIntRatePct}}&nbsp;%</b>
-						</span>
-					</li>
+
 					<li @click="pickLspd('payType')">
 						<b>支付方式</b>
 						<span>
@@ -223,13 +218,19 @@
 							<input type="text" @input="checkVal('pingtai')" placeholder="请输入平台费" name="pingtai" v-model="pingtai">&nbsp;元
 						</span>
 					</li>
-					<li class="input">
+					<li class="input spec">
 						<b>其他加融项</b>
 						<span>
 							<input type="text" @input="checkVal('jiarong')" placeholder="请输入加融项" name="jiarong" v-model="jiarong">&nbsp;元
 						</span>
 					</li>
 
+					<li>
+						<b>实际年利率</b>
+						<span>
+							<b>{{defAnnIntRatePct}}&nbsp;%</b>
+						</span>
+					</li>
 					<li><b>每期租金</b><span>{{everyPrice}}&nbsp;元</span></li>
 				</ul>
       </div>
@@ -355,8 +356,8 @@
 								className: 'slot1',
 								textAlign: 'center'
 							}],
-							annIntRatePct:'',
-							defAnnIntRatePct:'',
+							annIntRatePct:'',  //基础年利率 保存 查询的时候两个值反了
+							defAnnIntRatePct:'', //贷款年利率
 							listYearRate:[],
 							AnnIntRatePctList:[],
 							payWayCd:'',
@@ -542,8 +543,8 @@
 											_this.lsPdUntCdName=dataObj.lsPdUntNm
 											_this.payWayCd=dataObj.payWayCd
 											_this.payWay=dataObj.payWay
-											_this.annIntRatePct=dataObj.annIntRatePct
-											_this.defAnnIntRatePct=dataObj.defAnnIntRatePct
+											_this.annIntRatePct=dataObj.defAnnIntRatePct
+											_this.defAnnIntRatePct=dataObj.annIntRatePct
 											_this.hirePct=dataObj.hirePct
 											_this.hirePctMoney=parseInt(_this.hirePct*_this.allPrice*0.01)
 											_this.bailPct=dataObj.bailPct
@@ -555,8 +556,10 @@
 											_this.gpsTypList=res.data.GPSTypArray
 											//贴息 咨询费 融资额
 											_this.rongZiPrice =dataObj.actLsAmt
-											_this.tiJxId = dataObj.tiexiCd
+											_this.txJxId = dataObj.tiexiCd
+											_this.txJeName = dataObj.TiexiCdName
 											_this.fuwuId =dataObj.isHasSxf
+											_this.fuwuName = dataObj.IsHasSxfName
 											if(_this.gpsTyp){
 												_this.GPSTypArray=_this.gpsTyp.split(",")
 												for(var k=0;k<_this.GPSTypArray.length;k++){
@@ -889,7 +892,6 @@
 									this.computedYearRate()
 								}else if (this.currentName=='yearRate') {
 									this.annIntRatePct=this.pickingObj.value
-									this.defAnnIntRatePct=this.pickingObj.value
 								}else if (this.currentName=='payType') {
 									this.payWayCd=this.pickingObj.value
 									this.payWay=this.pickingObj.label
@@ -1049,7 +1051,7 @@
 							var params={
 								lsPd:this.lsPd,
 								lsPdUntCd:this.lsPdUntCd,
-								annIntRatePct:this.annIntRatePct,
+								defAnnIntRatePct:this.annIntRatePct,  //传基础年利率 (对应后台defAnnIntRatePct 值反了就好）
 								payWayCd:this.payWayCd,
 								payWay:this.payWay,
 								hirePct:this.hirePct,
@@ -1099,7 +1101,8 @@
 								summer.toast({msg:"测算完成"});
 								if(res.data.flag=='1'){
 									_this.isTest=true;
-									_this.everyPrice=res.data.datas
+									_this.everyPrice=res.data.datas.eachEstRntAmt
+									_this.defAnnIntRatePct=res.data.datas.annIntRatePct
 								}else {
 									summer.toast({msg:res.data.msg})
 								}
@@ -1122,7 +1125,8 @@
 								prjId:this.prjId,
 								lsPd:this.lsPd,
 								lsPdUntCd:this.lsPdUntCd,
-								annIntRatePct:this.annIntRatePct,
+								annIntRatePct:this.defAnnIntRatePct,
+								defAnnIntRatePct:this.annIntRatePct,
 								payWayCd:this.payWayCd,
 								payWay:this.payWay,
 								hirePct:this.hirePct,
