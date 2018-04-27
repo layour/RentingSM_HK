@@ -26,6 +26,9 @@
 	color:#333;
 	font-size:0.28rem;
 }
+.baseMessage ul li>p{
+  overflow:hidden;
+}
 .baseMessage ul li p .right  .first{
 
 	color:#333;
