@@ -52,13 +52,13 @@
 					<li   v-if='hasProjectId'>
 						<p class="pl10 pr10 tr">
 							<span class="fl">车牌类型</span>
-							 <span class="right"><span   class="first">{{carCdTypNm}}</span> </span>
+							 <span class="right"><span   class="first">{{carCdTypName}}</span> </span>
 						</p>
 					</li>
 					<li @click="surePickerCardtype" v-else  >
 						<p class="pl10 pr10 tr">
 							<span class="fl">车牌类型</span>
-							 <span class="right"><span v-if='lendRuleStyle' class="first">{{carCdTypNm}}</span><span v-else class="second">请选择</span> <i class="icon iconfont icon-enter"></i></span>
+							 <span class="right"><span v-if='lendRuleStyle' class="first">{{carCdTypName}}</span><span v-else class="second">请选择</span> <i class="icon iconfont icon-enter"></i></span>
 						</p>
 					</li>
 					<li   v-if='hasProjectId'>
@@ -278,7 +278,7 @@
 					PROJECT_ID:'',
 					areaTotal:'',
 					carCdTyp:'',//车牌类型
-					carCdTypNm:'',
+					carCdTypName:'',
 					splStore:'',//经销商门店
 					splStoreNm:''//经销商门店
 				}
@@ -299,7 +299,7 @@
 								self.taskStyle =res.data.datas.prjBscInfo.bizTypNm;
 								self.lendRuleStyle =res.data.datas.prjBscInfo.fkgzCd=="1"?"先抵押后放款":"先放款后抵押";
 								self.carCdTyp =res.data.datas.prjBscInfo.carCdTyp;
-								self.CarCdTypName =res.data.datas.prjBscInfo.CarCdTypName;
+								self.carCdTypName =res.data.datas.prjBscInfo.carCdTypName;
 								self.splStore =res.data.datas.prjBscInfo.splStore?res.data.datas.prjBscInfo.splStore.id:'';
 								self.splStoreNm =res.data.datas.prjBscInfo.splStore?res.data.datas.prjBscInfo.splStore.stoNm:'';
 								var dataT=res.data.datas.prjBscInfo;
@@ -374,7 +374,7 @@
 				surePickerCardtype:function(param) {
 					this.pickerCardtypeStatus = !this.pickerCardtypeStatus;
 					if (param == 'confirm') {
-						this.carCdTypNm = this.pickerCardtype;
+						this.carCdTypName = this.pickerCardtype;
 					}
 				},
 				onValuesChange5:function(picker, values) {
@@ -410,7 +410,7 @@
 			        var _programStyle=this.programStyle;
 					var _taskStyle=this.taskStyle;
 					var _lendRuleStyle=this.lendRuleStyle;
-					var _carCdTypNm=this.carCdTypNm;
+					var _carCdTypNm=this.carCdTypName;
 					var _splStoreNm=this.splStoreNm;
 			  		var prjTypCd,bizTyp,fkgzCd,carCdTyp,splStore;
 

@@ -186,7 +186,7 @@
 					</mt-popup>
 					<mt-datetime-picker ref="picker" v-model="pickerValue" type="date" cancel-text='取消' confirm-text='确定' :start-date='new Date("1950-01-01")' :end-date="noweDate" @confirm="handleConfirm1">
 					</mt-datetime-picker>
-					<mt-datetime-picker ref="picker2" v-model="pickerValue2" type="date" cancel-text='取消' confirm-text='确定' :start-date='new Date("1950-01-01")' :end-date="noweDate2" @confirm="handleConfirm2">
+					<mt-datetime-picker ref="picker2" v-model="pickerValue2" type="date" cancel-text='取消' confirm-text='确定' :start-date='new Date()' :end-date="noweDate2" @confirm="handleConfirm2">
 					</mt-datetime-picker>
 			<!--<mt-datetime-picker ref="picker" v-model="pickerValue" type="date" cancel-text='取消' confirm-text='确定' :start-date='new Date("1950-01-01")' :end-date="noweDate" @confirm="handleConfirm">
 			</mt-datetime-picker>-->
@@ -221,7 +221,7 @@
 					pickerValue2: new Date(),
 					surePicekerDateVal2: '',
 					pickerDateStatus2: false,
-					noweDate2: new Date(),
+					noweDate2: new Date(new Date().getTime()+946080000000),
 					isSelect:false,
 					CLIENT_ID:'',
 					GID:'',
