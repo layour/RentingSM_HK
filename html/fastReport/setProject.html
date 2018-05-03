@@ -316,7 +316,6 @@
 							// if (self.sourceFrom=="programSelect") {
 							// 	self.getCompleteStatus(self.customId,self.project_Id);
 							// }
-							if (res.data.flag == 1) {
 							 var finanlData=res.data.datas;
 							if (finanlData.jjlFlag) {
 							 	addRight('emergencyContract');
@@ -345,8 +344,7 @@
 							if (finanlData.quatFlag) {
 							 	addRight('price');
 							}
-						}
-							
+							self.customId = finanlData.CST_ID;
 
 						}
 					}, function(err) {
