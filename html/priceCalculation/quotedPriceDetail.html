@@ -477,7 +477,7 @@
 								summer.toast({msg:'车辆融资金额不能大于车辆单价'})
 							}
 							 this.hirePctMoney = parseInt(this.allPrice - this.rongZiPrice)
-							 this.hirePct = parseFloat(this.hirePctMoney/this.allPrice).toFixed(6)
+							 this.hirePct = parseFloat(this.hirePctMoney/this.allPrice).toFixed(2)
 							 this.groessPrice =parseInt(this.rongZiPrice * this.groessPriceRate*0.01)
 						},
 						changBailRate:function(){
@@ -489,7 +489,7 @@
 								this.bail=''
 								this.bailRate=''
 							}else {
-								this.bailRate=parseFloat(100*this.bail/number).toFixed(6);
+								this.bailRate=parseFloat(100*this.bail/number).toFixed(2);
 							}
 						},
 						changeFirstPayRate:function(){
@@ -501,7 +501,7 @@
 								this.firstPay=''
 								this.firstPayRate=''
 							}else {
-								this.firstPayRate=parseFloat(100*this.firstPay/this.allPrice).toFixed(6);
+								this.firstPayRate=parseFloat(100*this.firstPay/this.allPrice).toFixed(2);
 							}
 						},
 						bailToRateStatus:function(){
