@@ -701,6 +701,8 @@
 								_this.gpsTypList=resultData.GPSTypArray
 								_this.txJeArr = resultData.tiexiCdArray
 								_this.fuwuArr =	resultData.isHasSxfArray
+								_this.txJeName = "无";//默认贴息为无
+								_this.txJxId = "2";
 								for (var i = 0; i < resultData.schList.length; i++) {
 									if(resultData.schList[i].keyNameEn=='ZLQS'){
 										_this.lsPd=resultData.schList[i].valueStr
@@ -798,7 +800,10 @@
 										}
 									}
 								}
-								_this.groessPrice =parseInt(_this.rongZiPrice * _this.groessPriceRate*0.01)
+								_this.groessPrice =parseInt(_this.rongZiPrice * _this.groessPriceRate*0.01);
+								if(_this.groessPrice){
+									_this.fuwuName="是"
+								}
 
 								if(_this.lsPd&&_this.lsPdUntCd){
 									_this.AnnIntRatePctList=[];
@@ -1075,7 +1080,10 @@
 									{feeTypCd:'35',cntWayCd:'2',feeAmt:this.pingtai},
 									{feeTypCd:'36',cntWayCd:'2',feeAmt:this.jiarong},
 
-								]
+								],
+								proId:{
+									schemeCode:this.SCHEME_NAME_ID
+								}
 							};
 							if(this.prjId){
 								params.prjId=this.prjId
@@ -1119,6 +1127,10 @@
 								summer.toast({msg:'请先测算报价'})
 								return
 							}
+							if(this.gpsInsName=="是"&&this.gpsTypName==""){
+								summer.toast({msg:'GPS类型不能为空'})
+								return
+							}
 							summer.showProgress();
 							var _this=this
 							var param={
@@ -1160,12 +1172,20 @@
 							},function(res){
 								console.log("res",JSON.stringify(res));
 								summer.hideProgress();
-								summer.toast({msg:"保存成功"});
-								summer.execScript({
-								    winId: "setProject",
-								    script: "addRight('price')"
-								});
-								summer.closeToWin({id:'setProject'})
+								if(res.data.flag=="1"){
+									summer.toast({msg:"保存成功"});
+									summer.execScript({
+										winId: "setProject",
+										script: "addRight('price')"
+									});
+									summer.closeToWin({id:'setProject'})
+								}else{
+									summer.toast({
+										msg:res.data.msg
+									});
+									return;
+								}
+
 							},function(err){
 								console.log("err",err);
 							})

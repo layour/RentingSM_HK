@@ -58,7 +58,7 @@
 					<li @click="surePickerCardtype" v-else  >
 						<p class="pl10 pr10 tr">
 							<span class="fl">车牌类型</span>
-							 <span class="right"><span v-if='lendRuleStyle' class="first">{{carCdTypName}}</span><span v-else class="second">请选择</span> <i class="icon iconfont icon-enter"></i></span>
+							 <span class="right"><span v-if='carCdTypName' class="first">{{carCdTypName}}</span><span v-else class="second">请选择</span> <i class="icon iconfont icon-enter"></i></span>
 						</p>
 					</li>
 					<li   v-if='hasProjectId'>
@@ -70,7 +70,7 @@
 					<li @click="surePickerStoretype" v-else  >
 						<p class="pl10 pr10 tr">
 							<span class="fl">经销商门店</span>
-							 <span class="right"><span v-if='lendRuleStyle' class="first">{{splStoreNm}}</span><span v-else class="second">请选择</span> <i class="icon iconfont icon-enter"></i></span>
+							 <span class="right"><span v-if='splStoreNm' class="first">{{splStoreNm}}</span><span v-else class="second">请选择</span> <i class="icon iconfont icon-enter"></i></span>
 						</p>
 					</li>
 					<li  v-if='hasProjectId'>
