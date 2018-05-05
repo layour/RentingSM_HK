@@ -125,9 +125,8 @@
 					if (searchValue) {
 						ajaxRequest({
 							type: 'post',
-							url: 'appservice/project/prjbscinfo/initList.do?cstNm='+searchValue,
+							url: 'appservice/project/prjbscinfo/initList.do?cstNm='+searchValue+'&pageNo='+end,
 							param: {
-								"pageNo": end,
 								"pageSize": 10,
 								"prjStsCd": "",
 								"prjNm":''
