@@ -1,99 +1,140 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1">
-		<meta charset="UTF-8">
-		<title></title>
-		<link rel="stylesheet" href="../../css/iuapmobile.um.css">
-		<link rel="stylesheet" href="./car.min.css">
-	</head>
-	<body>
-		<div class="um-win" id="pickerModels-4">
-			<div class="um-content pickerModels">
-        <ul class="modelsList">
-          <li v-for="(it,index) in modelsList" @click="pickerModels(it)" :key="index">
-						{{it.equNm}}
-					</li>
-        </ul>
-      </div>
+
+<head>
+    <meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1">
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="../../css/iuapmobile.um.css">
+    <link rel="stylesheet" href="./car.min.css">
+</head>
+
+<body>
+    <div class="um-win" id="pickerModels-4">
+        <div class="um-content pickerModels">
+            <div class="um-input-group pr" id='search'>
+                <i class="icon iconfont icon-nav_search"></i>
+                <input type="text" name="search" class="form-control"  placeholder="搜索">
+                <span onclick="satartSearch('all')">取消</span>
+            </div>
+            <div id="content" style="display: none;"></div>
+            <ul class="modelsList">
+                <li v-for="(it,index) in modelsList" @click="pickerModels(it)" :key="index">
+                    {{it.equNm}}
+                </li>
+            </ul>
+        </div>
     </div>
-		<script src="../../js/summer.js" ></script>
-		<script src="../../js/jquery.min.js" ></script>
-		<script src="../../js/font.js" ></script>
-		<script src="../../js/vue.js" ></script>
-		<script src="../../js/common.js" ></script>
-		<script src="../../js/Frameworks/iuapmobile.frameworks.ui.js" ></script>
+    <script src="../../js/summer.js"></script>
+    <script src="../../js/jquery.min.js"></script>
+    <script src="../../js/font.js"></script>
+    <script src="../../js/vue.js"></script>
+    <script src="../../js/common.js"></script>
+    <script src="../../js/Frameworks/iuapmobile.frameworks.ui.js"></script>
     <script>
-				summerready=function() {
-					pickerModelsVue3.id=summer.pageParam.id;
-          pickerModelsVue3.equSet=summer.pageParam.equSet;
-          pickerModelsVue3.equMdl=summer.pageParam.equMdl;
-					pickerModelsVue3.getData();
-				}
-        var pickerModelsVue3=new Vue({
-          el:'#pickerModels-4',
-          data:function(){
-            return {
-							id:'',
-              equSet:'',
-              equMdl:'',
-              modelsList:[]
+        summerready = function () {
+            bindEvents();
+            pickerModelsVue3.id = summer.pageParam.id;
+            pickerModelsVue3.equSet = summer.pageParam.equSet;
+            pickerModelsVue3.equMdl = summer.pageParam.equMdl;
+            pickerModelsVue3.getData('');
+        }
+        function bindEvents() {
+            $('.form-control').on('input propertychange', satartSearch);
+        }
+        function satartSearch(val) {
+            if (val == 'all') {
+                $(".form-control").val('');
+                $(".form-control").addClass('active').siblings('span').removeClass('active');
+                pickerModelsVue3.getData('')
+                return
             }
-          },
-					methods:{
-						getData:function(){
-							var _this=this;
-							console.log(this.id);
-							ajaxRequest({
-								type:'post',
-								url:'appservice/project/prjprdbscinfo/queryByBra.do',
-								param:{
-									braBscInfo:{id:_this.id},
-									equSet:_this.equSet,
-                  equMdl:_this.equMdl
-								}
-							},function(res){
-								console.log("res",res);
-								if(res.data.datas.braList==0){
-									createNull("pickerModels-4")
-								}else {
-									_this.modelsList=res.data.datas.braList
-								}
-							},function(err){
-								console.log("err",err);
-							})
-						},
-						pickerModels:function(it){
-              summer.setStorage('pickerModels4',it.equNm);
-							summer.showProgress();
-							var _this=this
-							ajaxRequest({
-								type:'post',
-								url:'appservice/project/prjprdbscinfo/queryByBra.do',
-								param:{
-									braBscInfo:{id:_this.id},
-									equSet:_this.equSet,
-                  equMdl:_this.equMdl,
-									equNm:it.equNm
-								}
-							},function(res){
-								console.log("res",res);
-									summer.setStorage('realityPrice',res.data.datas.braList[0].guidePc);
-									summer.hideProgress()
-									summer.execScript({
-									    winId: 'addCarList',
-									    script: 'getModels()'
-									});
-									summer.closeToWin({
-										id:'addCarList'
-									})
-							},function(err){
-								console.log("err",err);
-							})
-						}
-					}
+            var searchData = $(".form-control").val();
+            if (searchData) {
+                $(".form-control").removeClass('active').siblings('span').addClass('active');
+            } else {
+                $(".form-control").addClass('active').siblings('span').removeClass('active')
+            }
+            pickerModelsVue3.getData(searchData)
+        }
+        var pickerModelsVue3 = new Vue({
+            el: '#pickerModels-4',
+            data: function () {
+                return {
+                    id: '',
+                    equSet: '',
+                    equMdl: '',
+                    modelsList: []
+                }
+            },
+            methods: {
+                getData: function (val) {
+                    var _this = this;
+                    ajaxRequest({
+                        type: 'post',
+                        url: 'appservice/project/prjprdbscinfo/queryByBra.do',
+                        param: {
+                            braBscInfo: {
+                                id: _this.id
+                            },
+                            equSet: _this.equSet,
+                            equMdl: _this.equMdl,
+                            remarks: val
+                        }
+                    }, function (res) {
+                        if (res.data.flag == 1) {
+                            if (!res.data.datas.braList || res.data.datas.braList == 0) {
+                                $('.modelsList').css('display', 'none');
+                                $('#content').css('display', 'block');
+                                createNull("content");
+                            } else {
+                                $('#content').css('display', 'none');
+                                $('.modelsList').css('display', 'block');
+                                _this.modelsList = res.data.datas.braList
+                            }
+                        } else {
+                            $('.modelsList').css('display', 'none');
+                            $('#content').css('display', 'block');
+                            createNull("content");
+                        }
+                    }, function (err) {
+                        console.log("err", err);
+                    })
+                },
+                pickerModels: function (it) {
+                    summer.setStorage('pickerModels4', it.equNm);
+                    summer.showProgress();
+                    var _this = this
+                    ajaxRequest({
+                        type: 'post',
+                        url: 'appservice/project/prjprdbscinfo/queryByBra.do',
+                        param: {
+                            braBscInfo: {
+                                id: _this.id
+                            },
+                            equSet: _this.equSet,
+                            equMdl: _this.equMdl,
+                            equNm: it.equNm
+                        }
+                    }, function (res) {
+                        console.log("res", res);
+                        summer.setStorage('realityPrice', res.data.datas.braList[0].guidePc);
+                        summer.hideProgress()
+                        summer.execScript({
+                            winId: 'addCarList',
+                            script: 'getModels()'
+                        });
+                        summer.closeToWin({
+                            id: 'addCarList'
+                        })
+                    }, function (err) {
+                        console.log("err", err);
+                    })
+                }
+            }
         })
     </script>
-  </body>
+</body>
+
 </html>
 s

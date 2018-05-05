@@ -1,89 +1,132 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1">
-		<meta charset="UTF-8">
-		<title></title>
-		<link rel="stylesheet" href="../../css/iuapmobile.um.css">
-		<link rel="stylesheet" href="./car.min.css">
-	</head>
-	<body>
-		<div class="um-win" id="pickerModels-3">
-			<div class="um-content pickerModels">
-        <ul class="modelsList">
-          <li v-for="(it,index) in modelsList" @click="pickerModels(it)" :key="index">
-						{{it.equMdl}}
-					</li>
-        </ul>
-      </div>
+
+<head>
+    <meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1">
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="../../css/iuapmobile.um.css">
+    <link rel="stylesheet" href="./car.min.css">
+</head>
+
+<body>
+    <div class="um-win" id="pickerModels-3">
+        <div class="um-content pickerModels">
+            <div class="um-input-group pr" id='search'>
+                <i class="icon iconfont icon-nav_search"></i>
+                <input type="text" name="search" class="form-control"  placeholder="搜索">
+                <span onclick="satartSearch('all')">取消</span>
+            </div>
+            <div id="content" style="display: none;"></div>
+            <ul class="modelsList">
+                <li v-for="(it,index) in modelsList" @click="pickerModels(it)" :key="index">
+                    {{it.equMdl}}
+                </li>
+            </ul>
+        </div>
     </div>
-		<script src="../../js/summer.js" ></script>
-		<script src="../../js/jquery.min.js" ></script>
-		<script src="../../js/font.js" ></script>
-		<script src="../../js/vue.js" ></script>
-		<script src="../../js/common.js" ></script>
-		<script src="../../js/Frameworks/iuapmobile.frameworks.ui.js" ></script>
+    <script src="../../js/summer.js"></script>
+    <script src="../../js/jquery.min.js"></script>
+    <script src="../../js/font.js"></script>
+    <script src="../../js/vue.js"></script>
+    <script src="../../js/common.js"></script>
+    <script src="../../js/Frameworks/iuapmobile.frameworks.ui.js"></script>
     <script>
-				summerready=function() {
-					pickerModelsVue3.id=summer.pageParam.braId;
-					pickerModelsVue3.equSet=summer.pageParam.equSet;
-					pickerModelsVue3.getData();
-				}
-        var pickerModelsVue3=new Vue({
-          el:'#pickerModels-3',
-          data:function(){
-            return {
-							id:'',
-							equSet:'',
-              modelsList:[]
+        summerready = function () {
+            bindEvents();
+            pickerModelsVue3.id = summer.pageParam.braId;
+            pickerModelsVue3.equSet = summer.pageParam.equSet;
+            pickerModelsVue3.getData('');
+        }
+        function bindEvents() {
+            $('.form-control').on('input propertychange', satartSearch);
+        }
+        function satartSearch(val) {
+            if (val == 'all') {
+                $(".form-control").val('');
+                $(".form-control").addClass('active').siblings('span').removeClass('active');
+                pickerModelsVue3.getData('')
+                return
             }
-          },
-					methods:{
-						getData:function(){
-							var _this=this;
-							console.log(this.id);
-							ajaxRequest({
-								type:'POST',
-								url:'appservice/project/prjprdbscinfo/queryByBra.do',
-								param:{
-									braBscInfo:{id:_this.id},
-									equSet:_this.equSet
-								}
-							},function(res){
-								console.log("res",res);
-								if(res.data.datas.braList==0){
-									createNull("pickerModels-3")
-								}else {
-									_this.modelsList=res.data.datas.braList
-								}
-							},function(err){
-								console.log("err",err);
-							})
-						},
-						pickerModels:function(it){
-							var _this=this;
-							summer.setStorage('pickerModels3',it.equMdl);
-							summer.openWin({
-								id:'pickerModels-4',
-								url:'html/touristsClient/pickerModels-4.html',
-								create:false,
-								type:'actionBar',
-								pageParam:{id:_this.id,equSet:_this.equSet,equMdl:it.equMdl},
-								actionBar: {
-						      title: it.equMdl,
-						      titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
-						      backgroundColor: "#039BE5",
-						      leftItem:{
-						          image: "img/back.png",
-						          method:'',//返回按钮自定义事件
-						          text:"返回",
-						          textColor:"#ffffff"  //返回文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
-						      }
-								}
-							})
-						}
-					}
+            var searchData = $(".form-control").val();
+            if (searchData) {
+                $(".form-control").removeClass('active').siblings('span').addClass('active');
+            } else {
+                $(".form-control").addClass('active').siblings('span').removeClass('active')
+            }
+            pickerModelsVue3.getData(searchData)
+        }
+        var pickerModelsVue3 = new Vue({
+            el: '#pickerModels-3',
+            data: function () {
+                return {
+                    id: '',
+                    equSet: '',
+                    modelsList: []
+                }
+            },
+            methods: {
+                getData: function (val) {
+                    var _this = this;
+                    ajaxRequest({
+                        type: 'POST',
+                        url: 'appservice/project/prjprdbscinfo/queryByBra.do',
+                        param: {
+                            braBscInfo: {
+                                id: _this.id
+                            },
+                            equSet: _this.equSet,
+                            remarks: val
+                        }
+                    }, function (res) {
+                        if (res.data.flag == 1) {
+                            if (!res.data.datas.braList || res.data.datas.braList == 0) {
+                                $('.modelsList').css('display', 'none');
+                                $('#content').css('display', 'block');
+                                createNull("content");
+                            } else {
+                                $('#content').css('display', 'none');
+                                $('.modelsList').css('display', 'block');
+                                _this.modelsList = res.data.datas.braList
+                            }
+                        } else {
+                            $('.modelsList').css('display', 'none');
+                            $('#content').css('display', 'block');
+                            createNull("content");
+                        }
+                    }, function (err) {
+                        console.log("err", err);
+                    })
+                },
+                pickerModels: function (it) {
+                    var _this = this;
+                    summer.setStorage('pickerModels3', it.equMdl);
+                    summer.openWin({
+                        id: 'pickerModels-4',
+                        url: 'html/touristsClient/pickerModels-4.html',
+                        create: false,
+                        type: 'actionBar',
+                        pageParam: {
+                            id: _this.id,
+                            equSet: _this.equSet,
+                            equMdl: it.equMdl
+                        },
+                        actionBar: {
+                            title: it.equMdl,
+                            titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
+                            backgroundColor: "#039BE5",
+                            leftItem: {
+                                image: "img/back.png",
+                                method: '', //返回按钮自定义事件
+                                text: "返回",
+                                textColor: "#ffffff" //返回文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
+                            }
+                        }
+                    })
+                }
+            }
         })
     </script>
-  </body>
+</body>
+
 </html>
