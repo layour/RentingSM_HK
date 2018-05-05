@@ -218,10 +218,13 @@
 							<input type="text" @input="checkVal('pingtai')" placeholder="请输入平台费" name="pingtai" v-model="pingtai">&nbsp;元
 						</span>
 					</li>
-					<li class="input spec">
+					<li class="input spec" v-if="jiarongStatus">
 						<b>其他加融项</b>
 						<span>
-							<input type="text" @input="checkVal('jiarong')" placeholder="请输入加融项" name="jiarong" v-model="jiarong">&nbsp;元
+							<input  v-if="jiarongEdit" type="text" @input="checkVal('jiarong')" placeholder="请输入加融项" name="jiarong" 
+							v-model="jiarong">
+							<b v-else>{{jiarong}}</b>
+							&nbsp;元
 						</span>
 					</li>
 
