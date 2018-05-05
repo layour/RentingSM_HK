@@ -108,10 +108,13 @@
 						<input type="text" @input="checkNumber($event,'realityPrice')" name="price" placeholder="请输入车辆单价" v-model="realityPrice">元
 					</td>
 				</tr>
-				<tr>
+				<tr  @click="surePickerRealColor">
 					<td>车身颜色</td>
 					<td>
-						<input type="text"  name="carColor" placeholder="请输入车身颜色" v-model="carColor">
+							<span v-if='carColor'>{{carColor}}</span>
+							<span class="grayColor" v-else>请选择</span>
+							<i class="icon iconfont icon-enter"></i>
+						<!-- <input type="text"  name="carColor" placeholder="请输入车身颜色" v-model="carColor"> -->
 					</td>
 				</tr>
 				<tr @click="surePickerColor('guanXi')">
@@ -136,6 +139,13 @@
 					<span class="" @click="surePickerOldCar">取消</span>
 					<span class="" @click="surePickerOldCar('confirm')">确定</span>
 				</p>
+			</mt-popup>
+			<mt-popup v-model="pickerRealColorStatus" position='bottom' class="pickerColor">
+					<mt-picker :slots="slots3" @change="onValuesChange3"></mt-picker>
+					<p>
+						<span class="" @click="surePickerRealColor">取消</span>
+						<span class="" @click="surePickerRealColor('confirm')">确定</span>
+					</p>
 			</mt-popup>
 			<template>
 		  <mt-datetime-picker
@@ -162,6 +172,8 @@
 			el: '#addCar',
 			data:function() {
 				return {
+					pickerRealColorStatus:false,
+					pickerRealColorType:'',
 					pickerDateValue:'',
 					dealer: '',
 					dealerId:'',
@@ -173,6 +185,8 @@
 					carModels: '',
 					color: '',
 					carColor:'',
+					carColorId:'',
+					realColorArray:[],
 					realityPrice: '',
 					guidePrice:'',
 					pickerColorStatus: false,
@@ -216,7 +230,15 @@
 						defaultIndex: 0,
 						className: 'slot1',
 						textAlign: 'center'
-					}]
+					}],
+					slots3: [{
+						flex: 1,
+						//values: ['未婚', '已婚', '离婚', '丧偶', '未说明的婚姻状况'],
+						values: [],
+						defaultIndex: 0,
+						className: 'slot1',
+						textAlign: 'center'
+					}],
 				}
 			},
 			methods: {
@@ -244,11 +266,16 @@
 						summer.hideProgress()
 						console.log("返回数据",JSON.stringify(res.data.datas.prjBscInfo.splBscInfo.sellTypCd),JSON.stringify(res.data.datas.prjBscInfo.prjEquBscInfo),JSON.stringify(res.data.datas.prjBscInfo.prjEqiDtlCar));
 						_this.colorArray = res.data.datas.braTypeList
+						_this.realColorArray = res.data.datas.carClArray;
 						_this.transParam=res.data.datas.braList
 						_this.regionArray=res.data.datas.regionArray
 						_this.guanXiArr=res.data.datas.driverRlTypArray
 
 						_this.dealer=res.data.datas.prjBscInfo.splBscInfo.splNm
+
+						for (var i = 0; i <_this.realColorArray.length; i++) {
+							_this.slots3[0].values.push( _this.realColorArray[i].label);
+						}
 						if(res.data.datas.prjBscInfo.splBscInfo.sellTypCd == "2"){
 							_this.isOldCar = "是"
 							this.color = "二手车";
@@ -287,7 +314,8 @@
 								_this.carNumber=oldCarData.vinNo
 								_this.powerNumber=oldCarData.engNo
 							}
-							_this.carColor=oldCarData.carCl
+							_this.carColor=oldCarData.carClName;
+							_this.carColorId=oldCarData.carCl;
 							if(resData.isNew=='1'){
 								_this.mileage=oldCarData.usedCarMil
 								_this.firstDate=oldCarData.usedCarReg
@@ -439,6 +467,21 @@
 						}
 					}
 				},
+				onValuesChange3: function (picker, values) {
+					this.pickerRealColorType = values[0];
+				},
+				surePickerRealColor: function (param) {
+					var self=this;
+					this.pickerRealColorStatus = !this.pickerRealColorStatus;
+					if (param == 'confirm') {
+						this.carColor = this.pickerRealColorType;
+						this.realColorArray.map(function(e,i){
+							if(e.label==self.carColor){
+								self.carColorId=self.realColorArray[i].value;
+							}
+						});
+					}
+				},
 				save:function() {
 					var _this=this
 					if (!this.dealer  || !this.isOldCar||!this.color || !this.carModels || !this.realityPrice) {
@@ -469,7 +512,7 @@
 					prjEquBscInfo.equMdl=this.equMdl
 					prjEquBscInfo.equNm=this.equNm
 					prjEquBscInfo.equAmt= this.realityPrice;
-					prjEqiDtlCar.carCl=this.carColor
+					prjEqiDtlCar.carCl=this.carColorId
 					prjEquBscInfo.equQty="1"
 					prjEqiDtlCar.driverRlTypCd=this.guanXiId
 					if(this.isOldCar=="是"){
