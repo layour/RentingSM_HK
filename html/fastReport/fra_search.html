@@ -34,25 +34,27 @@
 		<div class="um-content" id="content">
 			<div class="list customList um-bgc-white" v-for="(item,index) in dataList">
 				<p class="pl10 title pr10">
-					{{item.CR_BECR_NAME}}<span class="status fr">
-					<i class="iconfont icon-customer mr5"></i>{{item.CLERK_NAME}}</span>
+					{{item.cstNm}}<span class="status fr">
+					<i class="iconfont icon-customer mr5"></i>{{item.cstMgrNm}}</span>
 				</p>
 				<div class="center" @click="openDetail(item.ID)">
 					<p class="type pl10">
-						<span>{{item.CR_BECR_TYPE}} </span> | <span>{{item.PLATFORM}}</span>
+						<span>	{{item.cstId?item.cstId.cstTypCdNm:" "}} </span> | <span>{{item.bizTypNm}}</span>
 					</p>
 					<p class="type card pl10 status">
-						{{item.LEASE_CODE}} <span class="fr">{{item.STATUS}}</span>
+						{{item.lsCntNo}} <span class="fr">{{item.prjStsCdNm}}</span>
 					</p>
 					<p class="time pl10 pr10">
-						<span>创建时间：<span>{{item.CREATE_TIME}}</span></span>
+						<span>创建时间：<span>{{item.createDate}}</span></span>
 					</p>
 				</div>
-				<p class=" select um-box" v-if="item.STATUS=='未评审'">
-					<span class="um-bf1   tc" @click="upload(item.ID)"><i class="iconfont icon-Upload mr5"></i>上传资料</span>
-					<span class="um-bf1  tc" @click="submit(item.ID)"><i class="iconfont icon-submit mr5"></i>提交</span>
-					<span class="um-bf1   tc" @click="edit(item.ID)"><i class="iconfont icon-modify mr5"></i>修改</span>
-					<span class="um-bf1  tc" @click="openOpacity(item.ID,item.LEASE_CODE)"><i class="iconfont icon-nav_delete mr5"></i>删除</span>
+				<p class=" select um-box" v-if="item.prjStsCdNm=='未评审'">
+					<!--<span class="um-bf1   tc" @click="upload(item.ID)"><i class="iconfont icon-Upload mr5"></i>上传资料</span>-->
+					<!--<span class="um-bf1  tc" @click="submit(item.ID)"><i class="iconfont icon-submit mr5"></i>提交</span>-->
+					<span class="um-bf1   tc" @click="edit(item.id)">
+						<i class="iconfont icon-modify mr5"></i>修改</span>
+					<span class="um-bf1  tc" @click="openOpacity(item.id)">
+						<i class="iconfont icon-nav_delete mr5"></i>删除</span>
 				</p>
 				<p v-else></p>
 			</div>
@@ -123,28 +125,39 @@
 					if (searchValue) {
 						ajaxRequest({
 							type: 'post',
-							url: 'appservice/promc/projectList',
+							url: 'appservice/project/prjbscinfo/initList.do',
 							param: {
 								"pageNo": end,
 								"pageSize": 10,
-								"STATUS": "",
-								"CR_BECR_NAME": searchValue ? searchValue : ""
+								"prjStsCd": "",
+								"cstNm": searchValue ? searchValue : "",
+								"prjNm":''
 							}
 						}, function(res) {
 							//alert(res);
 							summer.hideProgress();
-							if (res.data.flag == 1) {
-								if (flag) {
-									if (res.data.datas.list.length < 1) {
-										$('.null').css('display','block');
-									} else {
-										$('.null').css('display','none');
-										self.dataList = res.data.datas.list;
-									}
+						var Data;
+						if (Object.prototype.toString.call(res.data) === '[object String]') {
+							Data = JSON.parse(res.data);
+						} else {
+							Data = res.data;
+						}
+						if (Data.flag == 1) {
+							self.totalPage = Data.datas.last;
+							if (flag) {
+								if (Data.datas.list.length < 1) {
+									createNull("content", "../../img/empty.png");
+									//$("#content").css('display', 'block');
 								} else {
-									self.dataList = self.dataList.concat(res.data.datas.list);
+									//$("#content").css('display', 'none');
+									self.dataList = Data.datas.list;
 								}
+							} else {
+								self.dataList = self.dataList.concat(Data.datas.list);
 							}
+
+							console.log(self.dataList);
+						}
 						}, function(err) {
 							alert(err);
 							console.log(err);
@@ -171,11 +184,12 @@
 						pageParam: {
 							id: id,
 							code: code,
-							frameId: "fra_total"
+							frameId: "fra_search",
+							winId:"search"
 						}
 					})
 				},
-				openDetail:function(id) {
+				openDetail:function(id, JBPM_ID) {
 					console.log(id);
 					summer.openWin({
 						id: 'programDetail',
@@ -194,59 +208,8 @@
 							}
 						},
 						pageParam: {
-							id: id
-						}
-					});
-				},
-				upload:function(id) {
-					summer.openWin({
-						id: 'uploadImg',
-						url: 'html/fastReport/uploadImg.html',
-						create: false,
-						type: 'actionBar',
-						actionBar: {
-							title: "资料上传",
-							titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
-							backgroundColor: "#039be5",
-							leftItem: {
-								image: "img/back.png",
-								method: "", //返回按钮自定义事件
-								text: "返回",
-								textColor: "#ffffff" //返回文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
-							},
-							rightItems: [{
-								type: "text",
-								text: "保存",
-								textColor: "#ffffff",
-								method: "save()"
-							}]
-						},
-						pageParam: {
 							id: id,
-							source: "programSelect"
-						}
-					});
-				},
-				submit:function(id) {
-					summer.openWin({
-						id: 'submitSure',
-						url: 'html/fastReport/submitSure.html',
-						create: false,
-						type: 'actionBar',
-						actionBar: {
-							title: "提交确认",
-							titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
-							backgroundColor: "#039be5",
-							leftItem: {
-								image: "img/back.png",
-								method: "", //返回按钮自定义事件
-								text: "返回",
-								textColor: "#ffffff" //返回文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
-							}
-						},
-						pageParam: {
-							id: id,
-							source: "programSelect"
+							JBPM_ID: JBPM_ID
 						}
 					});
 				},
@@ -274,11 +237,14 @@
 							}]
 						},
 						pageParam: {
-							id: id,
-							source: "programSelect"
+							projectId: id,
+							source: "programSelect",
+							isEdit: true
 						}
 					});
 				}
+			 
+			 
 			}
 
 		});

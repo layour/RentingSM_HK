@@ -76,10 +76,11 @@
     <script src="../../js/summer.js"></script>
     <script src="../../js/common.js" ></script>
     <script>
-    	var programId,programCode,frameId;
+    	var programId,programCode,frameId,winId;
 		summerready = function() {
 			 programId=summer.pageParam.id;
 			 frameId=summer.pageParam.frameId;
+			 winId=summer.pageParam.winId;
 		}
 	  function cancleChoose(){
 	  	closeOpacity();
@@ -96,11 +97,20 @@
 					console.log(res);
 					if(res.data.flag==1){
 						summer.toast({msg:"删除成功"});
-						summer.execScript({
+						if(winId){
+							summer.execScript({
+						    winId:winId,
+						    frameId:frameId,
+						    script: "getData('1','true')"
+							});
+						}else{
+							summer.execScript({
 						    winId: "programSelect",
 						    frameId:frameId,
 						    script: "getData('1','true')"
-						});
+							});
+						}
+						
 						closeOpacity();
 					}else{
 						summer.toast({msg:"删除失败"});
