@@ -133,12 +133,22 @@ function ajaxRequest(paramObj, successCallback, errorCallback) {
 		var token = getToken();
 		if ($summer.os == "ios") {
 			if (paramObj.type == "post" || paramObj.type == "POST") {
-				testPath = testPath + "?TOKEN=" + token;
+				if(paramObj.search){
+					testPath = testPath + "&TOKEN=" + token;//搜索的URL单独处理
+				}else{
+					testPath = testPath + "?TOKEN=" + token;
+				}
+				
 			} else {
 				paramObj.param.TOKEN = token;
 			}
 		} else {
-			testPath = testPath + "?TOKEN=" + token;
+			if(paramObj.search){//搜索的URL单独处理
+				testPath = testPath + "&TOKEN=" + token;
+			}else{
+				testPath = testPath + "?TOKEN=" + token;
+			}
+			
 		}
 	}
 	summer.ajax({

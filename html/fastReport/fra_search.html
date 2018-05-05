@@ -37,7 +37,7 @@
 					{{item.cstNm}}<span class="status fr">
 					<i class="iconfont icon-customer mr5"></i>{{item.cstMgrNm}}</span>
 				</p>
-				<div class="center" @click="openDetail(item.ID)">
+				<div class="center" @click="openDetail(item.id,item.JBPM_ID)">
 					<p class="type pl10">
 						<span>	{{item.cstId?item.cstId.cstTypCdNm:" "}} </span> | <span>{{item.bizTypNm}}</span>
 					</p>
@@ -125,14 +125,14 @@
 					if (searchValue) {
 						ajaxRequest({
 							type: 'post',
-							url: 'appservice/project/prjbscinfo/initList.do',
+							url: 'appservice/project/prjbscinfo/initList.do?cstNm='+searchValue,
 							param: {
 								"pageNo": end,
 								"pageSize": 10,
 								"prjStsCd": "",
-								"cstNm": searchValue ? searchValue : "",
 								"prjNm":''
-							}
+							},
+							search:true
 						}, function(res) {
 							//alert(res);
 							summer.hideProgress();
