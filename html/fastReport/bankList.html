@@ -223,25 +223,25 @@
                     var AccountType, IdentificationType, bkCd, BankID;
                     // 账户类型
                     this.typeArr.forEach(function (e) {
-                        if (e.label == this.insurerType) {
+                        if (e.label == This.insurerType) {
                             AccountType = e.value;
                         }
                     });
                     // 证件类型
                     this.paperArr.forEach(function (e) {
-                        if (e.label == this.insurerPaper) {
+                        if (e.label == This.insurerPaper) {
                             IdentificationType = e.value;
                         }
                     });
                     // 银行代码
                     this.bankArr.forEach(function (e) {
-                        if (e.label == this.insurerBank) {
+                        if (e.label == This.insurerBank) {
                             bkCd = e.value;
                         }
                     });
                     // 银行ID
                     this.bankArr.forEach(function (e) {
-                        if (e.label == this.insurerBank) {
+                        if (e.label == This.insurerBank) {
                             BankID = e.id;
                         }
                     });
@@ -375,6 +375,32 @@
                         bankInfo.insurerPaper = cstBankInfo.certTypNm ? cstBankInfo.certTypNm : "请选择";
                         bankInfo.paperNum = cstBankInfo.certNo ? cstBankInfo.certNo : "";
                         bankInfo.withholding = bankInfo.withholding ? bankInfo.withholding : 1;
+                    } else {
+                        // 新建银行账号
+                        ajaxRequest({
+                            type: 'post',
+                            url: 'appservice/customer/cstNpBscInfo/view.do',
+                            param: {
+                                "cstBscInfo": {
+                                    id: clintId
+                                }
+                            }
+                        }, function (res) {
+                            if (res.data.flag == 1) {
+                                var holeDataBase = res.data.datas.cstBscInfo;
+                                bankInfo.kaihuName = holeDataBase.cstNm ? holeDataBase.cstNm : "";
+                                bankInfo.insurerPaper = "身份证";
+                                bankInfo.paperNum = holeDataBase.certNo ? holeDataBase.certNo : "";
+                            } else {
+                                summer.toast({
+                                    msg: "读取客户信息失败"
+                                });
+                            }
+                        }, function (err) {
+                            summer.toast({
+                                msg: "读取客户信息失败"
+                            });
+                        });
                     };
                     bankInfo.bankArr = Data.datas.bankList;
                     bankInfo.bankSlots[0].values = bankInfo.bankArr.map(function (e) {
