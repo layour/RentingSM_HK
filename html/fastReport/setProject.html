@@ -120,7 +120,7 @@
 				</a>
 				<a href="javascript:void(0);" @click="openBaseMessage(baseMessageData)">
 					<div class="um-list-item-bodys">
-						项目基础信息
+						业务基础信息
 						<span class="frp"> <i class="baseMessage icon iconfont icon-right"></i>&nbsp; <i class="icon iconfont icon-enter"></i> </span>
 					</div>
 				</a>
@@ -187,7 +187,7 @@
 				var customId = summer.pageParam.customId;
 			var __projectid = summer.pageParam.projectId;
 			setProgect.project_Id = __projectid;
-			//setProgect.getProjectId(__projectid);//此处应为从项目列表进来修改准备
+			//setProgect.getProjectId(__projectid);//此处应为从业务列表进来修改准备
 			console.log(JSON.stringify(summer.pageParam));
 			if (sourceId == "programSelect") {
 				setProgect.getProjectId(__projectid);
@@ -462,7 +462,7 @@
 				// title = '添加设备';
 				if (!setProgect.project_Id) {
 					summer.toast({
-						msg: '请先完善项目基础信息'
+						msg: '请先完善业务基础信息'
 					});
 					return
 				}
@@ -574,7 +574,7 @@
 			}
 			if (!setProgect.project_Id) {
 				summer.toast({
-					msg: '请先完善项目基础信息'
+					msg: '请先完善业务基础信息'
 				});
 				return
 			}
@@ -641,7 +641,7 @@
 			var clientId = setProgect.customId
 			if (!projectId) {
 				summer.toast({
-					msg: "请先完善项目基本信息"
+					msg: "请先完善业务基本信息"
 				});
 				return;
 			} else {
@@ -701,7 +701,7 @@
 				id: "programSelect"
 			});*/
 			if(!$(".baseMessage").hasClass('active')){
-				summer.toast({msg:"请完善项目基本信息"});
+				summer.toast({msg:"请完善业务基本信息"});
 				return;
 			}else if(!$(".addCarList").hasClass('active')){
 				summer.toast({msg:"请添加车辆"});

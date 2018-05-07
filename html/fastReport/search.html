@@ -20,7 +20,7 @@
         <div class="bar bar-nav um-header" id="header" v-if="program">
             <form action="javascript:void(0);">
                 <i class="iconfont icon-nav_search pl10 pr5"> </i>
-                <input class="searchValue" id="search_program" type="search" name="search" autofocus="autofocus" placeholder="请输入项目名称" />
+                <input class="searchValue" id="search_program" type="search" name="search" autofocus="autofocus" placeholder="请输入业务名称" />
             </form>
             <span onclick="closeWin()">取消</span>
         </div>
@@ -92,7 +92,7 @@
         data() {
             return {
                 newCustom: false, //代表从客户这搜索
-                program: false, //代表从项目列表搜索
+                program: false, //代表从业务列表搜索
                 payList: false //代表搜索支付表
             }
         },
