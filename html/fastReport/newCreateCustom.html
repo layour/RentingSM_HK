@@ -160,6 +160,16 @@
 					</span>
 				</p>
 			</div>
+			<div @click="surePickerEducate" class="item" >
+					<p class="pl10 pr10  um-box">
+							<span class="um-red mr5 fl">*</span><span class="um-bf1">最高学历</span>
+						<span class="um-bf1 tr">
+							<span v-if='message.eduLvlNm' class="first">{{message.eduLvlNm}}</span>
+							<span v-else class="second">请选择</span>
+							<i class="icon iconfont icon-enter"></i>
+						</span>
+					</p>
+				</div>
 			<div @click="surePickerMarStsCd" class="item" >
 				<p class="pl10 pr10  um-box">
 						<span class="um-red mr5 fl">*</span><span class="um-bf1">婚姻状况</span>
@@ -302,6 +312,13 @@
 				</div>
 		</div>
 		<div class="um-footer">
+				<mt-popup v-model="pickerEducateStatus" position='bottom' class="pickerColor">
+						<mt-picker :slots="slots0" @change="onValuesChange0"></mt-picker>
+						<p>
+							<span class="" @click="surePickerEducate">取消</span>
+							<span class="" @click="surePickerEducate('confirm')">确定</span>
+						</p>
+					</mt-popup>
 			<mt-popup v-model="pickerMarStsCdStatus" position='bottom' class="pickerColor">
 				<mt-picker :slots="slots1" @change="onValuesChange1"></mt-picker>
 				<p>
@@ -375,6 +392,7 @@
 					cardShow: false,
 					cardUrl: "",
 					pickerVisible: "",
+					pickerEducateStatus:false,
 					pickerMarStsCdStatus: false,
 					pickerIsHasLicenseStatus: false,
 					pickerDriverLicenseTypeStatus: false,
@@ -383,6 +401,7 @@
 					pickerWorkTypCdStatus: false,
 					pickerPositionStatus: false,
 					pickerSourceIncomeStatus:false,
+					pickerEducate: "",
 					pickerMarStsCd: "",
 					pickerIsHasLicense: "",
 					pickerDriverLicenseType: "",
@@ -392,6 +411,14 @@
 					pickerPosition: "",
 					pickerSourceIncome:"",
 					isChooseCar:false,//判断准驾车型是否可选择
+					slots0: [{
+						flex: 1,
+						//values: ['大专', '本科', '离婚', '丧偶', '未说明的婚姻状况'],
+						values: [],
+						defaultIndex: 0,
+						className: 'slot1',
+						textAlign: 'center'
+					}],
 					slots1: [{
 						flex: 1,
 						//values: ['未婚', '已婚', '离婚', '丧偶', '未说明的婚姻状况'],
@@ -467,6 +494,8 @@
 						genderNm:'',
 						age:'',
 						birthday:'',
+						eduLvlNm:'',//最高学历
+						eduLvlCd:'',
 						marStsNm:'',//婚姻状况
 						marStsCd:'',
 						isHasLicense: '', //是否有驾照
@@ -649,7 +678,11 @@
 							var totalData = res.data.datas;
 							self.totalData=totalData;
 							self.regionArray = totalData.regionArray;
-							var marStsNmData=[],isHasLicenseNmData=[],driverLicenseNmData=[],housingOwnershipNmData=[],industryNmData=[],workTypNmData=[],positionData=[];majorInArrayData=[];
+							var marStsNmData=[],isHasLicenseNmData=[],driverLicenseNmData=[],housingOwnershipNmData=[],industryNmData=[],workTypNmData=[],positionData=[];majorInArrayData=[];mostEducateData=[]
+							for (var i = 0; i < totalData.eduLvlCd.length; i++) {
+								mostEducateData.push(totalData.eduLvlCd[i].label);
+							}
+							self.slots0[0].values = mostEducateData;
 							for (var i = 0; i < totalData.marStsCd.length; i++) {
 								marStsNmData.push(totalData.marStsCd[i].label);
 							}
@@ -689,6 +722,8 @@
 								self.message.cstBscInfo.cstPhoneNumber = holeDataBase.cstPhoneNumber;
 								self.message.cstBscInfo.id = holeDataBase.id;//保存客户基本信息
 								self.message.id = holeDataDetail.id;//存的是客户详情id,编辑保存必须带上
+								self.message.eduLvlCd = holeDataDetail.eduLvlCd;
+								self.message.eduLvlNm = holeDataDetail.eduLvlNm
 								self.message.genderCd = holeDataDetail.genderCd;
 								self.message.genderNm = holeDataDetail.genderCd=="1"?"男":"女";
 								self.message.birthday = holeDataDetail.birthday;
@@ -821,6 +856,21 @@
 				},
 				successCallBack: function (args) {
 					console.log(args);
+				},
+				onValuesChange0: function (picker, values) {
+					this.pickerEducate = values[0];
+				},
+				surePickerEducate: function (param) {
+					var self = this;
+					this.pickerEducateStatus = !this.pickerEducateStatus;
+					if (param == 'confirm') {
+						this.message.eduLvlNm = this.pickerEducate;
+						this.totalData.eduLvlCd.map(function(e,i){
+						 	if(e.label==self.message.eduLvlNm){
+								self.message.eduLvlCd=self.totalData.eduLvlCd[i].value;
+						 	}
+						 });
+					}
 				},
 				onValuesChange1: function (picker, values) {
 					this.pickerMarStsCd = values[0];
