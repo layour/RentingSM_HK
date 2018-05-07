@@ -165,12 +165,9 @@ function ajaxRequest(paramObj, successCallback, errorCallback) {
 		}
 		if (response.data.code == "R10002") {
 			summer.hideProgress();
-			if (tokenToast) {
-				tokenToast = false;
-				summer.toast({
-					msg: "登录过期，请重新登录"
-				});
-			}
+            summer.toast({
+                msg: "登录过期，请重新登录"
+            });
 			summer.openWin({
 				id: 'login',
 				url: 'login.html',
