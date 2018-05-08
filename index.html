@@ -46,23 +46,10 @@
 			</h2>
 			<div class="xmgl_con">
 				<ul class="xmgl_list clearfix">
-					<!-- <li onclick="mission()" class="">
-						<dl>
-							<dt class="iconfont icon-submit" style="color:#c79644"></dt>
-							<dd>审批管理</dd>
-						</dl>
-						<span class="missionNum" v-show='missionNum>0'>{{missionNum}}</span>
-					</li> -->
 					<li onclick="openFastReport()">
 						<dl>
 							<dt class="iconfont icon-nav_house" style="color:#88d27c"></dt>
 							<dd>业务申请</dd>
-						</dl>
-					</li>
-					<li onclick="openPayList()">
-						<dl>
-							<dt class="iconfont icon-qiandao" style="color:#c79644"></dt>
-							<dd>付款申请</dd>
 						</dl>
 					</li>
 					<li onclick="openQuotedPrice()">
@@ -91,94 +78,11 @@
 					</li>
 				</ul>
 			</div>
-			<h2 class="crm">
-				<div>
-					<span></span>
-					<i>CRM</i>
-				</div>
-			</h2>
-			<div class="crm_con">
-				<ul class="crm_list clearfix">
-					<li onclick="openNewCustom()">
-						<dl>
-							<dt class="iconfont icon-people-l" style="color:#88d27c"></dt>
-							<dd>客户</dd>
-						</dl>
-					</li>
-					<li onclick="unfinished()">
-						<dl>
-							<dt class="iconfont icon-house" style="color:#c79644"></dt>
-							<dd>商机</dd>
-						</dl>
-					</li>
-					<li onclick="unfinished()">
-						<dl>
-							<dt class="iconfont icon-qiandao" style="color:#c79644"></dt>
-							<dd>拜访记录</dd>
-						</dl>
-					</li>
-					<li onclick="unfinished()">
-						<dl>
-							<dt class="iconfont icon-friends" style="color:#88d27c"></dt>
-							<dd>销售线索</dd>
-						</dl>
-					</li>
-					<li onclick="unfinished()">
-						<dl>
-							<dt class="iconfont icon-version" style="color:#403b3a"></dt>
-							<dd>销售简报</dd>
-						</dl>
-					</li>
-				</ul>
-			</div>
-			<!-- <h2 class="xmgl">
-					<div>
-						<span></span>
-						<i>增值服务</i>
-					</div>
-				</h2>
-			<div class="xmgl_con">
-				<ul class="xmgl_list clearfix">
-					<li onclick="unfinished()">
-						<dl>
-							<dt class="iconfont icon-process" style="color:#403b3a"></dt>
-							<dd>燃油业务</dd>
-						</dl>
-					</li>
-					<li onclick="unfinished()">
-						<dl>
-							<dt class="iconfont icon-place" style="color:#88d27c"></dt>
-							<dd>GPS安装</dd>
-						</dl>
-					</li>
-					<li onclick="unfinished()">
-						<dl>
-							<dt class="iconfont icon-submit" style="color:#c79644"></dt>
-							<dd>ETC业务</dd>
-						</dl>
-					</li>
-				</ul>
-			</div> -->
 		</div>
 	</div>
 	<script>
 		
 		summerready = function () {
-			/* if (isLogin()) {
-				getMissionData(); //获取代办任务个数
-			}
-			summer.setRefreshHeaderInfo({
-				visible: true,
-				loadingImg: 'img/refresh.png',
-				bgColor: '#ffffff',
-				textColor: '#aaaaaa',
-				textDown: '下拉刷新...',
-				textUp: '松开刷新...',
-				showTime: true
-			}, function(ret, err) {
-				//通常在这里从服务器加载数据，t
-				getMissionData();
-			}); */
 			// 关闭启动图
 			setTimeout(function () {
 				summer.hideLaunch();
@@ -189,39 +93,6 @@
 			});
 		}
 
-		/* function getMissionData() {
-			fistPage.getMissionData();
-		} */
-		var fistPage = new Vue({
-			el: '#win',
-			data: {
-				missionNum: ''
-			},
-			methods: {
-				getMissionData:function () {
-					var self = this;
-					ajaxRequest({
-						type: 'post',
-						url: 'appservice/bpmtask/myTaskCount',
-						param: {}
-					}, function (res) {
-						summer.hideProgress();
-						if (res.data.flag == 1) {
-							self.missionNum = parseInt(res.data.datas.count);
-							console.log(res);
-						}
-					}, function (err) {
-						alert(err);
-						console.log(err);
-						summer.hideProgress();
-					});
-					this.$nextTick(function () {
-						summer.refreshHeaderLoadDone() //加载完成后调用方法恢复组件到默认状态
-						summer.refreshFooterLoadDone(); //加载完成后调用方法恢复组件到默认状态
-					})
-				}
-			}
-		});
 		// 判断是否已登陆
 		function isLogin() {
 			if (summer.getStorage("userinfo")) {
@@ -336,61 +207,8 @@
 				toLog();
 			}
 		}
-		// 销售线索
-		function openLeads() {
-			if (isLogin()) {
-				summer.openWin({
-					id: 'leadsList',
-					url: 'html/salesLeads/leadsList.html',
-					create: false,
-					type: 'actionBar',
-					actionBar: {
-						title: "销售线索",
-						titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
-						backgroundColor: "#039be5",
-						leftItem: {
-							image: "img/back.png",
-							method: "", //返回按钮自定义事件
-							text: "返回",
-							textColor: "#ffffff" //返回文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
-						},
-						rightItems: [{
-							type: "text",
-							text: "新建",
-							textColor: "#ffffff",
-							method: "addLeads()"
-						}]
-					}
-				})
-			} else {
-				toLog();
-			}
-		}
-		// 销售简报
-		function openBriefing() {
-			if (isLogin()) {
-				summer.openWin({
-					id: 'briefing',
-					url: 'html/salesBriefing/index.html',
-					create: false,
-					type: 'actionBar',
-					actionBar: {
-						title: "销售简报",
-						titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
-						backgroundColor: "#039be5",
-						leftItem: {
-							image: "img/back.png",
-							method: "", //返回按钮自定义事件
-							text: "返回",
-							textColor: "#ffffff" //返回文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
-						}
-					}
-				})
-			} else {
-				toLog();
-			}
-		}
 
+		// 报价测算
 		function openQuotedPrice() {
 			if (isLogin()) {
 				summer.openWin({
@@ -414,84 +232,6 @@
 				toLog();
 			}
 		}
-		//拜访记录
-		function openVisitRecord() {
-			if (isLogin()) {
-				summer.openWin({
-					id: 'visitRecord',
-					url: 'html/visitRecord/visitRecord.html',
-					create: false,
-					type: 'actionBar',
-					actionBar: {
-						title: "拜访记录",
-						titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
-						backgroundColor: "#039be5",
-						leftItem: {
-							image: "img/back.png",
-							method: "", //返回按钮自定义事件
-							text: "返回",
-							textColor: "#ffffff" //返回文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
-						},
-						rightItems: [{
-							type: "text",
-							text: "添加",
-							textColor: "#ffffff",
-							method: "newVisit()"
-						}]
-					}
-				})
-			} else {
-				toLog();
-			}
-		}
-
-		function openAddCar() {
-			if (isLogin()) {
-				summer.openWin({
-					id: 'setProject',
-					url: 'html/fastReport/setProject.html',
-					create: false,
-					type: 'actionBar',
-					actionBar: {
-						title: "快捷报单",
-						titleColor: "#000000", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
-						backgroundColor: "#039be5",
-						leftItem: {
-							image: "img/back.png",
-							method: "", //返回按钮自定义事件
-							text: "返回",
-							textColor: "#000000" //返回文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
-						}
-					}
-				})
-			} else {
-				toLog();
-			}
-		}
-		// 代办任务
-		function mission() {
-			if (isLogin()) {
-				summer.openWin({
-					id: 'missionIndex',
-					url: 'html/mission/index.html',
-					create: false,
-					type: 'actionBar',
-					actionBar: {
-						title: "审批管理",
-						titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
-						backgroundColor: "#039be5",
-						leftItem: {
-							image: "img/back.png",
-							method: "", //返回按钮自定义事件
-							text: "返回",
-							textColor: "#ffffff" //返回文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
-						}
-					}
-				});
-			} else {
-				toLog();
-			}
-		};
 
 		function openFastReport() {
 			if (isLogin()) {
@@ -522,60 +262,6 @@
 				toLog();
 			}
 		}
-		// 付款列表
-		function openPayList() {
-			if (isLogin()) {
-				summer.openWin({
-					id: 'payList',
-					url: 'html/repayApply/payList/index.html',
-					create: false,
-					type: 'actionBar',
-					actionBar: {
-						title: "付款申请",
-						titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
-						backgroundColor: "#039be5",
-						leftItem: {
-							image: "img/back.png",
-							method: "", //返回按钮自定义事件
-							text: "返回",
-							textColor: "#ffffff" //返回文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
-						}
-					}
-				});
-			} else {
-				toLog();
-			}
-		}
-		// 商机
-		function openOpportunity() {
-			if (isLogin()) {
-				summer.openWin({
-					id: 'opportunity',
-					url: 'html/opportunity/opportunity.html',
-					create: false,
-					type: 'actionBar',
-					actionBar: {
-						title: "商机",
-						titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
-						backgroundColor: "#039be5",
-						leftItem: {
-							image: "img/back.png",
-							method: "", //返回按钮自定义事件
-							text: "返回",
-							textColor: "#ffffff" //返回文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
-						},
-						rightItems: [{
-							type: "text",
-							text: "新建",
-							textColor: "#ffffff",
-							method: "opportunity.createOpp()"
-						}]
-					}
-				});
-			} else {
-				toLog();
-			}
-		};
 		// 我的
 		function showUserInfo() {
 			summer.openWin({
@@ -596,39 +282,6 @@
 				}
 			});
 		}
-		// 打开客户页面
-		function openNewCustom() {
-			if (isLogin()) {
-				summer.openWin({
-					id: 'newCustom',
-					url: 'html/fastReport/newCustom.html',
-					create: false,
-					type: 'actionBar',
-					actionBar: {
-						title: "客户列表",
-						titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
-						backgroundColor: "#039be5",
-						leftItem: {
-							image: "img/back.png",
-							method: "", //返回按钮自定义事件
-							text: "返回",
-							textColor: "#ffffff" //返回文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
-						},
-						rightItems: [{
-							type: "text",
-							text: "添加",
-							textColor: "#ffffff",
-							method: "newCreateCustom()"
-						}]
-					},
-					pageParam: {
-						pageSource: "index"
-					}
-				});
-			} else {
-				toLog();
-			}
-		};
 
 		// 敬请期待
 		function unfinished() {
