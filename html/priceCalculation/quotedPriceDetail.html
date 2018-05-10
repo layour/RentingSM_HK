@@ -221,7 +221,7 @@
 					<li class="input spec" v-if="jiarongStatus">
 						<b>其他加融项</b>
 						<span>
-							<input  v-if="jiarongEdit" type="text" @input="checkVal('jiarong')" placeholder="请输入加融项" name="jiarong" 
+							<input  v-if="jiarongEdit" type="text" @input="checkVal('jiarong')" placeholder="请输入加融项" name="jiarong"
 							v-model="jiarong">
 							<b v-else>{{jiarong}}</b>
 							&nbsp;元
@@ -523,7 +523,7 @@
 									url:"appservice/project/prjquatprps/getById.do",
 									param:{prjId:_this.prjId}
 								},function(res){
-									console.log("res",JSON.stringify(res));
+									console.log("getData===res",JSON.stringify(res));
 									summer.hideProgress()
 									_this.pickerSchemeList[0].values=res.data.quatList
 									if(!res.data.quatList){
@@ -541,66 +541,69 @@
 											_this.allPrice=dataObj.totLsItmAmt
 											_this.SCHEME_NAME_ID=res.data.schemeCode
 											_this.SCHEME_NAME=res.data.SCHEME_NAME
-											_this.lsPd=dataObj.lsPd
-											_this.lsPdUntCd=dataObj.lsPdUntCd
-											_this.lsPdUntCdName=dataObj.lsPdUntNm
-											_this.payWayCd=dataObj.payWayCd
-											_this.payWay=dataObj.payWay
-											_this.annIntRatePct=dataObj.defAnnIntRatePct
-											_this.defAnnIntRatePct=dataObj.annIntRatePct
-											_this.hirePct=dataObj.hirePct
-											_this.hirePctMoney=parseInt(_this.hirePct*_this.allPrice*0.01)
-											_this.bailPct=dataObj.bailPct
-											_this.bailPctMoney=parseInt(_this.bailPct*_this.allPrice*0.01)
-											_this.txJe=dataObj.txJe
-											_this.gpsIns=dataObj.gpsIns
-											_this.gpsInsName=dataObj.gpsInsNm
-											_this.gpsTyp=dataObj.gpsTyp
-											_this.gpsTypList=res.data.GPSTypArray
-											//贴息 咨询费 融资额
-											_this.rongZiPrice =dataObj.actLsAmt
-											_this.txJxId = dataObj.tiexiCd
-											_this.txJeName = dataObj.TiexiCdName
-											_this.fuwuId =dataObj.isHasSxf
-											_this.fuwuName = dataObj.IsHasSxfName
-											if(_this.gpsTyp){
-												_this.GPSTypArray=_this.gpsTyp.split(",")
-												for(var k=0;k<_this.GPSTypArray.length;k++){
-													for(var m=0;m<_this.gpsTypList.length;m++){
-														if(_this.GPSTypArray[k]==_this.gpsTypList[m].value){
-															_this.gpsTypName+=_this.gpsTypList[m].label
+											_this.checkDate(function(){
+												_this.lsPd=dataObj.lsPd
+												_this.lsPdUntCd=dataObj.lsPdUntCd
+												_this.lsPdUntCdName=dataObj.lsPdUntNm
+												_this.payWayCd=dataObj.payWayCd
+												_this.payWay=dataObj.payWay
+												_this.annIntRatePct=dataObj.defAnnIntRatePct
+												_this.defAnnIntRatePct=dataObj.annIntRatePct
+												_this.hirePct=dataObj.hirePct
+												_this.hirePctMoney=parseInt(_this.hirePct*_this.allPrice*0.01)
+												_this.bailPct=dataObj.bailPct
+												_this.bailPctMoney=parseInt(_this.bailPct*_this.allPrice*0.01)
+												_this.txJe=dataObj.txJe
+												_this.gpsIns=dataObj.gpsIns
+												_this.gpsInsName=dataObj.gpsInsNm
+												_this.gpsTyp=dataObj.gpsTyp
+												_this.gpsTypList=res.data.GPSTypArray
+												//贴息 咨询费 融资额
+												_this.rongZiPrice =dataObj.actLsAmt
+												_this.txJxId = dataObj.tiexiCd
+												_this.txJeName = dataObj.tiexiCdName
+												_this.fuwuId =dataObj.isHasSxf
+												_this.fuwuName = dataObj.isHasSxfName
+												if(_this.gpsTyp){
+													_this.GPSTypArray=_this.gpsTyp.split(",")
+													for(var k=0;k<_this.GPSTypArray.length;k++){
+														for(var m=0;m<_this.gpsTypList.length;m++){
+															if(_this.GPSTypArray[k]==_this.gpsTypList[m].value){
+																_this.gpsTypName+=_this.gpsTypList[m].label
+															}
 														}
 													}
 												}
-											}
-											_this.everyPrice=dataObj.eachEstRntAmt
+												_this.everyPrice=dataObj.eachEstRntAmt
 
-											for(var j=0;j<dataObj.prjQuatPrpsFeeList.length;j++){
-												if(dataObj.prjQuatPrpsFeeList[j].feeTypCd=='04'){
-													_this.groessPrice=dataObj.prjQuatPrpsFeeList[j].feeAmt
-												}else if(dataObj.prjQuatPrpsFeeList[j].feeTypCd=='10'){
-													_this.gpsPrice=dataObj.prjQuatPrpsFeeList[j].feeAmt
-													_this.gpsPriceId=dataObj.prjQuatPrpsFeeList[j].cntWayCd
-													if(_this.gpsPriceId=='1'){_this.gpsPriceName='首付款'}else{_this.gpsPriceName='融资额'}
-												}else if(dataObj.prjQuatPrpsFeeList[j].feeTypCd=='30'){
-													_this.gouZhiPrice=dataObj.prjQuatPrpsFeeList[j].feeAmt
-													_this.gouZhiPriceId=dataObj.prjQuatPrpsFeeList[j].cntWayCd
-													if(_this.gouZhiPriceId=='1'){_this.gouZhiPriceName='首付款'}else{_this.gouZhiPriceName='融资额'}
-												}else if(dataObj.prjQuatPrpsFeeList[j].feeTypCd=='32'){
-													_this.safePrice=dataObj.prjQuatPrpsFeeList[j].feeAmt
-													_this.safePriceId=dataObj.prjQuatPrpsFeeList[j].cntWayCd
-													if(_this.safePriceId=='1'){_this.safePriceName='首付款'}else{_this.safePriceName='融资额'}
-												}else if(dataObj.prjQuatPrpsFeeList[j].feeTypCd=='51'){
-													_this.zhuangXiuPrice=dataObj.prjQuatPrpsFeeList[j].feeAmt
-													_this.zhuangXiuPriceId=dataObj.prjQuatPrpsFeeList[j].cntWayCd
-													if(_this.zhuangXiuPriceId=='1'){_this.zhuangXiuPriceName='首付款'}else{_this.zhuangXiuPriceName='融资额'}
-												}else if(dataObj.prjQuatPrpsFeeList[j].feeTypCd=='35'){
-													_this.pingtai=dataObj.prjQuatPrpsFeeList[j].feeAmt
-												}else if(dataObj.prjQuatPrpsFeeList[j].feeTypCd=='36'){
-													_this.jiarong=dataObj.prjQuatPrpsFeeList[j].feeAmt
+												for(var j=0;j<dataObj.prjQuatPrpsFeeList.length;j++){
+													if(dataObj.prjQuatPrpsFeeList[j].feeTypCd=='04'){
+														_this.groessPrice=dataObj.prjQuatPrpsFeeList[j].feeAmt
+													}else if(dataObj.prjQuatPrpsFeeList[j].feeTypCd=='10'){
+														_this.gpsPrice=dataObj.prjQuatPrpsFeeList[j].feeAmt
+														_this.gpsPriceId=dataObj.prjQuatPrpsFeeList[j].cntWayCd
+														if(_this.gpsPriceId=='1'){_this.gpsPriceName='首付款'}else{_this.gpsPriceName='融资额'}
+													}else if(dataObj.prjQuatPrpsFeeList[j].feeTypCd=='30'){
+														_this.gouZhiPrice=dataObj.prjQuatPrpsFeeList[j].feeAmt
+														_this.gouZhiPriceId=dataObj.prjQuatPrpsFeeList[j].cntWayCd
+														if(_this.gouZhiPriceId=='1'){_this.gouZhiPriceName='首付款'}else{_this.gouZhiPriceName='融资额'}
+													}else if(dataObj.prjQuatPrpsFeeList[j].feeTypCd=='32'){
+														_this.safePrice=dataObj.prjQuatPrpsFeeList[j].feeAmt
+														_this.safePriceId=dataObj.prjQuatPrpsFeeList[j].cntWayCd
+														if(_this.safePriceId=='1'){_this.safePriceName='首付款'}else{_this.safePriceName='融资额'}
+													}else if(dataObj.prjQuatPrpsFeeList[j].feeTypCd=='51'){
+														_this.zhuangXiuPrice=dataObj.prjQuatPrpsFeeList[j].feeAmt
+														_this.zhuangXiuPriceId=dataObj.prjQuatPrpsFeeList[j].cntWayCd
+														if(_this.zhuangXiuPriceId=='1'){_this.zhuangXiuPriceName='首付款'}else{_this.zhuangXiuPriceName='融资额'}
+													}else if(dataObj.prjQuatPrpsFeeList[j].feeTypCd=='35'){
+														_this.pingtai=dataObj.prjQuatPrpsFeeList[j].feeAmt
+													}else if(dataObj.prjQuatPrpsFeeList[j].feeTypCd=='36'){
+														_this.jiarong=dataObj.prjQuatPrpsFeeList[j].feeAmt
+													}
+
 												}
-
-											}
+												summer.hideProgress()
+											})
 										}
 
 									}
@@ -666,7 +669,7 @@
 								}
 							}
 						},
-						checkDate:function(){
+						checkDate:function(callback){
 							var _this=this;
 							console.log('checkDate');
 							summer.showProgress();
@@ -676,8 +679,9 @@
 								url:'appservice/project/prdbscsch/selectDetailScheme.do',
 								param:{schemeCode:_this.SCHEME_NAME_ID}
 							},function(res){
-								console.log("res",JSON.stringify(res));
+								console.log("checkDate====res");
 								var resultData=res.data.datas;
+								console.log("hhhs")
 								if(resultData.lsPdUntArray.length>1){
 									_this.LspdList=resultData.lsPdUntArray
 								}else {
@@ -688,6 +692,12 @@
 								_this.listYearRate=resultData.listYearRate
 								if(resultData.payWayArray.length>1){
 									_this.pickerPayWayList=resultData.payWayArray
+									for(var j=0;j<_this.pickerPayWayList.length;j++){
+										if(_this.pickerPayWayList[i].remarks == 'selected'){
+											_this.payWay = _this.pickerPayWayList[i].label
+											_this.payWayCd = _this.pickerPayWayList[i].value
+										}
+									}
 								}else{
 									_this.pickerPayWayList=resultData.payWayArray
 									_this.payWayCd=resultData.payWayArray[0].value
@@ -704,6 +714,12 @@
 								_this.gpsTypList=resultData.GPSTypArray
 								_this.txJeArr = resultData.tiexiCdArray
 								_this.fuwuArr =	resultData.isHasSxfArray
+								for(var i =0;i<_this.fuwuArr.length;i++){
+									if(_this.fuwuArr[i].remarks == 'selected'){
+										_this.fuwuName = _this.fuwuArr[i].label
+										_this.fuwuId = _this.fuwuArr[i].value
+									}
+								}
 								_this.txJeName = "无";//默认贴息为无
 								_this.txJxId = "2";
 								for (var i = 0; i < resultData.schList.length; i++) {
@@ -804,9 +820,6 @@
 									}
 								}
 								_this.groessPrice =parseInt(_this.rongZiPrice * _this.groessPriceRate*0.01);
-								if(_this.groessPrice){
-									_this.fuwuName="是"
-								}
 
 								if(_this.lsPd&&_this.lsPdUntCd){
 									_this.AnnIntRatePctList=[];
@@ -817,6 +830,9 @@
 										}
 									}
 									if(_this.AnnIntRatePctList.length==1){_this.annIntRatePct=_this.AnnIntRatePctList[0].value}
+								}
+								if(callback){
+									callback()
 								}
 								summer.hideProgress()
 							},function(err){
@@ -1071,7 +1087,7 @@
 								tiexiCd:this.txJxId,
 								isHasSxf:this.fuwuId, //咨询服务是否有
 								prjQuatPrpsFeeList:[
-									{feeTypCd:'04',cntWayCd:'2',feeAmt:this.groessPrice},
+									{feeTypCd:'04',cntWayCd:'2',feeAmt:0},
 									// {feeTypCd:'10',cntWayCd:this.gpsPriceId,feeAmt:this.gpsPrice},
 									{feeTypCd:'10',cntWayCd:'2',feeAmt:this.gpsPrice}, //都默认为融资额了 2
 									// {feeTypCd:'30',cntWayCd:this.gouZhiPriceId,feeAmt:this.gouZhiPrice},
@@ -1088,6 +1104,9 @@
 									schemeCode:this.SCHEME_NAME_ID
 								}
 							};
+							if(this.fuwuName=="是"){
+								params.prjQuatPrpsFeeList[0].feeAmt =this.groessPrice
+							}
 							if(this.prjId){
 								params.prjId=this.prjId
 							}else {
@@ -1154,7 +1173,7 @@
 								tiexiCd:this.txJxId,
 								proQuatPrpsCfgM3:{id:this.SCHEME_NAME_ID},
 								prjQuatPrpsFeeList:[
-									{feeTypCd:'04',cntWayCd:'2',feeAmt:this.groessPrice},
+									{feeTypCd:'04',cntWayCd:'2',feeAmt:0},
 									// {feeTypCd:'10',cntWayCd:this.gpsPriceId,feeAmt:this.gpsPrice},
 									{feeTypCd:'10',cntWayCd:'2',feeAmt:this.gpsPrice},
 									// {feeTypCd:'30',cntWayCd:this.gouZhiPriceId,feeAmt:this.gouZhiPrice},
@@ -1167,6 +1186,9 @@
 									{feeTypCd:'36',cntWayCd:'2',feeAmt:this.jiarong},
 								]
 							};
+							if(this.fuwuName=="是"){
+								param.prjQuatPrpsFeeList[0].feeAmt =this.groessPrice
+							}
 							console.log(JSON.stringify(param));
 							ajaxRequest({
 								type:'POST',
