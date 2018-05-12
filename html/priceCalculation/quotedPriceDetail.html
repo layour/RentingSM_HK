@@ -212,7 +212,7 @@
 						</span>
 					</li>
 
-					<li class="input">
+					<li class="input" v-if="pingtaiStatus">
 						<b>平台费</b>
 						<span>
 							<input type="text" @input="checkVal('pingtai')" placeholder="请输入平台费" name="pingtai" v-model="pingtai">&nbsp;元
@@ -671,7 +671,6 @@
 						},
 						checkDate:function(callback){
 							var _this=this;
-							console.log('checkDate');
 							summer.showProgress();
 							console.log("schemeCode"+JSON.stringify({schemeCode:_this.SCHEME_NAME_ID}));
 							ajaxRequest({
@@ -679,9 +678,8 @@
 								url:'appservice/project/prdbscsch/selectDetailScheme.do',
 								param:{schemeCode:_this.SCHEME_NAME_ID}
 							},function(res){
-								console.log("checkDate====res");
+								console.log("checkDate====res",JSON.stringify(res));
 								var resultData=res.data.datas;
-								console.log("hhhs")
 								if(resultData.lsPdUntArray.length>1){
 									_this.LspdList=resultData.lsPdUntArray
 								}else {
@@ -721,7 +719,7 @@
 									}
 								}
 								_this.txJeName = "无";//默认贴息为无
-								_this.txJxId = "2";
+								_this.txJxId = "1";
 								for (var i = 0; i < resultData.schList.length; i++) {
 									if(resultData.schList[i].keyNameEn=='ZLQS'){
 										_this.lsPd=resultData.schList[i].valueStr
@@ -1080,7 +1078,6 @@
 								payWay:this.payWay,
 								hirePct:this.hirePct,
 								bailPct:this.bailPct,
-								txJe:this.txJe,
 								gpsIns:this.gpsIns,
 								gpsTyp:this.gpsTyp,
 								actLsAmt:this.rongZiPrice,
@@ -1106,6 +1103,9 @@
 							};
 							if(this.fuwuName=="是"){
 								params.prjQuatPrpsFeeList[0].feeAmt =this.groessPrice
+							}
+							if(this.txJeName != "无"){
+								params.txJe=this.txJe,
 							}
 							if(this.prjId){
 								params.prjId=this.prjId
@@ -1165,7 +1165,6 @@
 								payWay:this.payWay,
 								hirePct:this.hirePct,
 								bailPct:this.bailPct,
-								txJe:this.txJe,
 								gpsIns:this.gpsIns,
 								gpsTyp:this.gpsTyp,
 								actLsAmt:this.rongZiPrice,
@@ -1188,6 +1187,9 @@
 							};
 							if(this.fuwuName=="是"){
 								param.prjQuatPrpsFeeList[0].feeAmt =this.groessPrice
+							}
+							if(this.txJeName != "无"){
+								param.txJe=this.txJe,
 							}
 							console.log(JSON.stringify(param));
 							ajaxRequest({
