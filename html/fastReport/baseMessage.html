@@ -13,13 +13,13 @@
 		<div class="um-win" id="baseMessageElement" v-cloak>
 			<div class="um-content baseMessage">
 				<ul>
-					<li   v-if='hasProjectId'>
+					<!-- <li   v-if='hasProjectId'>
 						<p class="pl10 pr10 tr">
 							<span class="fl">业务类型</span>
 							 <span class="right"><span   class="first">{{programStyle}}</span> </span>
 						</p>
-					</li>
-					<li @click="surePickerProgram" v-else>
+					</li> -->
+					<li @click="surePickerProgram" >
 						<p class="pl10 pr10 tr">
 							<span class="fl">业务类型</span>
 							 <span class="right"><span v-if='programStyle' class="first">{{programStyle}}</span><span v-else class="second">请选择</span> <i class="icon iconfont icon-enter"></i></span>
@@ -37,37 +37,37 @@
 							 <span class="right"><span v-if='taskStyle' class="first">{{taskStyle}}</span><span v-else class="second">请选择</span> <i class="icon iconfont icon-enter"></i></span>
 						</p>
 					</li> -->
-					  <li   v-if='hasProjectId'>
+					  <!-- <li   v-if='hasProjectId'>
 						<p class="pl10 pr10 tr">
 							<span class="fl">放款规则</span>
 							 <span class="right"><span   class="first">{{lendRuleStyle}}</span> </span>
 						</p>
-					</li>
-					<li @click="surePickerLendRule" v-else  >
+					</li> -->
+					<li @click="surePickerLendRule"  >
 						<p class="pl10 pr10 tr">
 							<span class="fl">放款规则</span>
 							 <span class="right"><span v-if='lendRuleStyle' class="first">{{lendRuleStyle}}</span><span v-else class="second">请选择</span> <i class="icon iconfont icon-enter"></i></span>
 						</p>
 					</li>
-					<li   v-if='hasProjectId'>
+					<!-- <li   v-if='hasProjectId'>
 						<p class="pl10 pr10 tr">
 							<span class="fl">车牌类型</span>
 							 <span class="right"><span   class="first">{{carCdTypName}}</span> </span>
 						</p>
-					</li>
-					<li @click="surePickerCardtype" v-else  >
+					</li> -->
+					<li @click="surePickerCardtype"    >
 						<p class="pl10 pr10 tr">
 							<span class="fl">车牌类型</span>
 							 <span class="right"><span v-if='carCdTypName' class="first">{{carCdTypName}}</span><span v-else class="second">请选择</span> <i class="icon iconfont icon-enter"></i></span>
 						</p>
 					</li>
-					<li   v-if='hasProjectId'>
+					<!-- <li   v-if='hasProjectId'>
 						<p class="pl10 pr10 tr">
 							<span class="fl">经销商门店</span>
 							 <span class="right"><span   class="first">{{splStoreNm}}</span> </span>
 						</p>
-					</li>
-					<li @click="surePickerStoretype" v-else  >
+					</li> -->
+					<li @click="surePickerStoretype"    >
 						<p class="pl10 pr10 tr">
 							<span class="fl">经销商门店</span>
 							 <span class="right"><span v-if='splStoreNm' class="first">{{splStoreNm}}</span><span v-else class="second">请选择</span> <i class="icon iconfont icon-enter"></i></span>
