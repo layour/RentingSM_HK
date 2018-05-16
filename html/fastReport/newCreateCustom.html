@@ -668,6 +668,7 @@
 				},
 				getData:function(projectId, clintId) {
 					var self = this;
+					summer.showProgress();
 					ajaxRequest({
 						type: 'post',
 						url: 'appservice/customer/cstNpBscInfo/view.do',
