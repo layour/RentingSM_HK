@@ -6,7 +6,7 @@
  * 4、兼容获取权限：getPermission(["android.permission.ACCESS_FINE_LOCATION","android.permission.ACCESS_COARSE_LOCATION"], successFn)
  */
 // 华科测试地址
-window.G_COMMON_URL = "http://122.49.7.88:8080/honor/";
+window.G_COMMON_URL = "http://106.15.55.173:8080/honor";
 
 function getToken() {
 	var userinfo = summer.getStorage("userinfo");
