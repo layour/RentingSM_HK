@@ -79,6 +79,19 @@
 							 <span class=""> <span  class="first">{{areaTotal}} </span> </span>
 						</p>
 					</li>
+					<li @click="surePickerStoretype"    >
+						<p class="pl10 pr10 tr">
+							<span class="fl">经销商门店</span>
+							 <span class="right"><span v-if='splStoreNm' class="first">{{splStoreNm}}</span><span v-else class="second">请选择</span> <i class="icon iconfont icon-enter"></i></span>
+						</p>
+					</li>
+					<li  >
+						<p class="pl10 pr10 tr">
+							<span class="fl">补充信息</span>
+						</p>
+						<textarea id="question" v-model="remarks" placeholder="请填写补充信息" ></textarea>
+					</li>
+
 					<!-- <li  v-else>
 						<p class="pl10 pr10 tr" @click="selectAddr">
 							<span class="fl">省市</span>
@@ -280,7 +293,8 @@
 					carCdTyp:'',//车牌类型
 					carCdTypName:'',
 					splStore:'',//经销商门店
-					splStoreNm:''//经销商门店
+					splStoreNm:'',//经销商门店
+					remarks:''
 				}
 			},
 			 methods: {
@@ -296,6 +310,7 @@
 						 summer.hideProgress();
 						 if (res.data.flag == 1) {
 								self.programStyle =res.data.datas.prjBscInfo.prjTypCdNm;
+								self.remarks =res.data.datas.prjBscInfo.remarks;
 								self.taskStyle =res.data.datas.prjBscInfo.bizTypNm;
 								self.lendRuleStyle =res.data.datas.prjBscInfo.fkgzCd=="1"?"先抵押后放款":"先放款后抵押";
 								self.carCdTyp =res.data.datas.prjBscInfo.carCdTyp;
@@ -407,6 +422,7 @@
 					//此时需要调后端的ajax请求数据
 
 					var customId=this.customId;
+					var remarks = this.remarks;
 			        var _programStyle=this.programStyle;
 					var _taskStyle=this.taskStyle;
 					var _lendRuleStyle=this.lendRuleStyle;
@@ -455,7 +471,8 @@
 								 "carCdTyp":carCdTyp,
 								 "splStore":{
 									 "id":splStore
-								 }
+								 },
+								 'remarks':remarks
 						  }
 					 }, function (res) {
 							  if(res.data.flag==1){

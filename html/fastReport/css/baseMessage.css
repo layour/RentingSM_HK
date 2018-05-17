@@ -136,3 +136,23 @@ i.iconfont{
 .um-footer{
    min-height: 0px;
 }
+#question {
+  word-break: break-all;
+  display: block;
+  width: 100%;
+  height: 1.6rem;
+  line-height: 0.4rem;
+  text-indent: 1em;
+  resize: none;
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  text-align: justify;
+  outline: none;
+  border: none;
+  border-color: #fff;
+  font-size: 0.28rem;
+}
+
+#question::-webkit-input-placeholder {
+  text-indent: 1.1em;
+}
