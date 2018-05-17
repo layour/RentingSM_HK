@@ -127,7 +127,7 @@ function ajaxRequest(paramObj, successCallback, errorCallback) {
 	}
 	//设置超时
 	window.cordovaHTTP.settings = {
-		timeout: 5000
+		timeout: 12000
 	};
 	if (getToken()) {
 		var token = getToken();
