@@ -1149,6 +1149,10 @@
 								summer.toast({msg:'请先测算报价'})
 								return
 							}
+							if(!this.gpsInsName){
+								summer.toast({msg:'GPS是否安装不能为空'})
+								return
+							}
 							if(this.gpsInsName=="是"&&this.gpsTypName==""){
 								summer.toast({msg:'GPS类型不能为空'})
 								return
