@@ -59,12 +59,12 @@
 							<input type="text" @blur="checkCarNumber" name="carNumber" placeholder="请输入车辆识别号" v-model="carNumber">
 						</td>
 				</tr>
-				<tr>
+				<!-- <tr>
 						<td>发动机号</td>
 						<td class='oldCar'>
 							<input type="text" name="powerNumber" placeholder="请输入发动机号" v-model="powerNumber">
 						</td>
-				</tr>
+				</tr> -->
 				<template v-if="isOldCar=='是'">
 					<tr>
 						<td>二手车里程数(公里)</td>
@@ -312,7 +312,7 @@
 									}
 								}
 								_this.carNumber=oldCarData.vinNo
-								_this.powerNumber=oldCarData.engNo
+								// _this.powerNumber=oldCarData.engNo
 							}
 							_this.carColor=oldCarData.carClName;
 							_this.carColorId=oldCarData.carCl;
@@ -491,7 +491,7 @@
 						return
 					}
 					if(this.isOldCar=="是"){
-						if (!this.carNumber  || !this.powerNumber||!this.mileage || !this.firstDate ||!this.customerName|| !this.carId||!this.dealCity || !this.carColor) {
+						if (!this.carNumber ||!this.mileage || !this.firstDate ||!this.customerName|| !this.carId||!this.dealCity || !this.carColor) {
 							summer.toast({
 								msg: '请填写车辆的所有信息'
 							})
@@ -516,7 +516,7 @@
 					prjEquBscInfo.equQty="1"
 					prjEqiDtlCar.driverRlTypCd=this.guanXiId
                     prjEqiDtlCar.vinNo=this.carNumber
-                    prjEqiDtlCar.engNo=this.powerNumber
+                    prjEqiDtlCar.engNo=''
 					if(this.isOldCar=="是"){
 						prjEqiDtlCar.id=this.prjEqiDtlCar_id
 						prjEqiDtlCar.usedCarMil=this.mileage
