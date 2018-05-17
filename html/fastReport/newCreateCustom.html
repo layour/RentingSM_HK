@@ -505,6 +505,7 @@
 						marStsNm:'',//婚姻状况
 						marStsCd:'',
 						isHasLicense: '', //是否有驾照
+						isHasLicenseNm:'',
 						driverLicenseNm: '',
 						driverLicenseType: '', //准驾类型
 						housingOwnershipNm: '',
@@ -1118,7 +1119,7 @@
 							msg: "请输入工作单位性质"
 						});
 						return false;
-					}else if (this.message.WorkCity == "") {
+					}else if (this.WorkCity == "") {
 						summer.toast({
 							msg: "请选择工作地城市"
 						});
@@ -1223,9 +1224,9 @@
 					});
 				},
 				nextStopAction: function () {
-					// if (!this.messageTest()) {
-					// 	return;
-					// };
+					if (!this.messageTest()) {
+						return;
+					};
 					var self = this;
 					if(self.isAdd){
 						summer.openWin({
