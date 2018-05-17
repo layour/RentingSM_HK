@@ -492,7 +492,7 @@
 								this.bail=''
 								this.bailRate=''
 							}else {
-								this.bailRate=parseFloat(100*this.bail/number).toFixed(2);
+								this.bailRate=parseFloat(100*this.bail/this.allPrice).toFixed(2);
 							}
 						},
 						changeFirstPayRate:function(){
