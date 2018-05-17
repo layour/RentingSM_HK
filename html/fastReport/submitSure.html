@@ -414,7 +414,8 @@
 							});
 						}
 					}, function (err) {
-
+						summer.hideProgress()
+						summer.toast({msg:JSON.stringify(err)})
 					})
 
 				}

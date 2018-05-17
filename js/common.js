@@ -80,7 +80,7 @@ var CommonUtil = {
 					}
 				}];
 			}
-			
+
 			var data = {
 				"src": params.srcImage, //源图片路径
 				"target": params.targetImage, //目标图片路径
@@ -138,7 +138,7 @@ function ajaxRequest(paramObj, successCallback, errorCallback) {
 				}else{
 					testPath = testPath + "?TOKEN=" + token;
 				}
-				
+
 			} else {
 				paramObj.param.TOKEN = token;
 			}
@@ -148,7 +148,7 @@ function ajaxRequest(paramObj, successCallback, errorCallback) {
 			}else{
 				testPath = testPath + "?TOKEN=" + token;
 			}
-			
+
 		}
 	}
 	summer.ajax({
@@ -198,6 +198,11 @@ function ajaxRequest(paramObj, successCallback, errorCallback) {
 				msg: response.data.msg
 			});
 			return;
+		}else{
+			summer.hideProgress();
+			summer.toast({
+				msg: response.data.msg
+			});
 		}
 		successCallback(response);
 	}, function (response) {
