@@ -8,17 +8,15 @@
   <frame_name>summer-um</frame_name>  
   <theme>blue</theme>  
   <icon relativePath="css/themes/default/app">app</icon>  
-  <versionCode>1</versionCode>  
+  <versionCode>100</versionCode>  
   <versionBuild>1.0.0</versionBuild>  
   <versionName>1.0.0</versionName>  
   <orientation>unspecified</orientation>  
-  <permission id="android.permission.INTERNET"></permission>  
   <statusBarStyle>light</statusBarStyle>  
   <fullScreen>true</fullScreen>  
   <windowSoftInputMode>stateHidden</windowSoftInputMode>  
   <openMDoctor>false</openMDoctor>  
   <autoHideLaunch>false</autoHideLaunch>  
-  <openMDoctor>false</openMDoctor>
   <urlScheme>hkjrsm</urlScheme>
   <import id="cordova-plugin-compat" type="web" ref="cordova"></import>  
   <import id="cordova-plugin-http" type="web" ref="cordova"/>  
