@@ -53,12 +53,12 @@
 		<div class="um-win" id="projectImgList" v-cloak>
 			<div class="um-content addCar">
 				<div class="um-list-item-bodys" style="font-size:18px;font-weight:bold;">必传文件</div>
-				<div class="um-list-item-bodys" v-for="item in mustList" :key="item.id" @click="openContWin(item.value,item.label)">
+				<div class="um-list-item-bodys" v-for="item in mustList" :key="item.id" @click="openContWin(item.value,item.label,item.list1)">
           {{item.label}}
           <span class="frp"> <i class="uId icon iconfont icon-right"></i>&nbsp; <i class="icon iconfont icon-enter"></i> </span>
         </div>
 				<div class="um-list-item-bodys" style="margin-top:20px;font-size:18px;font-weight:bold;">非必传文件</div>
-        <div class="um-list-item-bodys" v-for="item in list" :key="item.id" @click="openContWin(item.value,item.label)">
+        <div class="um-list-item-bodys" v-for="item in list" :key="item.id" @click="openContWin(item.value,item.label,item.list1)">
           {{item.label}}
           <span class="frp"> <i class="uId icon iconfont icon-right"></i>&nbsp; <i class="icon iconfont icon-enter"></i> </span>
         </div>
@@ -96,36 +96,62 @@
 								console.log(JSON.stringify(err));
 							})
 						},
-            openContWin:function(id,name){
+            openContWin:function(id,name,array){
               var _this=this;
-              summer.openWin({
-        				id: "uploadFile"+id,
-        				url: "html/fastReport/uploadImg.html",
-        				create: false,
-        				type: 'actionBar',
-        				pageParam: {
-        					id:id,
-									name:name,
-									projectId:_this.projectId
-        				},
-        				actionBar: {
-        					title: name,
-        					titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
-        					backgroundColor: "#039BE5",
-        					leftItem: {
-        						image: "img/back.png",
-        						method: "", //返回按钮自定义事件
-        						text: "返回",
-        						textColor: "#ffffff" //返回文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
-        					},
-        					rightItems: [{
-        						type: "text",
-        						text: "保存",
-        						textColor: "#ffffff",
-        						method: "save()"
-        					}]
-        				}
-        			})
+							if(array&&array.length>0){
+								summer.openWin({
+	        				id: "uploadFileTwo"+id,
+	        				url: "html/fastReport/uploadImgListTwo.html",
+	        				create: false,
+	        				type: 'actionBar',
+	        				pageParam: {
+	        					id:id,
+										name:name,
+										projectId:_this.projectId,
+										array:array
+	        				},
+	        				actionBar: {
+	        					title: name,
+	        					titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
+	        					backgroundColor: "#039BE5",
+	        					leftItem: {
+	        						image: "img/back.png",
+	        						method: "", //返回按钮自定义事件
+	        						text: "返回",
+	        						textColor: "#ffffff" //返回文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
+	        					}
+	        				}
+	        			})
+							}else {
+								summer.openWin({
+	        				id: "uploadFile"+id,
+	        				url: "html/fastReport/uploadImg.html",
+	        				create: false,
+	        				type: 'actionBar',
+	        				pageParam: {
+	        					id:id,
+										name:name,
+										projectId:_this.projectId
+	        				},
+	        				actionBar: {
+	        					title: name,
+	        					titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
+	        					backgroundColor: "#039BE5",
+	        					leftItem: {
+	        						image: "img/back.png",
+	        						method: "", //返回按钮自定义事件
+	        						text: "返回",
+	        						textColor: "#ffffff" //返回文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
+	        					},
+	        					rightItems: [{
+	        						type: "text",
+	        						text: "保存",
+	        						textColor: "#ffffff",
+	        						method: "save()"
+	        					}]
+	        				}
+	        			})
+							}
             }
           }
 				});

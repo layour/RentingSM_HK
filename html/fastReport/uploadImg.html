@@ -101,14 +101,27 @@
 		<div class="um-content uploadImg">
 			<ul>
 				<template v-if="!isVideo">
-					<li v-for="(item,index) in oldImgList" :key="index">
-						<div @click="lookBig(item.filePath)">
-							<img v-if="item.filePath" :src="item.filePath" alt="">
-							<i v-else class="icon iconfont icon-add"></i>
-						</div>
-						<img class="close" @click="deleteOld(item.id,index)" src="../../img/close.png" alt="">
-						<p>{{param.name}}</p>
-					</li>
+					<template v-if="param.value">
+						<li v-for="(item,index) in oldImgList" v-if="item.detailType==param.value" :key="index">
+							<div @click="lookBig(item.filePath)">
+								<img v-if="item.filePath" :src="item.filePath" alt="">
+								<i v-else class="icon iconfont icon-add"></i>
+							</div>
+							<img class="close" @click="deleteOld(item.id,index)" src="../../img/close.png" alt="">
+							<p>{{param.name}}</p>
+						</li>
+					</template>
+					<template v-else>
+						<li v-for="(item,index) in oldImgList" :key="index">
+							<div @click="lookBig(item.filePath)">
+								<img v-if="item.filePath" :src="item.filePath" alt="">
+								<i v-else class="icon iconfont icon-add"></i>
+							</div>
+							<img class="close" @click="deleteOld(item.id,index)" src="../../img/close.png" alt="">
+							<p>{{param.name}}</p>
+						</li>
+					</template>
+
 					<li v-for="(item,index) in imgList" :key="index">
 						<div @click="lookBig(item)">
 							<img v-if="item" :src="item" alt="">
@@ -403,6 +416,7 @@
 					}
 					var dataParams = {
 						fileValue: that.param.id,
+						fileDetailValue:that.param.value || '',
 						prjId: that.param.projectId,
 						TOKEN:getToken()
 					};
