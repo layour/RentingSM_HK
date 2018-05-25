@@ -1174,7 +1174,8 @@
                             self.message.id=res.data.datas.npId;//保存详情id
 							summer.toast({
 								msg: "保存成功"
-							});
+                            });
+                            // 初始化项目
                             ajaxRequest({
                                 type: 'post',
                                 url: 'appservice/project/prjbscinfo/initPrj',
@@ -1183,6 +1184,8 @@
                                 }
                             }, function(res) {
                                 if (res.data.flag == 1) {
+                                    // 项目ID
+                                    var prjId = res.data.datas.prjId;
                                     if (self.sourceFrom == "newCreateCustom_verify") {
                                         summer.openWin({
                                             id: 'setProject',
@@ -1192,7 +1195,8 @@
                                             isKeep: false,
                                             pageParam: {
                                                 source: "customer",
-                                                customId: clint_Id
+                                                customId: clint_Id,
+                                                projectId: prjId
                                             },
                                             actionBar: {
                                                 title: "快捷报单",

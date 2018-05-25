@@ -347,7 +347,8 @@
 						summer.hideProgress();
 						if (res.data.flag == 1) {
 							summer.toast({msg:"保存成功"});
-							var clint_Id = res.data.datas.cstId;
+                            var clint_Id = res.data.datas.cstId;
+                            // 初始化项目
                             ajaxRequest({
                                 type: 'post',
                                 url: 'appservice/project/prjbscinfo/initPrj',
@@ -356,6 +357,8 @@
                                 }
                             }, function(res) {
                                 if (res.data.flag == 1) {
+                                    // 项目ID
+                                    var prjId = res.data.datas.prjId;
                                     if (self.sourceFrom=="newCreateCustom_verify2") {
                                         summer.openWin({
                                             id : 'setProject',
@@ -364,7 +367,8 @@
                                             type : 'actionBar',
                                             pageParam:{
                                                 source:"customer",
-                                                customId:clint_Id
+                                                customId:clint_Id,
+                                                projectId: prjId
                                             },
                                             actionBar : {
                                                 title : "快捷报单",

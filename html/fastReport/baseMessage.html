@@ -389,8 +389,10 @@
 					var _carCdTypNm=this.carCdTypName;
 					var _splStoreNm=this.splStoreNm;
 					var _isOwnCredit =this.isOwnCreditName
-			  		var prjTypCd,bizTyp,fkgzCd,carCdTyp,splStore,isOwnCredit;
-
+			  		var prjTypCd,bizTyp,fkgzCd,carCdTyp,splStore,isOwnCredit,project_Id;
+                    if (this.project_Id) {
+                        project_Id = this.project_Id;
+                    }
 					baseMessage.totalData.prjTypCdArray.map(function(e,i){
 						if(e.label==_programStyle){
 							prjTypCd=baseMessage.totalData.prjTypCdArray[i].value;
@@ -427,6 +429,7 @@
 						  type: 'post',
 						  url: 'appservice/project/prjbscinfo/add.do',
 						  param: {
+                              "id": project_Id,
 								 "prjTypCd":prjTypCd,
 								 "bizTyp":bizTyp,
 								 "fkgzCd":fkgzCd,
