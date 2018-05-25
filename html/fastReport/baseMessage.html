@@ -13,60 +13,34 @@
 		<div class="um-win" id="baseMessageElement" v-cloak>
 			<div class="um-content baseMessage">
 				<ul>
-					<!-- <li   v-if='hasProjectId'>
-						<p class="pl10 pr10 tr">
-							<span class="fl">业务类型</span>
-							 <span class="right"><span   class="first">{{programStyle}}</span> </span>
-						</p>
-					</li> -->
+					 
 					<li @click="surePickerProgram" >
 						<p class="pl10 pr10 tr">
 							<span class="fl">业务类型</span>
 							 <span class="right"><span v-if='programStyle' class="first">{{programStyle}}</span><span v-else class="second">请选择</span> <i class="icon iconfont icon-enter"></i></span>
 						</p>
 					</li>
-					<!-- <li   v-if='hasProjectId'>
-						<p class="pl10 pr10 tr">
-							<span class="fl">业务类型</span>
-							 <span class="right"><span   class="first">{{taskStyle}}</span> </span>
-						</p>
-					</li>
-					<li @click="surePickerTask" v-else>
-						<p class="pl10 pr10 tr">
-							<span class="fl">业务类型</span>
-							 <span class="right"><span v-if='taskStyle' class="first">{{taskStyle}}</span><span v-else class="second">请选择</span> <i class="icon iconfont icon-enter"></i></span>
-						</p>
-					</li> -->
-					  <!-- <li   v-if='hasProjectId'>
-						<p class="pl10 pr10 tr">
-							<span class="fl">放款规则</span>
-							 <span class="right"><span   class="first">{{lendRuleStyle}}</span> </span>
-						</p>
-					</li> -->
+					 
 					<li @click="surePickerLendRule"  >
 						<p class="pl10 pr10 tr">
 							<span class="fl">放款规则</span>
 							 <span class="right"><span v-if='lendRuleStyle' class="first">{{lendRuleStyle}}</span><span v-else class="second">请选择</span> <i class="icon iconfont icon-enter"></i></span>
 						</p>
 					</li>
-					<!-- <li   v-if='hasProjectId'>
+					<li @click="surePickerCredit"  >
 						<p class="pl10 pr10 tr">
-							<span class="fl">车牌类型</span>
-							 <span class="right"><span   class="first">{{carCdTypName}}</span> </span>
+							<span class="fl">是否自带征信</span>
+							 <span class="right"><span v-if='isOwnCreditName' class="first">{{isOwnCreditName}}</span><span v-else class="second">请选择</span> <i class="icon iconfont icon-enter"></i></span>
 						</p>
-					</li> -->
+					</li>
+					 
 					<li @click="surePickerCardtype"    >
 						<p class="pl10 pr10 tr">
 							<span class="fl">车牌类型</span>
 							 <span class="right"><span v-if='carCdTypName' class="first">{{carCdTypName}}</span><span v-else class="second">请选择</span> <i class="icon iconfont icon-enter"></i></span>
 						</p>
 					</li>
-					<!-- <li   v-if='hasProjectId'>
-						<p class="pl10 pr10 tr">
-							<span class="fl">经销商门店</span>
-							 <span class="right"><span   class="first">{{splStoreNm}}</span> </span>
-						</p>
-					</li> -->
+					 
 					<li @click="surePickerStoretype"    >
 						<p class="pl10 pr10 tr">
 							<span class="fl">经销商门店</span>
@@ -79,64 +53,18 @@
 							 <span class=""> <span  class="first">{{areaTotal}} </span> </span>
 						</p>
 					</li>
-					<li @click="surePickerStoretype"    >
+					<!-- <li @click="surePickerStoretype"    >
 						<p class="pl10 pr10 tr">
 							<span class="fl">经销商门店</span>
 							 <span class="right"><span v-if='splStoreNm' class="first">{{splStoreNm}}</span><span v-else class="second">请选择</span> <i class="icon iconfont icon-enter"></i></span>
 						</p>
-					</li>
+					</li> -->
 					<li  >
 						<p class="pl10 pr10 tr">
 							<span class="fl">补充信息</span>
 						</p>
 						<textarea id="question" v-model="remarks" placeholder="请填写补充信息" ></textarea>
 					</li>
-
-					<!-- <li  v-else>
-						<p class="pl10 pr10 tr" @click="selectAddr">
-							<span class="fl">省市</span>
-							 <span class=""> <span  class="first">{{AREA_ID_NM}} {{CITY_ID_NM}}  </span> <i class="icon iconfont icon-enter"></i></span>
-						</p>
-					</li> -->
-					<!-- <li  v-if='hasProjectId'>
-						<p class="pl10 pr10 tr" >
-							<span class="fl">业务名称</span>
-							 <span class=""> <span  class="first">{{PROJECT_NAME}}   </span> </span>
-						</p>
-					</li>
-					<li v-else></li>
-					<li  v-if='hasProjectId'>
-						<p class="pl10 pr10 tr" >
-							<span class="fl">业务ID</span>
-							 <span class=""> <span  class="first">{{PROJECT_ID}}   </span> </span>
-						</p>
-					</li>
-					<li v-else></li> -->
-			<!--		<li>
-						<p class="pl10 pr10 tr" style="line-height:0.88rem;">
-							<span class="fl">合同签署方式</span>
-							<span class="isGroup">
-								<span @click="changContractStatus($event,'electron')" class='active'>
-									电子
-								</span>
-								<span @click="changContractStatus($event,'paper')" class="">
-									纸质
-								</span></span>
-						</p>
-					</li>
-					<li>
-						<p class="pl10 pr10 tr" style="line-height:0.88rem;">
-								 <span class="fl">是否团单</span>
-							<span class="isGroup">
-									<span @click="changGroupStatus($event,'no')" class='active'>
-										否
-									</span>
-									<span @click="changGroupStatus($event,'yes')" class="">
-										是
-									</span>
-							</span>
-						</p>
-					</li>-->
 				</ul>
 
 
@@ -172,6 +100,12 @@
 		<p>
 			<span class="fl" @click="surePickerStoretype">取消</span><span class="fr" @click="surePickerStoretype('confirm')">确定</span>
 		</p>
+</mt-popup>
+<mt-popup v-model="pickerCreditStatus" position='bottom' class="pickerColor">
+	<mt-picker :slots="slots6" @change="onValuesChange6"></mt-picker>
+	<p>
+		<span class="fl" @click="surePickerCredit">取消</span><span class="fr" @click="surePickerCredit('confirm')">确定</span>
+	</p>
 </mt-popup>
 			</div>
 		</div>
@@ -210,6 +144,9 @@
 			  baseData.storesArray.map(function(e,i){
 					baseMessage.slots5[0].values.push(e.label);
 			  })
+			  baseData.yes_no.map(function(e,i){
+					baseMessage.slots6[0].values.push(e.label);
+			  })
 		  }
 		  function getAddr(){
 			  baseMessage.AREA_ID=JSON.parse(summer.getStorage('selectProvince')).AREA_ID
@@ -240,6 +177,8 @@
 					pickerCardtype:'',
 					pickerStoretypeStatus:false,
 					pickerStoretype:'',
+					pickerCreditStatus:false,
+					pickerCredittype:'',
 					slots1 : [{
 						flex : 1,
 						values : [],
@@ -279,6 +218,14 @@
 						className : 'slot1',
 						textAlign : 'center'
 					}],
+					slots6 : [{
+						flex : 1,
+						//values : ["先放款后抵押","先抵押后放款"],
+						values : [],
+						defaultIndex :0,
+						className : 'slot1',
+						textAlign : 'center'
+					}],
 					totalData:"",
 					project_Id:"",
 					AREA_ID:"",
@@ -294,6 +241,8 @@
 					carCdTypName:'',
 					splStore:'',//经销商门店
 					splStoreNm:'',//经销商门店
+					isOwnCredit:'',//是否自带征信
+					isOwnCreditName:'',
 					remarks:''
 				}
 			},
@@ -315,6 +264,8 @@
 								self.lendRuleStyle =res.data.datas.prjBscInfo.fkgzCd=="1"?"先抵押后放款":"先放款后抵押";
 								self.carCdTyp =res.data.datas.prjBscInfo.carCdTyp;
 								self.carCdTypName =res.data.datas.prjBscInfo.carCdTypName;
+								self.isOwnCredit =res.data.datas.prjBscInfo.isOwnCredit;
+								self.isOwnCreditName =res.data.datas.prjBscInfo.isOwnCreditName;
 								self.splStore =res.data.datas.prjBscInfo.splStore?res.data.datas.prjBscInfo.splStore.id:'';
 								self.splStoreNm =res.data.datas.prjBscInfo.splStore?res.data.datas.prjBscInfo.splStore.stoNm:'';
 								var dataT=res.data.datas.prjBscInfo;
@@ -401,6 +352,15 @@
 						this.splStoreNm = this.pickerStoretype;
 					}
 				},
+				onValuesChange6:function(picker, values) {
+					this.pickerCredittype = values[0];
+				},
+				surePickerCredit:function(param) {
+					this.pickerCreditStatus = !this.pickerCreditStatus;
+					if (param == 'confirm') {
+						this.isOwnCreditName = this.pickerCredittype;
+					}
+				},
 				save:function() {
 					var self=this;
 					if(this.programStyle==""){
@@ -428,7 +388,8 @@
 					var _lendRuleStyle=this.lendRuleStyle;
 					var _carCdTypNm=this.carCdTypName;
 					var _splStoreNm=this.splStoreNm;
-			  		var prjTypCd,bizTyp,fkgzCd,carCdTyp,splStore;
+					var _isOwnCredit =this.isOwnCreditName
+			  		var prjTypCd,bizTyp,fkgzCd,carCdTyp,splStore,isOwnCredit;
 
 					baseMessage.totalData.prjTypCdArray.map(function(e,i){
 						if(e.label==_programStyle){
@@ -455,6 +416,11 @@
 							splStore=baseMessage.totalData.storesArray[i].value;
 						}
 					});
+					baseMessage.totalData.yes_no.map(function(e,i){
+						if(e.label==_isOwnCredit){
+							isOwnCredit=baseMessage.totalData.yes_no[i].value;
+						}
+					});
 
 					summer.showProgress();
 					ajaxRequest({
@@ -472,7 +438,8 @@
 								 "splStore":{
 									 "id":splStore
 								 },
-								 'remarks':remarks
+								 'remarks':remarks,
+								 'isOwnCredit':isOwnCredit
 						  }
 					 }, function (res) {
 							  if(res.data.flag==1){

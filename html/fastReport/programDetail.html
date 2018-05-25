@@ -146,7 +146,7 @@
 
 <body>
 	<div class="um-win" id="programDetail">
-		<ul class="um-tabbar um-tabbar-underline um-tabbar-switch">
+		<ul class="um-tabbar um-tabbar-underline um-tabbar-switch" id="headerBar">
 			<li data-tar='.base' class="active tc"><a>基本信息</a></li>
 			<li class=" tc" data-tar='.flow'><a>评审流程</a></li>
 		</ul>
@@ -244,6 +244,13 @@
 <script src="../../js/Frameworks/iuapmobile.frameworks.ui.js"></script>
 <script>
 	summerready = function() {
+		/*导航更换js*/
+		$('#headerBar').on('click','li',function() {
+			alert(1);
+			$(this).addClass('active').siblings('.active').removeClass('active');
+			var tar = $(this).attr('data-tar');
+			$(tar).addClass('active').siblings('.active').removeClass('active');
+		});
 		var detailId = summer.pageParam.id;
 	//	var JBPM_ID= summer.pageParam.JBPM_ID;
 		programDetail.project_id=detailId;
@@ -310,14 +317,7 @@
 			}
 		}
 	});
-	$(function() {
-		/*导航更换js*/
-		$('ul.um-tabbar-switch  li').click(function() {
-			$(this).addClass('active').siblings('.active').removeClass('active');
-			var tar = $(this).attr('data-tar');
-			$(tar).addClass('active').siblings('.active').removeClass('active');
-		});
-	});
+	 
 
 	function newCreateCustom() {
 		summer.openWin({
