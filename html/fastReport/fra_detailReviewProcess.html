@@ -10,12 +10,142 @@
 	<script src="../../js/font.js"></script>
 	<link rel="stylesheet" href="css/fraCommon.css">
 </head>
+<style>
+		p.headerTitle{
+			font-size: 0.32rem;
+			color:#333;
+			padding:0.2rem;
 
+		}
+	.contentFlow {
+			margin-top: 0.2rem;
+			padding-left: 0.6rem;
+			overflow: hidden;
+		}
+
+		.contentFlow .listItem {
+			border-left: 2px dotted #ddd;
+			margin-left: 0.34rem;
+			min-height: 2rem;
+			padding-right:0.3rem;
+		}
+
+		.contentFlow .listItem:last-child {
+			border-left: 0px dotted #ddd;
+
+		}
+
+		.contentFlow .listItem:first-child {
+			margin-top: 0.4rem;
+		}
+
+		.contentFlow .listItem p.top {
+			color: #039be5;
+			font-size: 0.32rem;
+			padding-left: 0.24rem;
+		}
+
+		.contentFlow .listItem .inside {
+			position: relative;
+			padding-bottom: 0.32rem;
+			border-bottom: 1px solid #f7f7f7;
+		}
+
+		.contentFlow .listItem .inside img.true {
+			position: absolute;
+			z-index: 100;
+			top: 0.06rem;
+			left: -0.14rem;
+			width: 0.28rem;
+		}
+
+		.contentFlow .listItem:first-child .inside img.true {
+			top: 0.02rem;
+		}
+
+		.contentFlow .listItem p.content {
+			color: #9e9e9e;
+			font-size: 0.28rem;
+			padding-left: 0.24rem;
+		}
+
+		ul.um-tabbar li a {
+			display: inline-block;
+			line-height: 0.7rem;
+			height: 0.7rem;
+		}
+
+		.listContent:first-child {
+			margin-top: 0px;
+		}
+
+		.listContent {
+			border-radius: 5px;
+			margin-top: 0.2rem;
+			background: #fff;
+		}
+
+		.listContent p.title {
+			color: #333;
+			font-size: 0.36rem;
+			position: relative;
+			line-height: 0.9rem;
+			padding-left: 0.5rem;
+		}
+
+		.listContent p {
+			padding: 0 0.54rem;
+			font-size: 0.28rem;
+			line-height: 0.9rem;
+
+		}
+
+		.listContent p span {
+			color: #424242;
+		}
+
+		.um-tabbar-underline>li.active {
+			color: #039be5;
+			border-color: #039be5;
+		}
+
+		.listContent p.title:before {
+			content: "";
+			width: 3px;
+			height: 0.32rem;
+			background: #039be5;
+			position: absolute;
+			left: 0.4rem;
+			top: 0.26rem;
+		}
+
+		.um-tabbar-underline>li.active>a {
+			color: #039be5;
+		}
+
+		.listContent p {
+			line-height: 0.9rem;
+			border-bottom: 1px solid #f7f7f7;
+			color: #666;
+			font-size: 0.32rem;
+		}
+</style>
 <body>
 	<div class="um-frame" id="app" v-cloak>
 		<div class="um-content">
-			<div id="content"></div>
-			评审流程
+			<div id="flowContent"></div>
+			<p class="title  um-bgc-white headerTitle" v-show="JBPM_ID" >流程ID：{{JBPM_ID.pdNo}} </p>
+			<div class="contentFlow um-bgc-white">
+				<div class="listItem" v-for="(item,index) in JBPM_ID.histoicFlowList">
+					<div class="inside">
+						<img src="../../img/true.png" class="true" alt="" />
+						<p class="top">{{item.assigneeName}}</p>
+						<!-- <p class="content"> {{item.assigneeName}} </p> -->
+							<p class="content">审批意见：{{item.comment?item.comment:"无"}}  </p>
+						<p class="content">任务历时： {{item.durationTime}}</p>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 	<script src="../../js/summer.js"></script>
@@ -27,36 +157,38 @@
 		 
 		 
 		summerready = function () {
-			console.log(summer.pageParam);
-			getData(1, true)
-		 
+			 var projectId = summer.pageParam.id;
+			fra_detailReviewProcess.getData(projectId)
 		}
-
-		 
 		var fra_detailReviewProcess = new Vue({
 			el: '#app',
 			data:function() {
 				return {
 					dataList: '',
-					totalPage: "",
+					JBPM_ID: "",
 				}
 			},
 			methods: {
-				getData:function(pageNum, flag) {
+				getData:function(id) {
 					var self = this;
 					ajaxRequest({
 						type: 'get',
-						url: 'appservice/project/prjbscinfo/initList.do',
+						url: 'appservice/project/prjbscinfo/showPrjAct.do',
 						param: {
-							"pageNo": pageNum,
-							"pageSize": 10,
-							"prjStsCd": ""
+							"id": id,
 						}
-					}, function (res) {
-						
-					 
-					}, function (err) {
-						//alert(err);
+					}, function(res) {
+						summer.hideProgress();
+						if (res.data.flag == 1) {
+							$("#flowContent").css('display', 'none');
+							self.JBPM_ID=res.data.datas;
+							console.log(res);
+						}else{
+							createNull("flowContent", "../../img/empty.png","无流程信息");
+							$("#flowContent").css('display', 'block');
+						}
+					}, function(err) {
+						alert(err);
 						console.log(err);
 						summer.hideProgress();
 					});
