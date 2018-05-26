@@ -6,344 +6,105 @@
 	<meta charset="UTF-8">
 	<title></title>
 	<link rel="stylesheet" href="../../css/iuapmobile.um.css">
-	<link rel="stylesheet" href="../../css/fonts/iconfont.css">
-	<script src="../../js/font.js"></script>
-	<style>
-		div.Artical>div {
-			display: none;
-			color: #555;
-		}
-
-		.um-tabbar.um-tabbar-underline {
-			background-color: white;
-		}
-
-		div.Artical>div.active {
-			display: block;
-		}
-
-		.flow p.title {
-			font-size: 0.28rem;
-			color: #333;
-			padding:0.2rem 0.2rem;
-		}
-
-		.contentFlow {
-			margin-top: 0.2rem;
-			padding-left: 0.6rem;
-			overflow: hidden;
-		}
-
-		.contentFlow .listItem {
-			border-left: 2px dotted #ddd;
-			margin-left: 0.34rem;
-			min-height: 2rem;
-			padding-right:0.3rem;
-		}
-
-		.contentFlow .listItem:last-child {
-			border-left: 0px dotted #ddd;
-
-		}
-
-		.contentFlow .listItem:first-child {
-			margin-top: 0.4rem;
-		}
-
-		.contentFlow .listItem p.top {
-			color: #039be5;
-			font-size: 0.32rem;
-			padding-left: 0.24rem;
-		}
-
-		.contentFlow .listItem .inside {
-			position: relative;
-			padding-bottom: 0.32rem;
-			border-bottom: 1px solid #f7f7f7;
-		}
-
-		.contentFlow .listItem .inside img.true {
-			position: absolute;
-			z-index: 100;
-			top: 0.06rem;
-			left: -0.14rem;
-			width: 0.28rem;
-		}
-
-		.contentFlow .listItem:first-child .inside img.true {
-			top: 0.02rem;
-		}
-
-		.contentFlow .listItem p.content {
-			color: #9e9e9e;
-			font-size: 0.28rem;
-			padding-left: 0.24rem;
-		}
-
-		ul.um-tabbar li a {
-			display: inline-block;
-			line-height: 0.7rem;
-			height: 0.7rem;
-		}
-
-		.listContent:first-child {
-			margin-top: 0px;
-		}
-
-		.listContent {
-			border-radius: 5px;
-			margin-top: 0.2rem;
-			background: #fff;
-		}
-
-		.listContent p.title {
-			color: #333;
-			font-size: 0.36rem;
-			position: relative;
-			line-height: 0.9rem;
-			padding-left: 0.5rem;
-		}
-
-		.listContent p {
-			padding: 0 0.54rem;
-			font-size: 0.28rem;
-			line-height: 0.9rem;
-
-		}
-
-		.listContent p span {
-			color: #424242;
-		}
-
-		.um-tabbar-underline>li.active {
-			color: #039be5;
-			border-color: #039be5;
-		}
-
-		.listContent p.title:before {
-			content: "";
-			width: 3px;
-			height: 0.32rem;
-			background: #039be5;
-			position: absolute;
-			left: 0.4rem;
-			top: 0.26rem;
-		}
-
-		.um-tabbar-underline>li.active>a {
-			color: #039be5;
-		}
-
-		.listContent p {
-			line-height: 0.9rem;
-			border-bottom: 1px solid #f7f7f7;
-			color: #666;
-			font-size: 0.32rem;
-		}
-	</style>
-
+	<link rel="stylesheet" href="../../css/font-icons.css">
 </head>
-
+<style>
+	.um-content {
+		height: 0.88rem;
+		background-color: #fff;
+	}
+	.um-content .headertitle {
+		height: 0.88rem;
+		display: flex;
+		display: -webkit-flex;
+		justify-content: space-around;
+	}
+	.um-content .headertitle li {
+		width: 100%;
+		text-align: center;
+		line-height: 0.88rem;
+		font-size: 0.32rem;
+		color: #424242;
+	}
+	.um-content .headertitle li.active {
+		border-bottom: 0.05rem solid #039BE5;
+	}
+</style>
 <body>
-	<div class="um-win" id="programDetail">
-		<ul class="um-tabbar um-tabbar-underline um-tabbar-switch" id="headerBar">
-			<li data-tar='.base' class="active tc"><a>基本信息</a></li>
-			<li class=" tc" data-tar='.flow'><a>评审流程</a></li>
-		</ul>
+	<div class="um-win" id="index">
 		<div class="um-content">
-			<div class="Artical">
-				<div class="base  active">
-					<div class="list listContent">
-
-						<p class="title">基本信息</p>
-						<p class="pl10 pr10">客户信息<span class="fr">{{dataList?dataList.prjBscInfo.cstNm:""}}</span></p>
-						<p class="pl10 pr10">合同编号<span class="fr">{{dataList?dataList.prjBscInfo.lsCntNo:""}}</span></p>
-						<p class="pl10 pr10">业务类型<span class="fr">{{dataList?dataList.prjBscInfo.bizTypNm:""}}</span></p>
-						<p class="pl10 pr10">业务类型<span class="fr">{{dataList?dataList.prjBscInfo.prjTypCdNm:""}}</span></p>
-						<!-- <p class="pl10 pr10">放款规则<span class="fr">{{dataList?dataList.prjBscInfo.prjTypCdNm:""}}</span></p> -->
-						<p class="pl10 pr10">客户经理<span class="fr">{{dataList?dataList.prjBscInfo.cstMgrNm:""}}</span></p>
-					</div>
-					<div class="list listContent"  >
-						<p class="title pl10">车辆信息</p>
-						<p class="pl10 pr10">经销商<span class="fr">{{dataList?dataList.prjBscInfo.prjEquBscInfo.splNm:""}}</span></p>
-						<p class="pl10 pr10">品牌类型<span class="fr">{{dataList&&(dataList.prjBscInfo.prjEquBscInfo.isNew=="1")?"二手车":"新车"}}</span></p>
-						<p class="pl10 pr10">品牌<span class="fr">{{dataList?dataList.prjBscInfo.prjEquBscInfo.braNm:""}}</span></p>
-						<p class="pl10 pr10">车系<span class="fr">{{dataList?dataList.prjBscInfo.prjEquBscInfo.equSet:""}}</span></p>
-						<p class="pl10 pr10">车型号<span class="fr">{{dataList?dataList.prjBscInfo.prjEquBscInfo.equMdl:""}}</span></p>
-						<p class="pl10 pr10">车辆识别代号<span class="fr">{{dataList?dataList.prjBscInfo.prjEqiDtlCar.vinNo:""}}</span></p>
-						<p class="pl10 pr10">发动机号<span class="fr">{{dataList?dataList.prjBscInfo.prjEqiDtlCar.engNo:""}}</span></p>
-						<p class="pl10 pr10">是否二手车<span class="fr">{{dataList&&(dataList.prjBscInfo.prjEquBscInfo.isNew=="1")?"是":"否"}}</span></p>
-						<!-- <p class="pl10 pr10">二手车里程数(公里)<span class="fr">{{dataList?dataList.prjBscInfo.prjEqiDtlCar.usedCarMil:""}}</span></p> -->
-						<!-- <p class="pl10 pr10">二手车首次登记日期<span class="fr">{{dataList?new Date(dataList.prjBscInfo.prjEqiDtlCar.usedCarReg).format("yyyy-MM-dd"):""}}</span></p> -->
-						<p class="pl10 pr10" v-if="dataList.prjBscInfo.prjEquBscInfo.isNew == 1">交易城市<span class="fr">{{dataList?dataList.prjBscInfo.rgnReCd.name:""}}-{{dataList?dataList.prjBscInfo.rgnPrCd.name:""}}-{{dataList?dataList.prjBscInfo.rgnCyCd.name:""}}-{{dataList?dataList.prjBscInfo.rgnToCd.name:""}}</span></p>
-						<p class="pl10 pr10" v-if="dataList.prjBscInfo.prjEquBscInfo.isNew == 1">卖家姓名<span class="fr">{{dataList?dataList.prjBscInfo.prjEqiDtlCar.sellerNm:""}}</span></p>
-						<p class="pl10 pr10" v-if="dataList.prjBscInfo.prjEquBscInfo.isNew == 1">卖家证件号<span class="fr">{{dataList?dataList.prjBscInfo.prjEqiDtlCar.idCardNo:""}}</span></p>
-						<p class="pl10 pr10">车身颜色<span class="fr">{{dataList?dataList.prjBscInfo.prjEqiDtlCar.carClName:""}}</span></p>
-						<p class="pl10 pr10">车辆单价<span class="fr">{{dataList?dataList.prjBscInfo.prjEquBscInfo.equAmt:""}}</span></p>
-						<!-- <p class="pl10 pr10">留购价<span class="fr">{{dataList?dataList.prjBscInfo.prjEquBscInfo.rsrvPc:""}}</span></p> -->
-					</div>
-					<div class="list listContent">
-						<p class="title pl10">报价方案</p> 
-						 <!-- <p class="pl10 pr10">产品方案<span class="fr">{{dataList?dataList.prjBscInfo.prjQuatPrps.lsPd:""}}-没找到</span></p>  -->
-						<p class="pl10 pr10">还款期限<span class="fr">{{dataList?dataList.prjBscInfo.prjQuatPrps.lsPd:""}}</span></p>
-						<p class="pl10 pr10">还款期限单位<span class="fr">{{dataList?dataList.prjBscInfo.prjQuatPrps.lsPdUntNm:""}}</span></p>
-						<p class="pl10 pr10">贷款年利率(%)<span class="fr">{{dataList?dataList.prjBscInfo.prjQuatPrps.defAnnIntRatePct:""}}</span></p>
-						<p class="pl10 pr10">支付方式<span class="fr">{{dataList?dataList.prjBscInfo.prjQuatPrps.payWay:""}}</span></p>
-						<p class="pl10 pr10">首付款比例(%)<span class="fr">{{dataList?dataList.prjBscInfo.prjQuatPrps.hirePct:""}}</span></p>
-						<p class="pl10 pr10">首付款<span class="fr">{{dataList?dataList.prjBscInfo.prjQuatPrps.hirePct*(dataList.prjBscInfo.prjQuatPrps.totLsItmAmt)/100:""}}</span></p>
-						<p class="pl10 pr10">保证金比例(%)<span class="fr">{{dataList?dataList.prjBscInfo.prjQuatPrps.bailPct:""}}</span></p>
-						<p class="pl10 pr10">保证金<span class="fr">{{dataList?dataList.prjBscInfo.prjQuatPrps.bailPct*(dataList.prjBscInfo.prjQuatPrps.totLsItmAmt)/100:""}}</span></p>
-						<p class="pl10 pr10">贴息金额<span class="fr">{{dataList?dataList.prjBscInfo.prjQuatPrps.txJe:""}}</span></p>
-						<p class="pl10 pr10">GPS是否安装<span class="fr">{{dataList?dataList.prjBscInfo.prjQuatPrps.gpsInsNm:""}}</span></p>
-						<div v-for="item in dataDetail">
-								<p class="pl10 pr10" v-if="item.feeTypCd=='04'">咨询服务费<span class="fr">{{item.feeAmt}} </span></p>
-								<p class="pl10 pr10"  v-else-if="item.feeTypCd=='10'">GPS费<span class="fr">{{item.feeAmt}}</span></p>
-						<p class="pl10 pr10"   v-else-if="item.feeTypCd=='30'">购置税<span class="fr">{{item.feeAmt}}</span></p>
-						<p class="pl10 pr10"   v-else-if="item.feeTypCd=='32'">保险费<span class="fr">{{item.feeAmt}}</span></p>
-						<p class="pl10 pr10"   v-else-if="item.feeTypCd=='51'">精品装潢<span class="fr">{{item.feeAmt}}</span></p>
-						<p class="pl10 pr10"   v-else > </p>
-						<!-- <p class="pl10 pr10">每期租金<span class="fr">{{dataList?dataList.prjQuatProps.prjQuatPrpsPaySchList[0].rntAmt:""}}</span></p> -->	 
-						</div>
-						<!-- <p class="pl10 pr10">GPS类型<span class="fr">{{dataList?dataList.prjBscInfo.prjQuatPrps.lsPdUntNm:""}}--只有2，3</span></p>
-						
-						<p class="pl10 pr10">GPS费<span class="fr">{{dataList?dataList.prjBscInfo.prjQuatPrps.lsPdUntNm:""}}--未找到</span></p>
-						<p class="pl10 pr10">购置税<span class="fr">{{dataList?dataList.prjBscInfo.prjQuatPrps.lsPdUntNm:""}}--未找到</span></p>
-						<p class="pl10 pr10">保险费<span class="fr">{{dataList?dataList.prjBscInfo.prjQuatPrps.lsPdUntNm:""}}--未找到</span></p>
-						<p class="pl10 pr10">精品装潢<span class="fr">{{dataList?dataList.prjBscInfo.prjQuatPrps.lsPdUntNm:""}}--未找到</span></p>
-						<p class="pl10 pr10">每期租金<span class="fr">{{dataList?dataList.prjBscInfo.prjQuatPrps.lsPdUntNm:""}}--未找到</span></p> -->
-
-
-						 
-					</div>
-				</div>
-				<div class="flow" >
-					<div id="flowContent"></div>
-					<p class="title  um-bgc-white" v-show="JBPM_ID" >流程ID：{{JBPM_ID.pdNo}} </p>
-					<div class="contentFlow um-bgc-white">
-						<div class="listItem" v-for="(item,index) in JBPM_ID.histoicFlowList">
-							<div class="inside">
-								<img src="../../img/true.png" class="true" alt="" />
-								<p class="top">{{item.assigneeName}}</p>
-								<!-- <p class="content"> {{item.assigneeName}} </p> -->
-									<p class="content">审批意见：{{item.comment?item.comment:"无"}}  </p>
-								<p class="content">任务历时： {{item.durationTime}}</p>
-							</div>
-						</div>
-					</div>
-
-
-				</div>
-			</div>
+			<ul class=" headertitle  um-box" id="header">
+				<li class="tabbar  active  tc" data-index="0">
+					基本信息
+				</li>
+				<li class="tabbar   tc" data-index="1">
+					评审流程
+				</li>
+				<li class="tabbar  tc" data-index="2">
+					风控资料
+				</li>
+			</ul>
 		</div>
 	</div>
-</body>
-<script src="../../js/summer.js"></script>
-<script src="../../js/jquery.min.js"></script>
-<script src="../../js/vue.js"></script>
-<script src="../../js/common.js"></script>
-<script src="../../js/Frameworks/iuapmobile.frameworks.ui.js"></script>
-<script>
-	summerready = function() {
-		/*导航更换js*/
-		$('#headerBar').on('click','li',function() {
-			alert(1);
-			$(this).addClass('active').siblings('.active').removeClass('active');
-			var tar = $(this).attr('data-tar');
-			$(tar).addClass('active').siblings('.active').removeClass('active');
-		});
-		var detailId = summer.pageParam.id;
-	//	var JBPM_ID= summer.pageParam.JBPM_ID;
-		programDetail.project_id=detailId;
-		programDetail.getData(detailId);
-		programDetail.getJBPMData(detailId);
-		//	programDetail.getSchemeData(detailId);
-	};
-	var programDetail = new Vue({
-		el: '#programDetail',
-		data:function() {
-			return {
-				dataList: "",
-				dataSchemeList:"",
-				project_id:"",
-				JBPM_ID_NM:"",
-				JBPM_ID:"",
-				dataDetail:[]
-			}
-		},
-		methods: {
-			getData:function(id) {
-				var self = this;
-				ajaxRequest({
-					type: 'post',
-					url: 'appservice/project/prjbscinfo/getById.do',
-					param: {
-						"id": id,
-					}
-				}, function(res) {
-					summer.hideProgress();
-					if (res.data.flag == 1) {
-						self.dataList = res.data.datas;
-					self.dataDetail=res.data.datas.prjBscInfo.prjQuatPrps?res.data.datas.prjBscInfo.prjQuatPrps.prjQuatPrpsFeeList:[]
-						//self.getSchemeData(self.project_id);
-						console.log(self.dataList);
-					}
-				}, function(err) {
-					alert(err);
-					console.log(err);
-					summer.hideProgress();
-				});
-
-			},
-		  getJBPMData:function(id){
-				var self = this;
-					ajaxRequest({
-						type: 'get',
-						url: 'appservice/project/prjbscinfo/showPrjAct.do',
-						param: {
-							"id": id,
-						}
-					}, function(res) {
-						summer.hideProgress();
-						if (res.data.flag == 1) {
-							self.JBPM_ID=res.data.datas;
-							console.log(res);
-						}
-					}, function(err) {
-						alert(err);
-						console.log(err);
-						summer.hideProgress();
-					});
-
-			}
-		}
-	});
+	<script src="../../js/summer.js"></script>
+	<script src="../../js/jquery.min.js"></script>
+	<script src="../../js/Frameworks/iuapmobile.frameworks.ui.js"></script>
+	<script src="../../js/font.js"></script>
+	<script>
 	 
-
-	function newCreateCustom() {
-		summer.openWin({
-			id: 'newCreateCustom',
-			url: 'html/fastReport/newCreateCustom.html',
-			create: false,
-			type: 'actionBar',
-			actionBar: {
-				title: "客户信息",
-				titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
-				backgroundColor: "#039be5",
-				leftItem: {
-					image: "img/back.png",
-					method: "", //返回按钮自定义事件
-					text: "返回",
-					textColor: "#ffffff" //返回文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
+		summerready = function() {
+			var detailId = summer.pageParam.id;
+			var top = $summer.offset($summer.byId('header')).h;
+			summer.openFrameGroup({
+				id: 'group2',
+				background: '#ffffff',
+				scrollEnabled: false,
+				position: {
+					top: top,
+					bottom: 0,
+					left: 0,
+					right: 0
 				},
-				rightItems: [{
-					type: "text",
-					text: "下一步",
-					textColor: "#ffffff", //文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
-					method: "nextStopAction()" //在打开的window中自定义事件
-				}]
-			}
-		});
-	}
-</script>
+				index: 0,
+				frames: [{
+					id: 'fra_detailBaseMessage',
+					url: 'html/fastReport/fra_detailBaseMessage.html',
+					bgColor: '#ffffff',
+					hidden: false
+				}, {
+					id: 'fra_detailReviewProcess',
+					url: 'html/fastReport/fra_detailReviewProcess.html',
+					bgColor: '#ffffff',
+					hidden: true
+				}, {
+					id: 'fra_detailRiskControl',
+					url: 'html/fastReport/fra_detailRiskControl.html',
+					bgColor: '#ffffff',
+					hidden: true
+				}],
+				pageParam:[{
+						"fra_detailBaseMessage":detailId
+					},{
+						"fra_detailReviewProcess":detailId
+					},{
+						"fra_detailRiskControl":detailId
+					}], //（可选项）页面参数，页面中可以通过summer.pageParam获取，JSON对象
+			}, function(ret, err) {
+				var index = ret.index;
+			});
 
-</html>
+		}
+		$(function(){
+			$(".headertitle").on("click", '.tabbar', function(e) {
+				$(this).addClass("active").siblings().removeClass("active");
+				var tar = $(this).attr("data-index");
+				summer.setFrameGroupAttr({
+					id: 'group2',
+					index: tar
+				})
+			})
+		});
+	</script>
+</body>
+
+ 

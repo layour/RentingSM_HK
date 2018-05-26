@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1">
+	<meta charset="UTF-8">
+	<title>全部</title>
+	<link rel="stylesheet" href="../../css/iuapmobile.um.css">
+	<link rel="stylesheet" href="../../css/fonts/iconfont.css">
+	<script src="../../js/font.js"></script>
+	<link rel="stylesheet" href="css/fraCommon.css">
+</head>
+	<style>
+			.listContent:first-child {
+			margin-top: 0px;
+		}
+
+		.listContent {
+			border-radius: 5px;
+			margin-top: 0.2rem;
+			background: #fff;
+		}
+
+		.listContent p.title {
+			color: #333;
+			font-size: 0.36rem;
+			position: relative;
+			line-height: 0.9rem;
+			padding-left: 0.5rem;
+		}
+
+		.listContent p {
+			padding: 0 0.54rem;
+			font-size: 0.28rem;
+			line-height: 0.9rem;
+
+		}
+
+		.listContent p span {
+			color: #424242;
+		}
+
+		.um-tabbar-underline>li.active {
+			color: #039be5;
+			border-color: #039be5;
+		}
+
+		.listContent p.title:before {
+			content: "";
+			width: 3px;
+			height: 0.32rem;
+			background: #039be5;
+			position: absolute;
+			left: 0.4rem;
+			top: 0.26rem;
+		}
+
+		.um-tabbar-underline>li.active>a {
+			color: #039be5;
+		}
+
+		.listContent p {
+			line-height: 0.9rem;
+			border-bottom: 1px solid #f7f7f7;
+			color: #666;
+			font-size: 0.32rem;
+		}
+	</style>
+<body>
+	<div class="um-frame" id="app" v-cloak>
+		<div class="um-content">
+			<div class="list listContent" v-if="prjBscInfo">
+				<p class="title">客户信息</p>
+				<p class="pl10 pr10">姓名<span class="fr">{{prjBscInfo.cstId.cstNm}}</span></p>
+				<p class="pl10 pr10">手机号<span class="fr">{{prjBscInfo.cstId.cstPhoneNumber}}</span></p>
+				<p class="pl10 pr10">身份证号<span class="fr">{{prjBscInfo.cstId.certNo}}</span></p>
+				<p class="pl10 pr10">性别<span class="fr">{{prjBscInfo.cstId.cstNpBscInfo.genderCdName}}</span></p>
+				<p class="pl10 pr10">出生年月<span class="fr">{{prjBscInfo.cstId.cstNpBscInfo.birthday}}</span></p>
+				<p class="pl10 pr10">年龄<span class="fr">{{prjBscInfo.cstId.cstNpBscInfo.age}}</span></p>
+				<p class="pl10 pr10">最高学历<span class="fr">{{prjBscInfo.cstId.cstNpBscInfo.eduLvlNm}}</span></p>
+				<p class="pl10 pr10">婚姻状态<span class="fr">{{prjBscInfo.cstId.cstNpBscInfo.marStsCdName}}</span></p>
+				<!-- <p class="pl10 pr10">户籍所在城市<span class="fr">{{prjBscInfo.cstId.cstNpBscInfo.cstIdRegion.name  - prjBscInfo.cstId.cstNpBscInfo.cstIdProvince.name - prjBscInfo.cstId.cstNpBscInfo.cstIdCity.name - prjBscInfo.cstId.cstNpBscInfo.cstIdDistrict.name}}</span></p> -->
+				<p class="pl10 pr10">户籍所在城市详细地址<span class="fr">{{prjBscInfo.cstId.cstNpBscInfo.idAddr}}</span></p>
+				<!-- <p class="pl10 pr10">现居住城市<span class="fr">{{prjBscInfo.cstId.cstNpBscInfo.cstHomeRegion.name - prjBscInfo.cstId.cstNpBscInfo.cstHomeProvince.name - prjBscInfo.cstId.cstNpBscInfo.cstHomeCity.name - prjBscInfo.cstId.cstNpBscInfo.cstHomeDistrict.name}}</span></p> -->
+				<p class="pl10 pr10">现居住城市详细地址<span class="fr">{{prjBscInfo.cstId.cstNpBscInfo.homeAddr}}</span></p>
+				<p class="pl10 pr10">居住地址邮编<span class="fr">{{prjBscInfo.cstId.cstNpBscInfo.zipNo}}</span></p>
+				<p class="pl10 pr10">是否有驾照<span class="fr">{{ prjBscInfo.cstId.cstNpBscInfo.zipNo}}</span></p>
+				<p class="pl10 pr10">准驾类型<span class="fr">{{ prjBscInfo.cstId.cstNpBscInfo.driverLicenseType}}</span></p>
+				<p class="pl10 pr10">住房所有权<span class="fr">{{ prjBscInfo.cstId.cstNpBscInfo.housingOwnership}}</span></p>
+				<p class="pl10 pr10">从事行业<span class="fr">{{ prjBscInfo.cstId.cstNpBscInfo.industry}}</span></p>
+				<p class="pl10 pr10">现工作单位名称<span class="fr">{{prjBscInfo.cstId.cstNpBscInfo.workPlc }}</span></p>
+
+				<p class="pl10 pr10">现工作单位年限（年）<span class="fr">{{prjBscInfo.cstId.cstNpBscInfo.workYrs }}</span></p>
+				<p class="pl10 pr10">现工作单位性质<span class="fr">{{ prjBscInfo.cstId.cstNpBscInfo.workTypCdNm}}</span></p>
+				<!-- <p class="pl10 pr10">现工作城市<span class="fr">{{prjBscInfo.cstId.cstNpBscInfo.cstWorkRegion.name - prjBscInfo.cstId.cstNpBscInfo.cstWorkProvince.name - prjBscInfo.cstId.cstNpBscInfo.cstWorkCity.name - prjBscInfo.cstId.cstNpBscInfo.cstWorkDistrict.name }}</span></p> -->
+
+				<p class="pl10 pr10">现工作单位详细地址<span class="fr">{{ prjBscInfo.cstId.cstNpBscInfo.workAddr}}</span></p>
+				<p class="pl10 pr10">现工作单位电话<span class="fr">{{ prjBscInfo.cstId.cstNpBscInfo.workTel}}</span></p>
+				<p class="pl10 pr10">税后年收入（万元）<span class="fr">{{prjBscInfo.cstId.cstNpBscInfo.afterTaxYearIn }}</span></p>
+				<p class="pl10 pr10">主要收入来源<span class="fr">{{prjBscInfo.cstId.cstNpBscInfo.majorInTypCdName }}</span></p>
+
+				<p class="pl10 pr10">现工作单位职位<span class="fr">{{ prjBscInfo.cstId.cstNpBscInfo.positionNm}}</span></p>
+			</div>
+			<div class="list listContent">
+				<p class="title">基本信息</p>
+				<p class="pl10 pr10">居住地址邮编<span class="fr">{{ }}</span></p>
+				<p class="pl10 pr10">居住地址邮编<span class="fr">{{ }}</span></p>
+				<p class="pl10 pr10">居住地址邮编<span class="fr">{{ }}</span></p>
+				<p class="pl10 pr10">居住地址邮编<span class="fr">{{ }}</span></p>
+				<p class="pl10 pr10">居住地址邮编<span class="fr">{{ }}</span></p>
+				<p class="pl10 pr10">居住地址邮编<span class="fr">{{ }}</span></p>
+			</div>
+			<div class="list listContent"  >
+				<p class="title pl10">车辆信息</p>
+				<p class="pl10 pr10">居住地址邮编<span class="fr">{{ }}</span></p>
+				<p class="pl10 pr10">居住地址邮编<span class="fr">{{ }}</span></p>
+				<p class="pl10 pr10">居住地址邮编<span class="fr">{{ }}</span></p>
+				<p class="pl10 pr10">居住地址邮编<span class="fr">{{ }}</span></p>
+				<p class="pl10 pr10">居住地址邮编<span class="fr">{{ }}</span></p>
+				<p class="pl10 pr10">居住地址邮编<span class="fr">{{ }}</span></p>
+			</div>
+			<div class="list listContent">
+				<p class="title pl10">报价方案</p> 
+ 
+				<!-- <div v-for="item in dataDetail">
+						<p class="pl10 pr10" v-if="item.feeTypCd=='04'">咨询服务费<span class="fr">{{item.feeAmt}} </span></p>
+						<p class="pl10 pr10"  v-else-if="item.feeTypCd=='10'">GPS费<span class="fr">{{item.feeAmt}}</span></p>
+				<p class="pl10 pr10"   v-else-if="item.feeTypCd=='30'">购置税<span class="fr">{{item.feeAmt}}</span></p>
+				<p class="pl10 pr10"   v-else-if="item.feeTypCd=='32'">保险费<span class="fr">{{item.feeAmt}}</span></p>
+				<p class="pl10 pr10"   v-else-if="item.feeTypCd=='51'">精品装潢<span class="fr">{{item.feeAmt}}</span></p>
+				<p class="pl10 pr10"   v-else > </p> -->
+				</div>
+			</div>
+		</div>
+	</div>
+	<script src="../../js/summer.js"></script>
+	<script src="../../js/jquery.min.js"></script>
+	<script src="../../js/vue.js"></script>
+	<script src="../../js/common.js"></script>
+	<script src="../../js/Frameworks/iuapmobile.frameworks.ui.js"></script>
+	<script>
+		 
+		 
+		summerready = function () {
+			var projectID = summer.pageParam.id;
+			fra_detailRiskControl.getData(projectID)
+		}
+
+		 
+		var fra_detailRiskControl = new Vue({
+			el: '#app',
+			data:function() {
+				return {
+					jjlCstNpSocialRls: "",//紧急联系人
+					prjBscInfo:''
+				}
+			},
+			methods: {
+				getData:function( id) {
+					var self = this;
+						ajaxRequest({
+							type: 'post',
+							url: 'appservice/project/prjbscinfo/getById.do',
+							param: {
+								"id": id,
+							}
+						}, function(res) {
+							summer.hideProgress();
+							if (res.data.flag == 1) {
+								self.prjBscInfo = res.data.datas.prjBscInfo;//项目信息
+								self.jjlCstNpSocialRls = res.data.datas.jjlCstNpSocialRls;//紧急联系人信息
+							}
+						}, function(err) {
+							console.log(err);
+							summer.hideProgress();
+						});
+				 
+				},
+			 
+				 
+			}
+
+		});
+	</script>
+</body>
+
+</html>
