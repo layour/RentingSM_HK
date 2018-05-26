@@ -79,9 +79,11 @@
 				<p class="pl10 pr10">年龄<span class="fr">{{prjBscInfo.cstId.cstNpBscInfo.age}}</span></p>
 				<p class="pl10 pr10">最高学历<span class="fr">{{prjBscInfo.cstId.cstNpBscInfo.eduLvlNm}}</span></p>
 				<p class="pl10 pr10">婚姻状态<span class="fr">{{prjBscInfo.cstId.cstNpBscInfo.marStsCdName}}</span></p>
-				<!-- <p class="pl10 pr10">户籍所在城市<span class="fr">{{prjBscInfo.cstId.cstNpBscInfo.cstIdRegion.name  - prjBscInfo.cstId.cstNpBscInfo.cstIdProvince.name - prjBscInfo.cstId.cstNpBscInfo.cstIdCity.name - prjBscInfo.cstId.cstNpBscInfo.cstIdDistrict.name}}</span></p> -->
+				<p class="pl10 pr10" v-if='prjBscInfo&&prjBscInfo.cstNpBscInfo&&prjBscInfo.cstNpBscInfo.cstNpBscInfo.cstIdRegion&&prjBscInfo.cstNpBscInfo.cstNpBscInfo.cstIdProvince&&prjBscInfo.cstNpBscInfo.cstNpBscInfo.cstIdCity&&prjBscInfo.cstNpBscInfo.cstNpBscInfo.cstIdDistrict'>户籍所在城市<span class="fr">{{prjBscInfo.cstId.cstNpBscInfo.cstIdRegion.name+'-' +prjBscInfo.cstId.cstNpBscInfo.cstIdProvince.name+'-' +prjBscInfo.cstId.cstNpBscInfo.cstIdCity.name+'-' +prjBscInfo.cstId.cstNpBscInfo.cstIdDistrict.name}}</span></p>
+				<p v-else class="pl10 pr10" >户籍所在城市</p>
 				<p class="pl10 pr10">户籍所在城市详细地址<span class="fr">{{prjBscInfo.cstId.cstNpBscInfo.idAddr}}</span></p>
-				<!-- <p class="pl10 pr10">现居住城市<span class="fr">{{prjBscInfo.cstId.cstNpBscInfo.cstHomeRegion.name - prjBscInfo.cstId.cstNpBscInfo.cstHomeProvince.name - prjBscInfo.cstId.cstNpBscInfo.cstHomeCity.name - prjBscInfo.cstId.cstNpBscInfo.cstHomeDistrict.name}}</span></p> -->
+				<p class="pl10 pr10" v-if='prjBscInfo&&prjBscInfo.cstNpBscInfo&&prjBscInfo.cstNpBscInfo.cstNpBscInfo.cstHomeRegion&&prjBscInfo.cstNpBscInfo.cstNpBscInfo.cstHomeProvince&&prjBscInfo.cstNpBscInfo.cstNpBscInfo.cstHomeCity&&prjBscInfo.cstNpBscInfo.cstNpBscInfo.cstHomeDistrict'>现居住城市<span class="fr">{{prjBscInfo.cstId.cstNpBscInfo.cstHomeRegion.name+'-' +prjBscInfo.cstId.cstNpBscInfo.cstHomeProvince.name+'-' +prjBscInfo.cstId.cstNpBscInfo.cstHomeCity.name+'-' +prjBscInfo.cstId.cstNpBscInfo.cstHomeDistrict.name}}</span></p>
+				<p v-else class="pl10 pr10" >现居住城市</p>
 				<p class="pl10 pr10">现居住城市详细地址<span class="fr">{{prjBscInfo.cstId.cstNpBscInfo.homeAddr}}</span></p>
 				<p class="pl10 pr10">居住地址邮编<span class="fr">{{prjBscInfo.cstId.cstNpBscInfo.zipNo}}</span></p>
 				<p class="pl10 pr10">是否有驾照<span class="fr">{{ prjBscInfo.cstId.cstNpBscInfo.zipNo}}</span></p>
@@ -92,8 +94,8 @@
 
 				<p class="pl10 pr10">现工作单位年限（年）<span class="fr">{{prjBscInfo.cstId.cstNpBscInfo.workYrs }}</span></p>
 				<p class="pl10 pr10">现工作单位性质<span class="fr">{{ prjBscInfo.cstId.cstNpBscInfo.workTypCdNm}}</span></p>
-				<!-- <p class="pl10 pr10">现工作城市<span class="fr">{{prjBscInfo.cstId.cstNpBscInfo.cstWorkRegion.name - prjBscInfo.cstId.cstNpBscInfo.cstWorkProvince.name - prjBscInfo.cstId.cstNpBscInfo.cstWorkCity.name - prjBscInfo.cstId.cstNpBscInfo.cstWorkDistrict.name }}</span></p> -->
-
+				<p class="pl10 pr10" v-if='prjBscInfo&&prjBscInfo.cstNpBscInfo&&prjBscInfo.cstNpBscInfo.cstNpBscInfo.cstWorkRegion&&prjBscInfo.cstNpBscInfo.cstNpBscInfo.cstWorkProvince&&prjBscInfo.cstNpBscInfo.cstNpBscInfo.cstWorkCity&&prjBscInfo.cstNpBscInfo.cstNpBscInfo.cstWorkDistrict'>现工作城市<span class="fr">{{prjBscInfo.cstId.cstNpBscInfo.cstWorkRegion.name+'-' +prjBscInfo.cstId.cstNpBscInfo.cstWorkProvince.name+'-' +prjBscInfo.cstId.cstNpBscInfo.cstWorkCity.name +'-'+prjBscInfo.cstId.cstNpBscInfo.cstWorkDistrict.name }}</span></p>
+				<p v-else class="pl10 pr10" >现工作城市</p>
 				<p class="pl10 pr10">现工作单位详细地址<span class="fr">{{ prjBscInfo.cstId.cstNpBscInfo.workAddr}}</span></p>
 				<p class="pl10 pr10">现工作单位电话<span class="fr">{{ prjBscInfo.cstId.cstNpBscInfo.workTel}}</span></p>
 				<p class="pl10 pr10">税后年收入（万元）<span class="fr">{{prjBscInfo.cstId.cstNpBscInfo.afterTaxYearIn }}</span></p>
@@ -101,34 +103,59 @@
 
 				<p class="pl10 pr10">现工作单位职位<span class="fr">{{ prjBscInfo.cstId.cstNpBscInfo.positionNm}}</span></p>
 			</div>
-			<div class="list listContent">
-				<p class="title">基本信息</p>
-				<p class="pl10 pr10">居住地址邮编<span class="fr">{{ }}</span></p>
-				<p class="pl10 pr10">居住地址邮编<span class="fr">{{ }}</span></p>
-				<p class="pl10 pr10">居住地址邮编<span class="fr">{{ }}</span></p>
-				<p class="pl10 pr10">居住地址邮编<span class="fr">{{ }}</span></p>
-				<p class="pl10 pr10">居住地址邮编<span class="fr">{{ }}</span></p>
-				<p class="pl10 pr10">居住地址邮编<span class="fr">{{ }}</span></p>
+			<div class="list listContent" v-if="prjBscInfo">
+				<p class="title">业务基本信息</p>
+				<p class="pl10 pr10">业务类型<span class="fr">{{ prjBscInfo.bizTypNm}}</span></p>
+				<p class="pl10 pr10">放款规则<span class="fr">{{prjBscInfo.fkgzCdName }}</span></p>
+				<p class="pl10 pr10">车牌类型<span class="fr">{{ prjBscInfo.carCdTypName}}</span></p>
+				<!-- <p class="pl10 pr10" >经销商门店<span class="fr">{{prjBscInfo.splStore.stoNm }}</span></p> -->
+				<p class="pl10 pr10" v-if="prjBscInfo&&prjBscInfo.rgnReCd&&prjBscInfo.rgnPrCd&&prjBscInfo.rgnCyCd&&prjBscInfo.rgnToCd">区域<span class="fr">{{prjBscInfo.rgnReCd.name+'-'+prjBscInfo.rgnPrCd.name+'-'+prjBscInfo.rgnCyCd.name+'-'+prjBscInfo.rgnToCd.name }}</span></p>
+				<p v-else class="pl10 pr10" >区域</p>
+				<p class="pl10 pr10">补充信息<span class="fr">{{ prjBscInfo.remarks}}</span></p>
 			</div>
-			<div class="list listContent"  >
+			<div class="list listContent" v-if="prjBscInfo"  >
 				<p class="title pl10">车辆信息</p>
-				<p class="pl10 pr10">居住地址邮编<span class="fr">{{ }}</span></p>
-				<p class="pl10 pr10">居住地址邮编<span class="fr">{{ }}</span></p>
-				<p class="pl10 pr10">居住地址邮编<span class="fr">{{ }}</span></p>
-				<p class="pl10 pr10">居住地址邮编<span class="fr">{{ }}</span></p>
-				<p class="pl10 pr10">居住地址邮编<span class="fr">{{ }}</span></p>
-				<p class="pl10 pr10">居住地址邮编<span class="fr">{{ }}</span></p>
+				<p class="pl10 pr10">经销商名称<span class="fr">{{prjBscInfo.prjEquBscInfo.splNm }}</span></p>
+				<p class="pl10 pr10">是否二手车<span class="fr">{{ prjBscInfo.prjEquBscInfo.isNewName}}</span></p>
+				<p class="pl10 pr10">品牌类型<span class="fr">{{ prjBscInfo.prjEquBscInfo.braTypCdName}}</span></p>
+				<p class="pl10 pr10">品牌<span class="fr">{{prjBscInfo.prjEquBscInfo.braNm }}</span></p>
+				<p class="pl10 pr10">车系<span class="fr">{{ prjBscInfo.prjEquBscInfo.equSet}}</span></p>
+				<p class="pl10 pr10">车型<span class="fr">{{prjBscInfo.prjEquBscInfo.equMdl }}</span></p>
+				<p class="pl10 pr10">车辆识别号<span class="fr">{{prjBscInfo.PrjEqiDtlCar?prjBscInfo.PrjEqiDtlCar.vinNo:"" }}</span></p>
+				<p class="pl10 pr10">车辆单价<span class="fr">{{prjBscInfo.prjEquBscInfo.equAmt  }}</span></p>
+				<p class="pl10 pr10">车身颜色<span class="fr">{{prjBscInfo.PrjEqiDtlCar?prjBscInfo.PrjEqiDtlCar.carClName:''}}</span></p>
+				<p class="pl10 pr10">驾驶员与主贷人关系<span class="fr">{{ prjBscInfo.PrjEqiDtlCar?prjBscInfo.PrjEqiDtlCar.driverRlTypCdName:'' }}</span></p>
 			</div>
-			<div class="list listContent">
+			<!-- <div class="list listContent" v-if="">
+					<p class="title pl10">紧急联系人</p> 
+					<p class="pl10 pr10">经销商名称<span class="fr">{{ }}</span></p>
+			</div> -->
+			<div class="list listContent" v-if="prjBscInfo">
 				<p class="title pl10">报价方案</p> 
- 
-				<!-- <div v-for="item in dataDetail">
-						<p class="pl10 pr10" v-if="item.feeTypCd=='04'">咨询服务费<span class="fr">{{item.feeAmt}} </span></p>
-						<p class="pl10 pr10"  v-else-if="item.feeTypCd=='10'">GPS费<span class="fr">{{item.feeAmt}}</span></p>
-				<p class="pl10 pr10"   v-else-if="item.feeTypCd=='30'">购置税<span class="fr">{{item.feeAmt}}</span></p>
-				<p class="pl10 pr10"   v-else-if="item.feeTypCd=='32'">保险费<span class="fr">{{item.feeAmt}}</span></p>
-				<p class="pl10 pr10"   v-else-if="item.feeTypCd=='51'">精品装潢<span class="fr">{{item.feeAmt}}</span></p>
-				<p class="pl10 pr10"   v-else > </p> -->
+				<p class="pl10 pr10">产品名称<span class="fr">{{prjBscInfo.prdBscSch?prjBscInfo.prdBscSch.schemeName:''}}</span></p>
+				<p class="pl10 pr10">还款期限<span class="fr">{{prjBscInfo.prjQuatPrps.lsPd }}</span></p>
+				<p class="pl10 pr10">还款期限单位<span class="fr">{{ prjBscInfo.prjQuatPrps.lsPdUntCdNm}}</span></p>
+				<p class="pl10 pr10">基础年利率<span class="fr">{{prjBscInfo.prjQuatPrps.defAnnIntRatePct }}</span></p>
+				<p class="pl10 pr10">支付方式<span class="fr">{{ prjBscInfo.prjQuatPrps.payWay}}</span></p>
+				<p class="pl10 pr10">首付款<span class="fr">{{prjBscInfo.prjQuatPrps.hireAmt }}</span></p>
+				<p class="pl10 pr10">车辆融资额<span class="fr">{{ prjBscInfo.prjQuatPrps.actLsAmt}}</span></p>
+				<p class="pl10 pr10">保证金<span class="fr">{{prjBscInfo.prjQuatPrps.bailAmt }}</span></p>
+				<p class="pl10 pr10">是否有咨询服务费<span class="fr">{{prjBscInfo.prjQuatPrps.isHasSxfName }}</span></p>
+				<p class="pl10 pr10">贴息<span class="fr">{{prjBscInfo.prjQuatPrps.tiexiCdName }}</span></p>
+				<p class="pl10 pr10">贴息金额<span class="fr">{{prjBscInfo.prjQuatPrps.txJe }}</span></p>
+				<p class="pl10 pr10">GPS是否安装<span class="fr">{{ prjBscInfo.prjQuatPrps.gpsInsNm}}</span></p>
+
+				<p class="pl10 pr10">GPS类型<span class="fr">{{prjBscInfo.prjQuatPrps.gpsTypName }}</span></p>
+				<div v-for="item in prjBscInfo.prjQuatPrps.prjQuatPrpsFeeList">
+						<p class="pl10 pr10" v-if="item.feeTypCd==10">GPS费<span class="fr">{{ item.feeAmt}}</span></p>
+						<p class="pl10 pr10" v-if="item.feeTypCd==32">保险费<span class="fr">{{item.feeAmt }}</span></p>
+						<p class="pl10 pr10" v-if="item.feeTypCd==30">购置税<span class="fr">{{item.feeAmt }}</span></p>
+						<p class="pl10 pr10" v-if="item.feeTypCd==51">精品装潢<span class="fr">{{item.feeAmt }}</span></p>
+						<p class="pl10 pr10" v-if="item.feeTypCd==35">平台费<span class="fr">{{item.feeAmt }}</span></p>
+						<p class="pl10 pr10" v-if="item.feeTypCd==36">其他加融项<span class="fr">{{item.feeAmt }}</span></p>
+				</div>
+				<p class="pl10 pr10">实际年利率<span class="fr">{{prjBscInfo.prjQuatPrps.annIntRatePct }}</span></p>
+				<p class="pl10 pr10">每期租金<span class="fr">{{ prjBscInfo.prjQuatPrps.prjQuatPrpsPaySchList[0].rntAmt}}</span></p>
 				</div>
 			</div>
 		</div>
