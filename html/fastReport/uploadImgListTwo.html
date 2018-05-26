@@ -64,12 +64,17 @@
 					projectImgList.id=summer.pageParam.id
 					projectImgList.name=summer.pageParam.name
 					projectImgList.list=summer.pageParam.array
+					var sourceFrom = summer.pageParam.source;
+					if(sourceFrom == "sourceFrom"){
+						projectImgList.action = false;
+					}
 					console.log("pageParam"+summer.pageParam);
 				}
 				var projectImgList=new Vue({
 					el:'#projectImgList',
 					data:function(){
 						return{
+							action:true,
               projectId:'',
 							id:'',
 							name:'',
@@ -77,38 +82,66 @@
 						}
 					},
 					methods:{
-
             openContWin:function(value,name){
-              var _this=this;
-              summer.openWin({
-        				id: "uploadFile"+_this.id,
-        				url: "html/fastReport/uploadImg.html",
-        				create: false,
-        				type: 'actionBar',
-        				pageParam: {
-        					id:_this.id,
-									value:value,
-									name:name,
-									projectId:_this.projectId
-        				},
-        				actionBar: {
-        					title: name,
-        					titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
-        					backgroundColor: "#039BE5",
-        					leftItem: {
-        						image: "img/back.png",
-        						method: "", //返回按钮自定义事件
-        						text: "返回",
-        						textColor: "#ffffff" //返回文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
-        					},
-        					rightItems: [{
-        						type: "text",
-        						text: "保存",
-        						textColor: "#ffffff",
-        						method: "save()"
-        					}]
-        				}
-        			})
+							var _this=this;
+							if(_this.action){
+											summer.openWin({
+											id: "uploadFile"+_this.id,
+											url: "html/fastReport/uploadImg.html",
+											create: false,
+											type: 'actionBar',
+											pageParam: {
+												id:_this.id,
+												value:value,
+												name:name,
+												projectId:_this.projectId
+											},
+											actionBar: {
+												title: name,
+												titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
+												backgroundColor: "#039BE5",
+												leftItem: {
+													image: "img/back.png",
+													method: "", //返回按钮自定义事件
+													text: "返回",
+													textColor: "#ffffff" //返回文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
+												},
+												rightItems: [{
+													type: "text",
+													text: "保存",
+													textColor: "#ffffff",
+													method: "save()"
+												}]
+											}
+										})
+							}else{
+								summer.openWin({
+											id: "uploadFile"+_this.id,
+											url: "html/fastReport/uploadImg.html",
+											create: false,
+											type: 'actionBar',
+											pageParam: {
+												id:_this.id,
+												value:value,
+												name:name,
+												projectId:_this.projectId,
+												source:"programSelect"
+											},
+											actionBar: {
+												title: name,
+												titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
+												backgroundColor: "#039BE5",
+												leftItem: {
+													image: "img/back.png",
+													method: "", //返回按钮自定义事件
+													text: "返回",
+													textColor: "#ffffff" //返回文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
+												},
+												 
+											}
+										})
+							}
+              
             }
           }
 				});

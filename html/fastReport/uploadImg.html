@@ -107,7 +107,7 @@
 								<img v-if="item.filePath" :src="item.filePath" alt="">
 								<i v-else class="icon iconfont icon-add"></i>
 							</div>
-							<img class="close" @click="deleteOld(item.id,index)" src="../../img/close.png" alt="">
+							<img class="close" @click="deleteOld(item.id,index)" v-if="action" src="../../img/close.png" alt="">
 							<p>{{param.name}}</p>
 						</li>
 					</template>
@@ -117,7 +117,7 @@
 								<img v-if="item.filePath" :src="item.filePath" alt="">
 								<i v-else class="icon iconfont icon-add"></i>
 							</div>
-							<img class="close" @click="deleteOld(item.id,index)" src="../../img/close.png" alt="">
+							<img class="close" @click="deleteOld(item.id,index)" v-if="action"  src="../../img/close.png" alt="">
 							<p>{{param.name}}</p>
 						</li>
 					</template>
@@ -127,10 +127,10 @@
 							<img v-if="item" :src="item" alt="">
 							<i v-else class="icon iconfont icon-add"></i>
 						</div>
-						<img class="close" @click="deleteImg(index)" src="../../img/close.png" alt="">
+						<img class="close" @click="deleteImg(index)" v-if="action"  src="../../img/close.png" alt="">
 						<p>{{param.name}}</p>
 					</li>
-					<li @click="openPopup" v-if="imgList.length<9">
+					<li @click="openPopup" v-if="imgList.length<9 && action">
 						<div>
 							<i class="icon iconfont icon-add"></i>
 						</div>
@@ -142,7 +142,7 @@
 						<div>
 							<!-- <video v-if="videoUrl" :src="videoUrl"></video> -->
 							<img v-if="videoUrl" src="../../img/video.jpeg" alt="">
-							<i v-else class="icon iconfont icon-add"></i>
+							<i v-else class="icon iconfont icon-add" v-if="action" ></i>
 						</div>
 						<p>{{param.name}}</p>
 					</li>
@@ -165,6 +165,10 @@
 	<script src="../../js/common.js"></script>
 	<script>
 		summerready = function () {
+			var sourceFrom = summer.pageParam.source;
+			if(sourceFrom == "programSelect"){
+				uploadVue.action = false;
+			}
 			uploadVue.param = summer.pageParam;
 			if (summer.pageParam.video) {
 				uploadVue.isVideo = true
@@ -187,6 +191,7 @@
 			el: '#uploadImg',
 			data:function() {
 				return {
+					action:true,
 					popupVisible: false,
 					fileName: '',
 					param: {},
