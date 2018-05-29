@@ -16,12 +16,13 @@
         <div class="statementList">
             <ul>
                 <li v-for="(item,index) in list" :key="index">
-                    <p>{{item.CLIENT_NAME}}</p>
+                    <p>{{item.cstNm}}</p>
                     <div>
-                        <p>支付表编号：{{item.PAYLIST_CODE}}</p>
-                        <p>客户编号：{{item.CLIENT_CODE}}</p>
+                        <p>客户类型：{{item.cstTypCdNm}}</p>
+                        <p>客户证件号：{{item.certNo}}</p>
+                        <p style="color:#333">客户经理：{{item.clerkName}}</p>
                     </div>
-                    <button class="fr" @click="goDetail(item.PAYLIST_CODE,item.CLIENT_NAME,item.CLIENT_CODE)">对账单</button>
+                    <button class="fr" @click="goDetail(item.id)">对账单</button>
                 </li>
             </ul>
         </div>
@@ -49,7 +50,7 @@
                     summer.showProgress();
                     ajaxRequest({
                         type: "POST",
-                        url: 'appservice/project/project/prjprdpayschm/resolveView.do',
+                        url: 'appservice/project/prjprdpayschm/resolveView.do',
                         param: {
                             pageNo: _this.currentPage,
                             pageSize: 10,
@@ -60,24 +61,22 @@
                         _this.list = _this.list.concat(res.data.datas.list);
                         _this.totalPage = res.data.datas.count;
                         _this.$nextTick(function () {
-                            summer.refreshHeaderLoadDone() //加载完成后调用方法恢复组件到默认状态
-                            summer.refreshFooterLoadDone(); //加载完成后调用方法恢复组件到默认状态
-                        })
+                            summer.refreshHeaderLoadDone();
+                            summer.refreshFooterLoadDone(); 
+                        });
                     }, function (err) {
                         console.log(JSON.stringify(err));
                         summer.hideProgress();
-                    })
+                    });
                 },
-                goDetail: function (id, name, number) {
+                goDetail: function (cstId) {
                     summer.openWin({
                         id: 'statementDetaill',
                         url: 'html/statement/statementDetail.html',
                         create: false,
                         type: 'actionBar',
                         pageParam: {
-                            PAYLIST_CODE: id,
-                            CLIENT_NAME: name,
-                            CLIENT_CODE: number
+                            cstId: cstId
                         },
                         actionBar: {
                             title: "对账单明细",
@@ -92,7 +91,6 @@
                         }
                     })
                 }
-
             }
         });
 

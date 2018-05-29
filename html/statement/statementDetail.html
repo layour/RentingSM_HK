@@ -16,50 +16,47 @@
         <div class="um-content payTableDetail">
             <ul>
                 <li class="title">
-                    <span></span>对账单</li>
-                <li>客户姓名
-                    <span class="fr">{{CLIENT_NAME}}</span>
-                </li>
-                <li>客户编号
-                    <span class="fr">{{CLIENT_CODE}}</span>
-                </li>
-                <li>支付表编号
-                    <span class="fr">{{PAYLIST_CODE}}</span>
-                </li>
-            </ul>
-            <ul>
-                <li class="title">
                     <span></span>对账单明细</li>
-                <template v-for="(item,index) in res.list">
-                    <li class="bgLi">期数{{item.QC}}</li>
-                    <li>应还款时间:
+                <li class="bgLi">明细</li>
+                <template v-for="(item, index) in list">
+                    <!-- <li class="bgLi">期数{{item.QC}}</li> -->
+                    <li>类型：
                         <span class="fr"> {{item.YSRQ}}</span>
                     </li>
-                    <li>应还款金额:
+                    <li>期数：
+                        <span class="fr"> {{item.QC}}</span>
+                    </li>
+                    <li>应还款时间：
+                        <span class="fr"> {{item.YSRQ}}</span>
+                    </li>
+                    <li>应还款金额：
                         <span class="fr"> &yen;{{item.YSJE}}</span>
                     </li>
-                    <li>实收日期:
+                    <li>实收日期：
                         <span class="fr"> {{item.SSRQ}}</span>
                     </li>
-                    <li>实收金额:
+                    <li>实收金额：
                         <span class="fr"> &yen;{{item.SSJE_}}</span>
                     </li>
                 </template>
                 <li class="bgLi">合计</li>
-                <li>应收租金总额(元)
+                <li>应收租金总额（元）
                     <span class="fr">&yen;{{res.map3.BEGINNING_MONEY}}</span>
                 </li>
-                <li>实收租金总额(元)
+                <li>实收租金总额（元）
                     <span class="fr">&yen;{{res.map3.BEGINNING_PAID}}</span>
                 </li>
-                <li>剩余租金总额(元)
+                <li>剩余租金总额（元）
                     <span class="fr">&yen;{{res.map3.SY}}</span>
                 </li>
-                <li>逾期租金(元)
+                <li>逾期租金（元）
                     <span class="fr">&yen;{{res.map3.YQZJ}}</span>
                 </li>
-                <li>未到期租金(元)
+                <li>未到期租金（元）
                     <span class="fr">&yen;{{res.map3.WDQZJ}}</span>
+                </li>
+                <li>逾期天数（天）
+                    <span class="fr">{{res.map3.WDQZJ}}</span>
                 </li>
             </ul>
         </div>
@@ -73,22 +70,15 @@
     <script src="../../js/Frameworks/iuapmobile.frameworks.ui.js"></script>
     <script>
         summerready = function () {
-            payTableDetailVue.PAYLIST_CODE = summer.pageParam.PAYLIST_CODE;
-            payTableDetailVue.CLIENT_NAME = summer.pageParam.CLIENT_NAME;
-            payTableDetailVue.CLIENT_CODE = summer.pageParam.CLIENT_CODE;
+            payTableDetailVue.cstId = summer.pageParam.cstId;
             payTableDetailVue.getData();
         }
         var payTableDetailVue = new Vue({
             el: '#payTableDetail',
             data: function () {
                 return {
-                    PAYLIST_CODE: '',
-                    CLIENT_NAME: '',
-                    CLIENT_CODE: '',
-                    res: {
-                        map3: {},
-                        list: []
-                    }
+                    cstId: "",
+                    list: []
                 }
             },
             methods: {
@@ -97,14 +87,15 @@
                     summer.showProgress();
                     ajaxRequest({
                         type: "POST",
-                        url: 'appservice/custaccdetail/getsigleinfo',
+                        url: 'appservice/project/prjprdpayschm/findPrj.do',
                         param: {
-                            PAYLIST_CODE: _this.PAYLIST_CODE
+                            // cstId: _this.cstId
+                            cstId: "1352"
                         }
                     }, function (res) {
-                        console.log(JSON.stringify(res));
                         summer.hideProgress();
-                        _this.res = res.data.datas
+                        _this.list = res.data.datas.list;
+                        console.log(_this.list);
                     }, function (err) {
                         summer.hideProgress();
                         console.log(err);
