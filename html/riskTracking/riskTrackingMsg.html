@@ -1,49 +1,114 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1">
-		<meta charset="UTF-8">
-		<title></title>
-		<link rel="stylesheet" href="../../css/iuapmobile.um.css">
-		<link rel="stylesheet" href="../../css/fonts/iconfont.css">
-		<link rel="stylesheet" href="../../css/mint.css">
-		<link rel="stylesheet" href="../payTableQuery/index.min.css">
-	</head>
-	<body>
-		<div class="um-win" id="payTableDetail" v-cloak>
-			<div class="um-content payTableDetail">
-				<ul>
-          <li>客户姓名 <span class="fr">{{data.NAME}}</span></li>
-          <li>融资租赁合同号 <span class="fr">{{data.LEASE_CODE}}</span></li>
-          <li>支付表号 <span class="fr">{{data.PAYLIST_CODE}}</span></li>
-          <li>应收期次 <span class="fr">{{data.BEGINNING_NUM}}</span></li>
-          <li>租赁期数 <span class="fr">{{data.LEASE_TERM}}</span></li>
-          <li>剩余期数 <span class="fr">{{data.LASE_TERM}}</span></li>
-          <li>应收金额 <span class="fr">{{data.BEGINNING_MONEY}}</span></li>
-          <li>时收金额 <span class="fr">{{data.BEGINNING_PAID}}</span></li>
-          <li>余额 <span class="fr">{{data.BALANCE}}</span></li>
-          <li>应收日期 <span class="fr">{{data.BEGINNING_RECEIVE_DATA}}</span></li>
-				</ul>
-			</div>
 
-		</div>
-		<script src="../../js/summer.js" ></script>
-		<script src="../../js/jquery.min.js" ></script>
-		<script src="../../js/font.js" ></script>
-		<script src="../../js/vue.js" ></script>
-		<script src="../../js/Frameworks/iuapmobile.frameworks.ui.js" ></script>
-		<script>
-				summerready=function(){
-					payTableDetailMsg.data=JSON.parse(summer.pageParam.data)
-				}
-        var payTableDetailMsg=new Vue({
-					el:'#payTableDetail',
-					data:function(){
-						return{
-							data:{}
-						}
-					}
+<head>
+    <meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1">
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="../../css/iuapmobile.um.css">
+    <link rel="stylesheet" href="../../css/fonts/iconfont.css">
+    <link rel="stylesheet" href="../../css/mint.css">
+    <link rel="stylesheet" href="../payTableQuery/index.min.css">
+</head>
+
+<body>
+    <div class="um-win" id="payTableDetail" v-cloak>
+        <div class="um-content payTableDetail">
+            <ul>
+                <li class="title">
+                    <span></span>还款
+                </li>
+                <li>客户姓名
+                    <span class="fr">{{data.base ? data.base.cstNm : ""}}</span>
+                </li>
+                <template v-for="(item, index) in data.pay">
+                    <li>支付表号
+                        <span class="fr">{{item.paySchNo}}</span>
+                    </li>
+                    <div v-for="(e, i) in item.prjPrdPaySchDList">
+                        <li>应收款名称
+                            <span class="fr">{{e.otherParam ? e.otherParam.ysNm : ""}}</span>
+                        </li>
+                        <li>应收款日期
+                            <span class="fr">{{e.payDt ? e.payDt : ""}}</span>
+                        </li>
+                        <li>应收款金额
+                            <span class="fr">{{e.feeAmt ? e.feeAmt : ""}}</span>
+                        </li>
+                        <li>实收金额
+                            <span class="fr">{{e.paidUpAmt ? e.paidUpAmt : ""}}</span>
+                        </li>
+                        <li>余额（元）
+                            <span class="fr">{{e.arAmt ? e.arAmt : ""}}</span>
+                        </li>
+                    </div>
+                </template>
+            </ul>
+            <ul>
+                <li class="title">
+                    <span></span>逾期
+                </li>
+                <li>客户姓名
+                    <span class="fr">{{data.base ? data.base.cstNm : ""}}</span>
+                </li>
+                <li>逾期金额
+                    <span class="fr">{{data.base ? data.base.totalReceivable : ""}}</span>
+                </li>
+                <li>应收租金总额
+                    <span class="fr">{{data.base ? data.base.totalOverdue : ""}}</span>
+                </li>
+                <li>应收罚息总额
+                    <span class="fr">{{data.base ? data.base.totalPenalty : ""}}</span>
+                </li>
+                <li>实收租金总额
+                    <span class="fr">{{data.base ? data.base.totalAmount : ""}}</span>
+                </li>
+                <li>实收罚息总额
+                    <span class="fr">{{data.base ? data.base.totalPayAmount : ""}}</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <script src="../../js/common.js"></script>
+    <script src="../../js/summer.js"></script>
+    <script src="../../js/jquery.min.js"></script>
+    <script src="../../js/font.js"></script>
+    <script src="../../js/vue.js"></script>
+    <script src="../../js/Frameworks/iuapmobile.frameworks.ui.js"></script>
+    <script>
+        summerready = function () {
+            payTableDetailMsg.cstId = summer.pageParam.cstId;
+            payTableDetailMsg.getData();
+        }
+        var payTableDetailMsg = new Vue({
+            el: '#payTableDetail',
+            data: function () {
+                return {
+                    cstId: "",
+                    data: {}
+                }
+            },
+            methods: {
+                getData: function () {
+                    var _this = this;
+                    summer.showProgress();
+                    ajaxRequest({
+                        type: "POST",
+                        url: 'appservice/project/prjprdpayschm/rentalRemindDetail',
+                        param: {
+                            cstId: _this.cstId
+                        }
+                    }, function (res) {
+                        summer.hideProgress();
+                        _this.data = res.data.datas;
+                    }, function (err) {
+                        summer.hideProgress();
+                        console.log(err);
+                    })
+                }
+            }
         })
-		</script>
-	</body>
+    </script>
+</body>
+
 </html>

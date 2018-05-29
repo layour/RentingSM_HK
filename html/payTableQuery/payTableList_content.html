@@ -17,15 +17,15 @@
             <ul>
                 <li v-for="(item,index) in list" :key="index">
                     <p>{{item.cstId.cstNm}}
-                        <span class="fr">{{item.STATUS_NAME}}</span>
+                        <span class="fr">{{item.prdStsCdName}}</span>
                     </p>
                     <div>
                         <p>{{item.paySchNo}}</p>
                         <p>创建时间:{{item.createDate}}
-                            <span class="fr">客户经理:{{item.CLERK_NAME}}</span>
+                            <span class="fr">客户经理:{{item.cstId.clerkName}}</span>
                         </p>
                     </div>
-                    <button class="fr" @click="goDetail(item.ID)">支付明细</button>
+                    <button class="fr" @click="goDetail(item.id)">支付明细</button>
                 </li>
             </ul>
         </div>
@@ -45,7 +45,8 @@
                     list: [],
                     searchVal: '',
                     currentPage: 1,
-                    ORG_ID: ""
+                    ORG_ID: "",
+                    totalPage: ""
                 }
             },
             methods: {
@@ -58,17 +59,13 @@
                         param: {
                             pageNo: _this.currentPage,
                             pageSize: 10,
-                            RENTER_NAME: _this.searchVal
+                            cstNm: _this.searchVal
                         }
                     }, function (res) {
                         console.log(JSON.stringify(res));
                         summer.hideProgress();
                         _this.list = _this.list.concat(res.data.datas.list);
-                        if (!res.data.datas.hasNextPage) {
-                            summer.toast({
-                                msg: '没有更多了'
-                            })
-                        }
+                        _this.totalPage = res.data.datas.count;
                         _this.$nextTick(function () {
                             summer.refreshHeaderLoadDone() //加载完成后调用方法恢复组件到默认状态
                             summer.refreshFooterLoadDone(); //加载完成后调用方法恢复组件到默认状态
@@ -136,6 +133,12 @@
             }, function (ret, err) {
                 //通常在这里从服务器加载数据，
                 payTableListVue.currentPage += 1;
+                if (payTableListVue.currentPage > payTableListVue.totalPage) {
+                    summer.toast({
+                        msg: '没有更多了'
+                    });
+                    return;
+                }
                 payTableListVue.getData();
             });
         }

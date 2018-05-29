@@ -15,15 +15,15 @@
     <div class="um-win" id="riskTrackContent" v-cloak>
         <div class="riskTrackContent">
             <ul>
-                <li v-for="(item,index) in payList" :key="index" @click="goDetail(item)">
+                <li v-for="(item, index) in payList" :key="index" @click="goDetail(item.cstId)">
                     <span class="ps">
                         <table>
                             <tr>
                                 <td class="first">
-                                    <p class="first-child">{{item.NAME}}</p>
+                                    <p class="first-child">{{item.cstNm}}</p>
                                 </td>
                                 <td>
-                                    <span>{{item.BEGINNING_RECEIVE_DATA}}</span>
+                                    <span>应收日期：{{item.receivableTime}}</span>
                                 </td>
                                 <td rowspan="2">
                                     <i class="icon iconfont icon-enter"></i>
@@ -31,10 +31,10 @@
                             </tr>
                             <tr>
                                 <td class="first">
-                                    <p>{{item.BEGINNING_NUM}}</p>
+                                    <p>应收期次：{{item.paySchNum}}</p>
                                 </td>
                                 <td>
-                                    <p class="money">&yen;{{item.BEGINNING_MONEY}}</p>
+                                    <p class="money">&yen;{{item.receivableAmount}}</p>
                                 </td>
                             </tr>
                         </table>
@@ -57,32 +57,26 @@
                     expectedList: [],
                     payList: [],
                     currentPage: 1,
-                    ORG_ID: ""
-
+                    totalPage: "",
+                    searchVal: ""
                 }
             },
             methods: {
                 getData: function () {
-                    var _this = this
+                    var _this = this;
                     summer.showProgress();
                     ajaxRequest({
                         type: "POST",
-                        url: 'appservice/risk/returnmoney',
+                        url: 'appservice/project/prjprdpayschm/rentalRemindList.do',
                         param: {
                             pageSize: 10,
                             pageNo: _this.currentPage,
-                            ORG_ID: _this.ORG_ID
+                            cstNm: _this.searchVal
                         }
                     }, function (res) {
-                        console.log(JSON.stringify(res));
                         summer.hideProgress();
-                        _this.payList = _this.payList.concat(res.data.datas.list)
-
-                        if (!res.data.datas.hasNextPage) {
-                            summer.toast({
-                                msg: '没有更多了'
-                            })
-                        }
+                        _this.payList = _this.payList.concat(res.data.datas.list);
+                        _this.totalPage = res.data.datas.count;
                         _this.$nextTick(function () {
                             summer.refreshHeaderLoadDone() //加载完成后调用方法恢复组件到默认状态
                             summer.refreshFooterLoadDone(); //加载完成后调用方法恢复组件到默认状态
@@ -92,39 +86,17 @@
                         console.log(err);
                     })
                 },
-                goDetail: function (data) {
+                goDetail: function (cstId) {
                     summer.openWin({
                         id: 'payTableDetail',
                         url: 'html/riskTracking/riskTrackingMsg.html',
                         create: false,
                         type: 'actionBar',
                         pageParam: {
-                            data: JSON.stringify(data)
+                            cstId: cstId
                         },
                         actionBar: {
                             title: "还款提醒",
-                            titleColor: "#ffffff",
-                            backgroundColor: "#039BE5",
-                            leftItem: {
-                                image: "img/back.png",
-                                method: '',
-                                text: "返回",
-                                textColor: "#ffffff"
-                            }
-                        }
-                    })
-                },
-                goMoney: function (id) {
-                    summer.openWin({
-                        id: 'payTableDetail',
-                        url: 'html/riskTracking/riskTrackingMoney.html',
-                        create: false,
-                        type: 'actionBar',
-                        pageParam: {
-                            PAYLIST_CODE: id
-                        },
-                        actionBar: {
-                            title: "逾期催收",
                             titleColor: "#ffffff",
                             backgroundColor: "#039BE5",
                             leftItem: {
@@ -140,14 +112,15 @@
         });
 
         function getData(val) {
-            riskTrackContentVue.currentPage = 1
+            riskTrackContentVue.currentPage = 1;
+            riskTrackContentVue.payList = [];
+            riskTrackContentVue.expectedList = [];
+            riskTrackContentVue.searchVal = val
             riskTrackContentVue.getData();
         }
 
         summerready = function () {
-            var userinfo = summer.getStorage("userinfo");
-            riskTrackContentVue.ORG_ID = userinfo.ORG_ID ? userinfo.ORG_ID : "";
-            getData();
+            riskTrackContentVue.getData();
             summer.setRefreshHeaderInfo({
                 visible: true,
                 loadingImg: 'img/refresh.png',
@@ -174,6 +147,12 @@
             }, function (ret, err) {
                 //通常在这里从服务器加载数据，
                 riskTrackContentVue.currentPage += 1;
+                if (riskTrackContentVue.currentPage > riskTrackContentVue.totalPage) {
+                    summer.toast({
+                        msg: '没有更多了'
+                    });
+                    return;
+                }
                 riskTrackContentVue.getData();
             });
         }

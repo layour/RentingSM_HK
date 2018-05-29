@@ -18,6 +18,13 @@
                 <button onclick="changeState('expected',this)">逾期催收</button>
             </div>
         </div> -->
+        <div class="um-content payTableList">
+            <div class="um-input-group pr" id='search'>
+                <i class="icon iconfont icon-nav_search"></i>
+                <input type="text" name="search" class="form-control" placeholder="搜索">
+                <span onclick="satartSearch('all')">取消</span>
+            </div>
+        </div>
 
     </div>
     <script src="../../js/summer.js"></script>
@@ -26,7 +33,8 @@
     <script src="../../js/Frameworks/iuapmobile.frameworks.ui.js"></script>
     <script>
         summerready = function () {
-            var top = $summer.offset($summer.byId('changeState')).h;
+            var top = $summer.offset($summer.byId('search')).h;
+            bindEvents();
             summer.openFrame({
                 id: 'riskTrackContent',
                 url: 'html/riskTracking/riskTrack_content.html',
@@ -40,14 +48,42 @@
             })
         }
 
-        function changeState(val, target) {
+        function bindEvents() {
+            $('.form-control').on('input propertychange', satartSearch);
+        }
+
+        function satartSearch(val) {
+            if (val == 'all') {
+                $(".form-control").val('');
+                $(".form-control").addClass('active').siblings('span').removeClass('active');
+                summer.execScript({
+                    winId: "riskTracking",
+                    frameId: "riskTrackContent",
+                    script: "getData('')"
+                });
+                return
+            }
+            var searchData = $(".form-control").val();
+            if (searchData) {
+                $(".form-control").removeClass('active').siblings('span').addClass('active');
+                summer.execScript({
+                    winId: "riskTracking",
+                    frameId: "riskTrackContent",
+                    script: "getData('" + searchData + "')"
+                });
+            } else {
+                $(".form-control").addClass('active').siblings('span').removeClass('active')
+            }
+        }
+
+        /* function changeState(val, target) {
             $(target).addClass('active').siblings('.active').removeClass('active');
             summer.execScript({
                 winId: "riskTracking",
                 frameId: "riskTrackContent",
                 script: "getData('" + val + "')"
             });
-        }
+        } */
     </script>
 </body>
 
