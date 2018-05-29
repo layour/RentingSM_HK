@@ -16,12 +16,12 @@
         <div class="payTableList">
             <ul>
                 <li v-for="(item,index) in list" :key="index">
-                    <p>{{item.RENTER_NAME}}
+                    <p>{{item.cstId.cstNm}}
                         <span class="fr">{{item.STATUS_NAME}}</span>
                     </p>
                     <div>
-                        <p>{{item.PAYLIST_CODE}}</p>
-                        <p>创建时间:{{item.CREATE_DATE}}
+                        <p>{{item.paySchNo}}</p>
+                        <p>创建时间:{{item.createDate}}
                             <span class="fr">客户经理:{{item.CLERK_NAME}}</span>
                         </p>
                     </div>
@@ -53,18 +53,17 @@
                     var _this = this;
                     summer.showProgress();
                     ajaxRequest({
-                        type: "POST",
-                        url: 'appservice/paytable/paytablelist',
+                        type: "GET",
+                        url: 'appservice/project/prjprdpayschm/initList.do',
                         param: {
                             pageNo: _this.currentPage,
                             pageSize: 10,
-                            RENTER_NAME: _this.searchVal,
-                            ORG_ID: _this.ORG_ID
+                            RENTER_NAME: _this.searchVal
                         }
                     }, function (res) {
                         console.log(JSON.stringify(res));
                         summer.hideProgress();
-                        _this.list = _this.list.concat(res.data.datas.list)
+                        _this.list = _this.list.concat(res.data.datas.list);
                         if (!res.data.datas.hasNextPage) {
                             summer.toast({
                                 msg: '没有更多了'
@@ -101,7 +100,6 @@
                         }
                     })
                 }
-
             }
         });
 
@@ -112,8 +110,6 @@
             payTableListVue.getData();
         }
         summerready = function () {
-            var userinfo = summer.getStorage("userinfo");
-            payTableListVue.ORG_ID = userinfo.ORG_ID ? userinfo.ORG_ID : "";
             payTableListVue.getData();
             summer.setRefreshHeaderInfo({
                 visible: true,
