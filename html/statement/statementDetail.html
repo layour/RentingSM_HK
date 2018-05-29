@@ -16,47 +16,50 @@
         <div class="um-content payTableDetail">
             <ul>
                 <li class="title">
-                    <span></span>对账单明细</li>
+                    <span></span>对账单明细
+                </li>
+            </ul>
+            <ul v-for="(item, index) in list" v-cloak>
                 <li class="bgLi">明细</li>
-                <template v-for="(item, index) in list">
+                <template v-for="(e, i) in item.prjPrdPaySchDList">
                     <!-- <li class="bgLi">期数{{item.QC}}</li> -->
                     <li>类型：
-                        <span class="fr"> {{item.YSRQ}}</span>
+                        <span class="fr"> {{e.feeTypCd ? e.feeTypCd : ""}}</span>
                     </li>
                     <li>期数：
-                        <span class="fr"> {{item.QC}}</span>
+                        <span class="fr"> {{e.payPd ? e.payPd : ""}}</span>
                     </li>
                     <li>应还款时间：
-                        <span class="fr"> {{item.YSRQ}}</span>
+                        <span class="fr"> {{e.payDt ? e.payDt : ""}}</span>
                     </li>
                     <li>应还款金额：
-                        <span class="fr"> &yen;{{item.YSJE}}</span>
+                        <span class="fr"> &yen;{{e.feeAmt ? e.feeAmt : ""}}</span>
                     </li>
                     <li>实收日期：
-                        <span class="fr"> {{item.SSRQ}}</span>
+                        <span class="fr"> {{e.otherParame ? e.otherParame.vfDt : ""}}</span>
                     </li>
                     <li>实收金额：
-                        <span class="fr"> &yen;{{item.SSJE_}}</span>
+                        <span class="fr"> &yen;{{e.paidUpAmt ? e.paidUpAmt : ""}}</span>
                     </li>
                 </template>
                 <li class="bgLi">合计</li>
                 <li>应收租金总额（元）
-                    <span class="fr">&yen;{{res.map3.BEGINNING_MONEY}}</span>
+                    <span class="fr">&yen;{{item.otherParam ? item.otherParam.totalMonthPrice : ""}}</span>
                 </li>
                 <li>实收租金总额（元）
-                    <span class="fr">&yen;{{res.map3.BEGINNING_PAID}}</span>
+                    <span class="fr">&yen;{{item.otherParam ? item.otherParam.totalReceivedMonthPrice : ""}}</span>
                 </li>
                 <li>剩余租金总额（元）
-                    <span class="fr">&yen;{{res.map3.SY}}</span>
+                    <span class="fr">&yen;{{item.otherParam ? item.otherParam.totalRemainMonthPrice : ""}}</span>
                 </li>
                 <li>逾期租金（元）
-                    <span class="fr">&yen;{{res.map3.YQZJ}}</span>
+                    <span class="fr">&yen;{{item.otherParam ? item.otherParam.totalOverdueMonthPrice : ""}}</span>
                 </li>
                 <li>未到期租金（元）
-                    <span class="fr">&yen;{{res.map3.WDQZJ}}</span>
+                    <span class="fr">&yen;{{item.otherParam ? item.otherParam.totalNotDueMonthPrice : ""}}</span>
                 </li>
                 <li>逾期天数（天）
-                    <span class="fr">{{res.map3.WDQZJ}}</span>
+                    <span class="fr">{{item.otherParam ? item.otherParam.overdueDay : ""}}</span>
                 </li>
             </ul>
         </div>
@@ -89,12 +92,30 @@
                         type: "POST",
                         url: 'appservice/project/prjprdpayschm/findPrj.do',
                         param: {
-                            // cstId: _this.cstId
-                            cstId: "1352"
+                            cstId: _this.cstId
+                            // cstId: "1352"
                         }
                     }, function (res) {
                         summer.hideProgress();
                         _this.list = res.data.datas.list;
+                        // 处理"类型feeTypCd"
+                        _this.list.forEach(function (item) {
+                            if (item.prjPrdPaySchDList) {
+                                item.prjPrdPaySchDList.forEach(function (e) {
+                                    if (e.feeTypCd == "01" || e.feeTypCd == "S01") {
+                                        e.feeTypCd = "租金";
+                                    } else if (e.feeTypCd == "02" || e.feeTypCd == "S02") {
+                                        e.feeTypCd = "利息";
+                                    } else if (e.feeTypCd == "03" || e.feeTypCd == "S03") {
+                                        e.feeTypCd = "本金";
+                                    } else if (e.feeTypCd == "04" || e.feeTypCd == "S04") {
+                                        e.feeTypCd = "剩余本金";
+                                    }
+                                });
+                            } else {
+                                item.prjPrdPaySchDList = [];
+                            }
+                        });
                         console.log(_this.list);
                     }, function (err) {
                         summer.hideProgress();
