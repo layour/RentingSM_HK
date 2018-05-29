@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1">
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="../../css/iuapmobile.um.css">
+    <link rel="stylesheet" href="../../css/fonts/iconfont.css">
+    <link rel="stylesheet" href="../../css/mint.css">
+    <link rel="stylesheet" href="../payTableQuery/index.min.css">
+</head>
+
+<body>
+    <div class="um-win" id="payTableDetail">
+        <div class="um-content payTableDetail">
+            <ul>
+                <li class="title">
+                    <span></span>对账单</li>
+                <li>客户姓名
+                    <span class="fr">{{CLIENT_NAME}}</span>
+                </li>
+                <li>客户编号
+                    <span class="fr">{{CLIENT_CODE}}</span>
+                </li>
+                <li>支付表编号
+                    <span class="fr">{{PAYLIST_CODE}}</span>
+                </li>
+            </ul>
+            <ul>
+                <li class="title">
+                    <span></span>对账单明细</li>
+                <template v-for="(item,index) in res.list">
+                    <li class="bgLi">期数{{item.QC}}</li>
+                    <li>应还款时间:
+                        <span class="fr"> {{item.YSRQ}}</span>
+                    </li>
+                    <li>应还款金额:
+                        <span class="fr"> &yen;{{item.YSJE}}</span>
+                    </li>
+                    <li>实收日期:
+                        <span class="fr"> {{item.SSRQ}}</span>
+                    </li>
+                    <li>实收金额:
+                        <span class="fr"> &yen;{{item.SSJE_}}</span>
+                    </li>
+                </template>
+                <li class="bgLi">合计</li>
+                <li>应收租金总额(元)
+                    <span class="fr">&yen;{{res.map3.BEGINNING_MONEY}}</span>
+                </li>
+                <li>实收租金总额(元)
+                    <span class="fr">&yen;{{res.map3.BEGINNING_PAID}}</span>
+                </li>
+                <li>剩余租金总额(元)
+                    <span class="fr">&yen;{{res.map3.SY}}</span>
+                </li>
+                <li>逾期租金(元)
+                    <span class="fr">&yen;{{res.map3.YQZJ}}</span>
+                </li>
+                <li>未到期租金(元)
+                    <span class="fr">&yen;{{res.map3.WDQZJ}}</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <script src="../../js/summer.js"></script>
+    <script src="../../js/jquery.min.js"></script>
+    <script src="../../js/font.js"></script>
+    <script src="../../js/vue.js"></script>
+    <script src="../../js/mint.js"></script>
+    <script src="../../js/common.js"></script>
+    <script src="../../js/Frameworks/iuapmobile.frameworks.ui.js"></script>
+    <script>
+        summerready = function () {
+            payTableDetailVue.PAYLIST_CODE = summer.pageParam.PAYLIST_CODE;
+            payTableDetailVue.CLIENT_NAME = summer.pageParam.CLIENT_NAME;
+            payTableDetailVue.CLIENT_CODE = summer.pageParam.CLIENT_CODE;
+            payTableDetailVue.getData();
+        }
+        var payTableDetailVue = new Vue({
+            el: '#payTableDetail',
+            data: function () {
+                return {
+                    PAYLIST_CODE: '',
+                    CLIENT_NAME: '',
+                    CLIENT_CODE: '',
+                    res: {
+                        map3: {},
+                        list: []
+                    }
+                }
+            },
+            methods: {
+                getData: function () {
+                    var _this = this
+                    summer.showProgress();
+                    ajaxRequest({
+                        type: "POST",
+                        url: 'appservice/custaccdetail/getsigleinfo',
+                        param: {
+                            PAYLIST_CODE: _this.PAYLIST_CODE
+                        }
+                    }, function (res) {
+                        console.log(JSON.stringify(res));
+                        summer.hideProgress();
+                        _this.res = res.data.datas
+                    }, function (err) {
+                        summer.hideProgress();
+                        console.log(err);
+                    })
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
