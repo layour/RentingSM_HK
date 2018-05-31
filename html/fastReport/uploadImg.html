@@ -130,7 +130,7 @@
 						<img class="close" @click="deleteImg(index)" v-if="action"  src="../../img/close.png" alt="">
 						<p>{{param.name}}</p>
 					</li>
-					<li @click="openPopup" v-if="imgList.length<9 && action">
+					<li @click="openPopup" v-if="action">
 						<div>
 							<i class="icon iconfont icon-add"></i>
 						</div>
@@ -305,12 +305,12 @@
 						callback: function (args) {
 							console.log(JSON.stringify(args));
 							var length = args.imgPaths.length;
-							if (that.imgList.length + length > 9) {
+							/* if (that.imgList.length + length > 9) {
 								summer.toast({
 									msg: "最多上传9张图片"
 								})
 								return
-							}
+							} */
 							console.log("开始添加水印,图片个数" + length);
 							summer.showProgress();
 							that.compressImg(0, args, length);
