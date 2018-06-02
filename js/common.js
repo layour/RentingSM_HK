@@ -164,7 +164,8 @@ function ajaxRequest(paramObj, successCallback, errorCallback) {
 			response.data = JSON.parse(response.data);
 		}
 		if (response.data.code == "R10002") {
-			summer.hideProgress();
+            summer.hideProgress();
+            summer.setStorage("userinfo", {});
             summer.toast({
                 msg: "登录过期，请重新登录"
             });
