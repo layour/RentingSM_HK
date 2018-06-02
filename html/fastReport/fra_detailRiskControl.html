@@ -79,8 +79,8 @@
 	<script src="../../js/Frameworks/iuapmobile.frameworks.ui.js"></script>
 	<script>
 		summerready = function () {
-			projectImgList.projectId = summer.pageParam.id
-			console.log("projectId" + projectImgList.projectId);
+			projectImgList.projectId = summer.pageParam.fra_detailRiskControl ? summer.pageParam.fra_detailRiskControl : summer.pageParam.id;
+            console.log("projectId" + projectImgList.projectId);
 			projectImgList.getData()
 		}
 		var projectImgList = new Vue({

@@ -157,7 +157,7 @@
 		 
 		 
 		summerready = function () {
-			 var projectId = summer.pageParam.id;
+			 var projectId = summer.pageParam.fra_detailReviewProcess ? summer.pageParam.fra_detailReviewProcess : summer.pageParam.id;
 			fra_detailReviewProcess.getData(projectId)
 		}
 		var fra_detailReviewProcess = new Vue({

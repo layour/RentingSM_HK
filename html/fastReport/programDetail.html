@@ -70,17 +70,26 @@
 					id: 'fra_detailBaseMessage',
 					url: 'html/fastReport/fra_detailBaseMessage.html',
 					bgColor: '#ffffff',
-					hidden: false
+                    hidden: false,
+                    pageParam: {
+				        "fra_detailBaseMessage": detailId
+				    }
 				}, {
 					id: 'fra_detailReviewProcess',
 					url: 'html/fastReport/fra_detailReviewProcess.html',
 					bgColor: '#ffffff',
-					hidden: true
+                    hidden: true,
+                    pageParam: {
+				        "fra_detailReviewProcess": detailId
+				    }
 				}, {
 					id: 'fra_detailRiskControl',
 					url: 'html/fastReport/fra_detailRiskControl.html',
 					bgColor: '#ffffff',
-					hidden: true
+                    hidden: true,
+                    pageParam: {
+				        "fra_detailRiskControl": detailId
+				    }
 				}],
 				pageParam:[{
 						"fra_detailBaseMessage":detailId

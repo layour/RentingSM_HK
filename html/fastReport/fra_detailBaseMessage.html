@@ -169,7 +169,7 @@
 		 
 		 
 		summerready = function () {
-			var projectID = summer.pageParam.id;
+			var projectID = summer.pageParam.fra_detailBaseMessage ? summer.pageParam.fra_detailBaseMessage : summer.pageParam.id;
 			fra_detailRiskControl.getData(projectID)
 		}
 
