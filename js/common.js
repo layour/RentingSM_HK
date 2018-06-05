@@ -192,14 +192,14 @@ function ajaxRequest(paramObj, successCallback, errorCallback) {
 		if (Object.prototype.toString.call(response.data) === '[object String]') {
 			response.data = JSON.parse(response.data);
         }
-		if (response.data.flag  && response.data.flag != '1') {
+		/* if (response.data.flag  && response.data.flag != '1') {
 			summer.hideProgress();
 			successCallback(response);
 			summer.toast({
 				msg: response.data.msg
 			});
 			return;
-		}
+		} */
 		successCallback(response);
 	}, function (response) {
 		summer.hideProgress();
