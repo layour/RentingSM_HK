@@ -8,6 +8,9 @@
 // 华科测试地址
 window.G_COMMON_URL = "http://106.15.55.173:8080/honor/";
 
+// 华科正式地址
+// window.G_COMMON_URL = "http://47.104.88.176:8080/honor/";
+
 function getToken() {
 	var userinfo = summer.getStorage("userinfo");
 	var token = userinfo ? userinfo.token : "";
