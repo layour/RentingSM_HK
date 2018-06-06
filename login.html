@@ -61,29 +61,16 @@
 				});
 				return;
 			}
-			summer.showProgress();
-			if (!summer.netAvailable()) {
-				summer.hideProgress();
-				summer.toast({
-					msg: "网络异常，请检查网络"
-				});
-				return false;
-			}
-			window.cordovaHTTP.settings = {
-				timeout: 5000
-			}; //设置5秒超时
-			summer.ajax({
-				type: "get",
-				url: G_COMMON_URL+"/appservice/login/carLogin",
-				param: {
-					"loginName": workNum,
+            summer.showProgress();
+            var self = this;
+            ajaxRequest({
+                type: 'get',
+                url: 'appservice/login/carLogin',
+                param: {
+                    "loginName": workNum,
 					"password": "HKSD" + psw + "EFASD"
-				},
-				header: {
-					"Content-Type": "application/json"
-				}
-			}, function (response) {
-				console.log(response);
+                }
+            }, function(response) {
 				summer.hideProgress();
 				var Data;
 				if (Object.prototype.toString.call(response.data) === '[object String]') {
@@ -106,10 +93,10 @@
 						};
 						summer.setStorage("userinfo", userinfo);
 						// 调用首页获取代办任务数量
-						/* summer.execScript({
-							winId: 'homePage',
-							script: "getMissionData()"
-						}); */
+						// summer.execScript({
+						// 	winId: 'homePage',
+						// 	script: "getMissionData()"
+						// });
 						summer.closeToWin({
 							id: "homePage"
 						});
@@ -124,13 +111,13 @@
 							msg: "登录失败"
 						});
 				}
-			}, function (error) {
-				console.log(error);
+            }, function(err) {
+                console.log(err);
 				summer.hideProgress();
 				summer.toast({
 					msg: "系统内部异常"
 				});
-			});
+            });
 		};
 	</script>
 </body>
