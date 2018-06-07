@@ -76,7 +76,7 @@
                     }, function (res) {
                         summer.hideProgress();
                         _this.payList = _this.payList.concat(res.data.datas.list);
-                        _this.totalPage = res.data.datas.count;
+                        _this.totalPage = res.data.datas.last;
                         _this.$nextTick(function () {
                             summer.refreshHeaderLoadDone() //加载完成后调用方法恢复组件到默认状态
                             summer.refreshFooterLoadDone(); //加载完成后调用方法恢复组件到默认状态
@@ -151,6 +151,8 @@
                     summer.toast({
                         msg: '没有更多了'
                     });
+                    summer.refreshHeaderLoadDone() //加载完成后调用方法恢复组件到默认状态
+                    summer.refreshFooterLoadDone(); //加载完成后调用方法恢复组件到默认状态
                     return;
                 }
                 riskTrackContentVue.getData();
