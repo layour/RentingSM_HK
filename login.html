@@ -96,7 +96,13 @@
 						// summer.execScript({
 						// 	winId: 'homePage',
 						// 	script: "getMissionData()"
-						// });
+                        // });
+
+                        // 调用首页判断升级方法
+                        summer.execScript({
+							winId: 'homePage',
+							script: "update()"
+                        });
 						summer.closeToWin({
 							id: "homePage"
 						});

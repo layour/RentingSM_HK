@@ -8,7 +8,8 @@
 	<link rel="stylesheet" href="../../css/iuapmobile.um.css">
 	<link rel="stylesheet" href="../../css/fonts/iconfont.css">
 	<link rel="stylesheet" href="index.css">
-	<script src="../../js/summer.js"></script>
+    <script src="../../js/summer.js"></script>
+    <script src="../../js/common.js"></script>
 	<script src="../../js/jquery.min.js"></script>
 	<script src="../../js/Frameworks/iuapmobile.frameworks.ui.js"></script>
 	<script src="../../js/font.js" charset="utf-8"></script>
@@ -160,52 +161,81 @@
 
 		function update() {
 			if (isLogin()) {
-				/* summer.showProgress();
-				summer.ajax({
-					type: "post",
-					url: G_COMMON_URL+"appservice/appsys/getNewapp",
-					param: {
-						"version": "1",
-						"appFlag": "1",
-						"sysCd": "11002"
-					},
-					header: {
-						"Content-Type": "application/json"
-					}
-				}, function(response) {
-					summer.hideProgress();
-					var Data;
-					if (Object.prototype.toString.call(response.data) === '[object String]') {
-						Data = JSON.parse(response.data);
-					} else {
-						Data = response.data;
-					}
-					switch (Data.flag) {
-						case 1:
-							summer.toast({
-								msg: "成功"
-							});
-							break;
-						case 0:
-							summer.toast({
-								msg: "请求失败"
-							});
-							break;
-						default:
-							summer.toast({
-								msg: "请求失败"
-							});
-					}
-				}, function(error) {
-					summer.hideProgress();
-					console.log(error);
-					summer.toast({
-						msg: "系统内部异常"
-					});
-				}); */
-				summer.toast({
-					msg: "敬请期待"
-				});
+                var appVersion = JSON.parse(summer.getAppVersion()).versionName;
+                var mobileType;
+                if ($summer.os == "android") {
+                    mobileType = "1";
+                } else if ($summer.os == "ios") {
+                    mobileType = "2";
+                }
+                ajaxRequest({
+                    type: 'post',
+                    url: 'appservice/sys/version/checkVersion',
+                    param: {
+                        "version": appVersion,
+                        "mobileType": mobileType
+                    }
+                }, function(res) {
+                    if (res.data.flag == 1) {
+                        if (res.data.datas.check_status == 1) {
+                            // 有新版本，用户选择是否升级
+                            UM.confirm({
+                                title: '检测到新版本，是否升级？',
+                                btnText: ["取消", "确定"],
+                                overlay: true,
+                                ok: function () {
+                                    if ($summer.os == "android") {
+                                        summer.upgradeApp({
+                                            url: G_COMMON_URL + res.data.datas.latest_version.downloadLink
+                                        },function (ret) {
+                                            if (ret.state == 1 || ret == "OK") {
+                                                summer.toast({
+                                                    msg : '升级成功'
+                                                });
+                                            }
+                                        },function (err) {
+                                            summer.toast({
+                                                msg : '升级失败'
+                                            });
+                                        })
+                                    } else if ($summer.os == "ios") {
+                                        summer.openWebView({
+                                            url : res.data.datas.latest_version.downloadLink
+                                        });
+                                    }
+                                }
+                            });
+                        } else if (res.data.datas.check_status == 2) {
+                            // 当前版本已过期，进行强制升级
+                            summer.toast({
+                                msg : '当前版本已过期，准备更新至最新版本'
+                            });
+                            setTimeout(function () {
+                                if ($summer.os == "android") {
+                                    summer.upgradeApp({
+                                        url: G_COMMON_URL + res.data.datas.latest_version.downloadLink
+                                    },function (ret) {
+                                        if (ret.state == 1 || ret == "OK") {
+                                            summer.toast({
+                                                msg : '升级成功'
+                                            });
+                                        }
+                                    },function (err) {
+                                        summer.toast({
+                                            msg : '升级失败'
+                                        });
+                                    });
+                                } else if ($summer.os == "ios") {
+                                    summer.openWebView({
+                                        url : res.data.datas.latest_version.downloadLink
+                                    });
+                                }
+                            }, 1000);
+                        }
+                    }
+                }, function(err) {
+                    console.log(err);
+                });
 			} else {
 				summer.toast({
 					msg: "请先登录"

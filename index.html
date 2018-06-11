@@ -90,9 +90,91 @@
 			var mySwiper = new Swiper('.swiper-container', {
 				autoplay: 5000,
 				loop: true
-			});
+            });
+            // 判断版本升级
+            /* if ($summer.os == "android") {
+                update();
+            } */
+            update();
 		}
-
+        // 版本升级
+        function update () {
+            var appVersion = JSON.parse(summer.getAppVersion()).versionName;
+            var mobileType;
+            if ($summer.os == "android") {
+                mobileType = "1";
+            } else if ($summer.os == "ios") {
+                mobileType = "2";
+            }
+            ajaxRequest({
+                type: 'post',
+                url: 'appservice/sys/version/checkVersion',
+                param: {
+                    "version": appVersion,
+                    "mobileType": mobileType
+                }
+            }, function(res) {
+                if (res.data.flag == 1) {
+                    if (res.data.datas.check_status == 1) {
+                        // 有新版本，用户选择是否升级
+                        UM.confirm({
+                            title: '检测到新版本，是否升级？',
+                            btnText: ["取消", "确定"],
+                            overlay: true,
+                            ok: function () {
+                                if ($summer.os == "android") {
+                                    summer.upgradeApp({
+                                        url: G_COMMON_URL + res.data.datas.latest_version.downloadLink
+                                    },function (ret) {
+                                        if (ret.state == 1 || ret == "OK") {
+                                            summer.toast({
+                                                msg : '升级成功'
+                                            });
+                                        }
+                                    },function (err) {
+                                        summer.toast({
+                                            msg : '升级失败'
+                                        });
+                                    })
+                                } else if ($summer.os == "ios") {
+                                    summer.openWebView({
+                                        url : res.data.datas.latest_version.downloadLink
+                                    });
+                                }
+                            }
+                        });
+                    } else if (res.data.datas.check_status == 2) {
+                        // 当前版本已过期，进行强制升级
+                        summer.toast({
+                            msg : '当前版本已过期，准备更新至最新版本'
+                        });
+                        setTimeout(function () {
+                            if ($summer.os == "android") {
+                                summer.upgradeApp({
+                                    url: G_COMMON_URL + res.data.datas.latest_version.downloadLink
+                                },function (ret) {
+                                    if (ret.state == 1 || ret == "OK") {
+                                        summer.toast({
+                                            msg : '升级成功'
+                                        });
+                                    }
+                                },function (err) {
+                                    summer.toast({
+                                        msg : '升级失败'
+                                    });
+                                });
+                            } else if ($summer.os == "ios") {
+                                summer.openWebView({
+                                    url : res.data.datas.latest_version.downloadLink
+                                });
+                            }
+                        }, 1000);
+                    }
+                }
+            }, function(err) {
+                console.log(err);
+            });
+        };
 		// 判断是否已登陆
 		function isLogin() {
 			if (summer.getStorage("userinfo")) {
