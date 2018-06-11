@@ -17,8 +17,8 @@
   <windowSoftInputMode>stateHidden</windowSoftInputMode>  
   <openMDoctor>false</openMDoctor>  
   <autoHideLaunch>false</autoHideLaunch>  
-  <urlScheme>hkjrsm</urlScheme>
-  <import id="cordova-plugin-compat" type="web" ref="cordova"></import>  
+  <urlScheme>hkjrsm</urlScheme>  
+  <import id="cordova-plugin-compat" type="web" ref="cordova"/>  
   <import id="cordova-plugin-http" type="web" ref="cordova"/>  
   <import id="cordova-plugin-camera" type="web" ref="cordova"/>  
   <import id="cordova-plugin-file" type="web" ref="cordova"/>  

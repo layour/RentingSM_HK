@@ -123,8 +123,9 @@
                             overlay: true,
                             ok: function () {
                                 if ($summer.os == "android") {
+                                    var token = getToken() ? getToken() : "";
                                     summer.upgradeApp({
-                                        url: G_COMMON_URL + res.data.datas.latest_version.downloadLink
+                                        url: G_COMMON_URL + res.data.datas.latest_version.downloadLink + "&TOKEN=" + token
                                     },function (ret) {
                                         if (ret.state == 1 || ret == "OK") {
                                             summer.toast({
@@ -150,8 +151,9 @@
                         });
                         setTimeout(function () {
                             if ($summer.os == "android") {
+                                var token = getToken() ? getToken() : "";
                                 summer.upgradeApp({
-                                    url: G_COMMON_URL + res.data.datas.latest_version.downloadLink
+                                    url: G_COMMON_URL + res.data.datas.latest_version.downloadLink + "&TOKEN=" + token
                                 },function (ret) {
                                     if (ret.state == 1 || ret == "OK") {
                                         summer.toast({
