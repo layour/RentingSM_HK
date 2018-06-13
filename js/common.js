@@ -206,8 +206,9 @@ function ajaxRequest(paramObj, successCallback, errorCallback) {
 		successCallback(response);
 	}, function (response) {
 		summer.hideProgress();
+		console.log(response);
 		summer.toast({
-			msg: "数据请求失败" + JSON.stringify(response)
+			msg: "服务器开小差了，请重试" 			
 		});
 		return;
 		//此处还需要和后端沟通，统一失败状态码，统一处理
