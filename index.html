@@ -46,6 +46,13 @@
 			</h2>
 			<div class="xmgl_con">
 				<ul class="xmgl_list clearfix">
+					<li onclick="mission()" class="">
+						<dl>
+							<dt class="iconfont icon-submit" style="color:#c79644"></dt>
+							<dd>审批管理</dd>
+						</dl>
+						<!--span class="missionNum" v-show='missionNum>0'>{{missionNum}}</span-->
+					</li>
 					<li onclick="openFastReport()">
 						<dl>
 							<dt class="iconfont icon-nav_house" style="color:#88d27c"></dt>
@@ -218,6 +225,30 @@
 					}
 				}
 			});
+		};
+	   // 代办任务
+		function mission() {
+			if (isLogin()) {
+				summer.openWin({
+					id: 'missionIndex',
+					url: 'html/mission/index.html',
+					create: false,
+					type: 'actionBar',
+					actionBar: {
+						title: "审批管理",
+						titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
+						backgroundColor: "#039be5",
+						leftItem: {
+							image: "img/back.png",
+							method: "", //返回按钮自定义事件
+							text: "返回",
+							textColor: "#ffffff" //返回文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
+						}
+					}
+				});
+			} else {
+				toLog();
+			}
 		};
 		// 支付表查询
 		function openPayTab() {
