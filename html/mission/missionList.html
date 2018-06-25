@@ -24,15 +24,15 @@
             <ul class="missionList">
                 <li v-for="k in dataList">
                     <div class="title">
-                        <span class="name">{{k.PRO_NAME}}</span>
+                        <span class="name">{{k.pdNo}}</span>
                         <!-- <span class="state">{{k.CUST_NAME}}</span> -->
                     </div>
-                    <div class="content" @click="missionInfo(k.PROJECT_ID,k.EXECUTIONID,k.ID)">
+                    <div class="content" @click="missionInfo(k.procDefId,k.pdNo,k.taskDefKey,k.procInsId,k.taskName,k.taskId)">
                         <div class="leftCon">
-                            <p class="p1">任务名：{{k.ACTIVITYNAME}}</p>
-                            <p class="p2">项目编号：{{k.PRO_CODE}}</p>
-                            <p class="p3">流程编号：{{k.EXECUTIONID}}</p>
-                            <p class="p4">审批时间：{{k.CREATETIME}}</p>
+                            <p class="p1">发起人：{{k.sendName}}</p>
+                            <p class="p2">当前环节：{{k.taskName}}</p>
+                            <p class="p3">处理人：{{k.assigneeName}}</p>
+                            <p class="p4">发起时间：{{k.startTime}}</p>
                         </div>
                         <div class="enter">
                             <div class="enterCon">
@@ -49,7 +49,7 @@
         summerready = function() {
             summer.showProgress();
             var userinfo = summer.getStorage("userinfo");
-			missionList.ORG_ID = userinfo.ORG_ID ? userinfo.ORG_ID : "";
+		//	missionList.ORG_ID = userinfo.ORG_ID ? userinfo.ORG_ID : "";
             getData(1, true)
             summer.setRefreshHeaderInfo({
                 visible: true,
@@ -101,7 +101,7 @@
                     var self = this;
                     ajaxRequest({
                         type: 'post',
-                        url: 'sys/act/todo',
+                        url: 'appservice/sys/act/todo',
                         param: {
                             "pageNo": pageNum,
                             "pageSize": 10,
@@ -111,17 +111,17 @@
                         summer.hideProgress();
                         var Data = res.data;
                         if (Data.flag == 1) {
-                            self.totalPage = Data.datas.last;
+                           // self.totalPage = Data.datas.last;
                             if (flag) {
-                                if (Data.datas.list.length < 1) {
+                                if (Data.datas.page.list.length < 1) {
                                     createNull("content", "../../img/empty.png", "暂无待办任务");
                                     $('#content').css('display','block');
                                 } else {
                                     $('#content').css('display','none');
-                                    self.dataList = Data.datas.list;
+                                    self.dataList = Data.datas.page.list;
                                 }
                             } else {
-                                self.dataList = self.dataList.concat(Data.datas.list);
+                                self.dataList = self.dataList.concat(Data.datas.page.list);
                             }
 
                             console.log(self.dataList);
@@ -136,7 +136,7 @@
                         summer.refreshFooterLoadDone(); //加载完成后调用方法恢复组件到默认状态
                     })
                 },
-                missionInfo: function(PROJECT_ID, JBPM_ID, TASK_ID) {
+                missionInfo: function(procDefId, pdNo, taskDefKey,procInsId,taskName,taskId) {
                     summer.openWin({
                         id: 'missionInfo',
                         url: 'html/mission/missionInfo.html',
@@ -154,9 +154,13 @@
                             }
                         },
                         pageParam: {
-                            JBPM_ID: JBPM_ID,
-                            TASK_ID: TASK_ID,
-                            PROJECT_ID: PROJECT_ID
+                            procDefId: procDefId,
+                            pdNo: pdNo,
+                            taskDefKey: taskDefKey,
+                            procInsId:procInsId,
+                            taskName:taskName,
+                            taskId:taskId
+
                         }
 
                     });

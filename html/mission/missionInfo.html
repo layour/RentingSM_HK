@@ -19,18 +19,21 @@
 		<div class="um-content">
 			<div class="navbar">
 				<ul class="missionInfo">
-					<li class="active">项目信息</li>
-					<li>审批信息</li>
+					<li class="active">审批信息</li>
+					<li>附加信息</li>
 				</ul>
 			</div>
 		</div>
 	</div>
 	<script type="text/javascript">
 		summerready = function() {
-            var JBPM_ID = summer.pageParam.JBPM_ID;
-            var TASK_ID = summer.pageParam.TASK_ID;
-            var PROJECT_ID = summer.pageParam.PROJECT_ID;
-			var KTYPE = summer.pageParam.KTYPE;
+            var procDefId = summer.pageParam.procDefId;
+            var pdNo = summer.pageParam.pdNo;
+			var taskDefKey = summer.pageParam.taskDefKey;
+			
+			var procInsId = summer.pageParam.procInsId;
+            var taskName = summer.pageParam.taskName;
+            var taskId = summer.pageParam.taskId;
 			var top = $('.um-header').height() + $('.navbar').height();
 			summer.openFrameGroup({
 				id: 'missionCheck',
@@ -43,34 +46,40 @@
 					right: 0
 				},
 				index: 0,
-				frames: [{
-					id: 'projectDetail',
-					url: 'html/mission/projectDetail.html',
-					bgColor: '#ffffff',
-					hidden: false,
-					pageParam: {
-				        PROJECT_ID: PROJECT_ID
-				    }
-				}, {
+				frames: [ {
 					id: 'missionDetail',
 					url: 'html/mission/missionDetail.html',
 					bgColor: '#ffffff',
 					hidden: true,
 					pageParam: {
-                        JBPM_ID: JBPM_ID,
-                        TASK_ID: TASK_ID,
-						KTYPE: KTYPE
+                        procDefId: procDefId,
+                        pdNo: pdNo,
+						taskDefKey: taskDefKey,
+						procInsId:procInsId,
+                            taskName:taskName,
+                            taskId:taskId
 				    }
+				},{
+					id: 'projectDetail',
+					url: 'html/mission/projectDetail.html',
+					bgColor: '#ffffff',
+					hidden: false,
+					// pageParam: {
+				    //     PROJECT_ID: PROJECT_ID
+				    // }
 				}],
 				pageParam: [
 					{
-                        PROJECT_ID: PROJECT_ID
+                        procDefId: procDefId,
+                        pdNo: pdNo,
+						taskDefKey: taskDefKey,
+						procInsId:procInsId,
+                            taskName:taskName,
+                            taskId:taskId
 					},
-					{
-                        JBPM_ID: JBPM_ID,
-                        TASK_ID: TASK_ID,
-						KTYPE: KTYPE
-					}
+					// {
+                    //     PROJECT_ID: PROJECT_ID
+					// }
 				]
 			}, function(ret, err) {
 				var index = ret.index;

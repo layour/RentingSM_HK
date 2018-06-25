@@ -21,27 +21,28 @@
     <div class="um-frame" id="index">
         <div class="um-content">
             <div id="content"></div>
-            <h2 class="processNum">流程编号：{{JBPM_ID}}</h2>
-            <ul class="processList" v-if="!(KTYPE=='finished')">
+            <h2 class="processNum">流程编号：{{baseM.pdNo}}</h2>
+            <ul class="processList" >
                 <li v-for="(k, index) in items" v-bind:class="[index == items.length-1 ? '' : 'borderActive']">
                     <img src="../../img/true.png" alt="">
                     <div class="box">
-                        <p class="p1">{{k.TASK_NAME}}</p>
-                        <p class="p2">【{{k.ID}}】{{k.OP_CODE}}：{{k.OP_TYPE}}</p>
-                        <p class="p3" v-if="!memoFlag">内部意见：{{k.MEMO ? k.MEMO : "无"}}</p>
-                        <p class="p4">外部意见：{{k.WMEMO ? k.WMEMO : "无"}}</p>
-                        <p class="p5">{{k.OP_TIME}}</p>
+                        <p class="p1">执行环节:{{k.taskName}}</p>
+                        <p class="p2">执行人:{{k.assigneeName}}</p>
+                        <p class="p3" >处理类型:{{k.flagName}}</p>
+                        <p class="p4">开始时间:{{k.histIns.startTime}}</p>
+                        <p class="p5">结束时间:{{k.histIns.endTime}}</p>
+                        <p class="p5">任务历时:{{k.durationTime}}</p>
                     </div>
                 </li>
             </ul>
-            <ul class="processList" v-else>
+            <!-- <ul class="processList" v-else>
                 <li>
                     <img src="../../img/true.png" alt="">
                     <div class="box">
                         <p class="p1">任务已完成</p>
                     </div>
                 </li>
-            </ul>
+            </ul> -->
             <div v-bind:style="[KTYPE=='finished' ? {display:'none'} : {display:'block'}]">
                 <div class="text">
                     <textarea class="text" placeholder="请输入内部审批意见" v-model="txt"></textarea>
@@ -51,7 +52,7 @@
                 </div>
                 <div class="btns submitBtn um-box">
                     <span v-for="k in arr" class="um-bf1">
-                        <div @click=submitMission(k.nodeName_,k.toNode_) v-bind:class="[arr.length > 1 ? 'buttons more' : 'buttons']">{{k.nodeName_}}</div>
+                        <div @click=submitMission(k.label,k.value) v-bind:class="[arr.length > 1 ? 'buttons more' : 'buttons']">{{k.label}}</div>
                     </span>
                 </div>
             </div>
@@ -59,50 +60,58 @@
     </div>
     <script type="text/javascript">
         summerready = function () {
-            var JBPM_ID = summer.pageParam.JBPM_ID;
-            var TASK_ID = summer.pageParam.TASK_ID;
-            var KTYPE = summer.pageParam.KTYPE;
+            var procDefId = summer.pageParam.procDefId;
+            var pdNo = summer.pageParam.pdNo;
+            var taskDefKey = summer.pageParam.taskDefKey;
+
+            var procInsId = summer.pageParam.procInsId;
+            var taskName = summer.pageParam.taskName;
+            var taskId = summer.pageParam.taskId;
             var userinfo = summer.getStorage("userinfo");
-            missionDetail.ORG_ID = userinfo.ORG_ID ? userinfo.ORG_ID : "";
-            missionDetail.EMPLOYEE_ID = userinfo.EMPLOYEE_ID ? userinfo.EMPLOYEE_ID : "";
-            missionDetail.JBPM_ID = JBPM_ID;
-            missionDetail.TASK_ID = TASK_ID;
-            missionDetail.KTYPE = KTYPE;
-            missionDetail.getData(JBPM_ID, TASK_ID);
+            // missionDetail.ORG_ID = userinfo.ORG_ID ? userinfo.ORG_ID : "";
+            // missionDetail.EMPLOYEE_ID = userinfo.EMPLOYEE_ID ? userinfo.EMPLOYEE_ID : "";
+            // missionDetail.JBPM_ID = JBPM_ID;
+            // missionDetail.TASK_ID = TASK_ID;
+            // missionDetail.KTYPE = KTYPE;
+            missionDetail.getData(procDefId, pdNo,taskDefKey,procInsId,taskName,taskId);
         }
         var missionDetail = new Vue({
             el: '#index',
             data: {
-                memoFlag: false,
-                ORG_ID: '',
-                EMPLOYEE_ID: '',
-                JBPM_ID: '',
-                TASK_ID: '',
-                KTYPE: '',
-                txt: "",
-                txt_w: "",
+                // memoFlag: false,
+                // ORG_ID: '',
+                // EMPLOYEE_ID: '',
+                // JBPM_ID: '',
+                // TASK_ID: '',
+                // KTYPE: '',
+                // txt: "",
+                // txt_w: "",
+                baseM:'',
                 items: '',
                 arr: '' /* [{"nodeName_":'提交',"toNode_":"下一步"},{"nodeName_":'提交2',"toNode_":"下一步2"} ,{"nodeName_":'提交3',"toNode_":"下一步3"}]*/
             },
             methods: {
-                getData:function (JBPM_ID, TASK_ID) {
+                getData:function (procDefId, pdNo,taskDefKey,procInsId,taskName,taskId) {
                     summer.showProgress();
                     var self = this;
-                    if (JBPM_ID) {
                         ajaxRequest({
                             type: 'post',
-                            url: 'appservice/bpmtask/toShowTaskMemo',
+                            url: 'appservice/sys/act/toComplete',
                             param: {
-                                "JBPM_ID": JBPM_ID,
-                                "TASK_ID": TASK_ID,
-                                "ORG_ID": self.ORG_ID
+                                "procDefId": procDefId,
+                                "pdNo": pdNo,
+                                "taskDefKey": taskDefKey,
+                                "procInsId":procInsId,
+                                "taskName":taskName,
+                                "taskId":taskId
                             }
                         }, function (res) {
                             summer.hideProgress();
+                            console.log(res);
                             if (res.data.flag == 1) {
-                                self.items = res.data.datas.jbpmMemoModel;
-                                self.arr = res.data.datas.flowNodes;
-                                self.memoFlag = res.data.datas.memoFlag;
+                                self.items = res.data.datas.historyFlow;
+                                self.arr = res.data.datas.btns;
+                                self.baseM = res.data.datas.act;
                                 console.log(res);
                             }
                         }, function (err) {
@@ -110,10 +119,10 @@
                             console.log(err);
                             summer.hideProgress();
                         });
-                    } else {
-                        summer.hideProgress();
-                        createNull("content", "../../img/empty.png", "暂未发起流程")
-                    }
+                    // } else {
+                    //     summer.hideProgress();
+                    //     createNull("content", "../../img/empty.png", "暂未发起流程")
+                    // }
                 },
                 submitMission:function (nodeName_, toNode_) {
                     summer.showProgress();
