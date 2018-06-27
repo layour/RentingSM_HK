@@ -14,10 +14,10 @@
 			<div class="um-content baseMessage">
 				<ul>
 					 
-					<li @click="surePickerProgram" >
+					<li @click="surePickerIsSmallCard" >
 						<p class="pl10 pr10 tr">
-							<span class="fl">业务类型</span>
-							 <span class="right"><span v-if='programStyle' class="first">{{programStyle}}</span><span v-else class="second">请选择</span> <i class="icon iconfont icon-enter"></i></span>
+							<span class="fl">是否小公牌</span>
+							 <span class="right"><span v-if='isSmallCardNm' class="first">{{isSmallCardNm}}</span><span v-else class="second">请选择</span> <i class="icon iconfont icon-enter"></i></span>
 						</p>
 					</li>
 					 
@@ -71,10 +71,10 @@
 			</div>
 
 			<div class="um-footer">
-				<mt-popup v-model="pickerProgramStatus" position='bottom' class="pickerColor">
+				<mt-popup v-model="pickerIsSmallCardStatus" position='bottom' class="pickerColor">
 						<mt-picker :slots="slots1" @change="onValuesChange1"></mt-picker>
 						<p>
-							<span class="fl" @click="surePickerProgram">取消</span><span class="fr" @click="surePickerProgram('confirm')">确定</span>
+							<span class="fl" @click="surePickerIsSmallCard">取消</span><span class="fr" @click="surePickerIsSmallCard('confirm')">确定</span>
 						</p>
 				</mt-popup>
 				<mt-popup v-model="pickerTaskStatus" position='bottom' class="pickerColor">
@@ -129,7 +129,7 @@
 			  }
 			  baseMessage.totalData=baseData;
 			  baseMessage.project_Id=_project_Id;
-			  baseData.prjTypCdArray.map(function(e,i){
+			  baseData.isSmallCardArray.map(function(e,i){
 					baseMessage.slots1[0].values.push(e.label);
 			  })
 			  baseData.bizTypeArray.map(function(e,i){
@@ -163,12 +163,12 @@
 				return {
 					contractStatus : 'electron',
 					GroupStatus : 'no',
-					programStyle : '',
+					isSmallCardNm : '否',
 					taskStyle : '',
 					lendRuleStyle : '',
 					holdPrice : 100,
-					pickerProgramStatus:false,
-					pickerProgram:'',
+					pickerIsSmallCardStatus:false,
+					pickerIsSmallCard:'',
 					pickerTaskStatus:false,
 					pickerTask:'',
 					pickerLendRuleStatus:false,
@@ -258,7 +258,7 @@
 					 }, function(res) {
 						 summer.hideProgress();
 						 if (res.data.flag == 1) {
-								self.programStyle =res.data.datas.prjBscInfo.prjTypCdNm;
+								self.isSmallCardNm =res.data.datas.prjBscInfo.isSmallCardNm;
 								self.remarks =res.data.datas.prjBscInfo.remarks;
 								self.taskStyle =res.data.datas.prjBscInfo.bizTypNm;
 								self.lendRuleStyle =res.data.datas.prjBscInfo.fkgzCd=="1"?"先抵押后放款":"先放款后抵押";
@@ -308,12 +308,12 @@
 					this.GroupStatus = status;
 				},
 				onValuesChange1:function(picker, values) {
-					this.pickerProgram = values[0];
+					this.pickerIsSmallCard = values[0];
 				},
-				surePickerProgram:function(param) {
-					this.pickerProgramStatus = !this.pickerProgramStatus;
+				surePickerIsSmallCard:function(param) {
+					this.pickerIsSmallCardStatus = !this.pickerIsSmallCardStatus;
 					if (param == 'confirm') {
-						this.programStyle = this.pickerProgram;
+						this.isSmallCardNm = this.pickerIsSmallCard;
 					}
 				},
 				onValuesChange2:function(picker, values) {
@@ -363,8 +363,8 @@
 				},
 				save:function() {
 					var self=this;
-					if(this.programStyle==""){
-						summer.toast({msg:"请选择业务类型"});
+					if(this.isSmallCardNm==""){
+						summer.toast({msg:"请选择是否小公牌"});
 						return;
 					}
 					// if(this.taskStyle==""){
@@ -383,19 +383,19 @@
 
 					var customId=this.customId;
 					var remarks = this.remarks;
-			        var _programStyle=this.programStyle;
+			        var _isSmallCardNm=this.isSmallCardNm;
 					var _taskStyle=this.taskStyle;
 					var _lendRuleStyle=this.lendRuleStyle;
 					var _carCdTypNm=this.carCdTypName;
 					var _splStoreNm=this.splStoreNm;
 					var _isOwnCredit =this.isOwnCreditName
-			  		var prjTypCd,bizTyp,fkgzCd,carCdTyp,splStore,isOwnCredit,project_Id;
+			  		var isSmallCard,bizTyp,fkgzCd,carCdTyp,splStore,isOwnCredit,project_Id;
                     if (this.project_Id) {
                         project_Id = this.project_Id;
                     }
-					baseMessage.totalData.prjTypCdArray.map(function(e,i){
-						if(e.label==_programStyle){
-							prjTypCd=baseMessage.totalData.prjTypCdArray[i].value;
+					baseMessage.totalData.isSmallCardArray.map(function(e,i){
+						if(e.label==_isSmallCardNm){
+							isSmallCard=baseMessage.totalData.isSmallCardArray[i].value;
 						}
 					});
 					baseMessage.totalData.bizTypeArray.map(function(e,i){
@@ -430,7 +430,7 @@
 						  url: 'appservice/project/prjbscinfo/add.do',
 						  param: {
                                 "id": project_Id,
-								 "prjTypCd":prjTypCd,
+								 "isSmallCard":isSmallCard,
 								 "bizTyp":bizTyp,
 								 "fkgzCd":fkgzCd,
 								 "sign":"1",
