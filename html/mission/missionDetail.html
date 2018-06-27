@@ -35,21 +35,54 @@
                     </div>
                 </li>
             </ul>
-            <!-- <ul class="processList" v-else>
+            <!--ul class="processList" v-else>
                 <li>
                     <img src="../../img/true.png" alt="">
                     <div class="box">
                         <p class="p1">任务已完成</p>
                     </div>
                 </li>
-            </ul> -->
-            <div v-bind:style="[KTYPE=='finished' ? {display:'none'} : {display:'block'}]">
-                <div class="text">
-                    <textarea class="text" placeholder="请输入内部审批意见" v-model="txt"></textarea>
-                </div>
-                <div class="text">
-                    <textarea class="text" placeholder="请输入外部审批意见" v-model="txt_w"></textarea>
-                </div>
+            </ul-->
+            <div v-for="(item,index) in baseM" class="remark">
+                    <p class="pl10 pr10 ">
+                            <span class="delete" v-show="index>0&&item.isDel" @click="deleteMessage(index)">x</span> <span >留言{{index+1}}:</span>
+                    </p>
+                    <div class="item um-box pl10 pr10" v-if="item.isDel" >
+                            <span class="um-bf1">留言人：</span><input placeholder="请输入留言人" v-model="item.createName" type="text"  readonly="readonly">   
+                    </div>
+                    <div class="item um-box pl10 pr10" v-else >
+                            <span class="um-bf1">留言人：</span><input placeholder="请输入留言人" v-model="item.createName" type="text" > 
+                    </div>
+                    <div class="item um-box pl10 pr10" v-if="item.isDel" >
+                            <span class="um-bf1">留言时间：</span><input placeholder="请输入留言时间" v-model="item.createDate" type="text" readonly="readonly">   
+                    </div>
+                    <div class="item um-box pl10 pr10" v-else >
+                            <span class="um-bf1">留言时间：</span><input placeholder="请输入留言时间" v-model="item.createDate" type="text"  >   
+                    </div>
+                    <div class="item um-box pl10 pr10" v-show="item.isDel" >
+                            <span class="um-bf1">删除人：</span><input placeholder="请输入删除人" v-model="item.deleteBy"  readonly="readonly" type="text">   
+                    </div>
+                    <div class="item um-box pl10 pr10"  v-show="item.isDel">
+                            <span class="um-bf1">删除时间：</span><input placeholder="请输入删除时间" readonly="readonly" v-model="item.updateDate" type="text">   
+                    </div>
+                    <div class="item um-box pl10 pr10 leaveMessage"  >
+                            <span class="um-bf1">留言信息：</span> 
+                    </div>
+                    <textarea id="question" v-model="item.message" placeholder="请输入留言信息" v-if="item.isDel" readonly="readonly"></textarea>  
+                    <textarea id="question" v-model="item.message" placeholder="请输入留言信息" v-else  ></textarea>
+                    <p class=" select um-box" v-if="!item.isDel">
+                            <span class="um-bf1   tc" @click="delete(item.id)">
+                                <i class="iconfont icon-modify mr5"></i>删除</span>
+                            <span class="um-bf1  tc" @click="save(item.id)">
+                                <i class="iconfont icon-nav_delete mr5"></i>保存</span>
+                    </p>
+                     <p v-else></p> 
+            </div>
+            <div class="remark" @click="addMessage">
+                    <p class="pl10 pr10"> <span class="add">+</span>  添加留言</p>
+            </div>
+            <div>
+                 
                 <div class="btns submitBtn um-box">
                     <span v-for="k in arr" class="um-bf1">
                         <div @click=submitMission(k.label,k.value) v-bind:class="[arr.length > 1 ? 'buttons more' : 'buttons']">{{k.label}}</div>
@@ -113,7 +146,7 @@
                             if (res.data.flag == 1) {
                                 self.items = res.data.datas.historyFlow;
                                 self.arr = res.data.datas.btns;
-                                self.baseM = res.data.datas.act;
+                                self.baseM = res.data.datas.actMsgList;
                                 console.log(res);
                             }
                         }, function (err) {
@@ -125,6 +158,12 @@
                     //     summer.hideProgress();
                     //     createNull("content", "../../img/empty.png", "暂未发起流程")
                     // }
+                },
+                deleteMessage:function(){
+                    return;
+                },
+                addMessage:function(){
+                    return;
                 },
                 submitMission:function (nodeName_, toNode_) {
                     summer.showProgress();
