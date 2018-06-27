@@ -184,7 +184,7 @@
 					<li class='input' v-if="gpsPriceStatus">
 						<b>GPS费</b>
 						<span>
-							<input v-if="gpsEdit" type="text" @input="checkVal('gpsPrice')" placeholder="请输入GPS费" name="gpsPrice" v-model="gpsPrice">
+							<input v-if="gpsEdit&&gpsInsName=='是'" type="text" @input="checkVal('gpsPrice')" placeholder="请输入GPS费" name="gpsPrice" v-model="gpsPrice">
 							<b v-else>{{gpsPrice}}</b>
 							&nbsp;元
 						</span>
@@ -932,6 +932,9 @@
 								}else if (this.currentName=='hasGps') {
 									this.gpsIns=this.pickingObj.value
 									this.gpsInsName=this.pickingObj.label
+									if(this.gpsInsName == '否'){
+										this.gpsPrice = 0
+									}
 								}else if (this.currentName=='txJe') {
 									this.txJxId=this.pickingObj.value
 									this.txJeName=this.pickingObj.label
@@ -1106,6 +1109,10 @@
 							}
 							if(this.txJeName != "无"){
 								params.txJe=this.txJe
+								if(this.txJe ==''){
+									summer.toast({msg:'贴息金额不能为空'})
+									return
+								}
 							}
 							if(this.prjId){
 								params.prjId=this.prjId
@@ -1114,8 +1121,45 @@
 							}
 							// ||!this.bailPct 可能为0
 							console.log(this.lsPd, this.annIntRatePct ,this.payWay,this.hirePct,this.txJe,this.gpsIns,this.gpsPrice,this.gouZhiPrice,this.safePrice,this.zhuangXiuPrice)
-							if(!this.lsPd|| !this.annIntRatePct ||!this.payWay){
-								summer.toast({msg:'请先完善报价信息'})
+
+							if(this.lsPd ==''){
+								summer.toast({msg:'还款期限不能为空'})
+								return
+							}
+							if(this.annIntRatePct ==''){
+								summer.toast({msg:'基础年利率不能为空'})
+								return
+							}
+							if(this.payWay==''){
+								summer.toast({msg:'支付方式不能为空'})
+								return
+							}
+							if(this.hirePct==''){
+								summer.toast({msg:'首付款不能为空'})
+								return
+							}
+							if(this.bailPct==''){
+								summer.toast({msg:'保证金不能为空'})
+								return
+							}
+							if(this.gpsInsName==''){
+								summer.toast({msg:'GPS是否安装不能为空'})
+								return
+							}
+							if(this.gpsPrice==''){
+								summer.toast({msg:'GPS费不能为空'})
+								return
+							}
+							if(this.gouZhiPrice==''){
+								summer.toast({msg:'购置税不能为空'})
+								return
+							}
+							if(this.zhuangXiuPrice==''){
+								summer.toast({msg:'精品装潢不能为空'})
+								return
+							}
+							if(this.safePrice==''){
+								summer.toast({msg:'保险费不能为空'})
 								return
 							}
 							var _this=this;
