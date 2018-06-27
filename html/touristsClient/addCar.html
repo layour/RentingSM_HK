@@ -355,10 +355,10 @@
 				checkCarNumber:function(){
 					this.carNumber=this.carNumber.trim()
 					var vinNo=this.carNumber.toUpperCase()
+					var reg = /^[0-9a-zA-Z]+$/
 					if(vinNo){
-						if(vinNo.length != 17 || vinNo.indexOf("O")>=0 || vinNo.indexOf("Q")>=0 || vinNo.indexOf("I")>=0){
-							summer.toast({msg:"车辆识别代号输入有误！车辆识别代号内不能包O、I、Q且长度必须17位。"})
-							this.carNumber = ''
+						if(!reg.test(vinNo) || vinNo.length != 17 || vinNo.indexOf("O")>=0 || vinNo.indexOf("Q")>=0 || vinNo.indexOf("I")>=0){
+							summer.toast({msg:"车辆识别代号输入有误！车辆识别代号内不能包O、I、Q和符号且长度必须17位。"})
 							return false
 					  }else{
 							return true

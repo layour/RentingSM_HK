@@ -161,7 +161,7 @@
 					<p>暂无数据</p>
 	      </div>
 				<ul>
-					<li v-for="(item,index) in addContactList" :key='index'>
+					<li v-for="(item,index) in addContactList" :key='index' @click="addItem(item)">
 						<mt-cell-swipe :title="item.rlNm" :label="item.mp" :right="[{content: '&nbsp;&nbsp;&nbsp;删除&nbsp;&nbsp;&nbsp;',style: {lineHeight:'1.76rem', background: '#f44336', color: '#fff' },handler: function(){deleteItem(index)}}]">
 							<div  class="fr one inDiv">
 								<!-- <a href=""><i class="icon iconfont icon-call"></i></a> -->
@@ -228,6 +228,7 @@
 							rlTypCd:'',
 							rlTypNm:'',
 							id:'',
+							uid:'',
 							list:[],
 							slots: [{
 								flex: 1,
@@ -294,8 +295,15 @@
 								})
 							}
 						},
-						addItem:function(){
+						addItem:function(item){
 							this.addStatus=!this.addStatus
+							if(item){
+								this.rlNm=item.rlNm
+								this.mp=item.mp
+								this.rlTypCd=item.rlTypCd
+								this.rlTypNm = item.rlTypNm
+								this.uid = item.id
+							}
 						},
 						onValuesChange:function(picker, values) {
 							this.pickedValues = values[0];
@@ -322,10 +330,12 @@
 								summer.toast({msg:'手机号码格式有误'})
 								return
 							}
-							this.addContactList.push({rlNm:this.rlNm,rlTypNm:this.rlTypNm,mp:this.mp,rlTypCd:this.rlTypCd,id:''})
+							this.addContactList.push({rlNm:this.rlNm,rlTypNm:this.rlTypNm,mp:this.mp,rlTypCd:this.rlTypCd,id:this.uid})
 							this.rlNm=''
 							this.mp=''
 							this.rlTypCd=''
+							this.rlTypNm = ''
+							this.uid =''
 							this.addStatus=false
 						},
 						save:function(){
