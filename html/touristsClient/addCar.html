@@ -247,6 +247,10 @@
 				},
 				handleDate:function(){
 					var dateStr= new Date(this.pickerDateValue)
+					if(dateStr.getTime()>new Date().getTime()){
+						summer.toast({msg:'二手车首次登记日期不能大于当前时间'})
+						return
+					}
 					var month =String(dateStr.getMonth()+1)
 					month= month.length==1?('0'+month):month
 					var day = String(dateStr.getDate())
@@ -354,6 +358,7 @@
 					if(vinNo){
 						if(vinNo.length != 17 || vinNo.indexOf("O")>=0 || vinNo.indexOf("Q")>=0 || vinNo.indexOf("I")>=0){
 							summer.toast({msg:"车辆识别代号输入有误！车辆识别代号内不能包O、I、Q且长度必须17位。"})
+							this.carNumber = ''
 							return false
 					  }else{
 							return true
