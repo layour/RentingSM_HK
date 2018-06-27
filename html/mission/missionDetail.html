@@ -29,9 +29,9 @@
                         <p class="p1">执行环节:{{k.taskName}}</p>
                         <p class="p2">执行人:{{k.assigneeName}}</p>
                         <p class="p3" >处理类型:{{k.flagName}}</p>
-                        <p class="p4">开始时间:{{k.histIns.startTime}}</p>
-                        <p class="p5">结束时间:{{k.histIns.endTime}}</p>
-                        <p class="p5">任务历时:{{k.durationTime}}</p>
+                        <p class="p4">开始时间:{{(new Date(k.histIns.startTime)).format("yyyy-MM-dd hh:mm:ss")}}</p>
+                        <p class="pfive">结束时间:{{(new Date(k.histIns.endTime)).format("yyyy-MM-dd hh:mm:ss")}}</p>
+                        <p class="pfive">任务历时:{{k.durationTime}}</p>
                     </div>
                 </li>
             </ul>
@@ -67,13 +67,14 @@
             var procInsId = summer.pageParam.procInsId;
             var taskName = summer.pageParam.taskName;
             var taskId = summer.pageParam.taskId;
+            var view = summer.pageParam.view;
             var userinfo = summer.getStorage("userinfo");
             // missionDetail.ORG_ID = userinfo.ORG_ID ? userinfo.ORG_ID : "";
             // missionDetail.EMPLOYEE_ID = userinfo.EMPLOYEE_ID ? userinfo.EMPLOYEE_ID : "";
             // missionDetail.JBPM_ID = JBPM_ID;
             // missionDetail.TASK_ID = TASK_ID;
             // missionDetail.KTYPE = KTYPE;
-            missionDetail.getData(procDefId, pdNo,taskDefKey,procInsId,taskName,taskId);
+            missionDetail.getData(procDefId, pdNo,taskDefKey,procInsId,taskName,taskId,view);
         }
         var missionDetail = new Vue({
             el: '#index',
@@ -91,7 +92,7 @@
                 arr: '' /* [{"nodeName_":'提交',"toNode_":"下一步"},{"nodeName_":'提交2',"toNode_":"下一步2"} ,{"nodeName_":'提交3',"toNode_":"下一步3"}]*/
             },
             methods: {
-                getData:function (procDefId, pdNo,taskDefKey,procInsId,taskName,taskId) {
+                getData:function (procDefId, pdNo,taskDefKey,procInsId,taskName,taskId,view) {
                     summer.showProgress();
                     var self = this;
                         ajaxRequest({
@@ -103,7 +104,8 @@
                                 "taskDefKey": taskDefKey,
                                 "procInsId":procInsId,
                                 "taskName":taskName,
-                                "taskId":taskId
+                                "taskId":taskId,
+                                "status":view
                             }
                         }, function (res) {
                             summer.hideProgress();

@@ -22,12 +22,12 @@
         <div class="um-content">
             <div id="content"></div>
             <ul class="missionList">
-                <li v-for="k in dataList">
+                <li v-for="(k,index) in dataList">
                     <div class="title">
                         <span class="name">{{k.pdNo}}</span>
                         <!-- <span class="state">{{k.CUST_NAME}}</span> -->
                     </div>
-                    <div class="content" @click="missionInfo(k.procDefId,k.pdNo,k.taskDefKey,k.procInsId,k.taskName,k.taskId)">
+                    <div class="content" @click="missionInfo(k.procDefId,k.pdNo,k.taskDefKey,k.procInsId,k.taskName,k.taskId,'view')">
                         <div class="leftCon">
                             <p class="p1">发起人：{{k.sendName}}</p>
                             <p class="p2">当前环节：{{k.taskName}}</p>
@@ -40,6 +40,15 @@
                             </div>
                         </div>
                     </div>
+                    <p class=" select um-box" v-if="k.status=='claim'">
+                        <span class="um-bf1   tc" @click="receiveProgram(k.taskId,index)">
+                            <i class="iconfont icon-modify mr5"></i>签收</span>
+                    </p>
+                    <p class=" select um-box" v-else-if="k.status=='todo'">
+                        <span class="um-bf1  tc" @click="missionInfo(k.procDefId,k.pdNo,k.taskDefKey,k.procInsId,k.taskName,k.taskId)">
+                            <i class="iconfont icon-modify mr5"></i>处理</span>
+                    </p>
+                    <p v-else></p>
                 </li>
             </ul>
         </div>
@@ -101,11 +110,12 @@
                     var self = this;
                     ajaxRequest({
                         type: 'post',
-                        url: 'appservice/sys/act/todo',
+                        url: 'appservice/sys/act/todo?pageNo='+pageNum+'&pageSize=10',
                         param: {
                             "pageNo": pageNum,
                             "pageSize": 10,
-                        }
+                        },
+                        search:true//和搜索一样
                     }, function(res) {
                         //alert(res);
                         summer.hideProgress();
@@ -136,7 +146,28 @@
                         summer.refreshFooterLoadDone(); //加载完成后调用方法恢复组件到默认状态
                     })
                 },
-                missionInfo: function(procDefId, pdNo, taskDefKey,procInsId,taskName,taskId) {
+                receiveProgram:function(taskId,index){
+                    var self = this;
+                    ajaxRequest({
+                        type: 'post',
+                        url: 'appservice/sys/act/claim',
+                        param: {
+                            "taskId": taskId,
+                        }
+                    }, function(res) {
+                        //alert(res);
+                        summer.hideProgress();
+                        var Data = res.data;
+                        if (Data.flag == 1) {
+                            self.dataList[index].status = "todo"
+                        }
+                    }, function(err) {
+                        //alert(err);
+                        console.log(err);
+                        summer.hideProgress();
+                    });
+                },
+                missionInfo: function(procDefId, pdNo, taskDefKey,procInsId,taskName,taskId,view) {
                     summer.openWin({
                         id: 'missionInfo',
                         url: 'html/mission/missionInfo.html',
@@ -159,7 +190,8 @@
                             taskDefKey: taskDefKey,
                             procInsId:procInsId,
                             taskName:taskName,
-                            taskId:taskId
+                            taskId:taskId,
+                            view:view
 
                         }
 
