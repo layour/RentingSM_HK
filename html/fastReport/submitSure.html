@@ -412,6 +412,10 @@
 									}
 								}
 							});
+						}else{
+							summer.toast({
+                                msg: res.data.msg
+                            });
 						}
 					}, function (err) {
 						summer.hideProgress()
