@@ -37,7 +37,7 @@
                 </li>
                 <li>
                     <span>银行账号</span>
-                    <input type="text" placeholder="请输入" v-model="datas.accNo" v-if="pageType == 'change'" />
+                    <input type="number" placeholder="请输入" v-model="datas.accNo" v-if="pageType == 'change'" />
                     <div v-else>{{ datas.accNo }}</div>
                 </li>
                 <li>
@@ -63,7 +63,7 @@
                 </li>
                 <li>
                     <span>开户预留手机号</span>
-                    <input type="text" placeholder="请输入" v-model="datas.accPhone" v-if="pageType == 'change'" />
+                    <input type="number" placeholder="请输入" v-model="datas.accPhone" v-if="pageType == 'change'" />
                     <div v-else>{{ datas.accPhone }}</div>
                 </li>
             </ul>
@@ -191,15 +191,18 @@
 						var Data = res.data;
 						if (Data.flag == 1) {
                             self.ID = Data.datas.bankAcc.id ? Data.datas.bankAcc.id : "";
-                            self.bankSlots[0].values = Data.datas.bankAcc.bkCdArray ? Data.datas.bankAcc.bkCdArray : [];
-                            self.ZJTypeSlots[0].values = Data.datas.bankAcc.certTypCdArray ? Data.datas.bankAcc.certTypCdArray : [];
-                            self.ZHTypeSlots[0].values = Data.datas.bankAcc.accTypCdArray ? Data.datas.bankAcc.accTypCdArray : [];
-                            self.datas.bkNm = Data.datas.bankAcc.bkCd ? Data.datas.bankAcc.bkCd : "";
+                            self.bankSlots[0].values = Data.datas.bkCdArray ? Data.datas.bkCdArray : [];
+                            self.ZJTypeSlots[0].values = Data.datas.certTypCdArray ? Data.datas.certTypCdArray : [];
+                            self.ZHTypeSlots[0].values = Data.datas.accTypCdArray ? Data.datas.accTypCdArray : [];
+                            self.datas.bkNm = Data.datas.bankAcc.bkNm ? Data.datas.bankAcc.bkNm : "请选择";
+                            self.datas.bkNmCode = Data.datas.bankAcc.bkCd ? Data.datas.bankAcc.bkCd : "";
                             self.datas.accNm = Data.datas.bankAcc.accNm ? Data.datas.bankAcc.accNm : "";
                             self.datas.accNo = Data.datas.bankAcc.accNo ? Data.datas.bankAcc.accNo : "";
-                            self.datas.certTypCdNm = Data.datas.bankAcc.certTypCd ? Data.datas.bankAcc.certTypCd : "";
+                            self.datas.certTypCdNm = Data.datas.bankAcc.certTypNm ? Data.datas.bankAcc.certTypNm : "请选择";
+                            self.datas.certTypCdNmCode = Data.datas.bankAcc.certTypCd ? Data.datas.bankAcc.certTypCd : "";
                             self.datas.certNo = Data.datas.bankAcc.certNo ? Data.datas.bankAcc.certNo : "";
-                            self.datas.accTypCdName = Data.datas.bankAcc.accTypCd ? Data.datas.bankAcc.accTypCd : "";
+                            self.datas.accTypCdName = Data.datas.bankAcc.accTypCdName ? Data.datas.bankAcc.accTypCdName : "请选择";
+                            self.datas.accTypCdNameCode = Data.datas.bankAcc.accTypCd ? Data.datas.bankAcc.accTypCd : "请选择";
                             self.datas.accPhone = Data.datas.bankAcc.accPhone ? Data.datas.bankAcc.accPhone : "";
 						} else {
 							summer.toast({
@@ -222,11 +225,11 @@
 						param: {
                             id: this.ID,  
                             cstId: this.cstId,
-                            bkCd: this.datas.bkNm,
+                            bkCd: this.datas.bkNmCode,
                             accNm: this.datas.accNm,
                             accNo: this.datas.accNo,
-                            accTypCd: this.datas.accTypCdName,
-                            certTypCd: this.datas.certTypCdNm,
+                            accTypCd: this.datas.accTypCdNameCode,
+                            certTypCd: this.datas.certTypCdNmCode,
                             certNo: this.datas.certNo,
                             accPhone: this.datas.accPhone
 						}
