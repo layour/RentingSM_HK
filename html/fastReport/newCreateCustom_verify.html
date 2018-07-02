@@ -330,6 +330,7 @@
                                 }
                             }, function(res) {
                                 if (res.data.flag == 1) {
+									var prjId = res.data.datas.prjId;
                                     summer.openWin({
                                         id: 'setProject',
                                         url: 'html/fastReport/setProject.html',
@@ -337,7 +338,8 @@
                                         type: 'actionBar',
                                         pageParam: {
                                             source: "customer",
-                                            customId: customerId
+                                            customId: customerId,
+											projectId: prjId
                                         },
                                         actionBar: {
                                             title: "快捷报单",
