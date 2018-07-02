@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1">
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="../../css/iuapmobile.um.css">
+    <link rel="stylesheet" href="../../css/fonts/iconfont.css">
+    <link rel="stylesheet" href="./commonInfoPage.css">
+    <link rel="stylesheet" href="../../css/mint.css">
+    <script src="../../js/summer.js"></script>
+    <script src="../../js/jquery.min.js"></script>
+    <script src="../../js/Frameworks/iuapmobile.frameworks.ui.js"></script>
+    <script src="../../js/font.js"></script>
+    <script src="../../js/vue.js"></script>
+    <script src="../../js/mint.js"></script>
+    <script src="../../js/common.js"></script>
+</head>
+
+<body>
+    <div class="um-win" id="index">
+        <div class="um-content" v-cloak>
+            <ul class="loanList">
+                <li>
+                    <span>客户类型</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.cstId.cstTypCdNm : "" }}</div>
+                </li>
+                <li>
+                    <span>客户名称</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.cstNm : "" }}</div>
+                </li>
+                <li>
+                    <span>性别</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.cstId.cstNpBscInfo.genderCdName : "" }}</div>
+                </li>
+                <li>
+                    <span>证件类型</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.cstId.certTypCdName : "" }}</div>
+                </li>
+                <li>
+                    <span>证件号码</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.cstId.certNo : "" }}</div>
+                </li>
+                <li>
+                    <span>出生年月</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.cstId.cstNpBscInfo.birthday : "" }}</div>
+                </li>
+                <li>
+                    <span>婚姻状况</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.cstId.cstNpBscInfo.marStsCdName : "" }}</div>
+                </li>
+                <li>
+                    <span>手机号1</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.cstId.cstPhoneNumber : "" }}</div>
+                </li>
+                <li>
+                    <span>手机号2</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.cstId.cstNpBscInfo.mp1 : "" }}</div>
+                </li>
+                <li>
+                    <span>年龄</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.cstId.cstNpBscInfo.age : "" }}</div>
+                </li>
+                <li>
+                    <span>住房所有权</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.cstId.cstNpBscInfo.housingOwnershipNm : "" }}</div>
+                </li>
+                <li>
+                    <span>户籍城市</span>
+                    <div v-if="datas.prjBscInfo">
+                        {{ datas.prjBscInfo.cstId.cstNpBscInfo.cstIdRegion.name }} - 
+                        {{ datas.prjBscInfo.cstId.cstNpBscInfo.cstIdProvince.name }} - 
+                        {{ datas.prjBscInfo.cstId.cstNpBscInfo.cstIdCity.name }} - 
+                        {{ datas.prjBscInfo.cstId.cstNpBscInfo.cstIdDistrict.name }}
+                    </div>
+                </li>
+                <li>
+                    <span>户籍详细地址</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.cstId.cstNpBscInfo.idAddr : "" }}</div>
+                </li>
+                <li>
+                    <span>现居住城市</span>
+                    <div v-if="datas.prjBscInfo">
+                        {{ datas.prjBscInfo.cstId.cstNpBscInfo.cstHomeRegion.name }} - 
+                        {{ datas.prjBscInfo.cstId.cstNpBscInfo.cstHomeProvince.name }} - 
+                        {{ datas.prjBscInfo.cstId.cstNpBscInfo.cstHomeCity.name }} - 
+                        {{ datas.prjBscInfo.cstId.cstNpBscInfo.cstHomeDistrict.name }}
+                    </div>
+                </li>
+                <li>
+                    <span>现居住详细地址</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.cstId.cstNpBscInfo.homeAddr : "" }}</div>
+                </li>
+                <li>
+                    <span>最高学历</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.cstId.cstNpBscInfo.eduLvlCdNm : "" }}</div>
+                </li>
+                <li>
+                    <span>是否有驾照</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.cstId.cstNpBscInfo.isisHasLicenseNm : "" }}</div>
+                </li>
+                <li>
+                    <span>准驾类型</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.cstId.cstNpBscInfo.driverLicenseTypeNm : "" }}</div>
+                </li>
+                <li v-if="datas.condition.isSupper">
+                    <span>是否需要配偶签字</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.signName : "" }}</div>
+                </li>
+                <li v-if="datas.condition.isSupper">
+                    <span>有无信贷记录</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.hiCreditName : "" }}</div>
+                </li>
+                <li>
+                    <span>现居住城市邮编</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.cstId.cstNpBscInfo.zipNo : "" }}</div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var KHInfoPage = new Vue({
+            el: '#index',
+            data: {
+                datas: {}
+            },
+            methods: {
+                
+            }
+        });
+        summerready = function() {
+            KHInfoPage.datas = summer.pageParam.datas;
+        };
+    </script>
+</body>
+
+</html>

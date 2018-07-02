@@ -30,7 +30,7 @@
             var procDefId = summer.pageParam.procDefId;
             var pdNo = summer.pageParam.pdNo;
 			var taskDefKey = summer.pageParam.taskDefKey;
-			
+			var view = summer.pageParam.view;
 			var procInsId = summer.pageParam.procInsId;
             var taskName = summer.pageParam.taskName;
             var taskId = summer.pageParam.taskId;
@@ -64,9 +64,11 @@
 					url: 'html/mission/projectDetail.html',
 					bgColor: '#ffffff',
 					hidden: false,
-					// pageParam: {
-				    //     PROJECT_ID: PROJECT_ID
-				    // }
+					pageParam: {
+                        procInsId:procInsId,
+						taskDefKey: taskDefKey,
+                        view : view
+				    }
 				}],
 				pageParam: [
 					{
@@ -77,9 +79,11 @@
                             taskName:taskName,
                             taskId:taskId
 					},
-					// {
-                    //     PROJECT_ID: PROJECT_ID
-					// }
+					{
+                        procInsId:procInsId,
+						taskDefKey: taskDefKey,
+                        view : view
+				    }
 				]
 			}, function(ret, err) {
 				var index = ret.index;
