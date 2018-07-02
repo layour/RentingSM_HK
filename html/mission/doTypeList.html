@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1">
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="../../css/iuapmobile.um.css">
+		<link rel="stylesheet" href="../../css/mint.css">
+		<link rel="stylesheet" href="../../css/fonts/iconfont.css">
+	</head>
+	<style>
+		ul.dealerList.companyList li{
+			padding:0.15rem 0.56rem;
+		}
+		.dealerList li {
+    /* height: .68rem; */
+    line-height: .68rem;
+    padding: 0 .56rem;
+    border-bottom: 1px solid #EFEFEF;
+    font-size: 14px;
+    color: #333;
+}
+ 
+	</style>
+	<body>
+		<div class="um-win" id="pickerModels" v-cloak style="background: white;">
+			<div class="um-content addCar">
+				<!-- <div class="um-input-group pr" id='search'>
+          <i class="icon iconfont icon-nav_search"></i>
+          <input type="text" name="search" class="form-control"  placeholder="搜索">
+					<span onclick="satartSearch('all')">取消</span>
+        </div> -->
+				<ul class="dealerList companyList">
+          <li @click="pickerCarModels(item)" v-for="(item,index) in typeList" :key="index">{{item.label}}</li>
+        </ul>
+      </div>
+    </div>
+		<script src="../../js/summer.js" ></script>
+		<script src="../../js/jquery.min.js" ></script>
+		<script src="../../js/font.js" ></script>
+		<script src="../../js/vue.js" ></script>
+		<script src="../../js/mint.js" ></script>
+		<script src="../../js/common.js" ></script>
+		<script src="../../js/Frameworks/iuapmobile.frameworks.ui.js" ></script>
+    <script>
+				summerready=function() {
+					doTypeList.typeList= summer.pageParam.typeList;
+					doTypeList.reasonTitle= summer.pageParam.reasonTitle;
+					doTypeList.reasonList= summer.pageParam.reasonList;
+
+				}
+			 
+				 
+        var doTypeList=new Vue({
+          el:'#pickerModels',
+          data:function(){
+            return {
+              typeList:[],
+							id:'',
+							reasonTitle:'',
+							reasonList:[]
+            }
+          },
+					methods:{
+						// getData(val,taskDefKey){
+						// 	var _this=this;
+						// //	console.log(this.id);
+						// 	ajaxRequest({
+						// 		type:'post',
+						// 		url:'appservice/sys/act/selectTypeAndReason?value='+val+'&taskDefKey='+taskDefKey,
+						// 		param:{
+						// 			flag:val,
+						// 			taskDefKey:taskDefKey
+						// 		},
+						// 		search:true//和搜索一样
+						// 	},function(res){
+						// 		console.log("res",res);
+						// 		if(res.data.datas.length==0){
+						// 			createNull("pickerModels")
+						// 		}else {
+						// 			console.log(res);
+						// 			_this.typeList=res.data.datas
+						// 		}
+						
+						// 	},function(err){
+						// 		console.log("err",err);
+						// 	})
+						// },
+						pickerCarModels:function(it){
+							   var self = this;
+									summer.setStorage('pickerDoType',JSON.stringify(it));
+
+									
+
+									if(!doTypeList.reasonList){
+											summer.openWin({
+													id:'doReasonList',
+													url:'html/mission/doReasonList.html',
+													create:false,
+													type:'actionBar',
+													pageParam:{reasonList:self.reasonList},
+													actionBar: {
+														title: self.reasonTitle,
+														titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
+														backgroundColor: "#039BE5",
+														leftItem:{
+																image: "img/back.png",
+																method:'',//返回按钮自定义事件
+																text:"返回",
+																textColor:"#ffffff"  //返回文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
+														},
+														rightItems:[{
+															type: "text",
+															text: "完成",
+															textColor: "#ffffff",
+															method: "complete()"
+														}]
+													}
+												})
+									}else{
+										summer.openWin({
+													id:'doReasonList',
+													url:'html/mission/doReasonList.html',
+													create:false,
+													type:'actionBar',
+													pageParam:{reasonList:self.reasonList},
+													actionBar: {
+														title: self.reasonTitle,
+														titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
+														backgroundColor: "#039BE5",
+														leftItem:{
+																image: "img/back.png",
+																method:'',//返回按钮自定义事件
+																text:"返回",
+																textColor:"#ffffff"  //返回文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
+														},
+													}
+												})
+									}
+								
+						}
+					}
+        })
+    </script>
+  </body>
+</html>

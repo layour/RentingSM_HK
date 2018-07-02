@@ -14,6 +14,7 @@ html,body{
    background-color: #fff;
    padding-left: 0.7rem;
    padding-top: 0.24rem;
+   margin-bottom:0.2rem;
 }
 .processList li{
     width: 100%;
@@ -215,4 +216,20 @@ div.remark{
     color: #fff;
     font-size: 12px;
     margin-right: 5px;
+}
+.lastPcontent{
+    margin-bottom:0.2rem;
+    height: 0px;
+}
+.remarkNew{
+    margin-bottom:0.2rem;
+}
+.iconfont{
+    color:#039be5;
+}
+.saveItemButton{
+    color:#039be5;
+}
+.saveItemButton:active{
+    opacity: 0.5;
 }

@@ -201,61 +201,61 @@
 		summerready = function() {
             var PROJECT_ID = summer.pageParam.PROJECT_ID;
 			summer.showProgress();
-			ajaxRequest({
-                type: 'post',
-                url: 'appservice/foundproject/loadProjectPage',
-                param: {
-                    "PROJECT_ID": PROJECT_ID,
-                }
-			}, function(res) {
-				var Data;
-				if (Object.prototype.toString.call(res.data) === '[object String]') {
-					Data = JSON.parse(res.data);
-				} else {
-					Data = res.data;
-				}
-				if (Data.flag == 1) {
-					projectDetail.dataList = Data.datas;
-                    ajaxRequest({
-    					type: 'post',
-    					url: 'appservice/foundproject/queryProjectScheme',
-    					param: {
-    						"PROJECT_ID": PROJECT_ID,
-    					}
-    				}, function(res) {
-    					summer.hideProgress();
-                        var Data;
-        				if (Object.prototype.toString.call(res.data) === '[object String]') {
-        					Data = JSON.parse(res.data);
-        				} else {
-        					Data = res.data;
-        				}
-    					if (Data.flag == 1) {
-    						projectDetail.dataSchemeList = Data.datas.scheme;
-    					} else {
-                            summer.toast({
-            					msg: "暂无数据"
-            				});
-                        }
-    				}, function(err) {
-                        summer.hideProgress();
-                        summer.toast({
-        					msg: "暂无数据"
-        				});
-    					console.log(err);
-    				});
-				} else {
-					summer.toast({
-						msg: "暂无数据"
-					});
-				}
-			}, function(err) {
-				summer.hideProgress();
-				summer.toast({
-					msg: "暂无数据"
-				});
-				console.log(err);
-			});
+			// ajaxRequest({
+            //     type: 'post',
+            //     url: 'appservice/foundproject/loadProjectPage',
+            //     param: {
+            //         "PROJECT_ID": PROJECT_ID,
+            //     }
+			// }, function(res) {
+			// 	var Data;
+			// 	if (Object.prototype.toString.call(res.data) === '[object String]') {
+			// 		Data = JSON.parse(res.data);
+			// 	} else {
+			// 		Data = res.data;
+			// 	}
+			// 	if (Data.flag == 1) {
+			// 		projectDetail.dataList = Data.datas;
+            //         ajaxRequest({
+    		// 			type: 'post',
+    		// 			url: 'appservice/foundproject/queryProjectScheme',
+    		// 			param: {
+    		// 				"PROJECT_ID": PROJECT_ID,
+    		// 			}
+    		// 		}, function(res) {
+    		// 			summer.hideProgress();
+            //             var Data;
+        	// 			if (Object.prototype.toString.call(res.data) === '[object String]') {
+        	// 				Data = JSON.parse(res.data);
+        	// 			} else {
+        	// 				Data = res.data;
+        	// 			}
+    		// 			if (Data.flag == 1) {
+    		// 				projectDetail.dataSchemeList = Data.datas.scheme;
+    		// 			} else {
+            //                 summer.toast({
+            // 					msg: "暂无数据"
+            // 				});
+            //             }
+    		// 		}, function(err) {
+            //             summer.hideProgress();
+            //             summer.toast({
+        	// 				msg: "暂无数据"
+        	// 			});
+    		// 			console.log(err);
+    		// 		});
+			// 	} else {
+			// 		summer.toast({
+			// 			msg: "暂无数据"
+			// 		});
+			// 	}
+			// }, function(err) {
+			// 	summer.hideProgress();
+			// 	summer.toast({
+			// 		msg: "暂无数据"
+			// 	});
+			// 	console.log(err);
+			// });
 		};
 	</script>
 </body>

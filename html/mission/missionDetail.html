@@ -18,7 +18,7 @@
 </head>
 
 <body>
-    <div class="um-frame" id="index">
+    <div class="um-frame" id="index" v-cloak>
         <div class="um-content">
             <div id="content"></div>
             <h2 class="processNum">流程编号：{{baseM.pdNo}}</h2>
@@ -29,8 +29,8 @@
                         <p class="p1">执行环节:{{k.taskName}}</p>
                         <p class="p2">执行人:{{k.assigneeName}}</p>
                         <p class="p3" >处理类型:{{k.flagName}}</p>
-                        <p class="p4">开始时间:{{(new Date(k.histIns.startTime)).format("yyyy-MM-dd hh:mm:ss")}}</p>
-                        <p class="pfive">结束时间:{{(new Date(k.histIns.endTime)).format("yyyy-MM-dd hh:mm:ss")}}</p>
+                        <p class="p4">开始时间:{{k.histIns?(new Date(k.histIns.startTime)).format("yyyy-MM-dd hh:mm:ss"):''}}</p>
+                        <p class="pfive">结束时间:{{k.histIns?(new Date(k.histIns.endTime)).format("yyyy-MM-dd hh:mm:ss"):''}}</p>
                         <p class="pfive">任务历时:{{k.durationTime}}</p>
                     </div>
                 </li>
@@ -45,7 +45,7 @@
             </ul-->
             <div v-for="(item,index) in baseM" class="remark">
                     <p class="pl10 pr10 ">
-                            <span class="delete" v-show="index>0&&item.isDel" @click="deleteMessage(index)">x</span> <span >留言{{index+1}}:</span>
+                            <span >留言{{index+1}}:</span>
                     </p>
                     <div class="item um-box pl10 pr10" v-if="item.isDel" >
                             <span class="um-bf1">留言人：</span><input placeholder="请输入留言人" v-model="item.createName" type="text"  readonly="readonly">   
@@ -70,22 +70,35 @@
                     </div>
                     <textarea id="question" v-model="item.message" placeholder="请输入留言信息" v-if="item.isDel" readonly="readonly"></textarea>  
                     <textarea id="question" v-model="item.message" placeholder="请输入留言信息" v-else  ></textarea>
-                    <p class=" select um-box" v-if="!item.isDel">
-                            <span class="um-bf1   tc" @click="delete(item.id)">
-                                <i class="iconfont icon-modify mr5"></i>删除</span>
-                            <span class="um-bf1  tc" @click="save(item.id)">
-                                <i class="iconfont icon-nav_delete mr5"></i>保存</span>
+                    <p class=" select um-box remarkNew saveItemButton" v-if="!item.isDel" >
+                            <span class="um-bf1   tc" @click="deleteReal(item.id)">
+                                <i class="iconfont icon-nav_delete mr5"></i>删除</span>
                     </p>
-                     <p v-else></p> 
+                     <p v-else class="lastPcontent"></p> 
+            </div>
+            <div v-for="(item,index) in addNewMessage" class="remark remarkNew">
+                    <p class="pl10 pr10 ">
+                            <span class="delete"  @click="deleteMessage(index)">x</span> <span >新增留言{{index+1}}:</span>
+                    </p>
+                    <div class="item um-box pl10 pr10 leaveMessage"  >
+                            <span class="um-bf1">留言信息：</span> 
+                    </div>
+                    <textarea id="question" v-model="item.message" placeholder="请输入留言信息"  ></textarea>
+                    <p class=" select um-box saveItemButton"  >
+                            <span class="um-bf1  tc" @click="saveMessage(index)">
+                                <i class="iconfont icon-submit mr5"></i>保存</span>
+                    </p>
             </div>
             <div class="remark" @click="addMessage">
                     <p class="pl10 pr10"> <span class="add">+</span>  添加留言</p>
             </div>
             <div>
-                 
+                <div class="text" v-if="arr.length>0">
+                        <textarea class="text" placeholder="请输入处理意见" v-model="commontMessage"></textarea>
+                    </div>
                 <div class="btns submitBtn um-box">
                     <span v-for="k in arr" class="um-bf1">
-                        <div @click=submitMission(k.label,k.value) v-bind:class="[arr.length > 1 ? 'buttons more' : 'buttons']">{{k.label}}</div>
+                        <div @click=submitMission(k.label,k.value,k.isNeedTypeAndReason) v-bind:class="[arr.length > 1 ? 'buttons more' : 'buttons']">{{k.label}}</div>
                     </span>
                 </div>
             </div>
@@ -94,13 +107,20 @@
     <script type="text/javascript">
         summerready = function () {
             var procDefId = summer.pageParam.procDefId;
+            missionDetail.initMessage.procDefId = procDefId;
             var pdNo = summer.pageParam.pdNo;
+            missionDetail.initMessage.pdNo = pdNo;
             var taskDefKey = summer.pageParam.taskDefKey;
+            missionDetail.initMessage.taskDefKey = taskDefKey;
 
             var procInsId = summer.pageParam.procInsId;
+            missionDetail.initMessage.procInsId = procInsId;
             var taskName = summer.pageParam.taskName;
+            missionDetail.initMessage.taskName = taskName;
             var taskId = summer.pageParam.taskId;
+            missionDetail.initMessage.taskId = taskId;
             var view = summer.pageParam.view;
+            missionDetail.initMessage.view = view;
             var userinfo = summer.getStorage("userinfo");
             // missionDetail.ORG_ID = userinfo.ORG_ID ? userinfo.ORG_ID : "";
             // missionDetail.EMPLOYEE_ID = userinfo.EMPLOYEE_ID ? userinfo.EMPLOYEE_ID : "";
@@ -109,18 +129,41 @@
             // missionDetail.KTYPE = KTYPE;
             missionDetail.getData(procDefId, pdNo,taskDefKey,procInsId,taskName,taskId,view);
         }
+        function getdoType(){
+            missionDetail.taskDealType =JSON.parse(summer.getStorage('pickerDoType')).value;
+            var pickerDoReason = summer.getStorage('pickerDoReason');
+            if(pickerDoReason){
+                missionDetail.taskDealReasonCd = JSON.parse(summer.getStorage('pickerDoReason')).value;
+                missionDetail.taskDealReason = JSON.parse(summer.getStorage('pickerDoReason')).label;
+            }
+            missionDetail.doAction();
+        }
         var missionDetail = new Vue({
             el: '#index',
             data: {
-                // memoFlag: false,
-                // ORG_ID: '',
-                // EMPLOYEE_ID: '',
-                // JBPM_ID: '',
-                // TASK_ID: '',
-                // KTYPE: '',
-                // txt: "",
-                // txt_w: "",
-                baseM:'',
+                initMessage:{
+                    procDefId:'',
+                    pdNo:'',
+                    taskDefKey:'',
+                    procInsId:'',
+                    taskName:'',
+                    taskId:'',
+                    view:''
+                },
+                commontMessage:'',
+                flag:'',
+                taskDealType:'',//处理类型
+                taskDealReason:'',//..处理原因
+                taskDealReasonCd:'',//处理原因ID
+                newMessageInfo:{
+                    pdNo:'',
+                    pInstId:'',
+                    pTaskNo:'',
+                    pTaskNm:'',
+                    message:''
+                },
+                addNewMessage:[],
+                baseM:[],
                 items: '',
                 arr: '' /* [{"nodeName_":'提交',"toNode_":"下一步"},{"nodeName_":'提交2',"toNode_":"下一步2"} ,{"nodeName_":'提交3',"toNode_":"下一步3"}]*/
             },
@@ -147,6 +190,10 @@
                                 self.items = res.data.datas.historyFlow;
                                 self.arr = res.data.datas.btns;
                                 self.baseM = res.data.datas.actMsgList;
+                                self.newMessageInfo.pdNo = res.data.datas.act.pdNo;
+                                self.newMessageInfo.pInstId = res.data.datas.act.procInsId;
+                                self.newMessageInfo.pTaskNo = res.data.datas.act.taskDefKey;
+                                self.newMessageInfo.pTaskNm = res.data.datas.act.taskName;
                                 console.log(res);
                             }
                         }, function (err) {
@@ -159,27 +206,88 @@
                     //     createNull("content", "../../img/empty.png", "暂未发起流程")
                     // }
                 },
-                deleteMessage:function(){
+                deleteMessage:function(index){
+                    this.addNewMessage.splice(index,1);
                     return;
+                },
+                deleteReal:function(id){
+                    var  self = this;
+                    ajaxRequest({
+                        type: 'post',
+                        url: 'appservice/sys/act/delMsg',
+                        param: {
+                            id:id
+                        }
+                    }, function (res) {
+                        summer.hideProgress();
+                        if (res.data.flag == 1) {
+                            summer.toast({
+                                msg: "删除成功"
+                            });
+                           self.getData(self.initMessage.procDefId,self.initMessage.pdNo,self.initMessage.taskDefKey,self.initMessage.procInsId,self.initMessage.taskName,self.initMessage.taskId,self.initMessage.view);
+                        }else{
+                            summer.toast({
+                                msg: "删除失败"
+                            });  
+                        } 
+                    }, function (err) {
+                        summer.toast({
+                                msg: "删除失败"
+                            });  
+                        summer.hideProgress();
+                        console.log(err);
+                    });
                 },
                 addMessage:function(){
+                    this.addNewMessage.push({
+                        message:'',
+                        pdNo:this.newMessageInfo.pdNo,
+                        pInstId:this.newMessageInfo.pInstId,
+                        pTaskNo:this.newMessageInfo.pTaskNo,
+                        pTaskNm:this.newMessageInfo.pTaskNm,
+                    });
                     return;
                 },
-                submitMission:function (nodeName_, toNode_) {
-                    summer.showProgress();
+                saveMessage:function(index){
+                    var self = this;
+                    if(this.addNewMessage[index].message == ""){
+                        summer.toast({
+                            msg:"请输入留言信息"
+                        });
+                        return;
+                    }
+                    ajaxRequest({
+                        type: 'post',
+                        url: 'appservice/sys/act/addMsg',
+                        param: this.addNewMessage[index]
+                    }, function (res) {
+                        summer.hideProgress();
+                        if (res.data.flag == 1) {
+                            summer.toast({
+                                msg: "添加成功"
+                            });
+                            self.addNewMessage.splice(index,1);
+                            self.getData(self.initMessage.procDefId,self.initMessage.pdNo,self.initMessage.taskDefKey,self.initMessage.procInsId,self.initMessage.taskName,self.initMessage.taskId,self.initMessage.view);
+                        }  
+                    }, function (err) {
+                        summer.hideProgress();
+                        console.log(err);
+                    });
+                },
+                doAction: function(){
                     var self = this;
                     ajaxRequest({
                         type: 'post',
-                        url: 'appservice/bpmtask/domyTask',
+                        url: 'appservice/sys/act/complete',
                         param: {
-                            "JBPM_ID": self.JBPM_ID,
-                            "TASK_ID": self.TASK_ID,
-                            "MEMO": self.txt,
-                            "EMPLOYEE_ID": self.EMPLOYEE_ID,
-                            "nodeName_": nodeName_,
-                            "toNode_": toNode_,
-                            "WMEMO": self.txt_w,
-                            "ORG_ID": self.ORG_ID
+                            "flag": self.flag,
+                            "taskId": self.initMessage.taskId,
+                            "procInsId": self.initMessage.procInsId,
+                            "taskDefKey": self.initMessage.taskDefKey,
+                            "taskDealType":self.taskDealType,
+                            "taskDealReason":self.taskDealReason,
+                            "taskDealReasonCd":self.taskDealReasonCd,
+                            "comment":  self.commontMessage,
                         }
                     }, function (res) {
                         summer.hideProgress();
@@ -192,10 +300,103 @@
                                 frameId: 'missionList',
                                 script: " getData('1', 'true');"
                             });
-                            summer.execScript({
-                                winId: "homePage",
-                                script: " getMissionData();"
+                            // summer.execScript({
+                            //     winId: "homePage",
+                            //     script: " getMissionData();"
+                            // });
+                            summer.closeWin();
+                            console.log(res);
+                        } else if (res.data.flag == 0) {
+                            summer.toast({
+                                msg: res.data.msg
                             });
+                        }
+                    }, function (err) {
+                        summer.hideProgress();
+                        console.log(err);
+                    });
+                },
+                submitMission:function (label, value,isNeedTypeAndReason) {
+                    this.flag = value;
+                    summer.showProgress();
+                    var self = this;
+                    if(isNeedTypeAndReason){
+                        ajaxRequest({
+								type:'post',
+								url:'appservice/sys/act/selectTypeAndReason',
+								param:{
+									flag:value,
+									taskDefKey:self.initMessage.taskDefKey
+								},
+							},function(res){
+                                summer.hideProgress();
+								 if(res.data.flag==1){
+                                     var titleType = res.data.datas.typeTitle;
+                                     var reasonTitle = res.data.datas.reasonTitle;
+                                     var typeList = res.data.datas.types;
+                                     var reasonList = res.data.datas.reasons;
+                                    summer.openWin({
+                                        id: 'doTypeList',
+                                        url: 'html/mission/doTypeList.html',
+                                        create: false,
+                                        type: 'actionBar',
+                                        pageParam: {
+                                            reasonTitle:reasonTitle,
+                                            typeList:typeList,
+                                            reasonList:reasonList
+                                        },
+                                        actionBar: {
+                                            title:titleType,
+                                            titleColor: "#ffffff",
+                                            backgroundColor: "#039BE5",
+                                            leftItem: {
+                                                image: "img/back.png",
+                                                method: '',
+                                                text: "返回",
+                                                textColor: "#ffffff"
+                                            }
+                                        }
+                                    })
+                                 }else{
+                                     summer.toast({
+                                         msg:res.data.msg
+                                     });
+                                 }
+                                
+						
+							},function(err){
+                                summer.toast({
+                                    msg:"处理失败，请联系管理员"
+                                });
+                                summer.hideProgress();
+								console.log("err",err);
+							})
+                    }else{
+                        ajaxRequest({
+                        type: 'post',
+                        url: 'appservice/sys/act/complete',
+                        param: {
+                            "flag": value,
+                            "taskId": self.initMessage.taskId,
+                            "procInsId": self.initMessage.procInsId,
+                            "taskDefKey": self.initMessage.taskDefKey,
+                            "comment":  self.commontMessage,
+                        }
+                    }, function (res) {
+                        summer.hideProgress();
+                        if (res.data.flag == 1) {
+                            summer.toast({
+                                msg: "处理成功"
+                            });
+                            // summer.execScript({
+                            //     winId: "missionIndex",
+                            //     frameId: 'missionList',
+                            //     script: " getData('1', 'true');"
+                            // });
+                            // summer.execScript({
+                            //     winId: "homePage",
+                            //     script: " getMissionData();"
+                            // });
                             summer.closeWin();
                             console.log(res);
                         } else if (res.data.flag == 0) {
@@ -208,8 +409,11 @@
                         console.log(err);
                     });
                 }
+                    
+                }
             }
         });
+
     </script>
 </body>
 
