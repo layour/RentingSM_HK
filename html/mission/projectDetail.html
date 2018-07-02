@@ -36,7 +36,7 @@
                     <i class="icon iconfont icon-enter"></i>
                 </span>
             </div>
-            <div class="um-list-item-bodys" data-type="PO" @click="openInfo()">
+            <div class="um-list-item-bodys" data-type="PO" @click="openInfo()" v-if="datas.condition && datas.condition.showSocial">
                 配偶信息
                 <span class="frp">
                     <i class="icon iconfont icon-enter"></i>
@@ -50,8 +50,8 @@
             </div>
             <div class="um-list-item-bodys" data-type="DKK" @click="openInfo()">
                 客户代扣卡信息
-                <span class="frp">
-                    <i class="oZF icon iconfont icon-modify"></i>&nbsp;
+                <span class="frp" @click="changeDKK()">
+                    <i class="oZF icon iconfont icon-modify" v-if="datas.condition && datas.condition.allowEditBank"></i>&nbsp;
                     <i class="icon iconfont icon-enter"></i>
                 </span>
             </div>
@@ -123,7 +123,7 @@
                 </span>
             </div>
         </div>
-        <div class="um-footer" v-if="datas.condition.isAllowEditPrj">
+        <div class="um-footer" v-if="datas.condition && datas.condition.isAllowEditPrj">
             <button type="button" @click="">修改</button>
         </div>
 	</div>
@@ -209,6 +209,26 @@
                             title = "客户信息";
                             pageId = "KHInfoPage";
                             break;
+                        case 'BJ':
+                            url = "html/mission/BJInfoPage.html";
+                            title = "工作背景";
+                            pageId = "BJInfoPage";
+                            break;
+                        case 'PO':
+                            url = "html/mission/POInfoPage.html";
+                            title = "配偶信息";
+                            pageId = "POInfoPage";
+                            break;
+                        case 'JJ':
+                            url = "html/mission/JJInfoPage.html";
+                            title = "紧急联系人信息";
+                            pageId = "JJInfoPage";
+                            break;
+                        case 'DKK':
+                            url = "html/mission/DKKInfoPage.html";
+                            title = "客户代扣卡信息";
+                            pageId = "DKKInfoPage";
+                            break;
                         default:
                             break;
                     }
@@ -230,6 +250,40 @@
                         },
                         pageParam: {
                             datas: this.datas
+                        }
+                    });
+                },
+                changeDKK: function (ev) {
+                    var ev = ev || window.event;
+                    ev.cancelBubble = true;
+                    if (!this.datas.condition || !this.datas.condition.allowEditBank) {
+                        return;
+                    }
+                    summer.openWin({
+                        id: 'DKKInfoPage',
+                        url: 'html/mission/DKKInfoPage.html',
+                        create: false,
+                        type: 'actionBar',
+                        actionBar: {
+                            title: "客户代扣卡信息",
+                            titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
+                            backgroundColor: "#039be5",
+                            leftItem: {
+                                image: "img/back.png",
+                                method: "", //返回按钮自定义事件
+                                text: "返回",
+                                textColor: "#ffffff" //返回文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
+                            },
+                            rightItems: [{
+                                type: "text",
+                                text: "保存",
+                                textColor: "#ffffff",
+                                method: "DKKInfoPage.save()"
+                            }]
+                        },
+                        pageParam: {
+                            datas: this.datas,
+                            pageType: 'change'
                         }
                     });
                 }
