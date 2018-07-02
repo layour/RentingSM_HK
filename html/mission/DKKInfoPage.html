@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1">
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="../../css/iuapmobile.um.css">
+    <link rel="stylesheet" href="../../css/fonts/iconfont.css">
+    <link rel="stylesheet" href="./commonInfoPage.css">
+    <link rel="stylesheet" href="../../css/mint.css">
+    <script src="../../js/summer.js"></script>
+    <script src="../../js/jquery.min.js"></script>
+    <script src="../../js/Frameworks/iuapmobile.frameworks.ui.js"></script>
+    <script src="../../js/font.js"></script>
+    <script src="../../js/vue.js"></script>
+    <script src="../../js/mint.js"></script>
+    <script src="../../js/common.js"></script>
+</head>
+
+<body>
+    <div class="um-win" id="index">
+        <div class="um-content" v-cloak>
+            <ul class="loanList">
+                <li>
+                    <span>开户银行</span>
+                    <div @click="sureBank" v-if="pageType == 'change'">
+                        <span class="iconfont icon-enter"></span>
+                        <i v-bind:style="[datas.bkNm == '请选择' ? {'color':'#9e9e9e'} : {'color':'#333'}]">{{datas.bkNm}}</i>
+                    </div>
+                    <div v-else>{{ datas.bkNm }}</div>
+                </li>
+                <li>
+                    <span>开户名称</span>
+                    <input type="text" placeholder="请输入" v-model="datas.accNm" v-if="pageType == 'change'" />
+                    <div v-else>{{ datas.accNm }}</div>
+                </li>
+                <li>
+                    <span>银行账号</span>
+                    <input type="number" placeholder="请输入" v-model="datas.accNo" v-if="pageType == 'change'" />
+                    <div v-else>{{ datas.accNo }}</div>
+                </li>
+                <li>
+                    <span>证件类型</span>
+                    <div @click="sureZJType" v-if="pageType == 'change'">
+                        <span class="iconfont icon-enter"></span>
+                        <i v-bind:style="[datas.certTypCdNm == '请选择' ? {'color':'#9e9e9e'} : {'color':'#333'}]">{{datas.certTypCdNm}}</i>
+                    </div>
+                    <div v-else>{{ datas.certTypCdNm }}</div>
+                </li>
+                <li>
+                    <span>证件号码</span>
+                    <input type="text" placeholder="请输入" v-model="datas.certNo" v-if="pageType == 'change'" />
+                    <div v-else>{{ datas.certNo }}</div>
+                </li>
+                <li>
+                    <span>账户类型</span>
+                    <div @click="sureZHType" v-if="pageType == 'change'">
+                        <span class="iconfont icon-enter"></span>
+                        <i v-bind:style="[datas.accTypCdName == '请选择' ? {'color':'#9e9e9e'} : {'color':'#333'}]">{{datas.accTypCdName}}</i>
+                    </div>
+                    <div v-else>{{ datas.accTypCdName }}</div>
+                </li>
+                <li>
+                    <span>开户预留手机号</span>
+                    <input type="number" placeholder="请输入" v-model="datas.accPhone" v-if="pageType == 'change'" />
+                    <div v-else>{{ datas.accPhone }}</div>
+                </li>
+            </ul>
+            <!-- 开户银行 -->
+            <mt-popup v-model="bankStatus" position="bottom" class="pickerColor">
+                <mt-picker value-key="label" :slots="bankSlots" @change="onMethodChange"></mt-picker>
+                <p>
+                    <span class="" @click="sureBank">取消</span>
+                    <span class="" @click="sureBank('confirm')">确定</span>
+                </p>
+            </mt-popup>
+            <!-- 证件类型 -->
+            <mt-popup v-model="ZJTypeStatus" position="bottom" class="pickerColor">
+                <mt-picker value-key="label" :slots="ZJTypeSlots" @change="onZJTypeChange"></mt-picker>
+                <p>
+                    <span class="" @click="sureZJType">取消</span>
+                    <span class="" @click="sureZJType('confirm')">确定</span>
+                </p>
+            </mt-popup>
+            <!-- 账户类型 -->
+            <mt-popup v-model="ZHTypeStatus" position="bottom" class="pickerColor">
+                <mt-picker value-key="label" :slots="ZHTypeSlots" @change="onZHTypeChange"></mt-picker>
+                <p>
+                    <span class="" @click="sureZHType">取消</span>
+                    <span class="" @click="sureZHType('confirm')">确定</span>
+                </p>
+            </mt-popup>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var DKKInfoPage = new Vue({
+            el: '#index',
+            data: {
+                datas: {
+                    bkNm: "请选择",
+                    bkNmCode: "",
+                    accNm: "",
+                    accNo: "",
+                    certTypCdNm: "请选择",
+                    certTypCdNmCode: "",
+                    certNo: "",
+                    accTypCdName: "请选择",
+                    accTypCdNameCode: "",
+                    accPhone: ""
+                },
+                pageType: "",
+                cstId: "",
+                ID: "",
+                // 开户银行
+                bankStatus:false,
+                pickedBank:"",
+                bankSlots: [{
+                    flex: 1,
+                    values: [],
+                    defaultIndex: 0,
+                    className: 'slot1',
+                    textAlign: 'center'
+                }],
+                // 证件类型
+                ZJTypeStatus:false,
+                pickedZJType:"",
+                ZJTypeSlots: [{
+                    flex: 1,
+                    values: [],
+                    defaultIndex: 0,
+                    className: 'slot1',
+                    textAlign: 'center'
+                }],
+                // 账户类型
+                ZHTypeStatus:false,
+                pickedZHType:"",
+                ZHTypeSlots: [{
+                    flex: 1,
+                    values: [],
+                    defaultIndex: 0,
+                    className: 'slot1',
+                    textAlign: 'center'
+                }]
+            },
+            methods: {
+                // 选择开户银行
+                onMethodChange:function (picker, values) {
+					this.pickedBank = values[0];
+				},
+				sureBank:function (param) {
+					this.bankStatus = !this.bankStatus;
+					if (param == 'confirm') {
+                        this.datas.bkNm = this.pickedBank.label;
+                        this.datas.bkNmCode = this.pickedBank.value;
+					}
+                },
+                // 选择证件类型
+                onZJTypeChange:function (picker, values) {
+					this.pickedZJType = values[0];
+				},
+				sureZJType:function (param) {
+					this.ZJTypeStatus = !this.ZJTypeStatus;
+					if (param == 'confirm') {
+                        this.datas.certTypCdNm = this.pickedZJType.label;
+                        this.datas.certTypCdNmCode = this.pickedZJType.value;
+					}
+                },
+                // 选择账户类型
+                onZHTypeChange:function (picker, values) {
+					this.pickedZHType = values[0];
+				},
+				sureZHType:function (param) {
+					this.ZHTypeStatus = !this.ZHTypeStatus;
+					if (param == 'confirm') {
+                        this.datas.accTypCdName = this.pickedZHType.label;
+                        this.datas.accTypCdNameCode = this.pickedZHType.value;
+					}
+                },
+                getData: function () {
+                    summer.showProgress();
+                    var self = this;
+                    ajaxRequest({
+						type: 'post',
+						url: 'appservice/project/act/loadBankAcc',
+						param: {
+                            cstId: this.cstId
+						}
+					}, function(res) {
+                        summer.hideProgress();
+						var Data = res.data;
+						if (Data.flag == 1) {
+                            self.ID = Data.datas.bankAcc.id ? Data.datas.bankAcc.id : "";
+                            self.bankSlots[0].values = Data.datas.bkCdArray ? Data.datas.bkCdArray : [];
+                            self.ZJTypeSlots[0].values = Data.datas.certTypCdArray ? Data.datas.certTypCdArray : [];
+                            self.ZHTypeSlots[0].values = Data.datas.accTypCdArray ? Data.datas.accTypCdArray : [];
+                            self.datas.bkNm = Data.datas.bankAcc.bkNm ? Data.datas.bankAcc.bkNm : "请选择";
+                            self.datas.bkNmCode = Data.datas.bankAcc.bkCd ? Data.datas.bankAcc.bkCd : "";
+                            self.datas.accNm = Data.datas.bankAcc.accNm ? Data.datas.bankAcc.accNm : "";
+                            self.datas.accNo = Data.datas.bankAcc.accNo ? Data.datas.bankAcc.accNo : "";
+                            self.datas.certTypCdNm = Data.datas.bankAcc.certTypNm ? Data.datas.bankAcc.certTypNm : "请选择";
+                            self.datas.certTypCdNmCode = Data.datas.bankAcc.certTypCd ? Data.datas.bankAcc.certTypCd : "";
+                            self.datas.certNo = Data.datas.bankAcc.certNo ? Data.datas.bankAcc.certNo : "";
+                            self.datas.accTypCdName = Data.datas.bankAcc.accTypCdName ? Data.datas.bankAcc.accTypCdName : "请选择";
+                            self.datas.accTypCdNameCode = Data.datas.bankAcc.accTypCd ? Data.datas.bankAcc.accTypCd : "请选择";
+                            self.datas.accPhone = Data.datas.bankAcc.accPhone ? Data.datas.bankAcc.accPhone : "";
+						} else {
+							summer.toast({
+								msg: "获取信息失败"
+							});
+						}
+					}, function(err) {
+						summer.hideProgress();
+						summer.toast({
+							msg: "获取信息失败"
+						});
+					});
+                },
+                save: function () {
+                    summer.showProgress();
+                    var self = this;
+                    ajaxRequest({
+						type: 'post',
+						url: 'appservice/project/act/saveBankAcc',
+						param: {
+                            id: this.ID,  
+                            cstId: this.cstId,
+                            bkCd: this.datas.bkNmCode,
+                            accNm: this.datas.accNm,
+                            accNo: this.datas.accNo,
+                            accTypCd: this.datas.accTypCdNameCode,
+                            certTypCd: this.datas.certTypCdNmCode,
+                            certNo: this.datas.certNo,
+                            accPhone: this.datas.accPhone
+						}
+					}, function(res) {
+                        summer.hideProgress();
+						var Data = res.data;
+						if (Data.flag == 1) {
+                            summer.toast({
+								msg: "保存成功"
+							});
+                            summer.closeWin();
+						} else {
+							summer.toast({
+								msg: "保存失败"
+							});
+						}
+					}, function(err) {
+						summer.hideProgress();
+						summer.toast({
+							msg: "保存失败"
+						});
+					});
+                }
+            }
+        });
+        summerready = function() {
+            DKKInfoPage.pageType = summer.pageParam.pageType ? summer.pageParam.pageType : "";
+            DKKInfoPage.cstId = summer.pageParam.datas.prjBscInfo.cstId.id;
+            if (summer.pageParam.pageType && summer.pageParam.pageType == 'change') {
+                DKKInfoPage.getData();
+            } else if (summer.pageParam.datas && summer.pageParam.datas.prjBscInfo.cstId.cstNpBscInfo.cstBank) {
+                DKKInfoPage.datas.bkNm = summer.pageParam.datas.prjBscInfo.cstId.cstNpBscInfo.cstBank.bkNm;
+                DKKInfoPage.datas.accNm = summer.pageParam.datas.prjBscInfo.cstId.cstNpBscInfo.cstBank.accNm;
+                DKKInfoPage.datas.accNo = summer.pageParam.datas.prjBscInfo.cstId.cstNpBscInfo.cstBank.accNo;
+                DKKInfoPage.datas.certTypCdNm = summer.pageParam.datas.prjBscInfo.cstId.cstNpBscInfo.cstBank.certTypCdNm;
+                DKKInfoPage.datas.certNo = summer.pageParam.datas.prjBscInfo.cstId.cstNpBscInfo.cstBank.certNo;
+                DKKInfoPage.datas.accTypCdName = summer.pageParam.datas.prjBscInfo.cstId.cstNpBscInfo.cstBank.accTypCdName;
+                DKKInfoPage.datas.accPhone = summer.pageParam.datas.prjBscInfo.cstId.cstNpBscInfo.cstBank.accPhone;
+            }
+        };
+    </script>
+</body>
+
+</html>

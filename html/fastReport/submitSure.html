@@ -381,9 +381,9 @@
 						}
 					}, function (res) {
 						console.log("res", JSON.stringify(res));
+						summer.hideProgress();
 						if (res.data.flag == 1) {
 							var resultData = res.data.datas
-							summer.hideProgress()
 							summer.openWin({
 								id: 'finanlSubmit',
 								url: 'html/fastReport/finanlSubmit.html',
@@ -412,9 +412,10 @@
 									}
 								}
 							});
-						}else{
+						}else{	
 							summer.toast({
-                                msg: res.data.msg
+								msg: res.data.msg,
+								duration:"long"
                             });
 						}
 					}, function (err) {

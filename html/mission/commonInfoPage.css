@@ -131,3 +131,51 @@ strong {
     font-size: 0.28rem;
     color: #333;
 }
+
+.mint-field-core {
+    text-align: right;
+}
+
+.mint-cell-wrapper {
+    color: #333;
+    font-size: 0.28rem;
+}
+
+.mint-cell {
+    min-height: 40px;
+    /* height: 0.88rem; */
+    height: 44px;
+    color: #333;
+    font-size: 0.28rem;
+}
+
+.pickerColor {
+    width: 100%;
+    z-index: 10;
+    background: #ffffff;
+}
+
+.pickerColor>p {
+    line-height: .88rem;
+    padding: 0 .56rem;
+    color: #039BE5;
+    border-top: 1px solid #E0E0E0;
+    overflow: hidden;
+}
+
+.pickerColor>p span {
+    color: #34aadc;
+}
+
+.mint-cell-wrapper {
+    background-size: 100% 0px;
+    border-bottom: 1px solid #f7f7f7;
+}
+
+.pickerColor>p span:last-child {
+    float: right;
+}
+
+.pickerColor>p span:first-child {
+    float: left;
+}

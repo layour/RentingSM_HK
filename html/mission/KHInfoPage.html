@@ -68,7 +68,7 @@
                 </li>
                 <li>
                     <span>户籍城市</span>
-                    <div v-if="datas.prjBscInfo">
+                    <div v-if="datas.prjBscInfo && datas.prjBscInfo.cstId.cstNpBscInfo.cstIdRegion">
                         {{ datas.prjBscInfo.cstId.cstNpBscInfo.cstIdRegion.name }} - 
                         {{ datas.prjBscInfo.cstId.cstNpBscInfo.cstIdProvince.name }} - 
                         {{ datas.prjBscInfo.cstId.cstNpBscInfo.cstIdCity.name }} - 
@@ -81,7 +81,7 @@
                 </li>
                 <li>
                     <span>现居住城市</span>
-                    <div v-if="datas.prjBscInfo">
+                    <div v-if="datas.prjBscInfo && datas.prjBscInfo.cstId.cstNpBscInfo.cstHomeRegion">
                         {{ datas.prjBscInfo.cstId.cstNpBscInfo.cstHomeRegion.name }} - 
                         {{ datas.prjBscInfo.cstId.cstNpBscInfo.cstHomeProvince.name }} - 
                         {{ datas.prjBscInfo.cstId.cstNpBscInfo.cstHomeCity.name }} - 
@@ -104,11 +104,11 @@
                     <span>准驾类型</span>
                     <div>{{ datas.prjBscInfo ? datas.prjBscInfo.cstId.cstNpBscInfo.driverLicenseTypeNm : "" }}</div>
                 </li>
-                <li v-if="datas.condition.isSupper">
+                <li v-if="datas.condition && datas.condition.isSupper">
                     <span>是否需要配偶签字</span>
                     <div>{{ datas.prjBscInfo ? datas.prjBscInfo.signName : "" }}</div>
                 </li>
-                <li v-if="datas.condition.isSupper">
+                <li v-if="datas.condition && datas.condition.isSupper">
                     <span>有无信贷记录</span>
                     <div>{{ datas.prjBscInfo ? datas.prjBscInfo.hiCreditName : "" }}</div>
                 </li>
