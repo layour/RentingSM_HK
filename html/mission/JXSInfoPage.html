@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1">
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="../../css/iuapmobile.um.css">
+    <link rel="stylesheet" href="../../css/fonts/iconfont.css">
+    <link rel="stylesheet" href="./commonInfoPage.css">
+    <link rel="stylesheet" href="../../css/mint.css">
+    <script src="../../js/summer.js"></script>
+    <script src="../../js/jquery.min.js"></script>
+    <script src="../../js/Frameworks/iuapmobile.frameworks.ui.js"></script>
+    <script src="../../js/font.js"></script>
+    <script src="../../js/vue.js"></script>
+    <script src="../../js/mint.js"></script>
+    <script src="../../js/common.js"></script>
+</head>
+
+<body>
+    <div class="um-win" id="index">
+        <div class="um-content" v-cloak>
+            <ul class="loanList">
+                <li>
+                    <span>经销商名称</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.splBscInfo.splNm : "" }}</div>
+                </li>
+                <li>
+                    <span>经销商门店</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.splStore.stoNm : "" }}</div>
+                </li>
+                <li>
+                    <span>所属市场</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.rgnReCd.name : "" }}</div>
+                </li>
+                <li>
+                    <span>车牌类型</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.carCdTypName : "" }}</div>
+                </li>
+                <li>
+                    <span>所属销售人员</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.sdPerson : "" }}</div>
+                </li>
+                <li>
+                    <span>所属销售手机号码</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.sdPhone : "" }}</div>
+                </li>
+                <li>
+                    <span>经销商类型</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.splBscInfo.prjLvlCdNm : "" }}</div>
+                </li>
+                <li>
+                    <span>经销商业务开展城市</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.splBscInfo.bizScope : "" }}</div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var JXSInfoPage = new Vue({
+            el: '#index',
+            data: {
+                datas: {}
+            },
+            methods: {
+                
+            }
+        });
+        summerready = function() {
+            JXSInfoPage.datas = summer.pageParam.datas;
+        };
+    </script>
+</body>
+
+</html>
