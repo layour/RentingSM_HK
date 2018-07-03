@@ -57,8 +57,8 @@
             </div>
             <div class="um-list-item-bodys" data-type="CL" @click="openInfo()">
                 车辆信息
-                <span class="frp">
-                    <i class="oZF icon iconfont icon-modify"></i>&nbsp;
+                <span class="frp" @click="changeCL()">
+                    <i class="oZF icon iconfont icon-modify" v-if="datas.condition && datas.condition.allowEditEqu"></i>&nbsp;
                     <i class="icon iconfont icon-enter"></i>
                 </span>
             </div>
@@ -231,6 +231,11 @@
                             title = "客户代扣卡信息";
                             pageId = "DKKInfoPage";
                             break;
+                        case 'CL':
+                            url = "html/mission/CLInfoPage.html";
+                            title = "车辆信息";
+                            pageId = "CLInfoPage";
+                            break;
                         default:
                             break;
                     }
@@ -281,6 +286,40 @@
                                 text: "保存",
                                 textColor: "#ffffff",
                                 method: "DKKInfoPage.save()"
+                            }]
+                        },
+                        pageParam: {
+                            datas: this.datas,
+                            pageType: 'change'
+                        }
+                    });
+                },
+                changeCL: function (ev) {
+                    var ev = ev || window.event;
+                    ev.cancelBubble = true;
+                    if (!this.datas.condition || !this.datas.condition.allowEditEqu) {
+                        return;
+                    }
+                    summer.openWin({
+                        id: 'CLInfoPage',
+                        url: 'html/mission/CLInfoPage.html',
+                        create: false,
+                        type: 'actionBar',
+                        actionBar: {
+                            title: "车辆信息",
+                            titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
+                            backgroundColor: "#039be5",
+                            leftItem: {
+                                image: "img/back.png",
+                                method: "", //返回按钮自定义事件
+                                text: "返回",
+                                textColor: "#ffffff" //返回文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
+                            },
+                            rightItems: [{
+                                type: "text",
+                                text: "保存",
+                                textColor: "#ffffff",
+                                method: "CLInfoPage.save()"
                             }]
                         },
                         pageParam: {
