@@ -177,7 +177,7 @@
 					</p>
 			</div>
 			<div class="item um-box pl10 pr10"  >
-					<span class="um-bf2">税后年收入（万元）</span><input class="um-bf3" placeholder="请输入您的税后年收入" v-model="message.cstNpSocialRl.afterTaxYearIn"   type="number" />   
+					<span class="um-bf2">税后年收入（万元）</span><input class="um-bf3" placeholder="请输入您的税后年收入" v-model="message.cstNpSocialRl.afterTaxYearIn"   type="number"     oninput="if(value.length>3)value=value.slice(0,3)" />   
 	   </div>
 		</form>
 		</div>	

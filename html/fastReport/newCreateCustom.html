@@ -264,7 +264,7 @@
 					<span class="um-red mr5">*</span>	<span class="um-bf1">现工作单位名称</span><input placeholder="请输入现工作单位名称" v-model="message.workPlc" type="text">   
 			</div>
 			<div class="item um-box pl10 pr10"  >
-					<span class="um-red mr5">*</span>	<span class="um-bf1">现工作单位年限(年)</span><input placeholder="请输入现工作单位年限"  v-model="message.workYrs" type="number">   
+					<span class="um-red mr5">*</span>	<span class="um-bf1">现工作单位年限(年)</span><input placeholder="请输入现工作单位年限"  v-model="message.workYrs" type="number"    oninput="if(value.length>2)value=value.slice(0,2)">   
 			</div>
 			<div @click="surePickerWorkTypCd" class="item" >
 				<p class="pl10 pr10  um-box">
@@ -293,7 +293,7 @@
 					<span class="um-red mr5">*</span>	<span class="um-bf1">现工作单位电话</span><input placeholder="请输入现工作单位电话" v-model="message.workTel" type="number">   
 			</div>
 			<div class="item um-box pl10 pr10"  >
-					<span class="um-red mr5">*</span>	<span class="um-bf1">税后年收入（万元）</span><input placeholder="请输入税后年收入" v-model="message.afterTaxYearIn" type="number">   
+					<span class="um-red mr5">*</span>	<span class="um-bf1">税后年收入（万元）</span><input placeholder="请输入税后年收入" v-model="message.afterTaxYearIn" type="number"  oninput="if(value.length>3)value=value.slice(0,3)">   
 			</div>
 			<div @click="surePickerSoureIncome" class="item" >
 					<p class="pl10 pr10  um-box">
