@@ -1,63 +1,59 @@
-.infoList {
-    width: 100%;
-    margin-bottom: 0.2rem;
-    background-color: #fff;
-}
-
-.infoList li {
-    height: 0.9rem;
-    padding: 0 0.56rem;
-    border-bottom: 1px solid #f1f1f1;
-}
-
-.infoList .first {
-    line-height: 0.9rem;
-    font-size: 0.36rem;
+.um-list-item-bodys {
+    align-self: center;
+    line-height: .46rem;
+    padding: 0.2rem 0.55rem 0.2rem 0.56rem;
+    font-size: 0.32rem;
     color: #333;
-}
-
-.infoList .first i {
-    float: left;
-    font-style: normal;
-}
-
-.infoList .first strong {
-    float: left;
-    width: 0.06rem;
-    height: 0.32rem;
-    background-color: #039be5;
-    font-style: normal;
-    margin: 0.28rem 0.08rem 0 0;
-}
-
-.infoList li span:nth-of-type(1) {
-    float: left;
-    color: #333;
-}
-
-.infoList li span:nth-of-type(2) {
-    color: #333;
-    float: right;
-    min-height: 0.9rem;
+    border-bottom: 1px solid #EFEFEF;
+    background: #fff;
+    position: relative;
     display: flex;
     align-items: center;
-    width: 4.5rem;
-}
-.infoList li span:nth-of-type(2)>div{
-    font-size: 0.28rem;
-    color: #333;
-    display: block;
-    line-height: 0.4rem;
-    text-align: right;
-    width: 100%;
-}
-.infoList li span {
-    height: 0.9rem;
-    line-height: 0.9rem;
-    font-size: 0.28rem;
-    color: #333;
 }
 
-.infoList li span b {
-    font-weight: normal;
+.frp {
+    position: absolute;
+    right: .6rem;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+}
+
+.iconfont.icon-modify {
+    font-size: 20px;
+    color: #039BE5;
+    margin-right: 0.2rem;
+}
+
+.iconfont.icon-right.active {
+    display: inline-block;
+}
+
+.iconfont.icon-enter.active {
+    display: none;
+}
+
+i {
+    color: #DBDBDB;
+}
+
+.um-footer {
+    background: #f6f6f6;
+    border: 0;
+    height: 0.9rem;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.um-footer button {
+    width: 6.34rem;
+    height: 80%;
+    border-radius: 0.1rem;
+    background: #039be5;
+    color: #fff;
+    font-size: 0.32rem;
+    border: 0;
+    outline: none;
 }

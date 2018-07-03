@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1">
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="../../css/iuapmobile.um.css">
+    <link rel="stylesheet" href="../../css/fonts/iconfont.css">
+    <link rel="stylesheet" href="./commonInfoPage.css">
+    <link rel="stylesheet" href="../../css/mint.css">
+    <script src="../../js/summer.js"></script>
+    <script src="../../js/jquery.min.js"></script>
+    <script src="../../js/Frameworks/iuapmobile.frameworks.ui.js"></script>
+    <script src="../../js/font.js"></script>
+    <script src="../../js/vue.js"></script>
+    <script src="../../js/mint.js"></script>
+    <script src="../../js/common.js"></script>
+</head>
+
+<body>
+    <div class="um-win" id="index">
+        <div class="um-content" v-cloak>
+            <ul class="loanList">
+                <li>
+                    <span>姓名</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.cstId.cstNpBscInfo.cstNpSocialRl.rlNm : "" }}</div>
+                </li>
+                <li>
+                    <span>户籍所在地</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.cstId.cstNpBscInfo.cstNpSocialRl.idAddr : "" }}</div>
+                </li>
+                <li>
+                    <span>性别</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.cstId.cstNpBscInfo.cstNpSocialRl.genderCdName : "" }}</div>
+                </li>
+                <li>
+                    <span>证件类型</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.cstId.cstNpBscInfo.cstNpSocialRl.certTypCdName : "" }}</div>
+                </li>
+                <li>
+                    <span>证件号码</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.cstId.cstNpBscInfo.cstNpSocialRl.certNo : "" }}</div>
+                </li>
+                <li>
+                    <span>工作单位名称</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.cstId.cstNpBscInfo.cstNpSocialRl.workPlc : "" }}</div>
+                </li>
+                <li>
+                    <span>单位地址</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.cstId.cstNpBscInfo.cstNpSocialRl.workAddr : "" }}</div>
+                </li>
+                <li>
+                    <span>手机号</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.cstId.cstNpBscInfo.cstNpSocialRl.mp : "" }}</div>
+                </li>
+                <li>
+                    <span>主要收入来源</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.cstId.cstNpBscInfo.cstNpSocialRl.majorInTypCdName : "" }}</div>
+                </li>
+                <li>
+                    <span>税后年收入</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.cstId.cstNpBscInfo.cstNpSocialRl.afterTaxYearIn : "" }}</div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var POInfoPage = new Vue({
+            el: '#index',
+            data: {
+                datas: {}
+            },
+            methods: {
+                
+            }
+        });
+        summerready = function() {
+            POInfoPage.datas = summer.pageParam.datas;
+        };
+    </script>
+</body>
+
+</html>

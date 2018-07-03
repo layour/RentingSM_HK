@@ -43,7 +43,7 @@
 }
 	</style>
 	<body>
-		<div class="um-win" id="pickerModels" v-cloak  >
+		<div class="um-win" id="pickerModels" v-cloak style="background: white" >
 			<div class="um-content addCar">
 				<!-- <div class="um-input-group pr" id='search'>
           <i class="icon iconfont icon-nav_search"></i>
@@ -97,6 +97,12 @@
 								label:this.textAreaContent,
 								value:''
 							}
+							if(this.textAreaContent== ""){
+								summer.toast({
+									msg:"原因不能为空"
+								});
+								return;
+							}
 							summer.setStorage('pickerDoReason',JSON.stringify(it));
 								summer.execScript({
 												winId: "missionInfo",
@@ -115,7 +121,7 @@
 													script: 'getdoType()'
 											});
 											summer.closeToWin({
-												id:"missionDetail"
+												id:"missionInfo"
 									})
 						}
 					}
