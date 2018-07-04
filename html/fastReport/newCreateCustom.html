@@ -395,6 +395,7 @@
 			el: '#app',
 			data:function() {
 				return {
+					hasSpouse:'add',//是否有配偶
 					cardShow: false,
 					cardUrl: "",
 					pickerVisible: "",
@@ -776,6 +777,7 @@
 								self.message.majorInTypCd = holeDataDetail.majorInTypCd;
 								self.message.majorInTypCdName = holeDataDetail.majorInTypCdName;
 								if (self.message.marStsCd == "3"||self.message.marStsCd == "21"||self.message.marStsCd == "22"||self.message.marStsCd == "23") {
+									self.hasSpouse = "yes";
 									summer.setWinAttr({
 										actionBar: {
 											title: "客户信息",
@@ -790,6 +792,7 @@
 										}
 									});
 								} else {
+									self.hasSpouse = "no";
 									summer.setWinAttr({
 										actionBar: {
 											title: "客户信息",
@@ -1250,7 +1253,7 @@
 						return;
 					};
 					var self = this;
-					if(self.isAdd){
+					if(self.isAdd||self.hasSpouse=="no"){
 						summer.openWin({
 							id: 'newCreateCustom_verify2',
 							url: 'html/fastReport/newCreateCustom_verify2.html',
@@ -1275,8 +1278,9 @@
 							},
 							pageParam: {
 								personMessage: self.message,
-								sourceFrom: self.sourceFromk,
-								cstId:newCreateCustom.clintId
+								sourceFrom: self.sourceFrom,
+								cstId:newCreateCustom.clintId,
+								hasSpouse:self.hasSpouse
 							}
 						});
 					}else{

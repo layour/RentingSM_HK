@@ -220,6 +220,7 @@
 					}],
 					totalData:'',
 					cstID:'',
+					hasSpouse:'',
 					message: {
 						cstNpSocialRl:{
 							rlNm:'',
@@ -263,7 +264,6 @@
 							}
 						}
 					}, function(res) {
-						summer.hideProgress();
 						if (res.data.flag == 1) {
 							var totalData = res.data.datas;
 							self.totalData = totalData;
@@ -279,7 +279,6 @@
 						////alert(err);
 						//summer.toast({msg:err});
 						console.log(err);
-						summer.hideProgress();
 					});
 				},
 				messageTest: function() {
@@ -345,7 +344,6 @@
 						url: 'appservice/customer/cstNpBscInfo/save.do',
 						param:finanlInput
 					}, function(res) {
-						summer.hideProgress();
 						if (res.data.flag == 1) {
 							summer.toast({msg:"保存成功"});
                             var clint_Id = res.data.datas.cstId;
@@ -362,10 +360,13 @@
                                 if (res.data.flag == 1) {
                                     // 项目ID
                                     var prjId = res.data.datas.prjId;
-                                    if (self.sourceFrom=="newCreateCustom_verify2") {
+                                    if (self.sourceFrom=="newCreateCustom_verify2"&&self.hasSpouse!="no") {
                                     	   if ($summer.os == "ios") {
 			                                    summer.closeWin({
 			                                        id: 'newCreateCustom'
+												});
+												summer.closeWin({
+			                                        id: 'newCreateCustom_verify2'
 			                                    });
 			                                }
 
@@ -398,19 +399,20 @@
                                                 }]
                                             }
                                         });
-                                    } else if(self.sourceFrom=="newCustom"){
+                                    } else if(self.sourceFrom=="newCreateCustom_verify2"&&self.hasSpouse=="no"){
+										summer.closeToWin({id:"setProject"});
+									}else if(self.sourceFrom=="newCustom"){
                                         summer.closeToWin({id:"newCustom"});
                                     } else if(self.sourceFrom=="setProject") {  
                                         summer.closeToWin({id:"setProject"});
                                     }
                                 }
                             }, function(err) {
-                                summer.hideProgress();
                                 console.log(err);
                             });
 							//SWL
 							} else {
-								if (self.sourceFrom=="newCreateCustom_verify2") {
+								if (self.sourceFrom=="newCreateCustom_verify2"&&self.hasSpouse!="no") {
                                     	   if ($summer.os == "ios") {
 			                                    summer.closeWin({
 			                                        id: 'newCreateCustom'
@@ -425,7 +427,7 @@
                                             pageParam:{
                                                 source:"customer",
                                                 customId:clint_Id,
-                                                projectId: prjId
+                                                projectId: ''
                                             },
                                             isKeep:false,
                                             actionBar : {
@@ -446,7 +448,9 @@
                                                 }]
                                             }
                                         });
-                                    } else if(self.sourceFrom=="newCustom"){
+                                    } else if(self.sourceFrom=="newCreateCustom_verify2"&&self.hasSpouse=="no"){
+										summer.closeToWin({id:"setProject"});
+									}else if(self.sourceFrom=="newCustom"){
                                         summer.closeToWin({id:"newCustom"});
                                     } else if(self.sourceFrom=="setProject") {  
                                         summer.closeToWin({id:"setProject"});
@@ -461,7 +465,6 @@
 					}, function(err) {
 						alert(err);
 						console.log(err);
-						summer.hideProgress();
 					});
 				},
 				// openPicker: function() {
@@ -478,9 +481,11 @@
 			var clint_Id;
 			newCreateCustom.getData(clint_Id);
 			var personMessage = summer.pageParam.personMessage;
-			self.newCreateCustom.cstID = summer.pageParam.cstId;
+			newCreateCustom.cstID = summer.pageParam.cstId;
 			var sponseBase=summer.pageParam.sponseBase;
 			var sourceFrom=summer.pageParam.sourceFrom;
+
+			newCreateCustom.hasSpouse = summer.pageParam.hasSpouse;
 			if(sourceFrom=="newCreateCustom_verify2"){
 				if(sponseBase){
 					newCreateCustom.message.cstNpSocialRl.rlNm=sponseBase.cstNm;
