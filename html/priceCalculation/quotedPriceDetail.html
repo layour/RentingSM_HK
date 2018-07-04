@@ -531,10 +531,10 @@
 										summer.toast({msg:"无可用方案，请联系管理员维护"})
 										return
 									}
-									// if(res.data.quatList.length==1){
-									// 	_this.SCHEME_NAME_ID=res.data.quatList[0].schemeCode
-									// 	_this.SCHEME_NAME=res.data.quatList[0].schemeName
-									// }
+									if(res.data.quatList.length==1){
+										_this.SCHEME_NAME_ID=res.data.quatList[0].schemeCode
+										_this.SCHEME_NAME=res.data.quatList[0].schemeName
+									}
 									if(_this.prjId){
 										var dataObj=res.data.prjQuatPrps
 										_this.allPrice=res.data.carZe
