@@ -71,40 +71,45 @@
             <div class="um-list-item-bodys" data-type="FK" @click="openInfo()">
                 风控资料
                 <span class="frp">
-                    <i class="oZF icon iconfont icon-modify"></i>&nbsp;
                     <i class="icon iconfont icon-enter"></i>
                 </span>
             </div>
-            <div class="um-list-item-bodys" data-type="GR" @click="openInfo()">
+            <div class="um-list-item-bodys" data-type="GR" @click="openInfo()" v-if="datas.condition && datas.condition.warrTyp == '1'">
                 个人担保人
                 <span class="frp">
                     <i class="icon iconfont icon-enter"></i>
                 </span>
             </div>
-            <div class="um-list-item-bodys" data-type="QY" @click="openInfo()">
+            <div class="um-list-item-bodys" data-type="QY" @click="openInfo()" v-if="datas.condition && datas.condition.warrTyp == '2'">
                 企业担保人
                 <span class="frp">
                     <i class="icon iconfont icon-enter"></i>
                 </span>
             </div>
-            <div class="um-list-item-bodys" data-type="SP" @click="openInfo()">
+            <div class="um-list-item-bodys" data-type="SQ" @click="openInfo()" v-if="datas.condition && datas.condition.isSupper">
+                申请单附件
+                <span class="frp">
+                    <i class="icon iconfont icon-enter"></i>
+                </span>
+            </div>
+            <div class="um-list-item-bodys" data-type="SP" @click="openInfo()" v-if="datas.condition && datas.condition.showLic">
                 上牌信息
-                <span class="frp">
-                    <i class="oZF icon iconfont icon-modify"></i>&nbsp;
+                <span class="frp" @click="changeSP()">
+                    <i class="oZF icon iconfont icon-modify" v-if="datas.condition && datas.condition.allowEditLic"></i>&nbsp;
                     <i class="icon iconfont icon-enter"></i>
                 </span>
             </div>
-            <div class="um-list-item-bodys" data-type="DY" @click="openInfo()">
+            <div class="um-list-item-bodys" data-type="DY" @click="openInfo()" v-if="datas.condition && datas.condition.showMtg">
                 抵押信息
-                <span class="frp">
-                    <i class="oZF icon iconfont icon-modify"></i>&nbsp;
+                <span class="frp" @click="changeDY()">
+                    <i class="oZF icon iconfont icon-modify" v-if="datas.condition && datas.condition.allowEditMtg"></i>&nbsp;
                     <i class="icon iconfont icon-enter"></i>
                 </span>
             </div>
-            <div class="um-list-item-bodys" data-type="GPS" @click="openInfo()">
+            <div class="um-list-item-bodys" data-type="GPS" @click="openInfo()" v-if="datas.condition && datas.condition.showReview">
                 GPS信息
-                <span class="frp">
-                    <i class="oZF icon iconfont icon-modify"></i>&nbsp;
+                <span class="frp" @click="changeGPS()">
+                    <i class="oZF icon iconfont icon-modify" v-if="datas.condition && datas.condition.allowEditReview"></i>&nbsp;
                     <i class="icon iconfont icon-enter"></i>
                 </span>
             </div>
@@ -236,6 +241,46 @@
                             title = "车辆信息";
                             pageId = "CLInfoPage";
                             break;
+                        case 'ZL':
+                            url = "html/mission/ZLInfoPage.html";
+                            title = "租赁信息";
+                            pageId = "ZLInfoPage";
+                            break;
+                        case 'FK':
+                            url = "html/mission/FKInfoPage.html";
+                            title = "风控资料";
+                            pageId = "FKInfoPage";
+                            break;
+                        case 'GR':
+                            url = "html/mission/GRInfoPage.html";
+                            title = "个人担保人";
+                            pageId = "GRInfoPage";
+                            break;
+                        case 'QY':
+                            url = "html/mission/QYInfoPage.html";
+                            title = "企业担保人";
+                            pageId = "QYInfoPage";
+                            break;
+                        case 'SQ':
+                            url = "html/mission/SQInfoPage.html";
+                            title = "申请单附件";
+                            pageId = "SQInfoPage";
+                            break;
+                        case 'SP':
+                            url = "html/mission/SPInfoPage.html";
+                            title = "上牌信息";
+                            pageId = "SPInfoPage";
+                            break;
+                        case 'DY':
+                            url = "html/mission/DYInfoPage.html";
+                            title = "抵押信息";
+                            pageId = "DYInfoPage";
+                            break;
+                        case 'GPS':
+                            url = "html/mission/GPSInfoPage.html";
+                            title = "GPS信息";
+                            pageId = "GPSInfoPage";
+                            break;
                         default:
                             break;
                     }
@@ -320,6 +365,108 @@
                                 text: "保存",
                                 textColor: "#ffffff",
                                 method: "CLInfoPage.save()"
+                            }]
+                        },
+                        pageParam: {
+                            datas: this.datas,
+                            pageType: 'change'
+                        }
+                    });
+                },
+                changeSP: function (ev) {
+                    var ev = ev || window.event;
+                    ev.cancelBubble = true;
+                    if (!this.datas.condition || !this.datas.condition.allowEditLic) {
+                        return;
+                    }
+                    summer.openWin({
+                        id: 'SPInfoPage',
+                        url: 'html/mission/SPInfoPage.html',
+                        create: false,
+                        type: 'actionBar',
+                        actionBar: {
+                            title: "上牌信息",
+                            titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
+                            backgroundColor: "#039be5",
+                            leftItem: {
+                                image: "img/back.png",
+                                method: "", //返回按钮自定义事件
+                                text: "返回",
+                                textColor: "#ffffff" //返回文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
+                            },
+                            rightItems: [{
+                                type: "text",
+                                text: "保存",
+                                textColor: "#ffffff",
+                                method: "SPInfoPage.save()"
+                            }]
+                        },
+                        pageParam: {
+                            datas: this.datas,
+                            pageType: 'change'
+                        }
+                    });
+                },
+                changeDY: function (ev) {
+                    var ev = ev || window.event;
+                    ev.cancelBubble = true;
+                    if (!this.datas.condition || !this.datas.condition.allowEditMtg) {
+                        return;
+                    }
+                    summer.openWin({
+                        id: 'DYInfoPage',
+                        url: 'html/mission/DYInfoPage.html',
+                        create: false,
+                        type: 'actionBar',
+                        actionBar: {
+                            title: "抵押信息",
+                            titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
+                            backgroundColor: "#039be5",
+                            leftItem: {
+                                image: "img/back.png",
+                                method: "", //返回按钮自定义事件
+                                text: "返回",
+                                textColor: "#ffffff" //返回文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
+                            },
+                            rightItems: [{
+                                type: "text",
+                                text: "保存",
+                                textColor: "#ffffff",
+                                method: "DYInfoPage.save()"
+                            }]
+                        },
+                        pageParam: {
+                            datas: this.datas,
+                            pageType: 'change'
+                        }
+                    });
+                },
+                changeGPS: function () {
+                    var ev = ev || window.event;
+                    ev.cancelBubble = true;
+                    if (!this.datas.condition || !this.datas.condition.allowEditReview) {
+                        return;
+                    }
+                    summer.openWin({
+                        id: 'GPSInfoPage',
+                        url: 'html/mission/GPSInfoPage.html',
+                        create: false,
+                        type: 'actionBar',
+                        actionBar: {
+                            title: "GPS信息",
+                            titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
+                            backgroundColor: "#039be5",
+                            leftItem: {
+                                image: "img/back.png",
+                                method: "", //返回按钮自定义事件
+                                text: "返回",
+                                textColor: "#ffffff" //返回文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
+                            },
+                            rightItems: [{
+                                type: "text",
+                                text: "保存",
+                                textColor: "#ffffff",
+                                method: "GPSInfoPage.save()"
                             }]
                         },
                         pageParam: {

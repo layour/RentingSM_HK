@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1">
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="../../css/iuapmobile.um.css">
+    <link rel="stylesheet" href="../../css/fonts/iconfont.css">
+    <link rel="stylesheet" href="./commonInfoPage.css">
+    <link rel="stylesheet" href="../../css/mint.css">
+    <script src="../../js/summer.js"></script>
+    <script src="../../js/jquery.min.js"></script>
+    <script src="../../js/Frameworks/iuapmobile.frameworks.ui.js"></script>
+    <script src="../../js/font.js"></script>
+    <script src="../../js/vue.js"></script>
+    <script src="../../js/mint.js"></script>
+    <script src="../../js/common.js"></script>
+</head>
+
+<body>
+    <div class="um-win" id="index">
+        <div class="um-content" v-cloak>
+            <ul class="loanList">
+                <li @click="surePickerBirthday">
+                    <span>抵押时间</span>
+                    <div v-if="pageType == 'change' && datas.mtgDeadline != ''">{{datas.mtgDeadline}}</div>
+                    <div v-else-if="pageType == 'change' && datas.mtgDeadline == ''" style = "color: #999;">请选择</div>
+                    <div v-else>{{ datas.mtgDeadline }}</div>
+                </li>
+            </ul>
+            <!-- 日期 -->
+            <mt-datetime-picker 
+                ref="picker" 
+                v-model="pickerValue" 
+                type="date" 
+                cancel-text='取消' 
+                confirm-text='确定' 
+                :start-date='new Date("1950-01-01")'
+                :end-date="new Date()" 
+                @confirm="handleConfirm"
+            ></mt-datetime-picker>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var DYInfoPage = new Vue({
+            el: '#index',
+            data: {
+                datas: {
+                    mtgDeadline: ""
+                },
+                pageType: "",
+                CAR_ID: "",
+                ID: "",
+                // 日期
+                pickerBirthday: false,
+                pickerValue: new Date(),
+            },
+            methods: {
+                // 日期更改
+                surePickerBirthday: function () {
+					this.pickerBirthday = !this.pickerBirthday;
+					this.$refs.picker.open();
+				},
+                handleConfirm: function (pickerValue) {
+                    this.pickerValue = pickerValue;
+                    var result = this.getFormatDate(pickerValue);
+                    this.datas.mtgDeadline = result;
+                },
+                getFormatDate: function (date) {
+                    var date = new Date(date),
+                        seperator1 = "-";
+                    var year = date.getFullYear(),
+                        month = date.getMonth() + 1,
+                        strDate = date.getDate();
+                    if (month >= 1 && month <= 9) {
+                        month = "0" + month;
+                    }
+                    if (strDate >= 0 && strDate <= 9) {
+                        strDate = "0" + strDate;
+                    }
+                    return year + '-' + month + '-' + strDate;
+                },
+                getData: function () {
+                    summer.showProgress();
+                    var self = this;
+                    ajaxRequest({
+                        type: 'post',
+                        url: 'appservice/project/act/loadMtg',
+                        param: {
+                            prjEqiDtl: {
+                                id: this.CAR_ID
+                            }
+                        }
+                    }, function (res) {
+                        summer.hideProgress();
+                        var Data = res.data;
+                        if (Data.flag == 1) {
+                            self.ID = Data.datas.mtg.id ? Data.datas.mtg.id : "";
+                            self.datas.mtgDeadline = Data.datas.mtg.mtgDeadline ? Data.datas.mtg.mtgDeadline : "";
+                        } else {
+                            summer.toast({
+                                msg: "获取信息失败"
+                            });
+                        }
+                    }, function (err) {
+                        summer.hideProgress();
+                        summer.toast({
+                            msg: "获取信息失败"
+                        });
+                    });
+                },
+                save: function () {
+                    summer.showProgress();
+                    var self = this;
+                    ajaxRequest({
+                        type: 'post',
+                        url: 'appservice/project/act/saveMtg',
+                        param: {
+                            id: this.ID,
+                            prjEqiDtl: {
+                                id: this.CAR_ID
+                            },
+                            mtgDeadline: this.datas.mtgDeadline
+                        }
+                    }, function (res) {
+                        summer.hideProgress();
+                        var Data = res.data;
+                        if (Data.flag == 1) {
+                            summer.toast({
+                                msg: "保存成功"
+                            });
+                            summer.execScript({
+                                winId: 'missionInfo',
+                                frameId: 'projectDetail',
+                                script: 'projectDetail.getList()'
+                            });
+                            summer.closeWin();
+                        } else {
+                            summer.toast({
+                                msg: "保存失败"
+                            });
+                        }
+                    }, function (err) {
+                        summer.hideProgress();
+                        summer.toast({
+                            msg: "保存失败"
+                        });
+                    });
+                }
+            }
+        });
+        summerready = function () {
+            DYInfoPage.pageType = summer.pageParam.pageType ? summer.pageParam.pageType : "";
+            DYInfoPage.CAR_ID = summer.pageParam.datas.CAR_ID ? summer.pageParam.datas.CAR_ID : "";
+            if (summer.pageParam.pageType && summer.pageParam.pageType == 'change') {
+                DYInfoPage.getData();
+            } else {
+                DYInfoPage.datas.mtgDeadline = summer.pageParam.datas.prjEqiMtg ? summer.pageParam.datas.prjEqiMtg.mtgDeadline : "";
+            }
+        };
+    </script>
+</body>
+
+</html>

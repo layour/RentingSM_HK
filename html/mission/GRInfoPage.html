@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1">
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="../../css/iuapmobile.um.css">
+    <link rel="stylesheet" href="../../css/fonts/iconfont.css">
+    <link rel="stylesheet" href="./commonInfoPage.css">
+    <link rel="stylesheet" href="../../css/mint.css">
+    <script src="../../js/summer.js"></script>
+    <script src="../../js/jquery.min.js"></script>
+    <script src="../../js/Frameworks/iuapmobile.frameworks.ui.js"></script>
+    <script src="../../js/font.js"></script>
+    <script src="../../js/vue.js"></script>
+    <script src="../../js/mint.js"></script>
+    <script src="../../js/common.js"></script>
+</head>
+
+<body>
+    <div class="um-win" id="index">
+        <div class="um-content" v-cloak>
+            <ul class="loanList">
+                <li>
+                    <span>担保人名称</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.prjWarrantorInfoList[0].wrtNm : "" }}</div>
+                </li>
+                <li>
+                    <span>与申请人关系</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.prjWarrantorInfoList[0].gxNm : "" }}</div>
+                </li>
+                <li>
+                    <span>证件类型</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.prjWarrantorInfoList[0].certTypNm : "" }}</div>
+                </li>
+                <li>
+                    <span>证件号码</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.prjWarrantorInfoList[0].certNo : "" }}</div>
+                </li>
+                <li>
+                    <span>性别</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.prjWarrantorInfoList[0].genderCdName : "" }}</div>
+                </li>
+                <li>
+                    <span>年龄</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.prjWarrantorInfoList[0].age : "" }}</div>
+                </li>
+                <li>
+                    <span>婚姻状况</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.prjWarrantorInfoList[0].marStsNm : "" }}</div>
+                </li>
+                <li>
+                    <span>单位名称</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.prjWarrantorInfoList[0].workPlc : "" }}</div>
+                </li>
+                <li>
+                    <span>家庭电话</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.prjWarrantorInfoList[0].homeTel : "" }}</div>
+                </li>
+                <li>
+                    <span>手机号码</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.prjWarrantorInfoList[0].mp1 : "" }}</div>
+                </li>
+                <li>
+                    <span>家庭地址</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.prjWarrantorInfoList[0].homeAddr : "" }}</div>
+                </li>
+                <li>
+                    <span>单位地址</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.prjWarrantorInfoList[0].workAddr : "" }}</div>
+                </li>
+                <li>
+                    <span>主要收入来源</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.prjWarrantorInfoList[0].majorInTypCdName : "" }}</div>
+                </li>
+                <li>
+                    <span>税后年收入（万元）</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.prjWarrantorInfoList[0].afterTaxYearIn : "" }}</div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var GRInfoPage = new Vue({
+            el: '#index',
+            data: {
+                datas: {}
+            },
+            methods: {
+                
+            }
+        });
+        summerready = function() {
+            GRInfoPage.datas = summer.pageParam.datas;
+        };
+    </script>
+</body>
+
+</html>

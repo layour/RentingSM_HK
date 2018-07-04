@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1">
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="../../css/iuapmobile.um.css">
+    <link rel="stylesheet" href="../../css/fonts/iconfont.css">
+    <link rel="stylesheet" href="./commonInfoPage.css">
+    <link rel="stylesheet" href="../../css/mint.css">
+    <script src="../../js/summer.js"></script>
+    <script src="../../js/jquery.min.js"></script>
+    <script src="../../js/Frameworks/iuapmobile.frameworks.ui.js"></script>
+    <script src="../../js/font.js"></script>
+    <script src="../../js/vue.js"></script>
+    <script src="../../js/mint.js"></script>
+    <script src="../../js/common.js"></script>
+</head>
+
+<body>
+    <div class="um-win" id="index">
+        <div class="um-content" v-cloak>
+            <ul class="loanList">
+                <li>
+                    <span>产品名称</span>
+                    <div>{{ datas.prdSchInfo ? datas.prdSchInfo.schemeName : "" }}</div>
+                </li>
+                <li>
+                    <span>实际销售价</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.prjQuatPrps.totLsItmAmt : "" }}</div>
+                </li>
+                <li>
+                    <span>合同总额</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.prjQuatPrps.contAmt : "" }}</div>
+                </li>
+                <li>
+                    <span>还款期限</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.prjQuatPrps.lsPd : "" }}</div>
+                </li>
+                <li>
+                    <span>还款期限单位</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.prjQuatPrps.lsPdUntCdNm : "" }}</div>
+                </li>
+                <li>
+                    <span>基础年利率</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.prjQuatPrps.defAnnIntRatePct : "" }}</div>
+                </li>
+                <li>
+                    <span>实际年利率</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.prjQuatPrps.annIntRatePct : "" }}</div>
+                </li>
+                <li>
+                    <span>首付比例</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.prjQuatPrps.hirePct : "" }}</div>
+                </li>
+                <li>
+                    <span>首付金额</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.prjQuatPrps.hireAmt : "" }}</div>
+                </li>
+                <li v-if="datas.condition && !datas.condition.isOldCar">
+                    <span>保证金比例</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.prjQuatPrps.bailPct : "" }}</div>
+                </li>
+                <li v-if="datas.condition && !datas.condition.isOldCar">
+                    <span>保证金</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.prjQuatPrps.bailAmt : "" }}</div>
+                </li>
+                <li>
+                    <span>支付方式</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.prjQuatPrps.payWay : "" }}</div>
+                </li>
+                <li>
+                    <span>车辆融资金额(元）</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.prjQuatPrps.actLsAmt : "" }}</div>
+                </li>
+                <li>
+                    <span>咨询服务费（元）</span>
+                    <div>{{ datas.sxfJe }}</div>
+                </li>
+                <li>
+                    <span>保证金处理方式</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.prjQuatPrps.dpstHdlWayCdName : "" }}</div>
+                </li>
+                <li v-if="datas.condition && !datas.condition.isOldCar">
+                    <span>贴息</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.prjQuatPrps.tiexiCdName : "" }}</div>
+                </li>
+                <li v-if="datas.condition && !datas.condition.isOldCar">
+                    <span>贴息金额</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.prjQuatPrps.txJe : "" }}</div>
+                </li>
+                <li>
+                    <span>GPS是否安装</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.prjQuatPrps.gpsInsNm : "" }}</div>
+                </li>
+                <li>
+                    <span>GPS类型</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.prjQuatPrps.gpsTypName : "" }}</div>
+                </li>
+                <li v-if="feeAmt1 !== ''">
+                    <span>GPS费用</span>
+                    <div>{{ feeAmt1 }}</div>
+                </li>
+                <li v-if="feeAmt2 !== ''">
+                    <span>保险费</span>
+                    <div>{{ feeAmt2 }}</div>
+                </li>
+                <li v-if="feeAmt3 !== ''">
+                    <span>平台费</span>
+                    <div>{{ feeAmt3 }}</div>
+                </li>
+                <li v-if="feeAmt4 !== ''">
+                    <span>购置税</span>
+                    <div>{{ feeAmt4 }}</div>
+                </li>
+                <li v-if="feeAmt5 !== ''">
+                    <span>精品装潢</span>
+                    <div>{{ feeAmt5 }}</div>
+                </li>
+                <li v-if="feeAmt6 !== ''">
+                    <span>其他加融项</span>
+                    <div>{{ feeAmt6 }}</div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var ZLInfoPage = new Vue({
+            el: '#index',
+            data: {
+                datas: {},
+                arr: [],
+                feeAmt1: "",
+                feeAmt2: "",
+                feeAmt3: "",
+                feeAmt4: "",
+                feeAmt5: "",
+                feeAmt6: ""
+            },
+            methods: {
+                
+            }
+        });
+        summerready = function() {
+            ZLInfoPage.datas = summer.pageParam.datas;
+            if (summer.pageParam.datas.prjBscInfo.prjQuatPrps) {
+                ZLInfoPage.arr = summer.pageParam.datas.prjBscInfo.prjQuatPrps.prjQuatPrpsFeeList ? summer.pageParam.datas.prjBscInfo.prjQuatPrps.prjQuatPrpsFeeList : [];  
+            }
+            if (ZLInfoPage.arr.length) {
+                ZLInfoPage.arr.forEach(function (e) {
+                    if (e.feeTypCd == "10") {
+                        ZLInfoPage.feeAmt1 = e.feeAmt;
+                    } else if (e.feeTypCd == "32") {
+                        ZLInfoPage.feeAmt2 = e.feeAmt;
+                    } else if (e.feeTypCd == "35") {
+                        ZLInfoPage.feeAmt3 = e.feeAmt;
+                    } else if (e.feeTypCd == "30") {
+                        ZLInfoPage.feeAmt4 = e.feeAmt;
+                    } else if (e.feeTypCd == "51") {
+                        ZLInfoPage.feeAmt5 = e.feeAmt;
+                    }  else if (e.feeTypCd == "36") {
+                        ZLInfoPage.feeAmt6 = e.feeAmt;
+                    }
+                });
+            }
+        };
+    </script>
+</body>
+
+</html>

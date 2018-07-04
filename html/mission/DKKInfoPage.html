@@ -184,7 +184,9 @@
 						type: 'post',
 						url: 'appservice/project/act/loadBankAcc',
 						param: {
-                            cstId: this.cstId
+                            cstId: {
+                                id: this.cstId
+                            }
 						}
 					}, function(res) {
                         summer.hideProgress();
@@ -224,7 +226,9 @@
 						url: 'appservice/project/act/saveBankAcc',
 						param: {
                             id: this.ID,  
-                            cstId: this.cstId,
+                            cstId: {
+                                id: this.cstId
+                            },
                             bkCd: this.datas.bkNmCode,
                             accNm: this.datas.accNm,
                             accNo: this.datas.accNo,

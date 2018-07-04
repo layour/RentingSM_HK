@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1">
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="../../css/iuapmobile.um.css">
+    <link rel="stylesheet" href="../../css/fonts/iconfont.css">
+    <link rel="stylesheet" href="./commonInfoPage.css">
+    <link rel="stylesheet" href="../../css/mint.css">
+    <script src="../../js/summer.js"></script>
+    <script src="../../js/jquery.min.js"></script>
+    <script src="../../js/Frameworks/iuapmobile.frameworks.ui.js"></script>
+    <script src="../../js/font.js"></script>
+    <script src="../../js/vue.js"></script>
+    <script src="../../js/mint.js"></script>
+    <script src="../../js/common.js"></script>
+</head>
+
+<body>
+    <div class="um-win" id="index">
+        <div class="um-content" v-cloak>
+            <ul class="loanList">
+                <li>
+                    <span>GPS供应商</span>
+                    <div @click="sureBank" v-if="pageType == 'change'">
+                        <span class="iconfont icon-enter"></span>
+                        <i v-bind:style="[datas.gpsRem == '请选择' ? {'color':'#9e9e9e'} : {'color':'#333'}]">{{datas.gpsRem}}</i>
+                    </div>
+                    <div v-else>{{ datas.gpsRem }}</div>
+                </li>
+                <li v-if="pageType == 'change' && showYxGps">
+                    <span>GPS卡号_有线</span>
+                    <input type="text" placeholder="请输入" v-model="datas.gpsCardNo1"/>
+                </li>
+                <li v-else-if="datas.showYxGps && pageType != 'change'">
+                    <span>GPS卡号_有线</span>
+                    <div>{{ datas.gpsCardNo1 }}</div>
+                </li>
+                <li v-if="pageType == 'change' && showWxGps">
+                    <span>GPS卡号_无线</span>
+                    <input type="text" placeholder="请输入" v-model="datas.gpsCardNo2"/>
+                </li>
+                <li v-else-if="datas.showWxGps && pageType != 'change'">
+                    <span>GPS卡号_无线</span>
+                    <div>{{ datas.gpsCardNo2 }}</div>
+                </li>
+                <li v-if="pageType == 'change' && showYxGps" @click="surePickerBirthday1">
+                    <span>安装时间_有线</span>
+                    <div v-if="datas.gpsTime1 != ''">{{datas.gpsTime1}}</div>
+                    <div v-else style = "color: #999;">请选择</div>
+                </li>
+                <li v-else-if="datas.showYxGps && pageType != 'change'">
+                    <span>安装时间_有线</span>
+                    <div>{{ datas.gpsTime1 }}</div>
+                </li>
+                <li v-if="pageType == 'change' && showWxGps" @click="surePickerBirthday2">
+                    <span>安装时间_无线</span>
+                    <div v-if="datas.gpsTime2 != ''">{{datas.gpsTime2}}</div>
+                    <div v-else style = "color: #999;">请选择</div>
+                </li>
+                <li v-else-if="datas.showWxGps && pageType != 'change'">
+                    <span>安装时间_无线</span>
+                    <div>{{ datas.gpsTime2 }}</div>
+                </li>
+            </ul>
+            <!-- 开户银行 -->
+            <mt-popup v-model="bankStatus" position="bottom" class="pickerColor">
+                <mt-picker value-key="label" :slots="bankSlots" @change="onMethodChange"></mt-picker>
+                <p>
+                    <span class="" @click="sureBank">取消</span>
+                    <span class="" @click="sureBank('confirm')">确定</span>
+                </p>
+            </mt-popup>
+            <!-- 日期1 -->
+            <mt-datetime-picker 
+                ref="picker1" 
+                v-model="pickerValue1" 
+                type="date" 
+                cancel-text='取消' 
+                confirm-text='确定' 
+                :start-date='new Date("1950-01-01")'
+                :end-date="new Date()" 
+                @confirm="handleConfirm1"
+            ></mt-datetime-picker>
+            <!-- 日期2 -->
+            <mt-datetime-picker 
+                ref="picker2" 
+                v-model="pickerValue2" 
+                type="date" 
+                cancel-text='取消' 
+                confirm-text='确定' 
+                :start-date='new Date("1950-01-01")'
+                :end-date="new Date()" 
+                @confirm="handleConfirm2"
+            ></mt-datetime-picker>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var GPSInfoPage = new Vue({
+            el: '#index',
+            data: {
+                datas: {
+                    gpsRem: "请选择",
+                    gpsRemCode: "",
+                    gpsCardNo1: "",
+                    gpsCardNo2: "",
+                    showYxGps: true,
+                    showWxGps: true,
+                    gpsTime1: "",
+                    gpsTime2: ""
+                },
+                showYxGps: true,
+                showWxGps: true,
+                pageType: "",
+                prjId: "",
+                CAR_ID: "",
+                // GPS
+                bankStatus:false,
+                pickedBank:"",
+                bankSlots: [{
+                    flex: 1,
+                    values: [],
+                    defaultIndex: 0,
+                    className: 'slot1',
+                    textAlign: 'center'
+                }],
+                // 日期1
+                pickerBirthday1: false,
+                pickerValue1: new Date(),
+                // 日期2
+                pickerBirthday2: false,
+                pickerValue2: new Date(),
+            },
+            methods: {
+                // 日期1更改
+                surePickerBirthday1: function () {
+					this.pickerBirthday1 = !this.pickerBirthday1;
+					this.$refs.picker1.open();
+				},
+                handleConfirm1: function (pickerValue) {
+                    this.pickerValue1 = pickerValue;
+                    var result = this.getFormatDate(pickerValue);
+                    this.datas.gpsTime1 = result;
+                },
+                // 日期2更改
+                surePickerBirthday2: function () {
+					this.pickerBirthday2 = !this.pickerBirthday2;
+					this.$refs.picker2.open();
+				},
+                handleConfirm2: function (pickerValue) {
+                    this.pickerValue2 = pickerValue;
+                    var result = this.getFormatDate(pickerValue);
+                    this.datas.gpsTime2 = result;
+                },
+                getFormatDate: function (date) {
+                    var date = new Date(date),
+                        seperator1 = "-";
+                    var year = date.getFullYear(),
+                        month = date.getMonth() + 1,
+                        strDate = date.getDate();
+                    if (month >= 1 && month <= 9) {
+                        month = "0" + month;
+                    }
+                    if (strDate >= 0 && strDate <= 9) {
+                        strDate = "0" + strDate;
+                    }
+                    return year + '-' + month + '-' + strDate;
+                },
+                // 选择gps
+                onMethodChange:function (picker, values) {
+					this.pickedBank = values[0];
+				},
+				sureBank:function (param) {
+					this.bankStatus = !this.bankStatus;
+					if (param == 'confirm') {
+                        this.datas.gpsRem = this.pickedBank.label;
+                        this.datas.gpsRemCode = this.pickedBank.value;
+					}
+                },
+                getData: function () {
+                    summer.showProgress();
+                    var self = this;
+                    ajaxRequest({
+						type: 'post',
+						url: 'appservice/project/act/loadCar',
+						param: {
+                            id: this.CAR_ID,
+                            prjId: this.prjId
+						}
+					}, function(res) {
+                        summer.hideProgress();
+						var Data = res.data;
+						if (Data.flag == 1) {
+                            self.bankSlots[0].values = Data.datas.gpsRemArray ? Data.datas.gpsRemArray : [];
+                            self.datas.gpsRem = Data.datas.car.gpsRemName ? Data.datas.car.gpsRemName : "请选择";
+                            self.datas.gpsRemCode = Data.datas.car.gpsRem ? Data.datas.car.gpsRem : "";
+                            self.datas.gpsCardNo1 = Data.datas.car.gpsCardNo1 ? Data.datas.car.gpsCardNo1 : "";
+                            self.datas.gpsCardNo2 = Data.datas.car.gpsCardNo2 ? Data.datas.car.gpsCardNo2 : "";
+                            self.datas.gpsTime1 = Data.datas.car.gpsTime1 ? Data.datas.car.gpsTime1 : "";
+                            self.datas.gpsTime2 = Data.datas.car.gpsTime2 ? Data.datas.car.gpsTime2 : "";
+                            self.showYxGps = Data.datas.showYxGps ? Data.datas.showYxGps : false;
+                            self.showWxGps = Data.datas.showWxGps ? Data.datas.showWxGps : false;
+						} else {
+							summer.toast({
+								msg: "获取信息失败"
+							});
+						}
+					}, function(err) {
+						summer.hideProgress();
+						summer.toast({
+							msg: "获取信息失败"
+						});
+					});
+                },
+                save: function () {
+                    summer.showProgress();
+                    var self = this;
+                    ajaxRequest({
+						type: 'post',
+						url: 'appservice/project/act/saveCar',
+						param: {
+                            id: this.CAR_ID,  
+                            gpsCardNo1: this.datas.gpsCardNo1,
+                            gpsTime1: this.datas.gpsTime1,
+                            gpsCardNo2: this.datas.gpsCardNo2,
+                            gpsTime2: this.datas.gpsTime2,
+                            gpsRem: this.datas.gpsRemCode
+						}
+					}, function(res) {
+                        summer.hideProgress();
+						var Data = res.data;
+						if (Data.flag == 1) {
+                            summer.toast({
+								msg: "保存成功"
+                            });
+                            summer.execScript({
+                                winId: 'missionInfo',
+                                frameId: 'projectDetail',
+                                script: 'projectDetail.getList()'
+                            });
+                            summer.closeWin();
+						} else {
+							summer.toast({
+								msg: "保存失败"
+							});
+						}
+					}, function(err) {
+						summer.hideProgress();
+						summer.toast({
+							msg: "保存失败"
+						});
+					});
+                }
+            }
+        });
+        summerready = function() {
+            GPSInfoPage.pageType = summer.pageParam.pageType ? summer.pageParam.pageType : "";
+            GPSInfoPage.CAR_ID = summer.pageParam.datas.CAR_ID ? summer.pageParam.datas.CAR_ID : "";
+            GPSInfoPage.prjId = summer.pageParam.datas.prjBscInfo ? summer.pageParam.datas.prjBscInfo.id : "";
+            if (summer.pageParam.pageType && summer.pageParam.pageType == 'change') {
+                GPSInfoPage.getData();
+            } else if (summer.pageParam.datas && summer.pageParam.datas.prjEqiDtlCar) {
+                GPSInfoPage.datas.gpsRem = summer.pageParam.datas.prjEqiDtlCar.gpsRem;
+                GPSInfoPage.datas.gpsCardNo1 = summer.pageParam.datas.prjEqiDtlCar.gpsCardNo1;
+                GPSInfoPage.datas.gpsCardNo2 = summer.pageParam.datas.prjEqiDtlCar.gpsCardNo2;
+                GPSInfoPage.datas.showYxGps = summer.pageParam.datas.condition.showYxGps ? summer.pageParam.datas.condition.showYxGps : false;
+                GPSInfoPage.datas.showWxGps = summer.pageParam.datas.condition.showWxGps ? summer.pageParam.datas.condition.showWxGps : false;
+                GPSInfoPage.datas.gpsTime1 = summer.pageParam.datas.prjEqiDtlCar.gpsTime1;
+                GPSInfoPage.datas.gpsTime2 = summer.pageParam.datas.prjEqiDtlCar.gpsTime2;
+            } else {
+                GPSInfoPage.datas.gpsRem = "";
+            }
+        };
+    </script>
+</body>
+
+</html>

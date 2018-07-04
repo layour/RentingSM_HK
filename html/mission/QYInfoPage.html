@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1">
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="../../css/iuapmobile.um.css">
+    <link rel="stylesheet" href="../../css/fonts/iconfont.css">
+    <link rel="stylesheet" href="./commonInfoPage.css">
+    <link rel="stylesheet" href="../../css/mint.css">
+    <script src="../../js/summer.js"></script>
+    <script src="../../js/jquery.min.js"></script>
+    <script src="../../js/Frameworks/iuapmobile.frameworks.ui.js"></script>
+    <script src="../../js/font.js"></script>
+    <script src="../../js/vue.js"></script>
+    <script src="../../js/mint.js"></script>
+    <script src="../../js/common.js"></script>
+</head>
+
+<body>
+    <div class="um-win" id="index">
+        <div class="um-content" v-cloak>
+            <ul class="loanList">
+                <li>
+                    <span>企业名称</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.prjWarrantorEntInfoList[0].warNm : "" }}</div>
+                </li>
+                <li>
+                    <span>社会统一信用代码</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.prjWarrantorEntInfoList[0].succ : "" }}</div>
+                </li>
+                <li>
+                    <span>法人代表名称</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.prjWarrantorEntInfoList[0].corpRepName : "" }}</div>
+                </li>
+                <li>
+                    <span>法人代表手机号码</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.prjWarrantorEntInfoList[0].corpRepTel : "" }}</div>
+                </li>
+                <li>
+                    <span>法人代表证件类型</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.prjWarrantorEntInfoList[0].corpRepCertTypCdName : "" }}</div>
+                </li>
+                <li>
+                    <span>法人代表证件号码</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.prjWarrantorEntInfoList[0].corpRepCertNo : "" }}</div>
+                </li>
+                <li>
+                    <span>企业性质</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.prjWarrantorEntInfoList[0].corpTypCdName : "" }}</div>
+                </li>
+                <li>
+                    <span>通讯地址</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.prjWarrantorEntInfoList[0].postAddr : "" }}</div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var QYInfoPage = new Vue({
+            el: '#index',
+            data: {
+                datas: {}
+            },
+            methods: {
+                
+            }
+        });
+        summerready = function() {
+            QYInfoPage.datas = summer.pageParam.datas;
+        };
+    </script>
+</body>
+
+</html>
