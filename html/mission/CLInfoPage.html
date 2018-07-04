@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1">
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="../../css/iuapmobile.um.css">
+    <link rel="stylesheet" href="../../css/fonts/iconfont.css">
+    <link rel="stylesheet" href="./commonInfoPage.css">
+    <link rel="stylesheet" href="../../css/mint.css">
+    <script src="../../js/summer.js"></script>
+    <script src="../../js/jquery.min.js"></script>
+    <script src="../../js/Frameworks/iuapmobile.frameworks.ui.js"></script>
+    <script src="../../js/font.js"></script>
+    <script src="../../js/vue.js"></script>
+    <script src="../../js/mint.js"></script>
+    <script src="../../js/common.js"></script>
+</head>
+
+<body>
+    <div class="um-win" id="index">
+        <div class="um-content" v-cloak>
+            <ul class="loanList">
+                <li v-if="pageType != 'change'">
+                    <span>放款规则</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.fkgzCdName : "" }}</div>
+                </li>
+                <li v-if="pageType != 'change'">
+                    <span>业务类型</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.bizTypNm : "" }}</div>
+                </li>
+                <li v-if="pageType != 'change'">
+                    <span>品牌</span>
+                    <div>{{ datas.prjBscInfo.prjEquBscInfo ? datas.prjBscInfo.prjEquBscInfo.braNm : "" }}</div>
+                </li>
+                <li v-if="pageType != 'change'">
+                    <span>品牌类型</span>
+                    <div>{{ datas.prjBscInfo.prjEquBscInfo ? datas.prjBscInfo.prjEquBscInfo.braTypCdName : "" }}</div>
+                </li>
+                <li v-if="pageType != 'change'">
+                    <span>车系</span>
+                    <div>{{ datas.prjBscInfo.prjEquBscInfo ? datas.prjBscInfo.prjEquBscInfo.equSet : "" }}</div>
+                </li>
+                <li v-if="pageType != 'change'">
+                    <span>车型</span>
+                    <div>{{ datas.prjBscInfo.prjEquBscInfo ? datas.prjBscInfo.prjEquBscInfo.equMdl : "" }}</div>
+                </li>
+                <li v-if="pageType != 'change'">
+                    <span>产品名称</span>
+                    <div>{{ datas.prjBscInfo.prjEquBscInfo ? datas.prjBscInfo.prjEquBscInfo.equNm : "" }}</div>
+                </li>
+                <li>
+                    <span>车辆识别号</span>
+                    <input type="text" placeholder="请输入" v-model="vinNo" v-if="pageType == 'change'" />
+                    <div v-else>{{ datas.prjBscInfo.prjEqiDtlCar ? datas.prjBscInfo.prjEqiDtlCar.vinNo : "" }}</div>
+                </li>
+                <li>
+                    <span>发动机号</span>
+                    <input type="text" placeholder="请输入" v-model="engNo" v-if="pageType == 'change'" />
+                    <div v-else>{{ datas.prjBscInfo.prjEqiDtlCar ? datas.prjBscInfo.prjEqiDtlCar.engNo : "" }}</div>
+                </li>
+                <li>
+                    <span>车身颜色</span>
+                    <div @click="sureZHType" v-if="pageType == 'change'">
+                        <span class="iconfont icon-enter"></span>
+                        <i v-bind:style="[carClName == '请选择' ? {'color':'#9e9e9e'} : {'color':'#333'}]">{{carClName}}</i>
+                    </div>
+                    <div v-else>{{ datas.prjBscInfo.prjEqiDtlCar ? datas.prjBscInfo.prjEqiDtlCar.carClName : "" }}</div>
+                </li>
+                <li v-if="pageType != 'change'">
+                    <span>变速箱类型</span>
+                    <div>{{ datas.prjBscInfo.prjEqiDtlCar ? datas.prjBscInfo.prjEqiDtlCar.grboxTypCdName : "" }}</div>
+                </li>
+                <li v-if="pageType != 'change'">
+                    <span>排量</span>
+                    <div>{{ datas.prjBscInfo.prjEqiDtlCar ? datas.prjBscInfo.prjEqiDtlCar.outVol : "" }}</div>
+                </li>
+                <li v-if="pageType != 'change'">
+                    <span>座位</span>
+                    <div>{{ datas.prjBscInfo.prjEqiDtlCar ? datas.prjBscInfo.prjEqiDtlCar.seatQtyCdName : "" }}</div>
+                </li>
+                <li v-if="pageType != 'change'">
+                    <span>年款</span>
+                    <div>{{ datas.prjBscInfo.prjEqiDtlCar ? datas.prjBscInfo.prjEqiDtlCar.equYrName : "" }}</div>
+                </li>
+                <li v-if="pageType != 'change'">
+                    <span>驾驶员与主贷人关系</span>
+                    <div>{{ datas.prjBscInfo.prjEqiDtlCar ? datas.prjBscInfo.prjEqiDtlCar.driverRlTypCdName : "" }}</div>
+                </li>
+                <li v-if="pageType != 'change'">
+                    <span>是否二手车</span>
+                    <div>{{ datas.prjBscInfo.prjEquBscInfo ? datas.prjBscInfo.prjEquBscInfo.isNewName : "" }}</div>
+                </li>
+                <li v-if="pageType != 'change'">
+                    <span>合同编号</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.lsCntNo : "" }}</div>
+                </li>
+                <li v-if="pageType != 'change' && datas.condition && datas.condition.isOldCar">
+                    <span>二手车里程数(公里)</span>
+                    <div>{{ datas.prjBscInfo.prjEqiDtlCar ? datas.prjBscInfo.prjEqiDtlCar.usedCarMil : "" }}</div>
+                </li>
+                <li v-if="pageType != 'change' && datas.condition && datas.condition.isOldCar">
+                    <span>二手车卖方姓名</span>
+                    <div>{{ datas.prjBscInfo.prjEqiDtlCar ? datas.prjBscInfo.prjEqiDtlCar.sellerNm : "" }}</div>
+                </li>
+                <li v-if="pageType != 'change' && datas.condition && datas.condition.isOldCar">
+                    <span>二手车首次登记日期</span>
+                    <div>{{ datas.prjBscInfo.prjEqiDtlCar ? datas.prjBscInfo.prjEqiDtlCar.usedCarReg : "" }}</div>
+                </li>
+                <li v-if="pageType != 'change' && datas.condition && datas.condition.isOldCar">
+                    <span>二手车卖家身份证号</span>
+                    <div>{{ datas.prjBscInfo.prjEqiDtlCar ? datas.prjBscInfo.prjEqiDtlCar.idCardNo : "" }}</div>
+                </li>
+                <li v-if="pageType != 'change' && datas.condition && datas.condition.isOldCar">
+                    <span>二手车过户次数</span>
+                    <div>{{ datas.prjBscInfo.prjEqiDtlCar ? datas.prjBscInfo.prjEqiDtlCar.transferAm : "" }}</div>
+                </li>
+                <li v-if="pageType != 'change'">
+                    <span>交易城市</span>
+                    <div v-if="datas.prjBscInfo.prjEqiDtlCar && datas.prjBscInfo.prjEqiDtlCar.rgnReCd">
+                        {{ datas.prjBscInfo.prjEqiDtlCar.rgnReCd.name }} - 
+                        {{ datas.prjBscInfo.prjEqiDtlCar.rgnPrCd.name }} - 
+                        {{ datas.prjBscInfo.prjEqiDtlCar.rgnCyCd.name }}
+                    </div>
+                </li>
+                <li v-if="pageType != 'change'">
+                    <span>车辆单价</span>
+                    <div>{{ datas.prjBscInfo.prjEquBscInfo ? datas.prjBscInfo.prjEquBscInfo.equAmt : "" }}</div>
+                </li>
+                <li v-if="pageType != 'change' && datas.condition && datas.condition.isSupper">
+                    <span>二手车过户次数</span>
+                    <div>{{ datas.prjBscInfo.prjEquBscInfo ? datas.prjBscInfo.prjEqiDtlCar.guidePc : "" }}</div>
+                </li>
+                <li v-if="pageType != 'change'">
+                    <span>是否自查征信</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfoisOwnCreditName : "" }}</div>
+                </li>
+                <li v-if="pageType != 'change'">
+                    <span>订单编号</span>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.orderNo : "" }}</div>
+                </li>
+            </ul>
+            <!-- 车身颜色 -->
+            <mt-popup v-model="ZHTypeStatus" position="bottom" class="pickerColor">
+                <mt-picker value-key="label" :slots="ZHTypeSlots" @change="onZHTypeChange"></mt-picker>
+                <p>
+                    <span class="" @click="sureZHType">取消</span>
+                    <span class="" @click="sureZHType('confirm')">确定</span>
+                </p>
+            </mt-popup>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var CLInfoPage = new Vue({
+            el: '#index',
+            data: {
+                datas: {
+                    
+                },
+                pageType: "",
+                ID: "",
+                vinNo: "",
+                engNo: "",
+                carClName: "请选择",
+                carClNameCode: "",
+                // 车身颜色
+                ZHTypeStatus:false,
+                pickedZHType:"",
+                ZHTypeSlots: [{
+                    flex: 1,
+                    values: [],
+                    defaultIndex: 0,
+                    className: 'slot1',
+                    textAlign: 'center'
+                }]
+            },
+            methods: {
+                // 选择账户类型
+                onZHTypeChange:function (picker, values) {
+					this.pickedZHType = values[0];
+				},
+				sureZHType:function (param) {
+					this.ZHTypeStatus = !this.ZHTypeStatus;
+					if (param == 'confirm') {
+                        this.carClName = this.pickedZHType.label;
+                        this.carClNameCode = this.pickedZHType.value;
+					}
+                },
+                getData: function () {
+                    summer.showProgress();
+                    var self = this;
+                    ajaxRequest({
+						type: 'post',
+						url: 'appservice/project/act/loadCar',
+						param: {
+                            id: this.ID
+						}
+					}, function(res) {
+                        summer.hideProgress();
+						var Data = res.data;
+						if (Data.flag == 1) {
+                            self.ZHTypeSlots[0].values = Data.datas.carClArray ? Data.datas.carClArray : [];
+                            self.carClName = Data.datas.car.carClName ? Data.datas.car.carClName : "请选择";
+                            self.carClNameCode = Data.datas.car.carCl ? Data.datas.car.carCl : "";
+                            self.vinNo = Data.datas.car.vinNo ? Data.datas.car.vinNo : "";
+                            self.engNo = Data.datas.car.engNo ? Data.datas.car.engNo : "";
+						} else {
+							summer.toast({
+								msg: "获取信息失败"
+							});
+						}
+					}, function(err) {
+						summer.hideProgress();
+						summer.toast({
+							msg: "获取信息失败"
+						});
+					});
+                },
+                save: function () {
+                    summer.showProgress();
+                    var self = this;
+                    ajaxRequest({
+						type: 'post',
+						url: 'appservice/project/act/saveCar',
+						param: {
+                            id: this.ID,  
+                            engNo: this.engNo,
+                            carCl: this.carClNameCode,
+                            vinNo: this.vinNo
+						}
+					}, function(res) {
+                        summer.hideProgress();
+						var Data = res.data;
+						if (Data.flag == 1) {
+                            summer.toast({
+								msg: "保存成功"
+                            });
+                            summer.execScript({
+                                winId: 'missionInfo',
+                                frameId: 'projectDetail',
+                                script: 'projectDetail.getList()'
+                            });
+                            summer.closeWin();
+						} else {
+							summer.toast({
+								msg: "保存失败"
+							});
+						}
+					}, function(err) {
+						summer.hideProgress();
+						summer.toast({
+							msg: "保存失败"
+						});
+					});
+                }
+            }
+        });
+        summerready = function() {
+            CLInfoPage.pageType = summer.pageParam.pageType ? summer.pageParam.pageType : "";
+            CLInfoPage.ID = summer.pageParam.datas.CAR_ID ? summer.pageParam.datas.CAR_ID : "";
+            if (summer.pageParam.pageType && summer.pageParam.pageType == 'change') {
+                CLInfoPage.getData();
+            } else {
+                CLInfoPage.datas = summer.pageParam.datas;
+            }
+        };
+    </script>
+</body>
+
+</html>

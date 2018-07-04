@@ -102,6 +102,16 @@
 		.um-footer{
 			min-height:0px;
 		}
+		.item input{
+			border: none;
+			height: .5rem;
+			width: 2.92rem;
+			text-align: right;
+			line-height: .5rem;
+			outline: none;
+			margin-top: .2rem;
+			font-size: 0.28rem;
+		}
 	</style>
 </head>
 
@@ -161,7 +171,10 @@
 						</span>
 					</p>
 			</div>
-			<mt-field label="税后年收入(万元)" type="number" placeholder="请输入您的税后年收入" v-model="message.afterTaxYearIn"></mt-field>
+			<!-- <mt-field label="税后年收入(万元)" type="number" placeholder="请输入您的税后年收入":attr="{ max: 999 }"	 v-model="message.afterTaxYearIn"></mt-field> -->
+			<div class="item um-box pl10 pr10"  >
+				 <span class="um-bf1">税后年收入(万元)</span><input placeholder="请输入您的税后年收入"  v-model="message.afterTaxYearIn" type="number"    oninput="if(value.length>3)value=value.slice(0,3)">   
+		   </div>
 		</div>
 		<div class="um-footer">
 			<mt-popup v-model="pickerCardTypeStatus" position='bottom' class="pickerColor">

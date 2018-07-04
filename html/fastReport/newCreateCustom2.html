@@ -177,7 +177,7 @@
 					</p>
 			</div>
 			<div class="item um-box pl10 pr10"  >
-					<span class="um-bf2">税后年收入（万元）</span><input class="um-bf3" placeholder="请输入您的税后年收入" v-model="message.cstNpSocialRl.afterTaxYearIn"   type="number" />   
+					<span class="um-bf2">税后年收入（万元）</span><input class="um-bf3" placeholder="请输入您的税后年收入" v-model="message.cstNpSocialRl.afterTaxYearIn"   type="number"     oninput="if(value.length>3)value=value.slice(0,3)" />   
 	   </div>
 		</form>
 		</div>	
@@ -219,6 +219,7 @@
 						textAlign: 'center'
 					}],
 					totalData:'',
+					cstID:'',
 					message: {
 						cstNpSocialRl:{
 							rlNm:'',
@@ -348,6 +349,8 @@
 						if (res.data.flag == 1) {
 							summer.toast({msg:"保存成功"});
                             var clint_Id = res.data.datas.cstId;
+							//SWL
+							if(newCreateCustom.cstID == ''){
                             // 初始化项目
                             ajaxRequest({
                                 type: 'post',
@@ -405,6 +408,50 @@
                                 summer.hideProgress();
                                 console.log(err);
                             });
+							//SWL
+							} else {
+								if (self.sourceFrom=="newCreateCustom_verify2") {
+                                    	   if ($summer.os == "ios") {
+			                                    summer.closeWin({
+			                                        id: 'newCreateCustom'
+			                                    });
+			                                }
+
+                                        summer.openWin({
+                                            id : 'setProject',
+                                            url : 'html/fastReport/setProject.html',
+                                            create : false,
+                                            type : 'actionBar',
+                                            pageParam:{
+                                                source:"customer",
+                                                customId:clint_Id,
+                                                projectId: prjId
+                                            },
+                                            isKeep:false,
+                                            actionBar : {
+                                                title : "快捷报单",
+                                                titleColor : "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
+                                                backgroundColor : "#039be5",
+                                                leftItem : {
+                                                    image : "img/back.png",
+                                                    method : "", //返回按钮自定义事件
+                                                    text : "返回",
+                                                    textColor : "#ffffff" //返回文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
+                                                },
+                                                rightItems : [{
+                                                    type : "text",
+                                                    text : "下一步",
+                                                    textColor : "#ffffff", //文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
+                                                    method : "nextStopInput()" //在打开的window中自定义事件
+                                                }]
+                                            }
+                                        });
+                                    } else if(self.sourceFrom=="newCustom"){
+                                        summer.closeToWin({id:"newCustom"});
+                                    } else if(self.sourceFrom=="setProject") {  
+                                        summer.closeToWin({id:"setProject"});
+                                    }
+							}
 						}else if(res.data.flag==0){
 							if(res.data.code=="E02003"){
 								summer.toast({msg:"客户证件号重复,请重新录入"});
@@ -431,6 +478,7 @@
 			var clint_Id;
 			newCreateCustom.getData(clint_Id);
 			var personMessage = summer.pageParam.personMessage;
+			self.newCreateCustom.cstID = summer.pageParam.cstId;
 			var sponseBase=summer.pageParam.sponseBase;
 			var sourceFrom=summer.pageParam.sourceFrom;
 			if(sourceFrom=="newCreateCustom_verify2"){

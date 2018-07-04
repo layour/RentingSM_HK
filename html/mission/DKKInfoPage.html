@@ -239,7 +239,12 @@
 						if (Data.flag == 1) {
                             summer.toast({
 								msg: "保存成功"
-							});
+                            });
+                            summer.execScript({
+                                winId: 'missionInfo',
+                                frameId: 'projectDetail',
+                                script: 'projectDetail.getList()'
+                            });
                             summer.closeWin();
 						} else {
 							summer.toast({
