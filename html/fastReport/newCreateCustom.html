@@ -1175,6 +1175,8 @@
 							summer.toast({
 								msg: "保存成功"
                             });
+							//SWL
+							if(newCreateCustom.clintId == ""){
                             // 初始化项目
                             ajaxRequest({
                                 type: 'post',
@@ -1223,7 +1225,12 @@
                             }, function(err) {
                                 summer.hideProgress();
                                 console.log(err);
-                            });
+                            }); 
+							//SWL
+							} else 
+							   {
+                                        summer.closeWin();
+                                    }
 						} else if (res.data.flag == 0) {
 							if (res.data.code == "E02003") {
 								summer.toast({
@@ -1268,7 +1275,8 @@
 							},
 							pageParam: {
 								personMessage: self.message,
-								sourceFrom: self.sourceFrom
+								sourceFrom: self.sourceFromk,
+								cstId:newCreateCustom.clintId
 							}
 						});
 					}else{
@@ -1346,6 +1354,7 @@
 			var sourceFrom = summer.pageParam.sourceFrom;
 			newCreateCustom.sourceFrom = sourceFrom;
 			newCreateCustom.clintId = clintId;
+			newCreateCustom.message.cstBscInfo.id = clintId;//保存客户基本信息id
 			var customBaseMessage=summer.pageParam.personBaseMessage;
 			if(sourceFrom=="newCreateCustom_verify"&&customBaseMessage){
 				newCreateCustom.message.genderNm=customBaseMessage.sex;
@@ -1357,6 +1366,7 @@
 				newCreateCustom.message.cstBscInfo.cstPhoneNumber=customBaseMessage.cstPhoneNumber;
 				//newCreateCustom.clintId = customBaseMessage.cstBscInfo.id;
 				//newCreateCustom.message.cstBscInfo.id = customBaseMessage.cstBscInfo.id;//保存客户基本信息id
+				
 			}
 			newCreateCustom.getData(projectId, newCreateCustom.clintId);
 			var params = ["android.permission.ACCESS_FINE_LOCATION", "android.permission.ACCESS_COARSE_LOCATION",
