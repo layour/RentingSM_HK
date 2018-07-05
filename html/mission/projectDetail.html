@@ -86,12 +86,12 @@
                     <i class="icon iconfont icon-enter"></i>
                 </span>
             </div>
-            <div class="um-list-item-bodys" data-type="SQ" @click="openInfo()" v-if="datas.condition && datas.condition.isSupper">
+            <!-- <div class="um-list-item-bodys" data-type="SQ" @click="openInfo()" v-if="datas.condition && datas.condition.isSupper">
                 申请单附件
                 <span class="frp">
                     <i class="icon iconfont icon-enter"></i>
                 </span>
-            </div>
+            </div> -->
             <div class="um-list-item-bodys" data-type="SP" @click="openInfo()" v-if="datas.condition && datas.condition.showLic">
                 上牌信息
                 <span class="frp" @click="changeSP()">
@@ -113,13 +113,13 @@
                     <i class="icon iconfont icon-enter"></i>
                 </span>
             </div>
-            <div class="um-list-item-bodys" data-type="FS" @click="openInfo()" v-if="datas.condition && datas.condition.showReview">
+            <!-- <div class="um-list-item-bodys" data-type="FS" @click="openInfo()" v-if="datas.condition && datas.condition.showReview">
                 复审批复信息
                 <span class="frp" @click="changeFS()">
                     <i class="oZF icon iconfont icon-modify" v-if="datas.condition && datas.condition.allowEditReview"></i>&nbsp;
                     <i class="icon iconfont icon-enter"></i>
                 </span>
-            </div>
+            </div> -->
             <div class="um-list-item-bodys" data-type="CZR" @click="openInfo()" v-if="datas.condition && datas.condition.showCoLessee">
                 共同承租人信息
                 <span class="frp" @click="changeCZR()">
