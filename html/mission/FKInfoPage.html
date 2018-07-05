@@ -9,6 +9,9 @@
     <link rel="stylesheet" href="../../css/fonts/iconfont.css">
     <link rel="stylesheet" href="./commonInfoPage.css">
     <link rel="stylesheet" href="../../css/mint.css">
+    <style>
+      .loanList>li{line-height: 0.9rem;}
+    </style>
     <script src="../../js/summer.js"></script>
     <script src="../../js/jquery.min.js"></script>
     <script src="../../js/Frameworks/iuapmobile.frameworks.ui.js"></script>
@@ -22,7 +25,9 @@
     <div class="um-win" id="index">
         <div class="um-content" v-cloak>
             <ul class="loanList">
-                
+              <li @click="openFileList(item.fileTypeIndex)" v-for="(item, index) in datas.riskFiles" :key="index">
+                {{item.label}}
+              </li>
             </ul>
         </div>
     </div>
@@ -33,11 +38,34 @@
                 datas: {}
             },
             methods: {
-                
+              openFileList:function(num) {
+                summer.openWin({
+                  id: "uploadFileList",
+                  url: "html/mission/uploadList.html",
+                  create: false,
+                  type: 'actionBar',
+                  pageParam: {
+                    fileTypeIndex:num,
+                    isUpload:this.datas.condition.allowRiskFilesUpload
+                  },
+                  actionBar: {
+                    title: name,
+                    titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
+                    backgroundColor: "#039BE5",
+                    leftItem: {
+                      image: "img/back.png",
+                      method: "", //返回按钮自定义事件
+                      text: "返回",
+                      textColor: "#ffffff" //返回文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常
+                    }
+                  }
+                })
+              }
             }
         });
         summerready = function() {
             FKInfoPage.datas = summer.pageParam.datas;
+            console.log(JSON.stringify(FKInfoPage.datas))
         };
     </script>
 </body>
