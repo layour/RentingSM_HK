@@ -106,24 +106,24 @@
                     <i class="icon iconfont icon-enter"></i>
                 </span>
             </div>
-            <div class="um-list-item-bodys" data-type="GPS" @click="openInfo()" v-if="datas.condition && datas.condition.showReview">
+            <div class="um-list-item-bodys" data-type="GPS" @click="openInfo()" v-if="datas.condition && datas.condition.showGps">
                 GPS信息
                 <span class="frp" @click="changeGPS()">
+                    <i class="oZF icon iconfont icon-modify" v-if="datas.condition && datas.condition.allowEditGps"></i>&nbsp;
+                    <i class="icon iconfont icon-enter"></i>
+                </span>
+            </div>
+            <div class="um-list-item-bodys" data-type="FS" @click="openInfo()" v-if="datas.condition && datas.condition.showReview">
+                复审批复信息
+                <span class="frp" @click="changeFS()">
                     <i class="oZF icon iconfont icon-modify" v-if="datas.condition && datas.condition.allowEditReview"></i>&nbsp;
                     <i class="icon iconfont icon-enter"></i>
                 </span>
             </div>
-            <div class="um-list-item-bodys" data-type="FS" @click="openInfo()">
-                复审批复信息
-                <span class="frp">
-                    <i class="oZF icon iconfont icon-modify"></i>&nbsp;
-                    <i class="icon iconfont icon-enter"></i>
-                </span>
-            </div>
-            <div class="um-list-item-bodys" data-type="CZR" @click="openInfo()">
+            <div class="um-list-item-bodys" data-type="CZR" @click="openInfo()" v-if="datas.condition && datas.condition.showCoLessee">
                 共同承租人信息
-                <span class="frp">
-                    <i class="oZF icon iconfont icon-modify"></i>&nbsp;
+                <span class="frp" @click="changeCZR()">
+                    <i class="oZF icon iconfont icon-modify" v-if="datas.condition && datas.condition.allowEditCoLessee"></i>&nbsp;
                     <i class="icon iconfont icon-enter"></i>
                 </span>
             </div>
@@ -280,6 +280,16 @@
                             url = "html/mission/GPSInfoPage.html";
                             title = "GPS信息";
                             pageId = "GPSInfoPage";
+                            break;
+                        case 'FS':
+                            url = "html/mission/FSInfoPage.html";
+                            title = "复审批复信息";
+                            pageId = "FSInfoPage";
+                            break;
+                        case 'CZR':
+                            url = "html/mission/CZRInfoPage.html";
+                            title = "共同承租人信息";
+                            pageId = "CZRInfoPage";
                             break;
                         default:
                             break;
@@ -444,7 +454,7 @@
                 changeGPS: function () {
                     var ev = ev || window.event;
                     ev.cancelBubble = true;
-                    if (!this.datas.condition || !this.datas.condition.allowEditReview) {
+                    if (!this.datas.condition || !this.datas.condition.allowEditGps) {
                         return;
                     }
                     summer.openWin({
@@ -467,6 +477,74 @@
                                 text: "保存",
                                 textColor: "#ffffff",
                                 method: "GPSInfoPage.save()"
+                            }]
+                        },
+                        pageParam: {
+                            datas: this.datas,
+                            pageType: 'change'
+                        }
+                    });
+                },
+                changeFS: function () {
+                    var ev = ev || window.event;
+                    ev.cancelBubble = true;
+                    if (!this.datas.condition || !this.datas.condition.allowEditReview) {
+                        return;
+                    }
+                    summer.openWin({
+                        id: 'FSInfoPage',
+                        url: 'html/mission/FSInfoPage.html',
+                        create: false,
+                        type: 'actionBar',
+                        actionBar: {
+                            title: "复审批复信息",
+                            titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
+                            backgroundColor: "#039be5",
+                            leftItem: {
+                                image: "img/back.png",
+                                method: "", //返回按钮自定义事件
+                                text: "返回",
+                                textColor: "#ffffff" //返回文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
+                            },
+                            rightItems: [{
+                                type: "text",
+                                text: "保存",
+                                textColor: "#ffffff",
+                                method: "FSInfoPage.save()"
+                            }]
+                        },
+                        pageParam: {
+                            datas: this.datas,
+                            pageType: 'change'
+                        }
+                    });
+                },
+                changeCZR: function () {
+                    var ev = ev || window.event;
+                    ev.cancelBubble = true;
+                    if (!this.datas.condition || !this.datas.condition.allowEditCoLessee) {
+                        return;
+                    }
+                    summer.openWin({
+                        id: 'CZRInfoPage',
+                        url: 'html/mission/CZRInfoPage.html',
+                        create: false,
+                        type: 'actionBar',
+                        actionBar: {
+                            title: "共同承租人信息",
+                            titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
+                            backgroundColor: "#039be5",
+                            leftItem: {
+                                image: "img/back.png",
+                                method: "", //返回按钮自定义事件
+                                text: "返回",
+                                textColor: "#ffffff" //返回文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
+                            },
+                            rightItems: [{
+                                type: "text",
+                                text: "保存",
+                                textColor: "#ffffff",
+                                method: "CZRInfoPage.save()"
                             }]
                         },
                         pageParam: {

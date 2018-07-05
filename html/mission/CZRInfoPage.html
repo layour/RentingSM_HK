@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1">
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="../../css/iuapmobile.um.css">
+    <link rel="stylesheet" href="../../css/fonts/iconfont.css">
+    <link rel="stylesheet" href="./commonInfoPage.css">
+    <link rel="stylesheet" href="../../css/mint.css">
+    <script src="../../js/summer.js"></script>
+    <script src="../../js/jquery.min.js"></script>
+    <script src="../../js/Frameworks/iuapmobile.frameworks.ui.js"></script>
+    <script src="../../js/font.js"></script>
+    <script src="../../js/vue.js"></script>
+    <script src="../../js/mint.js"></script>
+    <script src="../../js/common.js"></script>
+</head>
+
+<body>
+    <div class="um-win" id="index">
+        <div class="um-content" v-cloak>
+            <ul class="loanList">
+                <li>
+                    <span>公司名称</span>
+                    <input type="text" placeholder="请输入" v-model="datas.smallCompanyNm" v-if="pageType == 'change'" />
+                    <div v-else>{{ datas.smallCompanyNm }}</div>
+                </li>
+                <li>
+                    <span>统一社会信用代码</span>
+                    <input type="text" placeholder="请输入" v-model="datas.smallSucc" v-if="pageType == 'change'" />
+                    <div v-else>{{ datas.smallSucc }}</div>
+                </li>
+                <li>
+                    <span>联系地址</span>
+                    <input type="text" placeholder="请输入" v-model="datas.smallContactAddr" v-if="pageType == 'change'" />
+                    <div v-else>{{ datas.smallContactAddr }}</div>
+                </li>
+                <li>
+                    <span>联系电话</span>
+                    <input type="number" placeholder="请输入" v-model="datas.smallContactTel" v-if="pageType == 'change'" />
+                    <div v-else>{{ datas.smallContactTel }}</div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var CZRInfoPage = new Vue({
+            el: '#index',
+            data: {
+                datas: {
+                    smallCompanyNm: "",
+                    smallSucc: "",
+                    smallContactAddr: "",
+                    smallContactTel: ""
+                },
+                pageType: "",
+                prjId: "",
+                ID: ""
+            },
+            methods: {
+                getData: function () {
+                    summer.showProgress();
+                    var self = this;
+                    ajaxRequest({
+                        type: 'post',
+                        url: 'appservice/project/act/loadCoLessee',
+                        param: {
+                           id: this.prjId
+                        }
+                    }, function (res) {
+                        summer.hideProgress();
+                        var Data = res.data;
+                        if (Data.flag == 1) {
+                            self.ID = Data.datas.prj.id ? Data.datas.prj.id : "";
+                            self.datas.smallCompanyNm = Data.datas.prj.smallCompanyNm ? Data.datas.prj.smallCompanyNm : "";
+                            self.datas.smallSucc = Data.datas.prj.smallSucc ? Data.datas.prj.smallSucc : "";
+                            self.datas.smallContactAddr = Data.datas.prj.smallContactAddr ? Data.datas.prj.smallContactAddr : "";
+                            self.datas.smallContactTel = Data.datas.prj.smallContactTel ? Data.datas.prj.smallContactTel : "";
+                        } else {
+                            summer.toast({
+                                msg: "获取信息失败"
+                            });
+                        }
+                    }, function (err) {
+                        summer.hideProgress();
+                        summer.toast({
+                            msg: "获取信息失败"
+                        });
+                    });
+                },
+                save: function () {
+                    summer.showProgress();
+                    var self = this;
+                    ajaxRequest({
+                        type: 'post',
+                        url: 'appservice/project/act/saveCoLessee',
+                        param: {
+                            id: this.ID,
+                            prj: this.prjId,
+                            smallCompanyNm: this.datas.smallCompanyNm,
+                            smallSucc: this.datas.smallSucc,
+                            smallContactAddr: this.datas.smallContactAddr,
+                            smallContactTel: this.datas.smallContactTel
+                        }
+                    }, function (res) {
+                        summer.hideProgress();
+                        var Data = res.data;
+                        if (Data.flag == 1) {
+                            summer.toast({
+                                msg: "保存成功"
+                            });
+                            summer.execScript({
+                                winId: 'missionInfo',
+                                frameId: 'projectDetail',
+                                script: 'projectDetail.getList()'
+                            });
+                            summer.closeWin();
+                        } else {
+                            summer.toast({
+                                msg: "保存失败"
+                            });
+                        }
+                    }, function (err) {
+                        summer.hideProgress();
+                        summer.toast({
+                            msg: "保存失败"
+                        });
+                    });
+                }
+            }
+        });
+        summerready = function () {
+            CZRInfoPage.pageType = summer.pageParam.pageType ? summer.pageParam.pageType : "";
+            CZRInfoPage.prjId = summer.pageParam.datas.prjBscInfo ? summer.pageParam.datas.prjBscInfo.id : "";
+            if (summer.pageParam.pageType && summer.pageParam.pageType == 'change') {
+                CZRInfoPage.getData();
+            } else {
+                CZRInfoPage.datas.smallCompanyNm = summer.pageParam.datas.prjBscInfo ? summer.pageParam.datas.prjBscInfo.smallCompanyNm : "";
+                CZRInfoPage.datas.smallSucc = summer.pageParam.datas.prjBscInfo ? summer.pageParam.datas.prjBscInfo.smallSucc : "";
+                CZRInfoPage.datas.smallContactAddr = summer.pageParam.datas.prjBscInfo ? summer.pageParam.datas.prjBscInfo.smallContactAddr : "";
+                CZRInfoPage.datas.smallContactTel = summer.pageParam.datas.prjBscInfo ? summer.pageParam.datas.prjBscInfo.smallContactTel : "";
+            }
+        };
+    </script>
+</body>
+
+</html>
