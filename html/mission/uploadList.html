@@ -68,7 +68,8 @@
 				summerready=function(){
 					projectImgList.fileTypeIndex=summer.pageParam.fileTypeIndex
 					projectImgList.isUpload=summer.pageParam.isUpload
-					console.log("fileTypeIndex"+projectImgList.fileTypeIndex,projectImgList.isUpload);
+					projectImgList.projectId=summer.pageParam.projectId
+					console.log("fileTypeIndex"+projectImgList.projectId,projectImgList.isUpload);
 					projectImgList.getData()
 				}
 				var projectImgList=new Vue({
@@ -94,7 +95,7 @@
 							}, function(res) {
 								console.log(JSON.stringify(res));
 								// _this.list=res.data.datas.needArray
-								// _this.mustList=res.data.datas.mustArray
+								_this.mustList=res.data.datas
 							},function(err){
 								console.log(JSON.stringify(err));
 							})
