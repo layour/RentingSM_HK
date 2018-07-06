@@ -44,9 +44,9 @@
                     <span>证件类型</span>
                     <div @click="sureZJType" v-if="pageType == 'change'">
                         <span class="iconfont icon-enter"></span>
-                        <i v-bind:style="[datas.certTypCdNm == '请选择' ? {'color':'#9e9e9e'} : {'color':'#333'}]">{{datas.certTypCdNm}}</i>
+                        <i v-bind:style="[datas.certTypNm == '请选择' ? {'color':'#9e9e9e'} : {'color':'#333'}]">{{datas.certTypNm}}</i>
                     </div>
-                    <div v-else>{{ datas.certTypCdNm }}</div>
+                    <div v-else>{{ datas.certTypNm }}</div>
                 </li>
                 <li>
                     <span>证件号码</span>
@@ -102,7 +102,7 @@
                     bkNmCode: "",
                     accNm: "",
                     accNo: "",
-                    certTypCdNm: "请选择",
+                    certTypNm: "请选择",
                     certTypCdNmCode: "",
                     certNo: "",
                     accTypCdName: "请选择",
@@ -162,7 +162,7 @@
 				sureZJType:function (param) {
 					this.ZJTypeStatus = !this.ZJTypeStatus;
 					if (param == 'confirm') {
-                        this.datas.certTypCdNm = this.pickedZJType.label;
+                        this.datas.certTypNm = this.pickedZJType.label;
                         this.datas.certTypCdNmCode = this.pickedZJType.value;
 					}
                 },
@@ -200,7 +200,7 @@
                             self.datas.bkNmCode = Data.datas.bankAcc.bkCd ? Data.datas.bankAcc.bkCd : "";
                             self.datas.accNm = Data.datas.bankAcc.accNm ? Data.datas.bankAcc.accNm : "";
                             self.datas.accNo = Data.datas.bankAcc.accNo ? Data.datas.bankAcc.accNo : "";
-                            self.datas.certTypCdNm = Data.datas.bankAcc.certTypNm ? Data.datas.bankAcc.certTypNm : "请选择";
+                            self.datas.certTypNm = Data.datas.bankAcc.certTypNm ? Data.datas.bankAcc.certTypNm : "请选择";
                             self.datas.certTypCdNmCode = Data.datas.bankAcc.certTypCd ? Data.datas.bankAcc.certTypCd : "";
                             self.datas.certNo = Data.datas.bankAcc.certNo ? Data.datas.bankAcc.certNo : "";
                             self.datas.accTypCdName = Data.datas.bankAcc.accTypCdName ? Data.datas.bankAcc.accTypCdName : "请选择";
@@ -219,6 +219,19 @@
 					});
                 },
                 save: function () {
+                    var regCard = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/; //身份证校验
+                    var phoneCard = /^[1][3,4,5,7,8,9][0-9]{9}$/;
+                    if (this.datas.certTypNm == "身份证" && !regCard.test(this.datas.certNo)) {
+                        summer.toast({
+                            msg: "身份证号格式有误"
+                        });
+                        return;
+                    } else if (!phoneCard.test(this.datas.accPhone)) {
+                        summer.toast({
+                            msg: "手机号格式有误"
+                        });
+                        return;
+                    }
                     summer.showProgress();
                     var self = this;
                     ajaxRequest({
@@ -273,7 +286,7 @@
                 DKKInfoPage.datas.bkNm = summer.pageParam.datas.prjBscInfo.cstId.cstNpBscInfo.cstBank.bkNm;
                 DKKInfoPage.datas.accNm = summer.pageParam.datas.prjBscInfo.cstId.cstNpBscInfo.cstBank.accNm;
                 DKKInfoPage.datas.accNo = summer.pageParam.datas.prjBscInfo.cstId.cstNpBscInfo.cstBank.accNo;
-                DKKInfoPage.datas.certTypCdNm = summer.pageParam.datas.prjBscInfo.cstId.cstNpBscInfo.cstBank.certTypCdNm;
+                DKKInfoPage.datas.certTypNm = summer.pageParam.datas.prjBscInfo.cstId.cstNpBscInfo.cstBank.certTypNm;
                 DKKInfoPage.datas.certNo = summer.pageParam.datas.prjBscInfo.cstId.cstNpBscInfo.cstBank.certNo;
                 DKKInfoPage.datas.accTypCdName = summer.pageParam.datas.prjBscInfo.cstId.cstNpBscInfo.cstBank.accTypCdName;
                 DKKInfoPage.datas.accPhone = summer.pageParam.datas.prjBscInfo.cstId.cstNpBscInfo.cstBank.accPhone;
