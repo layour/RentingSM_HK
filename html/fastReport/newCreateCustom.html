@@ -1179,7 +1179,7 @@
 								msg: "保存成功"
                             });
 							//SWL
-							if(newCreateCustom.clintId == ""){
+							if(newCreateCustom.clintId == "" || self.sourceFrom == "newCreateCustom_verify"){
                             // 初始化项目
                             ajaxRequest({
                                 type: 'post',

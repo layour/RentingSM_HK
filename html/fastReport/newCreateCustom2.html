@@ -237,6 +237,7 @@
 						}
 					},
 					sourceFrom:'',
+					sourceFrom1:'',
 				}
 			},
 			computed: {
@@ -348,7 +349,7 @@
 							summer.toast({msg:"保存成功"});
                             var clint_Id = res.data.datas.cstId;
 							//SWL
-							if(newCreateCustom.cstID == ''){
+							if(newCreateCustom.cstID == '' || self.sourceFrom1=="newCreateCustom_verify"){
                             // 初始化项目
                             ajaxRequest({
                                 type: 'post',
@@ -484,7 +485,7 @@
 			newCreateCustom.cstID = summer.pageParam.cstId;
 			var sponseBase=summer.pageParam.sponseBase;
 			var sourceFrom=summer.pageParam.sourceFrom;
-
+            newCreateCustom.sourceFrom1=summer.pageParam.sourceFrom1;
 			newCreateCustom.hasSpouse = summer.pageParam.hasSpouse;
 			if(sourceFrom=="newCreateCustom_verify2"){
 				if(sponseBase){
