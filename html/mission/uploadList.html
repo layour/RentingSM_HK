@@ -52,16 +52,16 @@
 	<body>
 		<div class="um-win" id="projectImgList" v-cloak>
 			<div class="um-content addCar">
-				<!-- <div class="um-list-item-bodys" style="font-size:18px;font-weight:bold;">必传文件</div> -->
+				<div class="um-list-item-bodys" style="font-size:18px;font-weight:bold;">必传文件</div>
 				<div class="um-list-item-bodys" v-for="item in mustList" :key="item.id" @click="openContWin(item.value,item.label,item.list1)">
           {{item.label}}
           <span class="frp"> <i class="uId icon iconfont icon-right"></i>&nbsp; <i class="icon iconfont icon-enter"></i> </span>
         </div>
-				<!-- <div class="um-list-item-bodys" style="margin-top:20px;font-size:18px;font-weight:bold;">非必传文件</div>
+				<div class="um-list-item-bodys" style="margin-top:20px;font-size:18px;font-weight:bold;">非必传文件</div>
         <div class="um-list-item-bodys" v-for="item in list" :key="item.id" @click="openContWin(item.value,item.label,item.list1)">
           {{item.label}}
           <span class="frp"> <i class="uId icon iconfont icon-right"></i>&nbsp; <i class="icon iconfont icon-enter"></i> </span>
-        </div> -->
+        </div>
 			</div>
 		</div>
 		<script>
@@ -69,7 +69,7 @@
 					projectImgList.fileTypeIndex=summer.pageParam.fileTypeIndex
 					projectImgList.isUpload=summer.pageParam.isUpload
 					projectImgList.projectId=summer.pageParam.projectId
-					console.log("fileTypeIndex"+projectImgList.projectId,projectImgList.isUpload);
+					console.log("projectId"+projectImgList.projectId,projectImgList.isUpload);
 					projectImgList.getData()
 				}
 				var projectImgList=new Vue({
@@ -90,12 +90,13 @@
 								type: 'post',
 								url: 'appservice/project/prjbscinfo/prjFile',
 								param: {
-									fileTypeIndex: _this.fileTypeIndex
+									fileTypeIndex: _this.fileTypeIndex,
+									id:_this.projectId
 								}
 							}, function(res) {
 								console.log(JSON.stringify(res));
-								// _this.list=res.data.datas.needArray
-								_this.mustList=res.data.datas
+								_this.list=res.data.datas.needArray
+								_this.mustList=res.data.datas.mustArray
 							},function(err){
 								console.log(JSON.stringify(err));
 							})
