@@ -266,6 +266,7 @@
 							pageParam: {
 								personMessage: self.personMessage,
 								sourceFrom: "newCreateCustom_verify2",
+								sourceFrom1:self.sourceFrom,
 								sponseBase:sponseBase,
 								hasSpouse:self.hasSpouse
 							}
@@ -313,6 +314,7 @@
 			  newCreateCustom.personMessage=personMessage;
 			  var hasSpouse=summer.pageParam.hasSpouse;
 			  newCreateCustom.hasSpouse=hasSpouse;
+			  newCreateCustom.sourceFrom=summer.pageParam.sourceFrom;
 			//newCreateCustom.getDatanewCreateCustom.getData(projectId, clintId);
 			var params = ["android.permission.ACCESS_FINE_LOCATION", "android.permission.ACCESS_COARSE_LOCATION",
 				"android.permission.CAMERA", "android.permission.FLASHLIGHT", "android.permission.READ_EXTERNAL_STORAGE",

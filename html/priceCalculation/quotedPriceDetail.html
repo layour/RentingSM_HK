@@ -26,7 +26,7 @@
 							<input type="text" v-model="allPrice" @input="checkVal('allPrice')" placeholder="请输入车辆单价" name="allPrice">&nbsp;元
 						</span>
 					</li>
-					<li @click="pickerScheme" v-if="pickerSchemeList[0].values.length>1">
+					<li @click="pickerScheme">
 						<b>产品方案</b>
 						<span>
 							<b v-if="SCHEME_NAME">{{SCHEME_NAME}}</b>
@@ -34,12 +34,12 @@
 							<i class="icon iconfont icon-enter"></i>
 						</span>
 					</li>
-					<li v-else>
+					<!-- <li v-else>
 						<b>产品方案</b>
 						<span>
 							<b>{{SCHEME_NAME}}</b>
 						</span>
-					</li>
+					</li> -->
 					<!-- <li class="input" v-if="lsPdStatus">
 						<b>还款期限</b>
 						<span>
@@ -531,10 +531,10 @@
 										summer.toast({msg:"无可用方案，请联系管理员维护"})
 										return
 									}
-									if(res.data.quatList.length==1){
-										_this.SCHEME_NAME_ID=res.data.quatList[0].schemeCode
-										_this.SCHEME_NAME=res.data.quatList[0].schemeName
-									}
+									// if(res.data.quatList.length==1){
+									// 	_this.SCHEME_NAME_ID=res.data.quatList[0].schemeCode
+									// 	_this.SCHEME_NAME=res.data.quatList[0].schemeName
+									// }
 									if(_this.prjId){
 										var dataObj=res.data.prjQuatPrps
 										_this.allPrice=res.data.carZe
