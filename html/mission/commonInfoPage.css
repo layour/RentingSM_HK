@@ -35,6 +35,10 @@
     line-height: 0.9rem;
     font-size: 0.28rem;
     color: #424242;
+    max-width: 4rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .loanList li input {

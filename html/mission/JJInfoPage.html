@@ -21,18 +21,19 @@
 <body>
     <div class="um-win" id="index">
         <div class="um-content" v-cloak>
-            <ul class="loanList">
+            <div id="content" v-if="!arr.length"></div>
+            <ul class="loanList" v-for="(item, index) in arr">
                 <li>
                     <span>姓名</span>
-                    <div>{{ datas.linkMens ? datas.linkMens.rlNm : "" }}</div>
+                    <div>{{ item.rlNm }}</div>
                 </li>
                 <li>
                     <span>手机号</span>
-                    <div>{{ datas.prjBscInfo ? datas.linkMens.mp : "" }}</div>
+                    <div>{{ item.mp }}</div>
                 </li>
                 <li>
                     <span>与客户关系</span>
-                    <div>{{ datas.prjBscInfo ? datas.linkMens.rlTypCdNm : "" }}</div>
+                    <div>{{ item.rlTypCdNm }}</div>
                 </li>
             </ul>
         </div>
@@ -41,14 +42,15 @@
         var JJInfoPage = new Vue({
             el: '#index',
             data: {
-                datas: {}
+                arr: []
             },
             methods: {
                 
             }
         });
         summerready = function() {
-            JJInfoPage.datas = summer.pageParam.datas;
+            JJInfoPage.arr = summer.pageParam.datas.linkMens ? summer.pageParam.datas.linkMens : [];
+            createNull("content", "../../img/empty.png");
         };
     </script>
 </body>
