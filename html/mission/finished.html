@@ -48,7 +48,7 @@
     <script type="text/javascript">
         var _endNum = 1;
         summerready = function () {
-            summer.showProgress();
+           // summer.showProgress();
             var userinfo = summer.getStorage("userinfo");
 			missionList.ORG_ID = userinfo.ORG_ID ? userinfo.ORG_ID : "";
             //getData(1, true)
@@ -62,7 +62,7 @@
                 showTime: true
             }, function (ret, err) {
                 //通常在这里从服务器加载数据，t
-                getData(1, true);
+                //getData(1, true);
                 _endNum = 1;
             });
             summer.setRefreshFooterInfo({
@@ -83,7 +83,7 @@
                     summer.refreshFooterLoadDone(); //加载完成后调用方法恢复组件到默认状态
                     return;
                 }
-                getData(_endNum, false);
+                //getData(_endNum, false);
             });
         }
 
