@@ -80,23 +80,22 @@
 				<p class="pl10 pr10">最高学历<span class="fr">{{prjBscInfo.cstId.cstNpBscInfo.eduLvlNm}}</span></p>
 				<p class="pl10 pr10">婚姻状态<span class="fr">{{prjBscInfo.cstId.cstNpBscInfo.marStsCdName}}</span></p>
 				<p class="pl10 pr10" v-if='prjBscInfo&&prjBscInfo.cstNpBscInfo&&prjBscInfo.cstNpBscInfo.cstNpBscInfo.cstIdRegion&&prjBscInfo.cstNpBscInfo.cstNpBscInfo.cstIdProvince&&prjBscInfo.cstNpBscInfo.cstNpBscInfo.cstIdCity&&prjBscInfo.cstNpBscInfo.cstNpBscInfo.cstIdDistrict'>户籍所在城市<span class="fr">{{prjBscInfo.cstId.cstNpBscInfo.cstIdRegion.name+'-' +prjBscInfo.cstId.cstNpBscInfo.cstIdProvince.name+'-' +prjBscInfo.cstId.cstNpBscInfo.cstIdCity.name+'-' +prjBscInfo.cstId.cstNpBscInfo.cstIdDistrict.name}}</span></p>
-				<p v-else class="pl10 pr10" >户籍所在城市</p>
-				<p class="pl10 pr10">户籍所在城市详细地址<span class="fr">{{prjBscInfo.cstId.cstNpBscInfo.idAddr}}</span></p>
-				<p class="pl10 pr10" v-if='prjBscInfo&&prjBscInfo.cstNpBscInfo&&prjBscInfo.cstNpBscInfo.cstNpBscInfo.cstHomeRegion&&prjBscInfo.cstNpBscInfo.cstNpBscInfo.cstHomeProvince&&prjBscInfo.cstNpBscInfo.cstNpBscInfo.cstHomeCity&&prjBscInfo.cstNpBscInfo.cstNpBscInfo.cstHomeDistrict'>现居住城市<span class="fr">{{prjBscInfo.cstId.cstNpBscInfo.cstHomeRegion.name+'-' +prjBscInfo.cstId.cstNpBscInfo.cstHomeProvince.name+'-' +prjBscInfo.cstId.cstNpBscInfo.cstHomeCity.name+'-' +prjBscInfo.cstId.cstNpBscInfo.cstHomeDistrict.name}}</span></p>
-				<p v-else class="pl10 pr10" >现居住城市</p>
-				<p class="pl10 pr10">现居住城市详细地址<span class="fr">{{prjBscInfo.cstId.cstNpBscInfo.homeAddr}}</span></p>
+				<p class="pl10 pr10" >户籍所在城市<span class="fr">{{prjBscInfo.cstId.cstNpBscInfo.cstIdRegion.name}}-{{prjBscInfo.cstId.cstNpBscInfo.cstIdProvince.name}}-{{prjBscInfo.cstId.cstNpBscInfo.cstIdCity.name }}-{{prjBscInfo.cstId.cstNpBscInfo.cstIdDistrict.name}}</p>
+				<p class="pl10 pr10 um-text-overflow2">户籍所在城市详细地址:<span class="fr">{{prjBscInfo.cstId.cstNpBscInfo.idAddr}}</span></p>
+				<p class="pl10 pr10" >现居住城市<span class="fr">{{prjBscInfo.cstId.cstNpBscInfo.cstHomeRegion.name}}-{{prjBscInfo.cstId.cstNpBscInfo.cstHomeCity.name }}-{{prjBscInfo.cstId.cstNpBscInfo.cstHomeDistrict.name}}</p>
+					<p class="pl10 pr10 um-text-overflow2">现居住城市详细地址:<span class="fr">{{prjBscInfo.cstId.cstNpBscInfo.homeAddr}}</span></p>
+				
 				<p class="pl10 pr10">居住地址邮编<span class="fr">{{prjBscInfo.cstId.cstNpBscInfo.zipNo}}</span></p>
-				<p class="pl10 pr10">是否有驾照<span class="fr">{{ prjBscInfo.cstId.cstNpBscInfo.zipNo}}</span></p>
-				<p class="pl10 pr10">准驾类型<span class="fr">{{ prjBscInfo.cstId.cstNpBscInfo.driverLicenseType}}</span></p>
-				<p class="pl10 pr10">住房所有权<span class="fr">{{ prjBscInfo.cstId.cstNpBscInfo.housingOwnership}}</span></p>
-				<p class="pl10 pr10">从事行业<span class="fr">{{ prjBscInfo.cstId.cstNpBscInfo.industry}}</span></p>
+				<p class="pl10 pr10">是否有驾照<span class="fr">{{ prjBscInfo.cstId.cstNpBscInfo.isHasLicenseNm}}</span></p>
+				<p class="pl10 pr10">准驾类型<span class="fr">{{ prjBscInfo.cstId.cstNpBscInfo.driverLicenseNm}}</span></p>
+				<p class="pl10 pr10">住房所有权<span class="fr">{{ prjBscInfo.cstId.cstNpBscInfo.housingOwnershipNm}}</span></p>
+				<p class="pl10 pr10">从事行业<span class="fr">{{ prjBscInfo.cstId.cstNpBscInfo.industryNm}}</span></p>
 				<p class="pl10 pr10">现工作单位名称<span class="fr">{{prjBscInfo.cstId.cstNpBscInfo.workPlc }}</span></p>
 
 				<p class="pl10 pr10">现工作单位年限（年）<span class="fr">{{prjBscInfo.cstId.cstNpBscInfo.workYrs }}</span></p>
-				<p class="pl10 pr10">现工作单位性质<span class="fr">{{ prjBscInfo.cstId.cstNpBscInfo.workTypCdNm}}</span></p>
-				<p class="pl10 pr10" v-if='prjBscInfo&&prjBscInfo.cstNpBscInfo&&prjBscInfo.cstNpBscInfo.cstNpBscInfo.cstWorkRegion&&prjBscInfo.cstNpBscInfo.cstNpBscInfo.cstWorkProvince&&prjBscInfo.cstNpBscInfo.cstNpBscInfo.cstWorkCity&&prjBscInfo.cstNpBscInfo.cstNpBscInfo.cstWorkDistrict'>现工作城市<span class="fr">{{prjBscInfo.cstId.cstNpBscInfo.cstWorkRegion.name+'-' +prjBscInfo.cstId.cstNpBscInfo.cstWorkProvince.name+'-' +prjBscInfo.cstId.cstNpBscInfo.cstWorkCity.name +'-'+prjBscInfo.cstId.cstNpBscInfo.cstWorkDistrict.name }}</span></p>
-				<p v-else class="pl10 pr10" >现工作城市</p>
-				<p class="pl10 pr10">现工作单位详细地址<span class="fr">{{ prjBscInfo.cstId.cstNpBscInfo.workAddr}}</span></p>
+				<p class="pl10 pr10">现工作单位性质<span class="fr">{{ prjBscInfo.cstId.cstNpBscInfo.workTypNm}}</span></p>
+				<p class="pl10 pr10" >现工作城市<span class="fr">{{prjBscInfo.cstId.cstNpBscInfo.cstWorkRegion.name+'-' +prjBscInfo.cstId.cstNpBscInfo.cstWorkProvince.name+'-' +prjBscInfo.cstId.cstNpBscInfo.cstWorkCity.name +'-'+prjBscInfo.cstId.cstNpBscInfo.cstWorkDistrict.name }}</span></p>
+				<p class="pl10 pr10 um-text-overflow2">现工作单位详细地址<span class="fr">{{ prjBscInfo.cstId.cstNpBscInfo.workAddr}}</span></p>
 				<p class="pl10 pr10">现工作单位电话<span class="fr">{{ prjBscInfo.cstId.cstNpBscInfo.workTel}}</span></p>
 				<p class="pl10 pr10">税后年收入（万元）<span class="fr">{{prjBscInfo.cstId.cstNpBscInfo.afterTaxYearIn }}</span></p>
 				<p class="pl10 pr10">主要收入来源<span class="fr">{{prjBscInfo.cstId.cstNpBscInfo.majorInTypCdName }}</span></p>
@@ -121,10 +120,10 @@
 				<p class="pl10 pr10">品牌<span class="fr">{{prjBscInfo.prjEquBscInfo.braNm }}</span></p>
 				<p class="pl10 pr10">车系<span class="fr">{{ prjBscInfo.prjEquBscInfo.equSet}}</span></p>
 				<p class="pl10 pr10">车型<span class="fr">{{prjBscInfo.prjEquBscInfo.equMdl }}</span></p>
-				<p class="pl10 pr10">车辆识别号<span class="fr">{{prjBscInfo.PrjEqiDtlCar?prjBscInfo.PrjEqiDtlCar.vinNo:"" }}</span></p>
+				<p class="pl10 pr10">车辆识别号<span class="fr">{{prjBscInfo.prjEqiDtlCar.vinNo}}</span></p>
 				<p class="pl10 pr10">车辆单价<span class="fr">{{prjBscInfo.prjEquBscInfo.equAmt  }}</span></p>
-				<p class="pl10 pr10">车身颜色<span class="fr">{{prjBscInfo.PrjEqiDtlCar?prjBscInfo.PrjEqiDtlCar.carClName:''}}</span></p>
-				<p class="pl10 pr10">驾驶员与主贷人关系<span class="fr">{{ prjBscInfo.PrjEqiDtlCar?prjBscInfo.PrjEqiDtlCar.driverRlTypCdName:'' }}</span></p>
+				<p class="pl10 pr10">车身颜色<span class="fr">{{prjBscInfo.prjEqiDtlCar.carClName}}</span></p>
+				<p class="pl10 pr10">驾驶员与主贷人关系<span class="fr">{{prjBscInfo.prjEqiDtlCar.driverRlTypCdName}}</span></p>
 			</div>
 			<!-- <div class="list listContent" v-if="">
 					<p class="title pl10">紧急联系人</p> 
@@ -134,7 +133,7 @@
 				<p class="title pl10">报价方案</p> 
 				<p class="pl10 pr10">产品名称<span class="fr">{{prjBscInfo.prdBscSch?prjBscInfo.prdBscSch.schemeName:''}}</span></p>
 				<p class="pl10 pr10">还款期限<span class="fr">{{prjBscInfo.prjQuatPrps.lsPd }}</span></p>
-				<p class="pl10 pr10">还款期限单位<span class="fr">{{ prjBscInfo.prjQuatPrps.lsPdUntCdNm}}</span></p>
+				<p class="pl10 pr10">还款期限单位<span class="fr">{{ prjBscInfo.prjQuatPrps.lsPdUntNm}}</span></p>
 				<p class="pl10 pr10">基础年利率<span class="fr">{{prjBscInfo.prjQuatPrps.defAnnIntRatePct }}</span></p>
 				<p class="pl10 pr10">支付方式<span class="fr">{{ prjBscInfo.prjQuatPrps.payWay}}</span></p>
 				<p class="pl10 pr10">首付款<span class="fr">{{prjBscInfo.prjQuatPrps.hireAmt }}</span></p>
@@ -195,6 +194,7 @@
 							summer.hideProgress();
 							if (res.data.flag == 1) {
 								self.prjBscInfo = res.data.datas.prjBscInfo;//项目信息
+								console.log("aaaa",self.prjBscInfo)
 								self.jjlCstNpSocialRls = res.data.datas.jjlCstNpSocialRls;//紧急联系人信息
 							}
 						}, function(err) {
