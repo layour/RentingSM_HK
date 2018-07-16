@@ -81,14 +81,6 @@
 							<!-- <input type="text" name="firstDate" placeholder="二手车首次登记日期" v-model="firstDate"> -->
 						</td>
 					</tr>
-					<tr @click="pickerDealCity">
-						<td>交易城市</td>
-						<td class='oldCar lastCity'>
-							<span v-if='dealCity'>{{dealCity}}</span>
-							<span class="grayColor" v-else>请选择</span>
-							<i class="icon iconfont icon-enter"></i>
-						</td>
-					</tr>
 					<tr>
 						<td>卖家姓名</td>
 						<td class='oldCar'>
@@ -102,6 +94,14 @@
 						</td>
 					</tr>
 				</template>
+				<tr @click="pickerDealCity">
+					<td>交易城市</td>
+					<td class='oldCar lastCity'>
+						<span v-if='dealCity'>{{dealCity}}</span>
+						<span class="grayColor" v-else>请选择</span>
+						<i class="icon iconfont icon-enter"></i>
+					</td>
+				</tr>
 				<tr>
 					<td>车辆单价</td>
 					<td class='last'>
@@ -320,10 +320,11 @@
 							}
 							_this.carColor=oldCarData.carClName;
 							_this.carColorId=oldCarData.carCl;
+							_this.dealCity=oldCarData.rgnReCd.name+oldCarData.rgnPrCd.name+oldCarData.rgnCyCd.name+oldCarData.rgnToCd.name
 							if(resData.isNew=='1'){
 								_this.mileage=oldCarData.usedCarMil
 								_this.firstDate=oldCarData.usedCarReg
-								_this.dealCity=oldCarData.rgnReCd.name+oldCarData.rgnPrCd.name+oldCarData.rgnCyCd.name+oldCarData.rgnToCd.name
+								//_this.dealCity=oldCarData.rgnReCd.name+oldCarData.rgnPrCd.name+oldCarData.rgnCyCd.name+oldCarData.rgnToCd.name
 								_this.customerName=oldCarData.sellerNm
 								_this.carId=oldCarData.idCardNo
 								_this.rgnReCd=oldCarData.rgnReCd
@@ -505,6 +506,14 @@
 						if(!this.checkCarNumber()){
 							return
 						}
+					}
+					_this.carNumber=_this.carNumber.trim()
+					var vinNo=_this.carNumber.toUpperCase()
+					var reg = /^[0-9a-zA-Z]+$/
+					if(vinNo){
+						if(!reg.test(vinNo) || vinNo.length != 17 || vinNo.indexOf("O")>=0 || vinNo.indexOf("Q")>=0 || vinNo.indexOf("I")>=0){
+							summer.toast({msg:"车辆识别代号输入有误！需仔细比对，车辆识别代号内不能包O、I、Q和符号且长度必须17位。"})
+							return}
 					}
 					var prjEquBscInfo = {},prjEqiDtlCar={};
 					summer.showProgress();
