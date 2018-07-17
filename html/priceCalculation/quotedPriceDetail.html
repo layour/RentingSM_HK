@@ -125,6 +125,22 @@
 							<i class="icon iconfont icon-enter"></i>
 						</span>
 					</li>
+					<li @click="pickLspd('dpstHdlWay')">
+						<b>保证金处理方式</b>
+						<span>
+							<b v-if="dpstHdlWay">{{dpstHdlWay}}</b>
+							<b v-else class="default">请选择</b>
+							<i class="icon iconfont icon-enter"></i>
+						</span>
+					</li>
+					<li @click="pickLspd('expHdlWay')">
+						<b>赁期满处理方式</b>
+						<span>
+							<b v-if="expHdlWay">{{expHdlWay}}</b>
+							<b v-else class="default">请选择</b>
+							<i class="icon iconfont icon-enter"></i>
+						</span>
+					</li>
 					<li @click="pickLspd('fuwu')">
 						<b>是否有咨询服务费</b>
 						<span>
@@ -366,6 +382,12 @@
 							payWayCd:'',
 							payWay:'',
 							pickerPayWayList:[],
+							dpstHdlWayCd:'',//保证金处理方式
+							dpstHdlWay:'',
+							pickerdpstHdlWayCdList:[],
+							expHdlWayCd:'', //租赁期满处理方式
+							expHdlWay:'',
+							pickerexpHdlWayCdList:[],
 							firstPayStatu:false,
 							bailStatue:false,
 							firstPay:'', //首付款 选择未确认
@@ -537,6 +559,7 @@
 									// }
 									if(_this.prjId){
 										var dataObj=res.data.prjQuatPrps
+										console.log("所有返回值",dataObj)
 										_this.allPrice=res.data.carZe
 										if(dataObj){
 											_this.allPrice=dataObj.totLsItmAmt
@@ -548,6 +571,21 @@
 												_this.lsPdUntCdName=dataObj.lsPdUntNm
 												_this.payWayCd=dataObj.payWayCd
 												_this.payWay=dataObj.payWay
+												//保证金处理方式
+												if(dataObj.dpstHdlWayCd){_this.dpstHdlWayCd=dataObj.dpstHdlWayCd
+												_this.dpstHdlWay=dataObj.dpstHdlWayCdName}
+											
+												console.log("保证金22",_this.dpstHdlWay)
+												//_this.pickerexpHdlWayCdList=dataObj.pickerdpstHdlWayCdList
+												//期末
+												if(dataObj.expHdlWayCdName){
+													_this.expHdlWay=dataObj.expHdlWayCdName
+												_this.expHdlWayCd=dataObj.expHdlWayCd
+												}
+												
+												//_this.pickerexpHdlWayCdList=dataObj.expHdlWayCdArray
+				                                console.log("期末字典",_this.pickerexpHdlWayCdList)
+												console.log("保证金字典11",_this.pickerexpHdlWayCdList)
 												_this.annIntRatePct=dataObj.defAnnIntRatePct
 												_this.defAnnIntRatePct=dataObj.annIntRatePct
 												_this.hirePct=dataObj.hirePct
@@ -635,6 +673,7 @@
 						},
 						pickerSchemeChange:function(picker,values){
 							this.pickingObj=values[0]
+							console.log("ddddd",this.pickingObj)
 						},
 						checkSelected:function(value){
 							if(String(this.gpsTyp).indexOf(value)>-1){
@@ -689,6 +728,26 @@
 									_this.lsPdUntCd=resultData.lsPdUntArray[0].value
 									_this.lsPdUntCdName=resultData.lsPdUntArray[0].label
 								}
+						
+                      
+								 //保证金处理方式
+							    _this.pickerdpstHdlWayCdList=resultData.dpstHdlWayCdArray
+								console.log("保证金字典66",_this.pickerdpstHdlWayCdList)
+								if(resultData.dpstHdlWayCdArray.length>1){
+									_this.pickerdpstHdlWayCdList=resultData.dpstHdlWayCdArray
+									for(var j=0;j<_this.pickerdpstHdlWayCdList.length;j++){
+										if(_this.pickerdpstHdlWayCdList[i].remarks == 'selected'){
+											_this.dpstHdlWay = _this.pickerdpstHdlWayCdList[i].label
+											_this.dpstHdlWayCd = _this.pickerdpstHdlWayCdList[i].value
+										}
+									}
+								}else{
+									_this.pickerdpstHdlWayCdList=resultData.dpstHdlWayCdArray
+									_this.dpstHdlWayCd=resultData.pickerdpstHdlWayCdList[0].value
+									_this.dpstHdlWay=resultData.pickerdpstHdlWayCdList[0].label
+								}
+								_this.pickerexpHdlWayCdList=resultData.expHdlWayCdArray
+								console.log("期末字典66",_this.pickerexpHdlWayCdList)
 								_this.listYearRate=resultData.listYearRate
 								if(resultData.payWayArray.length>1){
 									_this.pickerPayWayList=resultData.payWayArray
@@ -880,6 +939,7 @@
 								summer.toast({msg:'请先选择产品方案'});
 								return;
 							}
+							console.log("是否是",this.pickerObj)
 							this.pickLspdStatus=!this.pickLspdStatus
 							if(status){
 								this.currentName=status
@@ -904,10 +964,16 @@
 									this.pickerLspdList[0].values=this.txJeArr
 								}else if (status=='fuwu') {
 									this.pickerLspdList[0].values=this.fuwuArr
+								}else if (status=='dpstHdlWay') {
+									this.pickerLspdList[0].values=this.pickerdpstHdlWayCdList
+									console.log("dpstHdlWay",this.pickerLspdList)
+								}else if (status=='expHdlWay') {
+									this.pickerLspdList[0].values=this.pickerexpHdlWayCdList
 								}else {
 									this.pickerLspdList[0].values=this.pickerCntWayList
 								}
 								return
+								
 							}
 							if(values=='confirm'){
 								this.isTest=false
@@ -946,6 +1012,14 @@
 								}else if (this.currentName=='fuwu') {
 									this.fuwuId=this.pickingObj.value
 									this.fuwuName=this.pickingObj.label
+								}else if (this.currentName=='dpstHdlWay') {
+									console.log("是否是",this.pickerObj)
+									this.dpstHdlWayCd=this.pickingObj.value
+								
+									this.dpstHdlWay=this.pickingObj.label
+								}else if (this.currentName=='expHdlWay') {
+									this.expHdlWayCd=this.pickingObj.value
+									this.expHdlWay=this.pickingObj.label
 								}
 
 							}
@@ -1209,6 +1283,7 @@
 							summer.showProgress();
 							var _this=this
 							var param={
+								
 								prjId:this.prjId,
 								lsPd:this.lsPd,
 								lsPdUntCd:this.lsPdUntCd,
@@ -1223,6 +1298,10 @@
 								actLsAmt:this.rongZiPrice,
 								isHasSxf:this.fuwuId, //咨询服务是否有
 								tiexiCd:this.txJxId,
+								dpstHdlWayCd:this.dpstHdlWayCd,
+								expHdlWayCd:this.expHdlWayCd,
+							
+
 								proQuatPrpsCfgM3:{id:this.SCHEME_NAME_ID},
 								prjQuatPrpsFeeList:[
 									{feeTypCd:'04',cntWayCd:'2',feeAmt:0},
