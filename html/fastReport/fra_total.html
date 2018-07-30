@@ -31,7 +31,7 @@
 					<span class="status fr">
 						<i class="iconfont icon-customer mr5"></i>{{item.cstMgrNm}}</span>
 				</p>
-				<div class="center" @click="openDetail(item.id,item.JBPM_ID)">
+				<div class="center" @click="openDetail(item.id,item.JBPM_ID,item.prjStsCdNm)">
 					<p class="type pl10">
 						<span>{{item.cstId?item.cstId.cstTypCdNm:" "}} </span> |
 						<span>{{item.bizTypNm}}</span>
@@ -190,7 +190,13 @@
 						}
 					})
 				},
-				openDetail:function(id, JBPM_ID) {
+				openDetail:function(id, JBPM_ID,stats) {
+					if(stats == "未评审"){
+						summer.toast({
+							msg: "项目提交到立项流程，可查看项目详情"
+						});
+						return false;
+					}
 					console.log(id);
 					summer.openWin({
 						id: 'programDetail',
