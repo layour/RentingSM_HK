@@ -531,16 +531,16 @@
 					prjEqiDtlCar.driverRlTypCd=this.guanXiId
                     prjEqiDtlCar.vinNo=this.carNumber
                     prjEqiDtlCar.engNo=''
+					prjEqiDtlCar.rgnReCd=this.rgnReCd
+					prjEqiDtlCar.rgnPrCd=this.rgnPrCd
+					prjEqiDtlCar.rgnCyCd=this.rgnCyCd
+					prjEqiDtlCar.rgnToCd=this.rgnToCd
 					if(this.isOldCar=="是"){
 						prjEqiDtlCar.id=this.prjEqiDtlCar_id
 						prjEqiDtlCar.usedCarMil=this.mileage
 						prjEqiDtlCar.usedCarReg=this.firstDate
 						prjEqiDtlCar.sellerNm=this.customerName
 						prjEqiDtlCar.idCardNo=this.carId
-						prjEqiDtlCar.rgnReCd=this.rgnReCd
-						prjEqiDtlCar.rgnPrCd=this.rgnPrCd
-						prjEqiDtlCar.rgnCyCd=this.rgnCyCd
-						prjEqiDtlCar.rgnToCd=this.rgnToCd
 					}
 					console.log("param", JSON.stringify({
 							prjEquBscInfo:prjEquBscInfo,
