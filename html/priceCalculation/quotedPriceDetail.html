@@ -409,6 +409,7 @@
 							fuwuName: '',//选择的服务费方式
 							fuwuId:'',
 							fuwuArr:[],
+							defaultFuwuArr:[], // 默认的咨询服务费字典
 							groessPriceRate:0, //服务费比例
 							groessPrice:'', //服务费
 
@@ -673,7 +674,7 @@
 						},
 						pickerSchemeChange:function(picker,values){
 							this.pickingObj=values[0]
-							console.log("ddddd",this.pickingObj)
+							// console.log("ddddd",this.pickingObj)
 						},
 						checkSelected:function(value){
 							if(String(this.gpsTyp).indexOf(value)>-1){
@@ -733,21 +734,6 @@
 								 //保证金处理方式
 							    _this.pickerdpstHdlWayCdList=resultData.dpstHdlWayCdArray
 								console.log("保证金字典66",_this.pickerdpstHdlWayCdList)
-<<<<<<< HEAD
-								if(resultData.dpstHdlWayCdArray.length>1){
-									_this.pickerdpstHdlWayCdList=resultData.dpstHdlWayCdArray
-									for(var j=0;j<_this.pickerdpstHdlWayCdList.length;j++){
-										if(_this.pickerdpstHdlWayCdList[i].remarks == 'selected'){
-											_this.dpstHdlWay = _this.pickerdpstHdlWayCdList[i].label
-											_this.dpstHdlWayCd = _this.pickerdpstHdlWayCdList[i].value
-										}
-									}
-								}else{
-									_this.pickerdpstHdlWayCdList=resultData.dpstHdlWayCdArray
-									_this.dpstHdlWayCd=_this.pickerdpstHdlWayCdList[0].value
-									_this.dpstHdlWay=_this.pickerdpstHdlWayCdList[0].label
-								}
-=======
 								// if(resultData.dpstHdlWayCdArray.length>1){
 								// 	_this.pickerdpstHdlWayCdList=resultData.dpstHdlWayCdArray
 								// 	for(var j=0;j<_this.pickerdpstHdlWayCdList.length;j++){
@@ -758,10 +744,9 @@
 								// 	}
 								// }else{
 								// 	_this.pickerdpstHdlWayCdList=resultData.dpstHdlWayCdArray
-								// 	_this.dpstHdlWayCd=resultData.pickerdpstHdlWayCdList[0].value
-								// 	_this.dpstHdlWay=resultData.pickerdpstHdlWayCdList[0].label
+								// 	_this.dpstHdlWayCd=_this.pickerdpstHdlWayCdList[0].value
+								// 	_this.dpstHdlWay=_this.pickerdpstHdlWayCdList[0].label
 								// }
->>>>>>> 7061c6f599ba80cd1f21a508b46ae8d82ca267e8
 								_this.pickerexpHdlWayCdList=resultData.expHdlWayCdArray
 								console.log("期末字典66",_this.pickerexpHdlWayCdList)
 								_this.listYearRate=resultData.listYearRate
@@ -789,6 +774,7 @@
 								_this.gpsTypList=resultData.GPSTypArray
 								_this.txJeArr = resultData.tiexiCdArray
 								_this.fuwuArr =	resultData.isHasSxfArray
+								_this.defaultFuwuArr = resultData.isHasSxfArray
 								for(var i =0;i<_this.fuwuArr.length;i++){
 									if(_this.fuwuArr[i].remarks == 'selected'){
 										_this.fuwuName = _this.fuwuArr[i].label
@@ -955,7 +941,6 @@
 								summer.toast({msg:'请先选择产品方案'});
 								return;
 							}
-							console.log("是否是",this.pickerObj)
 							this.pickLspdStatus=!this.pickLspdStatus
 							if(status){
 								this.currentName=status
@@ -999,6 +984,11 @@
 									this.computedYearRate()
 								}else if (this.currentName=='yearRate') {
 									this.annIntRatePct=this.pickingObj.value
+									if(this.pickingObj.isHasSxfArray&&this.pickingObj.isHasSxfArray.length>0){
+										this.fuwuArr = this.pickingObj.isHasSxfArray
+									}else {
+										this.fuwuArr = this.defaultFuwuArr
+									}
 								}else if (this.currentName=='payType') {
 									this.payWayCd=this.pickingObj.value
 									this.payWay=this.pickingObj.label
@@ -1029,7 +1019,6 @@
 									this.fuwuId=this.pickingObj.value
 									this.fuwuName=this.pickingObj.label
 								}else if (this.currentName=='dpstHdlWay') {
-									console.log("是否是",this.pickerObj)
 									this.dpstHdlWayCd=this.pickingObj.value
 
 									this.dpstHdlWay=this.pickingObj.label
