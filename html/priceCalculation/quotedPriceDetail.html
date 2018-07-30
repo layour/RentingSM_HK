@@ -574,7 +574,7 @@
 												//保证金处理方式
 												if(dataObj.dpstHdlWayCd){_this.dpstHdlWayCd=dataObj.dpstHdlWayCd
 												_this.dpstHdlWay=dataObj.dpstHdlWayCdName}
-											
+
 												console.log("保证金22",_this.dpstHdlWay)
 												//_this.pickerexpHdlWayCdList=dataObj.pickerdpstHdlWayCdList
 												//期末
@@ -582,7 +582,7 @@
 													_this.expHdlWay=dataObj.expHdlWayCdName
 												_this.expHdlWayCd=dataObj.expHdlWayCd
 												}
-												
+
 												//_this.pickerexpHdlWayCdList=dataObj.expHdlWayCdArray
 				                                console.log("期末字典",_this.pickerexpHdlWayCdList)
 												console.log("保证金字典11",_this.pickerexpHdlWayCdList)
@@ -728,8 +728,8 @@
 									_this.lsPdUntCd=resultData.lsPdUntArray[0].value
 									_this.lsPdUntCdName=resultData.lsPdUntArray[0].label
 								}
-						
-                      
+
+
 								 //保证金处理方式
 							    _this.pickerdpstHdlWayCdList=resultData.dpstHdlWayCdArray
 								console.log("保证金字典66",_this.pickerdpstHdlWayCdList)
@@ -743,8 +743,8 @@
 									}
 								}else{
 									_this.pickerdpstHdlWayCdList=resultData.dpstHdlWayCdArray
-									_this.dpstHdlWayCd=resultData.pickerdpstHdlWayCdList[0].value
-									_this.dpstHdlWay=resultData.pickerdpstHdlWayCdList[0].label
+									_this.dpstHdlWayCd=_this.pickerdpstHdlWayCdList[0].value
+									_this.dpstHdlWay=_this.pickerdpstHdlWayCdList[0].label
 								}
 								_this.pickerexpHdlWayCdList=resultData.expHdlWayCdArray
 								console.log("期末字典66",_this.pickerexpHdlWayCdList)
@@ -973,7 +973,7 @@
 									this.pickerLspdList[0].values=this.pickerCntWayList
 								}
 								return
-								
+
 							}
 							if(values=='confirm'){
 								this.isTest=false
@@ -1015,7 +1015,7 @@
 								}else if (this.currentName=='dpstHdlWay') {
 									console.log("是否是",this.pickerObj)
 									this.dpstHdlWayCd=this.pickingObj.value
-								
+
 									this.dpstHdlWay=this.pickingObj.label
 								}else if (this.currentName=='expHdlWay') {
 									this.expHdlWayCd=this.pickingObj.value
@@ -1283,7 +1283,7 @@
 							summer.showProgress();
 							var _this=this
 							var param={
-								
+
 								prjId:this.prjId,
 								lsPd:this.lsPd,
 								lsPdUntCd:this.lsPdUntCd,
@@ -1300,7 +1300,7 @@
 								tiexiCd:this.txJxId,
 								dpstHdlWayCd:this.dpstHdlWayCd,
 								expHdlWayCd:this.expHdlWayCd,
-							
+
 
 								proQuatPrpsCfgM3:{id:this.SCHEME_NAME_ID},
 								prjQuatPrpsFeeList:[
