@@ -213,7 +213,7 @@
 							&nbsp;元
 						</span>
 					</li>
-					<li class='input'>
+					<li class='input' v-if="gouZhiPriceStatus">
 						<b>购置税</b>
 						<span>
 							<input type="text" @input="checkVal('gouZhiPrice')" placeholder="请输入购置税" name="gouZhiPrice" v-model="gouZhiPrice">&nbsp;元
@@ -590,9 +590,16 @@
 												_this.annIntRatePct=dataObj.defAnnIntRatePct
 												_this.defAnnIntRatePct=dataObj.annIntRatePct
 												_this.hirePct=dataObj.hirePct
+												
 												_this.hirePctMoney=parseInt(_this.hirePct*_this.allPrice*0.01)
 												_this.bailPct=dataObj.bailPct
 												_this.bailPctMoney=parseInt(_this.bailPct*_this.allPrice*0.01)
+												if(dataObj.hireAmt){
+													_this.hirePctMoney = dataObj.hireAmt
+												}
+												if(dataObj.bailAmt){
+													_this.bailPctMoney = dataObj.bailAmt
+												}
 												_this.txJe=dataObj.txJe
 												_this.gpsIns=dataObj.gpsIns
 												_this.gpsInsName=dataObj.gpsInsNm
@@ -774,6 +781,7 @@
 								_this.gpsTypList=resultData.GPSTypArray
 								_this.txJeArr = resultData.tiexiCdArray
 								_this.fuwuArr =	resultData.isHasSxfArray
+								console.log("_this.fuwuArr",_this.fuwuArr)
 								_this.defaultFuwuArr = resultData.isHasSxfArray
 								for(var i =0;i<_this.fuwuArr.length;i++){
 									if(_this.fuwuArr[i].remarks == 'selected'){
@@ -888,7 +896,8 @@
 									var num=_this.lsPd*_this.lsPdUntCd
 									for (var i = 0; i < _this.listYearRate.length; i++) {
 										if(num>=_this.listYearRate[i].leaseTermS&&num<=_this.listYearRate[i].leaseTermE){
-											_this.AnnIntRatePctList.push({label:_this.listYearRate[i].yearRate,value:_this.listYearRate[i].yearRate})
+											_this.AnnIntRatePctList.push({label:_this.listYearRate[i].yearRate,value:_this.listYearRate[i].yearRate,arr1:_this.listYearRate[i].isHasSxfArray})
+											console.log("_this.listYearRate[i].isHasSxfArray",_this.listYearRate[i].isHasSxfArray)
 										}
 									}
 									if(_this.AnnIntRatePctList.length==1){_this.annIntRatePct=_this.AnnIntRatePctList[0].value}
@@ -984,8 +993,14 @@
 									this.computedYearRate()
 								}else if (this.currentName=='yearRate') {
 									this.annIntRatePct=this.pickingObj.value
-									if(this.pickingObj.isHasSxfArray&&this.pickingObj.isHasSxfArray.length>0){
-										this.fuwuArr = this.pickingObj.isHasSxfArray
+									if(this.pickingObj.arr1&&this.pickingObj.arr1.length>0){
+										this.fuwuArr = this.pickingObj.arr1
+										if(this.fuwuArr.length == 1){
+											this.fuwuId=this.fuwuArr[0].value
+								         	this.fuwuName=this.fuwuArr[0].label
+											 console.log("this.fuwuName",this.fuwuName)
+										}
+										console.log("this.pickingObj.isHasSxfArray",this.pickingObj.isHasSxfArray)
 									}else {
 										this.fuwuArr = this.defaultFuwuArr
 									}
@@ -1157,6 +1172,9 @@
 							}
 						},
 						quotedTest:function(){
+							console.log(this.firstPay)
+							console.log(this.bail)
+
 							var params={
 								lsPd:this.lsPd,
 								lsPdUntCd:this.lsPdUntCd,
@@ -1165,6 +1183,8 @@
 								payWay:this.payWay,
 								hirePct:this.hirePct,
 								bailPct:this.bailPct,
+								bailAmt:this.bailPctMoney,
+								hireAmt:this.hirePctMoney,
 								gpsIns:this.gpsIns,
 								gpsTyp:this.gpsTyp,
 								actLsAmt:this.rongZiPrice,
@@ -1272,6 +1292,9 @@
 
 						},
 						save:function(){
+
+							console.log(this.firstPay)
+							console.log(this.bail)
 							// http
 							if(!this.isTest){
 								summer.toast({msg:'请先测算报价'})
@@ -1298,6 +1321,8 @@
 								payWay:this.payWay,
 								hirePct:this.hirePct,
 								bailPct:this.bailPct,
+								bailAmt:this.bailPctMoney,
+								hireAmt:this.hirePctMoney,
 								gpsIns:this.gpsIns,
 								gpsTyp:this.gpsTyp,
 								actLsAmt:this.rongZiPrice,

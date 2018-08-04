@@ -238,13 +238,13 @@
 							<span class="fr">{{dataList?dataList.prjBscInfo.prjQuatPrps.hirePct:""}}</span>
 						</p>
 						<p class="pl10 pr10">首付款
-							<span class="fr">{{dataList?dataList.prjBscInfo.prjQuatPrps.hirePct*(dataList.prjBscInfo.prjQuatPrps.totLsItmAmt)/100:""}}</span>
+							<span class="fr">{{dataList?dataList.prjBscInfo.prjQuatPrps.hireAmt:""}}</span>
 						</p>
 						<p class="pl10 pr10">保证金比例(%)
 							<span class="fr">{{dataList?dataList.prjBscInfo.prjQuatPrps.bailPct:""}}</span>
 						</p>
 						<p class="pl10 pr10">保证金
-							<span class="fr">{{dataList?dataList.prjBscInfo.prjQuatPrps.bailPct*(dataList.prjBscInfo.prjQuatPrps.totLsItmAmt)/100:""}}</span>
+							<span class="fr">{{dataList?dataList.prjBscInfo.prjQuatPrps.bailAmt:""}}</span>
 						</p>
 						<p class="pl10 pr10">贴息金额
 							<span class="fr">{{dataList?dataList.prjBscInfo.prjQuatPrps.txJe:""}}</span>
@@ -268,6 +268,8 @@
 							<p class="pl10 pr10" v-else-if="item.feeTypCd=='51'">精品装潢
 								<span class="fr">{{item.feeAmt}}</span>
 							</p>
+							<p class="pl10 pr10" v-if="item.feeTypCd==35">平台费<span class="fr">{{item.feeAmt }}</span></p>
+							<p class="pl10 pr10" v-if="item.feeTypCd==36">其他加融项<span class="fr">{{item.feeAmt }}</span></p>
 							<p class="pl10 pr10" v-else> </p>
 							<!-- <p class="pl10 pr10">每期租金<span class="fr">{{dataList?dataList.prjQuatProps.prjQuatPrpsPaySchList[0].rntAmt:""}}</span></p> -->
 						</div>
