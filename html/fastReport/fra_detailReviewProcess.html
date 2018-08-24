@@ -139,10 +139,13 @@
 				<div class="listItem" v-for="(item,index) in JBPM_ID.histoicFlowList">
 					<div class="inside">
 						<img src="../../img/true.png" class="true" alt="" />
-						<p class="top">{{item.assigneeName}}</p>
+						<p class="top" v-if = '!showOn'>{{item.assigneeName}}</p>
 						<!-- <p class="content"> {{item.assigneeName}} </p> -->
-							<p class="content">审批意见：{{item.comment?item.comment:"无"}}  </p>
+						<p class="content">处理环节： {{item.taskName}}</p>
+						<p class="content" v-if = '!showOn'>审批意见：{{item.comment?item.comment:"无"}}  </p>
 						<p class="content">任务历时： {{item.durationTime}}</p>
+						<p class="content" >开始时间：{{item.startTime}}  </p>
+						<p class="content">结束时间： {{item.endTime}}</p>
 					</div>
 				</div>
 			</div>
@@ -166,6 +169,7 @@
 				return {
 					dataList: '',
 					JBPM_ID: "",
+					showOn: true,
 				}
 			},
 			methods: {
@@ -182,6 +186,7 @@
 						if (res.data.flag == 1) {
 							$("#flowContent").css('display', 'none');
 							self.JBPM_ID=res.data.datas;
+							self.showOn = res.data.datas.isSales;
 							console.log(res);
 						}else{
 							createNull("flowContent", "../../img/empty.png","无流程信息");
