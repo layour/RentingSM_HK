@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1">
+	<meta charset="UTF-8">
+	<title></title>
+	<link rel="stylesheet" href="../../css/iuapmobile.um.css">
+	<link rel="stylesheet" href="../../css/fonts/iconfont.css">
+	<script src="../../js/font.js"></script>
+	<link rel="stylesheet" href="missionList.css">
+	<link rel="stylesheet" href="../fastReport/css/fraCommon.css">
+</head>
+
+<body>
+	<div class="null">
+        <div class="nullCon">
+            <div class="nullBox">
+                <img src="../../img/empty.png" alt="">
+                <p>暂无数据</p>
+            </div>
+        </div>
+    </div>
+	<div class="um-frame" id="fraSearchMisson" v-cloak>
+		<!-- <div class="um-header-light">
+				<div class="sera">
+					<div class="s-box" onclick="opensearch()">
+						<i class="iconfont icon-search"> </i>
+						<p class="txt">
+							输入客户名称/关键词
+						</p>
+					</div>
+				</div>
+			</div> -->
+			<div class="um-content">
+					<div id="content"></div>
+					<ul class="missionList">
+						<li v-for="(k,index) in dataList">
+							<div class="title">
+								<span class="name">{{k.pdNo}}</span>
+								<!-- <span class="state">{{k.CUST_NAME}}</span> -->
+							</div>
+							<div class="content" @click="missionInfo(k.procDefId,k.pdNo,k.taskDefKey,k.procInsId,k.taskName,k.taskId,'view')">
+								<div class="leftCon">
+									<p class="p1">发起人：{{k.sendName}}</p>
+									<p class="p2">当前环节：{{k.taskName}}</p>
+									<p class="p3">处理人：{{k.assigneeName}}</p>
+									<p class="p4">发起时间：{{k.startTime}}</p>
+								</div>
+								<div class="enter">
+									<div class="enterCon">
+										<i class="iconfont icon-enter"></i>
+									</div>
+								</div>
+							</div>
+							<p class=" select um-box" v-if="k.status=='claim'">
+								<span class="um-bf1   tc" @click="receiveProgram(k.taskId,index)">
+									<i class="iconfont icon-modify mr5"></i>签收</span>
+							</p>
+							<p class=" select um-box" v-else-if="k.status=='todo'">
+								<span class="um-bf1  tc" @click="missionInfo(k.procDefId,k.pdNo,k.taskDefKey,k.procInsId,k.taskName,k.taskId)">
+									<i class="iconfont icon-modify mr5"></i>处理</span>
+							</p>
+							<p v-else></p>
+						</li>
+					</ul>
+			</div>
+	</div>
+	<script src="../../js/summer.js"></script>
+	<script src="../../js/jquery.min.js"></script>
+	<script src="../../js/vue.js"></script>
+	<script src="../../js/common.js"></script>
+	<script src="../../js/Frameworks/iuapmobile.frameworks.ui.js"></script>
+	<script>
+		function opensearch() {
+			summer.openWin({
+				id: 'search',
+				url: 'html/fastReport/search.html',
+				pageParam: {
+					source: "program"
+				}
+
+			});
+		}
+		var _endNum = 1;
+		summerready = function() {
+			//getData(1);
+			summer.setRefreshHeaderInfo({
+				visible: true,
+				loadingImg: 'img/refresh.png',
+				bgColor: '#ffffff',
+				textColor: '#aaaaaa',
+				textDown: '下拉刷新...',
+				textUp: '松开刷新...',
+				showTime: true
+			}, function(ret, err) {
+				//通常在这里从服务器加载数据，t
+				getData(1, fra_total_mission.searchValue,true);
+				_endNum = 1;
+			});
+			summer.setRefreshFooterInfo({
+				visible: true,
+				loadingImg: 'img/refresh.png',
+				bgColor: '#ffffff',
+				textColor: '#aaaaaa',
+				textDown: '上拉刷新...',
+				textUp: '松开刷新...',
+				showTime: true
+			}, function(ret, err) {
+				//通常在这里从服务器加载数据，
+				_endNum += 1;
+				getData(_endNum, fra_total_mission.searchValue,false);
+			});
+		}
+
+		function getData(end, searchValue,flag) {
+			fra_total_mission.getData(end, searchValue,flag);
+			fra_total_mission.searchValue = searchValue;
+		}
+		var fra_total_mission = new Vue({
+			el: '#fraSearchMisson',
+			data:function() {
+				return {
+					dataList: '',
+					searchValue: ''
+				}
+			},
+			methods: {
+				getData:function(end, searchValue,flag) {
+					var self=this;
+					console.log("searchValue",searchValue)
+					if (searchValue) {
+						ajaxRequest({
+							type: 'post',
+							url: 'appservice/sys/act/todo?pageNo='+end+'&pageSize=10',
+							param: {
+								"pageSize": 10,
+								"pdNo": searchValue,
+							},
+							search:true
+						}, function(res) {
+							//alert(res);
+							summer.hideProgress();
+						var Data;
+						if (Object.prototype.toString.call(res.data) === '[object String]') {
+							Data = JSON.parse(res.data);
+						} else {
+							Data = res.data;
+						}
+						if (Data.flag == 1) {
+							self.totalPage = Data.datas.page.list;
+							if (flag) {
+								if (Data.datas.page.list < 1) {
+									createNull("content", "../../img/empty.png");
+									//$("#content").css('display', 'block');
+								} else {
+									//$("#content").css('display', 'none');
+									self.dataList = Data.datas.page.list;
+								}
+							} else {
+								self.dataList = self.dataList.concat(Data.datas.page.list);
+							}
+
+							console.log(self.dataList);
+						}
+						}, function(err) {
+							alert(err);
+							console.log(err);
+							summer.hideProgress();
+						});
+					}
+					this.$nextTick(function() {
+						summer.refreshHeaderLoadDone() //加载完成后调用方法恢复组件到默认状态
+						summer.refreshFooterLoadDone(); //加载完成后调用方法恢复组件到默认状态
+					})
+				},
+				openOpacity:function(id, code) {
+					console.log(id);
+					summer.openFrame({
+						id: 'Opacity',
+						url: 'html/fastReport/Opacity.html',
+						position: {
+							top: 0,
+							left: 0,
+							bottom: 0,
+							right: 0
+						},
+						opaque: false,
+						pageParam: {
+							id: id,
+							code: code,
+							frameId: "fra_search",
+							winId:"search"
+						}
+					})
+				},
+				receiveProgram:function(taskId,index){
+                    var self = this;
+                    ajaxRequest({
+                        type: 'post',
+                        url: 'appservice/sys/act/claim',
+                        param: {
+                            "taskId": taskId,
+                        }
+                    }, function(res) {
+                        //alert(res);
+                        summer.hideProgress();
+                        var Data = res.data;
+                        if (Data.flag == 1) {
+                            self.dataList[index].status = "todo"
+                        }
+                    }, function(err) {
+                        //alert(err);
+                        console.log(err);
+                        summer.hideProgress();
+                    });
+				},
+				missionInfo: function(procDefId, pdNo, taskDefKey,procInsId,taskName,taskId,view) {
+                    summer.openWin({
+                        id: 'missionInfo',
+                        url: 'html/mission/missionInfo.html',
+                        create: false,
+                        type: 'actionBar',
+                        actionBar: {
+                            title: "审批详情",
+                            titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
+                            backgroundColor: "#039be5",
+                            leftItem: {
+                                image: "img/back.png",
+                                method: "", //返回按钮自定义事件
+                                text: "返回",
+                                textColor: "#ffffff" //返回文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
+                            }
+                        },
+                        pageParam: {
+                            procDefId: procDefId,
+                            pdNo: pdNo,
+                            taskDefKey: taskDefKey,
+                            procInsId:procInsId,
+                            taskName:taskName,
+                            taskId:taskId,
+                            view:view
+
+                        }
+
+                    });
+                },
+				openDetail:function(id, JBPM_ID) {
+					console.log(id);
+					summer.openWin({
+						id: 'programDetail',
+						url: 'html/fastReport/programDetail.html',
+						create: false,
+						type: 'actionBar',
+						actionBar: {
+							title: "业务查看",
+							titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
+							backgroundColor: "#039be5",
+							leftItem: {
+								image: "img/back.png",
+								method: "", //返回按钮自定义事件
+								text: "返回",
+								textColor: "#ffffff" //返回文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
+							}
+						},
+						pageParam: {
+							id: id,
+							JBPM_ID: JBPM_ID
+						}
+					});
+				},
+				edit:function(id) {
+					summer.openWin({
+						id: 'setProject',
+						url: 'html/fastReport/setProject.html',
+						create: false,
+						type: 'actionBar',
+						actionBar: {
+							title: "快捷报单",
+							titleColor: "#ffffff", //注意必须是6位数的颜色值。（3位数颜色值会不正常）
+							backgroundColor: "#039be5",
+							leftItem: {
+								image: "img/back.png",
+								method: "", //返回按钮自定义事件
+								text: "返回",
+								textColor: "#ffffff" //返回文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
+							},
+							rightItems: [{
+								type: "text",
+								text: "下一步",
+								textColor: "#ffffff", //文字颜色，注意必须是6位数的颜色值。（3位数颜色值会不正常）
+								method: "nextStopInput()" //在打开的window中自定义事件
+							}]
+						},
+						pageParam: {
+							projectId: id,
+							source: "programSelect",
+							isEdit: true
+						}
+					});
+				}
+			 
+			 
+			}
+
+		});
+	</script>
+</body>
+
+</html>
