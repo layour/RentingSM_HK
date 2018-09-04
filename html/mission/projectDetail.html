@@ -200,11 +200,13 @@
 					});
                 },
                 openInfo: function (ev) {
+                   var self = this;
                     var ev = ev || window.event;
                     var itemType = ev.currentTarget.dataset.type;
                     var url = "";
                     var title = "";
                     var pageId = "";
+                    console.log("this.datas",this.datas)
                     switch (itemType) {
                         case 'JXS':
                             url = "html/mission/JXSInfoPage.html";
@@ -311,7 +313,7 @@
                             }
                         },
                         pageParam: {
-                            datas: this.datas
+                            datas: self.datas
                         }
                     });
                 },

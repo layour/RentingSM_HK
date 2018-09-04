@@ -21,7 +21,7 @@
     <div class="um-frame" id="index" v-cloak>
         <div class="um-content">
             <div id="content"></div>
-            <h2 class="processNum">流程编号：{{baseM.pdNo}}</h2>
+            <h2 class="processNum">流程编号：{{newMessageInfo.pdNo}}</h2>
             <ul class="processList" >
                 <li v-for="(k, index) in items" v-bind:class="[index == items.length-1 ? '' : 'borderActive']">
                     <img src="../../img/true.png" alt="">
@@ -32,6 +32,17 @@
                         <p class="p4">开始时间:{{k.histIns?(new Date(k.histIns.startTime)).format("yyyy-MM-dd hh:mm:ss"):''}}</p>
                         <p class="pfive">结束时间:{{k.histIns?(new Date(k.histIns.endTime)).format("yyyy-MM-dd hh:mm:ss"):''}}</p>
                         <p class="pfive">任务历时:{{k.durationTime}}</p>
+                        <p class="pfive">处理状态:{{k.flagName}}</p>
+                    </div>
+                </li>
+            </ul>
+            <ul class="processList" >
+                <li v-for="(k, index) in leavingMessage" v-bind:class="[index == items.length-1 ? '' : 'borderActive']">
+                    <img src="../../img/true.png" alt="">
+                    <div class="box">
+                        <p class="p1">留言人:{{k.createName}}</p>
+                        <p class="p2">留言时间:{{k.createDate}}</p>
+                        <p class="p3" >留言内容:{{k.message}}</p>
                     </div>
                 </li>
             </ul>
@@ -165,6 +176,7 @@
                 addNewMessage:[],
                 baseM:[],
                 items: '',
+                leavingMessage:'',
                 arr: '' /* [{"nodeName_":'提交',"toNode_":"下一步"},{"nodeName_":'提交2',"toNode_":"下一步2"} ,{"nodeName_":'提交3',"toNode_":"下一步3"}]*/
             },
             methods: {
@@ -190,11 +202,14 @@
                                 self.items = res.data.datas.historyFlow;
                                 self.arr = res.data.datas.btns;
                                 self.baseM = res.data.datas.actMsgList;
-                                self.newMessageInfo.pdNo = res.data.datas.act.pdNo;
+                                self.newMessageInfo.pdNo = res.data.datas.historyFlow[0].pdNo;
+                                console.log("self.newMessageInfo.pdNo",self.newMessageInfo.pdNo)
                                 self.newMessageInfo.pInstId = res.data.datas.act.procInsId;
                                 self.newMessageInfo.pTaskNo = res.data.datas.act.taskDefKey;
                                 self.newMessageInfo.pTaskNm = res.data.datas.act.taskName;
                                 console.log(res);
+                                self.leavingMessage = res.data.datas.actMsgList;
+                                
                             }
                         }, function (err) {
                             alert(err);

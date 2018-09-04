@@ -183,3 +183,21 @@ strong {
 .pickerColor>p span:first-child {
     float: left;
 }
+
+.loginBtn{
+    width: 6.34rem;
+    height: 0.9rem;
+    background-color: #1287de;
+    color: #fff;
+    position: absolute;
+    left: 50%;
+    margin-left: -3.17rem;
+    bottom: 0.8rem;
+    border: 1px solid #039be5;
+    outline: none;
+    border-radius: 0.08rem;
+    font-size: 0.32rem;
+    letter-spacing: 0.05rem;
+    line-height: 0.9rem;
+    text-align: center;
+ }

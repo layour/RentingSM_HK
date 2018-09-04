@@ -38,13 +38,29 @@
 					</p>
 					<p class="type card pl10 status h20">
 						{{item.lsCntNo}}
-						<span class="fr">{{item.prjStsCdNm}}</span>
+						<span class="fr">{{item.taskDefKeyLabel}}</span>
 					</p>
 					<p class="time pl10 pr10">
 						<span>创建时间：
 							<span>{{item.createDate}}</span>
 						</span>
 					</p>
+					 <!--新增的几个显示字段 -->
+					<p class="time pl10 pr10">
+							<span>经销商名称：
+								<span>{{item.splBscInfo.splNm}}</span>
+							</span>
+						</p>
+				    <p class="time pl10 pr10">
+								<span>合同金额：
+									<span>{{item.prjQuatPrps?item.prjQuatPrps.contAmt:"0"}}</span>
+								</span>
+							</p>
+					<!--p class="time pl10 pr10">
+									<span>订单流程节点状态：
+										<span>{{item.taskDefKeyLabel}}</span>
+									</span>
+								</p-->
 				</div>
 				<p class=" select um-box" v-if="item.prjStsCdNm=='未评审'">
 					<!--<span class="um-bf1   tc" @click="upload(item.ID)"><i class="iconfont icon-Upload mr5"></i>上传资料</span>-->
@@ -122,7 +138,9 @@
 				return {
 					dataList: '',
 					totalPage: "",
-					marginTop0:"marginTop0" 
+					marginTop0:"marginTop0",
+					conditions:true
+
 				}
 			},
 			methods: {
@@ -140,11 +158,15 @@
 						//alert(res);
 						summer.hideProgress();
 						var Data;
+						
 						if (Object.prototype.toString.call(res.data) === '[object String]') {
 							Data = JSON.parse(res.data);
 						} else {
 							Data = res.data;
 						}
+						console.log("真真的",Data)
+						self.conditions = Data.datas.conditions.isShowEditBtn;
+						console.log("真真的",self.conditions )
 						if (Data.flag == 1) {
 							self.totalPage = Data.datas.last;
 							if (flag) {
@@ -294,6 +316,12 @@
 					});*/
 				},
 				edit:function(id) {
+					var self = this;
+					console.log("真真的",self.conditions )
+					if(self.conditions == false) {
+						summer.toast({msg: "无法进行修改"});
+						return;
+					}
 					summer.openWin({
 						id: 'setProject',
 						url: 'html/fastReport/setProject.html',

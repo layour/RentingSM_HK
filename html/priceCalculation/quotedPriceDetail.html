@@ -344,10 +344,10 @@
 				quotedVue.getData();
 			}
 			$(function(){$('body').height($('body')[0].clientHeight);});
-      var quotedVue=new Vue({
-          el:'#quotedPriceDetail',
-          data:function(){
-            return {
+    		  var quotedVue=new Vue({
+       					   el:'#quotedPriceDetail',
+       							   data:function(){
+        				    return {
 							isTest:false,
 							prjId:'',
 							SCHEME_NAME:'',
@@ -505,7 +505,14 @@
 							}
 							 this.hirePctMoney = parseInt(this.allPrice - this.rongZiPrice)
 							 this.hirePct = parseFloat(this.hirePctMoney/this.allPrice).toFixed(2)
-							 this.groessPrice =parseInt(this.rongZiPrice * this.groessPriceRate*0.01)
+							 //this.gpsPrice + this.gouZhiPrice + this.safePrice + this.zhuangXiuPrice + this.pingtai + this.jiarong
+							 //this.groessPrice =parseInt(this.rongZiPrice * this.groessPriceRate*0.01)
+							 //修改咨询费
+							 this.pingtai = parseInt(this.pingtai)
+							 this.groessPrice =parseInt((this.rongZiPrice + this.gpsPrice + this.gouZhiPrice + this.safePrice + this.zhuangXiuPrice + this.pingtai + this.jiarong) * this.groessPriceRate*0.01)
+							 console.log("this.groessPrice22",this.groessPrice22)
+							 console.log("this.rongZiPrice22",this.rongZiPrice22)
+							 console.log("this.groessPriceRate22",this.groessPriceRate22)
 						},
 						changBailRate:function(){
 							var val=this.bail
@@ -548,6 +555,7 @@
 									param:{prjId:_this.prjId}
 								},function(res){
 									console.log("getData===res",JSON.stringify(res));
+									console.log("getData===res",JSON.stringify(res.data.datas));
 									summer.hideProgress()
 									_this.pickerSchemeList[0].values=res.data.quatList
 									if(!res.data.quatList){
@@ -588,7 +596,9 @@
 				                                console.log("期末字典",_this.pickerexpHdlWayCdList)
 												console.log("保证金字典11",_this.pickerexpHdlWayCdList)
 												_this.annIntRatePct=dataObj.defAnnIntRatePct
+												console.log("实际年利率_this.annIntRatePct",_this.annIntRatePct)
 												_this.defAnnIntRatePct=dataObj.annIntRatePct
+												console.log("实际年利率111_this.annIntRatePct",_this.defAnnIntRatePct)
 												_this.hirePct=dataObj.hirePct
 												
 												_this.hirePctMoney=parseInt(_this.hirePct*_this.allPrice*0.01)
@@ -626,6 +636,7 @@
 												for(var j=0;j<dataObj.prjQuatPrpsFeeList.length;j++){
 													if(dataObj.prjQuatPrpsFeeList[j].feeTypCd=='04'){
 														_this.groessPrice=dataObj.prjQuatPrpsFeeList[j].feeAmt
+														console.log("_this.groessPrice33",_this.groessPrice)
 													}else if(dataObj.prjQuatPrpsFeeList[j].feeTypCd=='10'){
 														_this.gpsPrice=dataObj.prjQuatPrpsFeeList[j].feeAmt
 														_this.gpsPriceMiddle =_this.gpsPrice
@@ -889,8 +900,9 @@
 										}
 									}
 								}
-								_this.groessPrice =parseInt(_this.rongZiPrice * _this.groessPriceRate*0.01);
-
+								//查询咨询费计算
+								//_this.groessPrice =parseInt(_this.rongZiPrice * _this.groessPriceRate*0.01);
+								console.log("_this.groessPrice44",_this.groessPrice)
 								if(_this.lsPd&&_this.lsPdUntCd){
 									_this.AnnIntRatePctList=[];
 									var num=_this.lsPd*_this.lsPdUntCd
@@ -1101,7 +1113,14 @@
 								this.hirePctMoney=this.firstPay
 								this.hirePct=this.firstPayRate
 								this.rongZiPrice = parseInt(this.allPrice - this.hirePctMoney)
-								this.groessPrice =parseInt(this.rongZiPrice * this.groessPriceRate*0.01)
+                                //首期租金计算咨询费
+								this.pingtai = parseInt(this.pingtai)
+								console.log("this.rongZiPrice + this.gpsPrice",this.rongZiPrice + this.gpsPrice)
+								console.log("this.rongZiPrice + this.gpsPrice + this.gouZhiPrice + this.safePrice + this.zhuangXiuPrice + this.pingtai + this.jiarong",this.rongZiPrice + this.gpsPrice + this.gouZhiPrice + this.safePrice + this.zhuangXiuPrice + this.pingtai + this.jiarong)
+								this.groessPrice = parseInt((this.rongZiPrice + this.gpsPrice + this.gouZhiPrice + this.safePrice + this.zhuangXiuPrice + this.pingtai + this.jiarong) * this.groessPriceRate*0.01)
+								console.log("this.groessPrice11",this.groessPrice)
+								console.log("this.rongZiPrice11",this.rongZiPrice)
+								console.log("this.groessPriceRate11",this.groessPriceRate)
 							}else{
 								this.firstPay = this.hirePctMoney
 								this.firstPayRate = this.hirePct
@@ -1210,6 +1229,7 @@
 							};
 							if(this.fuwuName=="是"){
 								params.prjQuatPrpsFeeList[0].feeAmt =this.groessPrice
+								console.log("params.prjQuatPrpsFeeList[0].feeAmt",params.prjQuatPrpsFeeList[0].feeAmt)
 							}
 							if(this.txJeName != "无"){
 								params.txJe=this.txJe
@@ -1266,6 +1286,11 @@
 								summer.toast({msg:'保险费不能为空'})
 								return
 							}
+							//测算时重新计算咨询费
+							this.pingtai = parseInt(this.pingtai)
+							this.gpsPrice = parseInt(this.gpsPrice)
+							this.groessPrice =parseInt((this.rongZiPrice + this.gpsPrice + this.gouZhiPrice + this.safePrice + this.zhuangXiuPrice + this.pingtai + this.jiarong) * this.groessPriceRate*0.01)
+							console.log("this.groessPrice",this.groessPrice)
 							var _this=this;
 							console.log(JSON.stringify(params));
 							summer.showProgress();
@@ -1308,10 +1333,16 @@
 								summer.toast({msg:'GPS类型不能为空'})
 								return
 							}
+							console.log("this.annIntRatePct",this.annIntRatePct)
+							console.log("this.defannIntRatePct",this.defAnnIntRatePct)
+                            // return;
+							//保存时重新计算咨询费
+							// this.pingtai = parseInt(this.pingtai)
+							// this.gpsPrice = parseInt(this.gpsPrice)
+							// this.groessPrice =parseInt((this.rongZiPrice + this.gpsPrice + this.gouZhiPrice + this.safePrice + this.zhuangXiuPrice + this.pingtai + this.jiarong) * this.groessPriceRate*0.01)
 							summer.showProgress();
 							var _this=this
 							var param={
-
 								prjId:this.prjId,
 								lsPd:this.lsPd,
 								lsPdUntCd:this.lsPdUntCd,
@@ -1331,7 +1362,6 @@
 								dpstHdlWayCd:this.dpstHdlWayCd,
 								expHdlWayCd:this.expHdlWayCd,
 
-
 								proQuatPrpsCfgM3:{id:this.SCHEME_NAME_ID},
 								prjQuatPrpsFeeList:[
 									{feeTypCd:'04',cntWayCd:'2',feeAmt:0},
@@ -1349,6 +1379,7 @@
 							};
 							if(this.fuwuName=="是"){
 								param.prjQuatPrpsFeeList[0].feeAmt =this.groessPrice
+								console.log("params.prjQuatPrpsFeeList[0].feeAmt",params.prjQuatPrpsFeeList[0].feeAmt)
 							}
 							if(this.txJeName != "无"){
 								param.txJe=this.txJe

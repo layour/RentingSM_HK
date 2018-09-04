@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="../../css/iuapmobile.um.css">
     <link rel="stylesheet" href="../../css/fonts/iconfont.css">
     <link rel="stylesheet" href="missionList.css">
+    <link rel="stylesheet" href="../fastReport/css/fraCommon.css">
     <script src="../../js/summer.js"></script>
     <script src="../../js/jquery.min.js"></script>
     <script src="../../js/Frameworks/iuapmobile.frameworks.ui.js"></script>
@@ -19,6 +20,16 @@
 
 <body>
     <div class="um-frame" id="index">
+        <div class="um-header-light">
+                <div class="sera">
+                    <div class="s-box" onclick="opensearch()">
+                        <i class="iconfont icon-search"> </i>
+                        <p class="txt">
+                            请输入客户名称
+                        </p>
+                    </div>
+                </div>
+        </div>
         <div class="um-content">
             <div id="content"></div>
             <ul class="missionList">
@@ -40,22 +51,43 @@
                             </div>
                         </div>
                     </div>
-                    <p class=" select um-box" v-if="k.status=='claim'">
-                        <span class="um-bf1   tc" @click="receiveProgram(k.taskId,index)">
-                            <i class="iconfont icon-modify mr5"></i>签收</span>
-                    </p>
-                    <p class=" select um-box" v-else-if="k.status=='todo'">
-                        <span class="um-bf1  tc" @click="missionInfo(k.procDefId,k.pdNo,k.taskDefKey,k.procInsId,k.taskName,k.taskId)">
-                            <i class="iconfont icon-modify mr5"></i>处理</span>
-                    </p>
+                    <!-- p class=" select um-box" >
+                         
+                            <span class="um-bf1   tc" @click="missionInfo(k.procDefId,k.pdNo,k.taskDefKey,k.procInsId,k.taskName,k.taskId,'view')">
+                                <i class="iconfont icon-modify mr5"></i>查看</span>
+                            <span class="um-bf1   tc" @click="receiveProgram(k.taskId,index)"  v-if="k.status=='claim'">
+                                <i class="iconfont icon-modify mr5" ></i>签收</span>
+                            <span class="um-bf1  tc" @click="missionInfo(k.procDefId,k.pdNo,k.taskDefKey,k.procInsId,k.taskName,k.taskId)">
+                                <i class="iconfont icon-modify mr5"></i>处理</span>
+                    </p-->
+                        <p class=" select um-box" v-if="k.status=='claim'">
+                            <span class="um-bf1   tc" @click="receiveProgram(k.taskId,index)">
+                                <i class="iconfont icon-modify mr5"></i>签收</span>
+                        </p>
+                        <p class=" select um-box" v-else-if="k.status=='todo'">
+                            <span class="um-bf1  tc" @click="missionInfo(k.procDefId,k.pdNo,k.taskDefKey,k.procInsId,k.taskName,k.taskId)">
+                                <i class="iconfont icon-modify mr5"></i>处理</span>
+                        </p>
                     <p v-else></p>
                 </li>
             </ul>
         </div>
     </div>
     <script type="text/javascript">
+    	function opensearch() {
+            summer.setStorage("searchFromSource", "misson");
+			summer.openWin({
+				id: 'search',
+				url: 'html/fastReport/search.html',
+				pageParam: {
+					source: "misson"
+				}
+
+			});
+		}
         var _endNum = 1;
         summerready = function() {
+            //summer.showProgress();
             //summer.showProgress();
             var userinfo = summer.getStorage("userinfo");
 		//	missionList.ORG_ID = userinfo.ORG_ID ? userinfo.ORG_ID : "";

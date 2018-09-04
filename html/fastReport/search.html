@@ -31,13 +31,20 @@
             </form>
             <span onclick="closeWin()">取消</span>
         </div>
-        <div class="bar bar-nav um-header" id="header" v-else="payList">
+        <div class="bar bar-nav um-header" id="header" v-else-if="payList">
             <form action="javascript:void(0);">
                 <i class="iconfont icon-nav_search pl10 pr5"> </i>
                 <input class="searchValue" id="search_payList" type="search" name="search" autofocus="autofocus" placeholder="请输入客户名称" />
             </form>
             <span onclick="closeWin()">取消</span>
         </div>
+        <div class="bar bar-nav um-header" id="header" v-else="misson">
+                <form action="javascript:void(0);">
+                    <i class="iconfont icon-nav_search pl10 pr5"> </i>
+                    <input class="searchValue" id="search_misson" type="search" name="search" autofocus="autofocus" placeholder="请输入客户名称" />
+                </form>
+                <span onclick="closeWin()">取消</span>
+            </div>
         <div class="um-content">
 
         </div>
@@ -69,6 +76,10 @@
             searchD.payList = true;
             url = "html/repayApply/payList/payList_search.html"
             frameId = "payList_search"
+        } else if (source == "misson") {
+            searchD.misson = true;
+            url = "html/mission/fra_search_misson.html"
+            frameId = "fra_search_misson"
         }
         setTimeout(function() {
             bindEvents(source);
@@ -93,7 +104,8 @@
             return {
                 newCustom: false, //代表从客户这搜索
                 program: false, //代表从业务列表搜索
-                payList: false //代表搜索支付表
+                payList: false, //代表搜索支付表
+                misson:false
             }
         },
         mounted() {},

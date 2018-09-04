@@ -34,18 +34,36 @@
 								<span>{{item.cstId?item.cstId.cstTypCdNm:"  "}} </span> | <span>{{item.bizTypNm}}</span>
 							</p>
 							<p class="type card pl10 status h20">
-								{{item.lsCntNo}} <span class="fr">{{item.prjStsCdNm}}</span>
+								{{item.lsCntNo}} <span class="fr">{{item.taskDefKeyLabel}}</span>
 							</p>
 							<p class="time pl10 pr10">
 								<span>创建时间：<span>{{item.createDate}}</span></span>
 							</p>
+							 <!--新增的几个显示字段 -->
+							 <p class="time pl10 pr10">
+									<span>经销商名称：
+										<span>{{item.splBscInfo.splNm}}</span>
+									</span>
+								</p>
+							<p class="time pl10 pr10">
+										<span>合同金额：
+											<span>{{item.prjQuatPrps?item.prjQuatPrps.contAmt:"0"}}</span>
+										</span>
+									</p>
+							<!--p class="time pl10 pr10">
+											<span>订单流程节点状态：
+												<span>{{item.taskDefKeyLabel}}</span>
+											</span>
+										</p-->
 						</div>
+							 <!--新增的几个显示字段 -->
 						<p class=" select um-box" v-if="item.prjStsCdNm=='未评审'">
 								<!--<span class="um-bf1   tc" @click="upload(item.ID)"><i class="iconfont icon-Upload mr5"></i>上传资料</span>-->
 								<!--<span class="um-bf1  tc" @click="submit(item.ID)"><i class="iconfont icon-submit mr5"></i>提交</span>-->
 								<span class="um-bf1   tc" @click="edit(item.id)"><i class="iconfont icon-modify mr5"></i>修改</span>
 								<span class="um-bf1  tc" @click="openOpacity(item.id)"><i class="iconfont icon-nav_delete mr5"></i>删除</span>
 							</p>
+							
 				<p v-else></p>
 			</div>
 		</div>
@@ -112,7 +130,8 @@
 				return {
 					dataList: '',
 					totalPage: "",
-					marginTop0:"marginTop0"
+					marginTop0:"marginTop0",
+					conditions:true
 				}
 			},
 			mounted() {},
@@ -135,6 +154,9 @@
 						} else {
 							Data = res.data;
 						}
+						console.log("Data = res.data",res.data)
+				
+						self.conditions = Data.datas.conditions.isShowEditBtn;
 						if (Data.flag == 1) {
 							self.totalPage = Data.datas.last;
 							if (flag) {
@@ -258,6 +280,11 @@
 						})
 				},
 				edit(id) {
+					var self = this;
+					if(!self.conditions) {
+						summer.toast({msg: "无法进行修改"});
+						return;
+					}
 					summer.openWin({
 						id: 'setProject',
 						url: 'html/fastReport/setProject.html',

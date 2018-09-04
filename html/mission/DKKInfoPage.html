@@ -66,7 +66,27 @@
                     <input type="number" placeholder="请输入" v-model="datas.accPhone" v-if="pageType == 'change'" />
                     <div v-else>{{ datas.accPhone }}</div>
                 </li>
+                 <li>
+                        <input type="number" placeholder="请输入验证码" v-model="datas.PhoneCode" v-if="pageType == 'change'" />
+                        <div v-else>{{ datas.accPhone }}</div>
+                        <span @click="achieveCode()" style="color:rgb(28, 145, 241)">发送验证码</span>
+                 </li>
+                 <!-- <li>
+                        <input type="number" placeholder="请输入验证码" v-model="datas.PhoneCode" v-if="!(pageType == 'change')"/>
+                        <div v-else style="color:rgb(250, 40, 40)">{{解除绑定}}</div>
+                        <span @click="bundleBank()" style="color:rgb(28, 145, 241)">绑定银行卡</span>
+                 </li> -->
+                 <!--dl>
+                        <dt class="iconfont icon-key"></dt>
+                        <dd>
+                            <input v-model="code" type="text" placeholder="验证码">
+                        </dd>
+                    </dl-->
+                    <!-- <span v-bind:class="codeClassObject" @click="achieveCode()">{{获取验证码}}</span> -->
             </ul>
+            <button type="button" class="loginBtn" onclick="toLogin()">绑定银行卡</button>
+            
+ 
             <!-- 开户银行 -->
             <mt-popup v-model="bankStatus" position="bottom" class="pickerColor">
                 <mt-picker value-key="label" :slots="bankSlots" @change="onMethodChange"></mt-picker>
@@ -107,7 +127,9 @@
                     certNo: "",
                     accTypCdName: "请选择",
                     accTypCdNameCode: "",
-                    accPhone: ""
+                    accPhone: "",
+                    cardId:"",
+                    PhoneCode:""
                 },
                 pageType: "",
                 cstId: "",
@@ -274,12 +296,241 @@
 							msg: "保存失败"
 						});
 					});
-                }
+                },
+                achieveCode: function () {
+					var This = this;
+                    var regCard = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/; //身份证校验
+                    var phoneCard =  /^[1][0-9]{10}$/;
+                    if (this.datas.certTypNm == "身份证" && !regCard.test(this.datas.certNo)) {
+                        summer.toast({
+                            msg: "身份证号格式有误"
+                        });
+                        return;
+                    } else if (!phoneCard.test(this.datas.accPhone)) {
+                        summer.toast({
+                            msg: "手机号格式有误"
+                        });
+                        return;
+                    }
+                    summer.showProgress();
+                    var self = this;
+                    ajaxRequest({
+						type: 'post',
+						url: 'appservice/project/act/saveBankAcc',
+						param: {
+                            id: this.ID,  
+                            cstId: {
+                                id: this.cstId
+                            },
+                            bkCd: this.datas.bkNmCode,
+                            accNm: this.datas.accNm,
+                            accNo: this.datas.accNo,
+                            accTypCd: this.datas.accTypCdNameCode,
+                            certTypCd: this.datas.certTypCdNmCode,
+                            certNo: this.datas.certNo,
+                            accPhone: this.datas.accPhone
+						}
+					}, function(res) {
+                        summer.hideProgress();
+						var Data = res.data;
+						if (Data.flag == 1) {
+                            summer.execScript({
+                                winId: 'missionInfo',
+                                frameId: 'projectDetail',
+                                script: 'projectDetail.getList()'
+                            });
+                         summer.showProgress();
+						/* 获取验证码接口 */
+						ajaxRequest({
+							type: 'post',
+							url: 'appservice/project/act/sendBindMsg',
+							param: {
+								id: This.datas.cardId
+							}
+						}, function (res) {
+							summer.hideProgress();
+							// var Data;
+							// if (Object.prototype.toString.call(res.data) === '[object String]') {
+							// 	Data = JSON.parse(res.data);
+							// } else {
+							// 	Data = res.data;
+							// }
+							if (res.data.datas.code == 1) {
+									summer.toast({
+										msg: "验证码已发送"
+									});
+							} else {
+								summer.toast({
+									msg: res.data.datas.msg
+								});
+							}
+						}, function (err) {
+							summer.hideProgress();
+							summer.toast({
+								msg: "系统内部异常"
+							});
+							console.log(err);
+						});
+						} else {
+							summer.toast({
+								msg: Data.msg
+							});
+						}
+					}, function(err) {
+						summer.hideProgress();
+						summer.toast({
+							msg: "保存失败"
+						});
+					});
+					// var re = /^1[3|4|5|7|8|6|9][0-9]{9}$/;
+					// if (!this.phoneNum) {
+					// 	summer.toast({
+					// 		msg: "请输入手机号"
+					// 	});
+					// 	return;
+					// }
+					// if (!re.test(this.phoneNum)) {
+					// 	summer.toast({
+					// 		msg: "手机号格式有误"
+					// 	});
+					// 	return;
+					// }
+					// if (this.codeTxt == "获取验证码") {
+						This.getCode = "";
+					// } else {
+					// 	summer.toast({
+					// 		msg: "请勿连续发送"
+					// 	});
+					// }
+				}
+            },
+            //解除绑定
+            removeBank: function () { 
+                var This = this;
+                summer.showProgress();
+						ajaxRequest({
+							type: 'post',
+							url: 'appservice/project/act/unbind',
+							param: {
+								id: This.datas.cardId
+							}
+						}, function (res) {
+							summer.hideProgress();
+							if (res.data.datas.code == 1) {
+									summer.toast({
+										msg: "解除绑定成功"
+									});
+							} else {
+								summer.toast({
+									msg: res.data.datas.msg
+								});
+							}
+						}, function (err) {
+							summer.hideProgress();
+							summer.toast({
+								msg: "系统内部异常"
+							});
+							console.log(err);
+						});
+						
+				
             }
+            //绑定银行卡
+            // bundleBank: function () {
+            //     var This = this;
+            //     summer.showProgress();
+            //     ajaxRequest({
+            //         type: 'post',
+            //         url: 'appservice/project/act/bind',
+            //         param: {
+            //             id: This.datas.cardId
+            //         }
+            //     }, function (res) {
+            //         summer.hideProgress();
+            //         if (res.data.datas.code == 1) {
+            //                 summer.toast({
+            //                     msg: "绑定成功"
+            //                 });
+            //         } else {
+            //             summer.toast({
+            //                 msg: res.data.datas.msg
+            //             });
+            //         }
+            //     }, function (err) {
+            //         summer.hideProgress();
+            //         summer.toast({
+            //             msg: "系统内部异常"
+            //         });
+            //         console.log(err);
+            //     });
+						
+				
+            // }
         });
+        function toLogin() {
+            var This = DKKInfoPage;
+                summer.showProgress();
+                ajaxRequest({
+                    type: 'post',
+                    url: 'appservice/project/act/bind',
+                    param: {
+                        id: DKKInfoPage.datas.cardId,
+                        vailCode:DKKInfoPage.datas.PhoneCode
+                    }
+                }, function (res) {
+                    summer.hideProgress();
+                    if (res.data.datas.code == 1) {
+                            summer.toast({
+                                msg: "绑定成功"
+                            });
+                    } else {
+                        summer.toast({
+                            msg: res.data.datas.msg
+                        });
+                    }
+                }, function (err) {
+                    summer.hideProgress();
+                    summer.toast({
+                        msg: "系统内部异常"
+                    });
+                    console.log(err);
+                });
+            
+            }
+        function bundleBank(){
+               var This = DKKInfoPage;
+                summer.showProgress();
+                ajaxRequest({
+                    type: 'post',
+                    url: 'appservice/project/act/bind',
+                    param: {
+                        id: DKKInfoPage.datas.cardId
+                    }
+                }, function (res) {
+                    summer.hideProgress();
+                    if (res.data.datas.code == 1) {
+                            summer.toast({
+                                msg: "绑定成功"
+                            });
+                    } else {
+                        summer.toast({
+                            msg: res.data.datas.msg
+                        });
+                    }
+                }, function (err) {
+                    summer.hideProgress();
+                    summer.toast({
+                        msg: "系统内部异常"
+                    });
+                    console.log(err);
+                });
+			}
+
         summerready = function() {
             DKKInfoPage.pageType = summer.pageParam.pageType ? summer.pageParam.pageType : "";
             DKKInfoPage.cstId = summer.pageParam.datas.prjBscInfo.cstId.id;
+            DKKInfoPage.datas.cardId = summer.pageParam.datas.prjBscInfo.cstId.cstNpBscInfo.cstBank.id;
+            console.log("DKKInfoPage.datas.cardId",DKKInfoPage.datas.cardId )
             if (summer.pageParam.pageType && summer.pageParam.pageType == 'change') {
                 DKKInfoPage.getData();
             } else if (summer.pageParam.datas && summer.pageParam.datas.prjBscInfo.cstId.cstNpBscInfo.cstBank) {
@@ -290,6 +541,7 @@
                 DKKInfoPage.datas.certNo = summer.pageParam.datas.prjBscInfo.cstId.cstNpBscInfo.cstBank.certNo;
                 DKKInfoPage.datas.accTypCdName = summer.pageParam.datas.prjBscInfo.cstId.cstNpBscInfo.cstBank.accTypCdName;
                 DKKInfoPage.datas.accPhone = summer.pageParam.datas.prjBscInfo.cstId.cstNpBscInfo.cstBank.accPhone;
+                DKKInfoPage.datas.cardId = summer.pageParam.datas.prjBscInfo.cstId.cstNpBscInfo.cstBank.id
             }
         };
     </script>

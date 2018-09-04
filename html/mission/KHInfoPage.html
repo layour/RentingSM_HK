@@ -94,15 +94,15 @@
                 </li>
                 <li>
                     <span>最高学历</span>
-                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.cstId.cstNpBscInfo.eduLvlCdNm : "" }}</div>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.cstId.cstNpBscInfo.eduLvlNm : "" }}</div>
                 </li>
                 <li>
                     <span>是否有驾照</span>
-                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.cstId.cstNpBscInfo.isisHasLicenseNm : "" }}</div>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.cstId.cstNpBscInfo.isHasLicenseNm : "" }}</div>
                 </li>
                 <li>
                     <span>准驾类型</span>
-                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.cstId.cstNpBscInfo.driverLicenseTypeNm : "" }}</div>
+                    <div>{{ datas.prjBscInfo ? datas.prjBscInfo.cstId.cstNpBscInfo.driverLicenseNm: "" }}</div>
                 </li>
                 <li v-if="datas.condition && datas.condition.isSupper">
                     <span>是否需要配偶签字</span>
@@ -131,6 +131,7 @@
         });
         summerready = function() {
             KHInfoPage.datas = summer.pageParam.datas;
+            console.log("KHInfoPage.datas",KHInfoPage.datas)
         };
     </script>
 </body>
